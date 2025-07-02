@@ -4,9 +4,9 @@ version = "0.1.0"
 dynamic = [
     "dependencies",
 ]
-description = "A Pytohon package for create interactive maps with anywidget and Javascript mapping libraries"
+description = "A Python package for creating interactive maps with anywidget and JavaScript mapping libraries"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 keywords = [
     "anymap",
 ]
@@ -18,15 +18,13 @@ classifiers = [
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Natural Language :: English",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
 ]
 
-[project.entry-points."console_scripts"]
-anymap = "anymap.cli:main"
 
 [project.optional-dependencies]
 all = [

@@ -1,0 +1,201 @@
+/* Potree Widget Styling */
+
+/* Main container styling */
+.anymap-potree-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    background-color: #000000;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Canvas styling for Potree */
+.anymap-potree-container canvas {
+    pointer-events: auto;
+    cursor: grab;
+    display: block;
+    outline: none;
+    border: none;
+}
+
+.anymap-potree-container canvas:active {
+    cursor: grabbing;
+}
+
+/* Loading indicator */
+.anymap-potree-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: normal;
+    text-align: center;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+/* Error message styling */
+.anymap-potree-error {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #ff4444;
+    font-size: 16px;
+    font-weight: normal;
+    text-align: center;
+    z-index: 1000;
+    pointer-events: none;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+/* Control panel styling (if needed for future controls) */
+.anymap-potree-controls {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 5px;
+    padding: 10px;
+    color: #ffffff;
+    font-size: 12px;
+    z-index: 100;
+    pointer-events: auto;
+}
+
+/* Info panel styling */
+.anymap-potree-info {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #ffffff;
+    font-size: 11px;
+    z-index: 100;
+    pointer-events: none;
+    max-width: 300px;
+}
+
+/* Measurement tools styling */
+.anymap-potree-measurement {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 1px solid #cccccc;
+    border-radius: 3px;
+    padding: 5px 8px;
+    color: #333333;
+    font-size: 11px;
+    font-weight: bold;
+    z-index: 200;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+/* Button styling for any UI controls */
+.anymap-potree-button {
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 1px solid #cccccc;
+    border-radius: 3px;
+    padding: 6px 12px;
+    color: #333333;
+    font-size: 12px;
+    cursor: pointer;
+    margin: 2px;
+    transition: background-color 0.2s;
+}
+
+.anymap-potree-button:hover {
+    background-color: rgba(255, 255, 255, 1.0);
+}
+
+.anymap-potree-button:active {
+    background-color: rgba(230, 230, 230, 1.0);
+}
+
+/* Progress bar for loading */
+.anymap-potree-progress {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 4px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    z-index: 1000;
+}
+
+.anymap-potree-progress-bar {
+    height: 100%;
+    background-color: #00aaff;
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+
+/* Responsive design adjustments */
+@media (max-width: 768px) {
+    .anymap-potree-controls {
+        top: 5px;
+        right: 5px;
+        padding: 8px;
+        font-size: 11px;
+    }
+
+    .anymap-potree-info {
+        bottom: 5px;
+        left: 5px;
+        padding: 6px 10px;
+        font-size: 10px;
+        max-width: 250px;
+    }
+
+    .anymap-potree-loading {
+        font-size: 14px;
+    }
+}
+
+/* Disable text selection on the widget */
+.anymap-potree-container {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Focus outline for accessibility */
+.anymap-potree-container:focus {
+    outline: 2px solid #0066cc;
+    outline-offset: 2px;
+}
+
+/* Fullscreen styling */
+.anymap-potree-container.fullscreen {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 9999 !important;
+}
+
+/* Dark theme adjustments */
+.anymap-potree-container.dark-theme {
+    background-color: #1a1a1a;
+}
+
+.anymap-potree-container.dark-theme .anymap-potree-controls {
+    background-color: rgba(40, 40, 40, 0.9);
+    color: #e0e0e0;
+}
+
+.anymap-potree-container.dark-theme .anymap-potree-info {
+    background-color: rgba(40, 40, 40, 0.9);
+    color: #e0e0e0;
+}
