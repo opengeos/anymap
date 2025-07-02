@@ -243,5 +243,172 @@ class TestMultipleInstances(unittest.TestCase):
         self.assertEqual(map2_calls[0]["args"][0]["popup"], "Map 2")
 
 
+class TestEnhancedMapFeatures(unittest.TestCase):
+    """Test cases for enhanced map features."""
+
+    def setUp(self):
+        """Set up test fixtures."""
+        self.map = MapLibreMap(center=[40.7128, -74.0060], zoom=12)
+
+    def test_get_layers(self):
+        """Test getting layers from map."""
+        # Initially should be empty
+        self.assertEqual(self.map.get_layers(), {})
+
+        # Add a layer
+        layer_config = {"id": "test", "type": "circle", "source": "test"}
+        self.map.add_layer("test", layer_config)
+
+        layers = self.map.get_layers()
+        self.assertIn("test", layers)
+        self.assertEqual(layers["test"], layer_config)
+
+    def test_get_sources(self):
+        """Test getting sources from map."""
+        # Initially should be empty
+        self.assertEqual(self.map.get_sources(), {})
+
+        # Add a source
+        source_config = {"type": "geojson", "data": {}}
+        self.map.add_source("test", source_config)
+
+        sources = self.map.get_sources()
+        self.assertIn("test", sources)
+        self.assertEqual(sources["test"], source_config)
+
+    def test_clear_layers(self):
+        """Test clearing all layers."""
+        # Add some layers
+        self.map.add_layer("layer1", {"id": "layer1", "type": "circle"})
+        self.map.add_layer("layer2", {"id": "layer2", "type": "fill"})
+
+        self.assertEqual(len(self.map.get_layers()), 2)
+
+        # Clear layers
+        self.map.clear_layers()
+        self.assertEqual(len(self.map.get_layers()), 0)
+
+    def test_clear_sources(self):
+        """Test clearing all sources."""
+        # Add some sources
+        self.map.add_source("source1", {"type": "geojson", "data": {}})
+        self.map.add_source("source2", {"type": "geojson", "data": {}})
+
+        self.assertEqual(len(self.map.get_sources()), 2)
+
+        # Clear sources
+        self.map.clear_sources()
+        self.assertEqual(len(self.map.get_sources()), 0)
+
+    def test_clear_all(self):
+        """Test clearing all layers and sources."""
+        # Add layers and sources
+        self.map.add_source("source1", {"type": "geojson", "data": {}})
+        self.map.add_layer(
+            "layer1", {"id": "layer1", "type": "circle", "source": "source1"}
+        )
+
+        self.assertEqual(len(self.map.get_layers()), 1)
+        self.assertEqual(len(self.map.get_sources()), 1)
+
+        # Clear all
+        self.map.clear_all()
+        self.assertEqual(len(self.map.get_layers()), 0)
+        self.assertEqual(len(self.map.get_sources()), 0)
+
+    def test_add_raster_layer(self):
+        """Test adding a raster layer."""
+        self.map.add_raster_layer(
+            layer_id="raster_test",
+            source_url="https://example.com/tiles/{z}/{x}/{y}.png",
+        )
+
+        # Check that both source and layer were added
+        sources = self.map.get_sources()
+        layers = self.map.get_layers()
+
+        self.assertIn("raster_test_source", sources)
+        self.assertIn("raster_test", layers)
+        self.assertEqual(layers["raster_test"]["type"], "raster")
+
+    def test_add_vector_layer(self):
+        """Test adding a vector layer."""
+        self.map.add_vector_layer(
+            layer_id="vector_test",
+            source_url="https://example.com/tiles.json",
+            source_layer="data_layer",
+            layer_type="fill",
+        )
+
+        # Check that both source and layer were added
+        sources = self.map.get_sources()
+        layers = self.map.get_layers()
+
+        self.assertIn("vector_test_source", sources)
+        self.assertIn("vector_test", layers)
+        self.assertEqual(layers["vector_test"]["type"], "fill")
+        self.assertEqual(layers["vector_test"]["source-layer"], "data_layer")
+
+    def test_add_image_layer(self):
+        """Test adding an image layer."""
+        coordinates = [[-80, 25], [-80, 26], [-79, 26], [-79, 25]]
+
+        self.map.add_image_layer(
+            layer_id="image_test",
+            image_url="https://example.com/image.png",
+            coordinates=coordinates,
+        )
+
+        # Check that both source and layer were added
+        sources = self.map.get_sources()
+        layers = self.map.get_layers()
+
+        self.assertIn("image_test_source", sources)
+        self.assertIn("image_test", layers)
+        self.assertEqual(sources["image_test_source"]["type"], "image")
+        self.assertEqual(sources["image_test_source"]["coordinates"], coordinates)
+
+
+class TestLayerPersistence(unittest.TestCase):
+    """Test cases for layer persistence across widget renders."""
+
+    def test_layer_state_persistence(self):
+        """Test that layers persist in widget state."""
+        map_widget = MapLibreMap(center=[0, 0], zoom=1)
+
+        # Add a layer
+        layer_config = {"id": "persistent", "type": "circle", "source": "test"}
+        source_config = {"type": "geojson", "data": {}}
+
+        map_widget.add_source("test", source_config)
+        map_widget.add_layer("persistent", layer_config)
+
+        # Check internal state
+        self.assertIn("persistent", map_widget._layers)
+        self.assertIn("test", map_widget._sources)
+
+        # Verify layer config is preserved
+        self.assertEqual(map_widget._layers["persistent"], layer_config)
+        self.assertEqual(map_widget._sources["test"], source_config)
+
+    def test_layer_removal_from_state(self):
+        """Test that removing layers updates the state."""
+        map_widget = MapLibreMap(center=[0, 0], zoom=1)
+
+        # Add and then remove a layer
+        map_widget.add_source("test", {"type": "geojson", "data": {}})
+        map_widget.add_layer("temp", {"id": "temp", "type": "circle", "source": "test"})
+
+        self.assertIn("temp", map_widget._layers)
+        self.assertIn("test", map_widget._sources)
+
+        # Remove layer and source
+        map_widget.remove_layer("temp")
+        map_widget.remove_source("test")
+
+        self.assertNotIn("temp", map_widget._layers)
+        self.assertNotIn("test", map_widget._sources)
+
+
 if __name__ == "__main__":
     unittest.main()

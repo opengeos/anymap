@@ -43,6 +43,9 @@ extra = [
 include = ["anymap*"]
 exclude = ["docs*"]
 
+[tool.setuptools.package-data]
+anymap = ["static/*"]
+
 [tool.setuptools.dynamic]
 dependencies = {file = ["requirements.txt"]}
 
