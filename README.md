@@ -4,6 +4,7 @@
 [![image](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/opengeos/anymap/blob/main)
 [![image](https://img.shields.io/pypi/v/anymap.svg)](https://pypi.python.org/pypi/anymap)
 [![image](https://img.shields.io/conda/vn/conda-forge/anymap.svg)](https://anaconda.org/conda-forge/anymap)
+[![Conda Recipe](https://img.shields.io/badge/recipe-anymap-green.svg)](https://github.com/conda-forge/anymap-feedstock)
 
 <!-- [![Docker Image](https://img.shields.io/badge/docker-opengeos%2Fanymap-blue?logo=docker)](https://hub.docker.com/r/opengeos/anymap/tags)     -->
 
@@ -25,6 +26,10 @@
 
 ```bash
 pip install anymap
+```
+
+```bash
+conda install -c conda-forge anymap
 ```
 
 ## Quick Start
@@ -196,7 +201,7 @@ python -m unittest tests.test_anymap -v
 ## Roadmap
 
 -   ✅ MapLibre GL JS backend
--   🔲 Mapbox GL JS backend
+-   ✅ Mapbox GL JS backend
 -   🔲 Leaflet backend
 -   🔲 Cesium backend
 -   🔲 Potree backend
