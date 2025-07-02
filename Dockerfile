@@ -47,7 +47,7 @@
     WORKDIR /home/jovyan/anymap
 
     # ------------------------------
-    # 5. Install leafmap from source
+    # 5. Install anymap from source
     # ------------------------------
     # Prevent version resolution errors in CI
     ENV SETUPTOOLS_SCM_PRETEND_VERSION_FOR_ANYMAP=0.0.0
