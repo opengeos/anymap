@@ -196,8 +196,11 @@ python -m unittest tests.test_anymap -v
 ## Roadmap
 
 -   ✅ MapLibre GL JS backend
--   🔲 Mapbox GL JS backend
+-   ✅ Mapbox GL JS backend
 -   🔲 Leaflet backend
+-   🔲 OpenLayers backend
+-   🔲 DeckGL backend
+-   🔲 KeplerGL backend
 -   🔲 Cesium backend
 -   🔲 Potree backend
 
