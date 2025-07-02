@@ -68,7 +68,6 @@ def test_basic_functionality():
     print("   ✓ Event handler registered successfully")
 
     print("\n✅ All basic functionality tests passed!")
-    return m
 
 
 def test_multiple_maps():
@@ -82,15 +81,13 @@ def test_multiple_maps():
         print(f"   ✓ Map {i+1} created successfully")
 
     print("✅ Multiple map instances test passed!")
-    return maps
 
 
 if __name__ == "__main__":
     # Run basic functionality tests
-    test_map = test_basic_functionality()
+    test_basic_functionality()
 
     # Run multiple maps test
-    test_maps = test_multiple_maps()
+    test_multiple_maps()
 
     print(f"\n🎉 All tests completed successfully!")
-    print(f"Created {len(test_maps) + 1} map instances total")

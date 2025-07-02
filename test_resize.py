@@ -37,10 +37,10 @@ def test_resize_functionality():
     print("4. Both should now render at full width automatically")
     print("5. Try resizing the browser window - maps should adapt")
 
-    return m
+    pass
 
 
 if __name__ == "__main__":
-    test_map = test_resize_functionality()
+    test_resize_functionality()
     print(f"\n✅ Resize test completed successfully!")
     print("The map instance is ready for Jupyter notebook testing.")
