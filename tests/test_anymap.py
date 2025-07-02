@@ -4,7 +4,7 @@
 
 import unittest
 from unittest.mock import Mock, patch
-from anymap import MapWidget, MapLibreMap, MapboxMap
+from anymap import MapWidget, MapLibreMap, MapboxMap, CesiumMap
 
 
 class TestMapWidget(unittest.TestCase):
@@ -560,6 +560,298 @@ class TestMapboxMapboxInteraction(unittest.TestCase):
         maplibre_css = str(maplibre_map._css)
         mapbox_css = str(mapbox_map._css)
         self.assertNotEqual(maplibre_css, mapbox_css)
+
+
+class TestCesiumMap(unittest.TestCase):
+    """Test cases for the CesiumMap class."""
+
+    def setUp(self):
+        """Set up test fixtures."""
+        self.map = CesiumMap(
+            center=[37.7749, -122.4194],
+            zoom=12,
+            camera_height=15000000,
+        )
+
+    def test_initialization(self):
+        """Test Cesium map initialization."""
+        self.assertEqual(self.map.center, [37.7749, -122.4194])
+        self.assertEqual(self.map.zoom, 12)
+        self.assertEqual(self.map.camera_height, 15000000)
+        self.assertEqual(self.map.heading, 0.0)
+        self.assertEqual(self.map.pitch, -90.0)
+        self.assertEqual(self.map.roll, 0.0)
+        self.assertTrue(self.map.base_layer_picker)
+        self.assertFalse(self.map.timeline)  # Default is False based on implementation
+
+    def test_access_token_handling(self):
+        """Test access token management."""
+        # Test setting access token
+        test_token = "ey.test"
+        self.map.set_access_token(test_token)
+        self.assertEqual(self.map.access_token, test_token)
+
+        # Test creating map with custom token
+        custom_map = CesiumMap(access_token="custom_token")
+        self.assertEqual(custom_map.access_token, "custom_token")
+
+    def test_default_access_token(self):
+        """Test default access token retrieval."""
+        import warnings
+
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            token = CesiumMap._get_default_access_token()
+            # Token could be empty if no environment variable set
+            self.assertIsInstance(token, str)
+
+    def test_cesium_specific_methods(self):
+        """Test Cesium-specific methods."""
+        # Test fly to
+        self.map.fly_to(40.7128, -74.0060, height=20000000, duration=5.0)
+        calls = self.map._js_calls
+        self.assertTrue(any(call["method"] == "flyTo" for call in calls))
+
+        # Test adding point
+        point_id = self.map.add_point(
+            40.7128, -74.0060, height=100000, name="Test Point"
+        )
+        calls = self.map._js_calls
+        self.assertTrue(any(call["method"] == "addEntity" for call in calls))
+        self.assertIsInstance(point_id, str)
+
+        # Test adding billboard
+        billboard_id = self.map.add_billboard(40.7128, -74.0060, image_url="test.png")
+        calls = self.map._js_calls
+        self.assertTrue(any(call["method"] == "addEntity" for call in calls))
+
+        # Test adding polyline
+        coordinates = [[40.0, -74.0, 0], [41.0, -75.0, 1000]]
+        polyline_id = self.map.add_polyline(coordinates, width=5, color="#ff0000")
+        calls = self.map._js_calls
+        self.assertTrue(any(call["method"] == "addEntity" for call in calls))
+
+        # Test adding polygon
+        polygon_id = self.map.add_polygon(coordinates, color="#00ff00")
+        calls = self.map._js_calls
+        self.assertTrue(any(call["method"] == "addEntity" for call in calls))
+
+    def test_entity_management(self):
+        """Test entity management."""
+        # Add an entity
+        entity_id = self.map.add_point(40.0, -74.0, name="Test Entity")
+
+        # Remove the entity
+        self.map.remove_entity(entity_id)
+        calls = self.map._js_calls
+        self.assertTrue(any(call["method"] == "removeEntity" for call in calls))
+
+        # Test zoom to entity
+        self.map.zoom_to_entity(entity_id)
+        calls = self.map._js_calls
+        self.assertTrue(any(call["method"] == "zoomToEntity" for call in calls))
+
+    def test_data_sources(self):
+        """Test data source management."""
+        # Test GeoJSON data source
+        geojson_data = {
+            "type": "FeatureCollection",
+            "features": [
+                {
+                    "type": "Feature",
+                    "geometry": {"type": "Point", "coordinates": [0, 0]},
+                    "properties": {"name": "Test Point"},
+                }
+            ],
+        }
+
+        self.map.add_geojson(geojson_data, options={"name": "Test GeoJSON"})
+        calls = self.map._js_calls
+        self.assertTrue(any(call["method"] == "addDataSource" for call in calls))
+
+        # Test KML data source
+        self.map.add_kml("https://example.com/test.kml", options={"name": "Test KML"})
+        calls = self.map._js_calls
+        self.assertTrue(any(call["method"] == "addDataSource" for call in calls))
+
+        # Test CZML data source
+        czml_data = [{"id": "document", "version": "1.0"}]
+        self.map.add_czml(czml_data, options={"name": "Test CZML"})
+        calls = self.map._js_calls
+        self.assertTrue(any(call["method"] == "addDataSource" for call in calls))
+
+    def test_terrain_management(self):
+        """Test terrain management."""
+        # Test Cesium World Terrain
+        self.map.set_cesium_world_terrain(request_water_mask=True)
+        calls = self.map._js_calls
+        self.assertTrue(any(call["method"] == "setTerrain" for call in calls))
+
+        # Test custom terrain
+        self.map.set_terrain({"url": "https://example.com/terrain"})
+        calls = self.map._js_calls
+        self.assertTrue(any(call["method"] == "setTerrain" for call in calls))
+
+        # Test disable terrain
+        self.map.set_terrain(None)
+        calls = self.map._js_calls
+        self.assertTrue(any(call["method"] == "setTerrain" for call in calls))
+
+    def test_imagery_management(self):
+        """Test imagery management."""
+        # Test Bing Maps imagery
+        self.map.set_imagery({"type": "bing", "key": "test_key", "mapStyle": "Aerial"})
+        calls = self.map._js_calls
+        self.assertTrue(any(call["method"] == "setImagery" for call in calls))
+
+        # Test OpenStreetMap imagery
+        self.map.set_imagery({"type": "osm"})
+        calls = self.map._js_calls
+        self.assertTrue(any(call["method"] == "setImagery" for call in calls))
+
+    def test_scene_management(self):
+        """Test scene management."""
+        # Test scene modes
+        self.map.set_scene_mode_3d()
+        calls = self.map._js_calls
+        self.assertTrue(any(call["method"] == "setScene3D" for call in calls))
+
+        self.map.set_scene_mode_2d()
+        calls = self.map._js_calls
+        self.assertTrue(any(call["method"] == "setScene2D" for call in calls))
+
+        self.map.set_scene_mode_columbus()
+        calls = self.map._js_calls
+        self.assertTrue(any(call["method"] == "setSceneColumbusView" for call in calls))
+
+        # Test lighting and fog
+        self.map.enable_lighting(True)
+        calls = self.map._js_calls
+        self.assertTrue(any(call["method"] == "enableLighting" for call in calls))
+
+        self.map.enable_fog(True)
+        calls = self.map._js_calls
+        self.assertTrue(any(call["method"] == "enableFog" for call in calls))
+
+    def test_camera_controls(self):
+        """Test camera controls."""
+        # Test home view
+        self.map.home()
+        calls = self.map._js_calls
+        self.assertTrue(any(call["method"] == "home" for call in calls))
+
+        # Test setting camera position
+        self.map.set_camera_position(
+            40.0, -74.0, 20000000, heading=45, pitch=-60, roll=10
+        )
+        self.assertEqual(self.map.center, [40.0, -74.0])
+        self.assertEqual(self.map.camera_height, 20000000)
+        self.assertEqual(self.map.heading, 45)
+        self.assertEqual(self.map.pitch, -60)
+        self.assertEqual(self.map.roll, 10)
+
+    def test_inheritance_from_mapwidget(self):
+        """Test that CesiumMap inherits all MapWidget functionality."""
+        # Test basic methods work
+        self.map.set_center(40.7128, -74.0060)
+        self.assertEqual(self.map.center, [40.7128, -74.0060])
+
+        # Test event handling
+        callback = Mock()
+        self.map.on_map_event("click", callback)
+        self.assertIn("click", self.map._event_handlers)
+
+    def test_cesium_widget_options(self):
+        """Test Cesium widget configuration options."""
+        # Test with custom options
+        custom_map = CesiumMap(
+            base_layer_picker=False,
+            fullscreen_button=False,
+            vr_button=False,
+            geocoder=False,
+            home_button=False,
+            info_box=False,
+            scene_mode_picker=False,
+            selection_indicator=False,
+            timeline=False,
+            navigation_help_button=False,
+            animation=False,
+            should_animate=False,
+        )
+
+        self.assertFalse(custom_map.base_layer_picker)
+        self.assertFalse(custom_map.fullscreen_button)
+        self.assertFalse(custom_map.timeline)
+        self.assertFalse(custom_map.animation)
+
+
+class TestCesiumMapIntegration(unittest.TestCase):
+    """Test integration between all map types including Cesium."""
+
+    def test_independent_map_instances(self):
+        """Test that all three map types work independently."""
+        # Create one of each type
+        maplibre_map = MapLibreMap(center=[37.7749, -122.4194], zoom=10)
+        mapbox_map = MapboxMap(center=[40.7128, -74.0060], zoom=12)
+        cesium_map = CesiumMap(
+            center=[51.5074, -0.1278], zoom=8, camera_height=25000000
+        )
+
+        # Verify they have different configurations
+        self.assertNotEqual(maplibre_map.center, mapbox_map.center)
+        self.assertNotEqual(mapbox_map.center, cesium_map.center)
+        self.assertNotEqual(maplibre_map.zoom, cesium_map.zoom)
+
+        # Add different features to each
+        maplibre_map.add_geojson_layer(
+            "ml_layer", {"type": "FeatureCollection", "features": []}
+        )
+        mapbox_map.add_geojson_layer(
+            "mb_layer", {"type": "FeatureCollection", "features": []}
+        )
+        cesium_map.add_point(51.5074, -0.1278, name="London")
+
+        # Verify features are independent
+        self.assertIn("ml_layer", maplibre_map.get_layers())
+        self.assertNotIn("ml_layer", mapbox_map.get_layers())
+        self.assertIn("mb_layer", mapbox_map.get_layers())
+        self.assertNotIn("mb_layer", maplibre_map.get_layers())
+
+        # Cesium uses entities, not layers
+        cesium_calls = [
+            call for call in cesium_map._js_calls if call["method"] == "addEntity"
+        ]
+        self.assertEqual(len(cesium_calls), 1)
+
+    def test_different_javascript_modules(self):
+        """Test that different map types use different JavaScript modules."""
+        maplibre_map = MapLibreMap()
+        mapbox_map = MapboxMap()
+        cesium_map = CesiumMap()
+
+        # Check they use different implementations by verifying the content differs
+        maplibre_content = str(maplibre_map._esm)
+        mapbox_content = str(mapbox_map._esm)
+        cesium_content = str(cesium_map._esm)
+
+        # Verify they contain different library imports
+        self.assertIn("maplibre-gl", maplibre_content)
+        self.assertIn("mapbox-gl-js", mapbox_content)
+        self.assertIn("cesium.com", cesium_content)
+
+        # Verify all three are different
+        self.assertNotEqual(maplibre_content, mapbox_content)
+        self.assertNotEqual(mapbox_content, cesium_content)
+        self.assertNotEqual(maplibre_content, cesium_content)
+
+        # Check they use different CSS
+        maplibre_css = str(maplibre_map._css)
+        mapbox_css = str(mapbox_map._css)
+        cesium_css = str(cesium_map._css)
+
+        self.assertNotEqual(maplibre_css, mapbox_css)
+        self.assertNotEqual(mapbox_css, cesium_css)
+        self.assertNotEqual(maplibre_css, cesium_css)
 
 
 if __name__ == "__main__":
