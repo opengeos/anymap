@@ -14,7 +14,7 @@ class MapWidget(anywidget.AnyWidget):
     center = traitlets.List([0.0, 0.0]).tag(sync=True)
     zoom = traitlets.Float(2.0).tag(sync=True)
     width = traitlets.Unicode("100%").tag(sync=True)
-    height = traitlets.Unicode("400px").tag(sync=True)
+    height = traitlets.Unicode("600px").tag(sync=True)
     style = traitlets.Unicode("").tag(sync=True)
 
     # Communication traits
@@ -137,7 +137,7 @@ class MapLibreMap(MapWidget):
         zoom: float = 2.0,
         map_style: str = "https://demotiles.maplibre.org/style.json",
         width: str = "100%",
-        height: str = "400px",
+        height: str = "600px",
         bearing: float = 0.0,
         pitch: float = 0.0,
         **kwargs,

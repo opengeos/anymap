@@ -19,7 +19,7 @@ class TestMapWidget(unittest.TestCase):
         self.assertEqual(self.widget.center, [0.0, 0.0])
         self.assertEqual(self.widget.zoom, 2.0)
         self.assertEqual(self.widget.width, "100%")
-        self.assertEqual(self.widget.height, "400px")
+        self.assertEqual(self.widget.height, "600px")
         self.assertEqual(self.widget._js_calls, [])
         self.assertEqual(self.widget._js_events, [])
 
