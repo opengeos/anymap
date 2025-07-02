@@ -2,7 +2,7 @@ name: docs-build
 on:
     pull_request:
         branches:
-            - master
+            - main
 
 jobs:
     docs-build:
@@ -52,7 +52,7 @@ jobs:
               uses: nwtgck/actions-netlify@v3.0
               with:
                   publish-dir: "./site"
-                  production-branch: master
+                  production-branch: main
                   github-token: ${{ secrets.GITHUB_TOKEN }}
                   deploy-message: "Deploy from GitHub Actions"
                   enable-pull-request-comment: true
