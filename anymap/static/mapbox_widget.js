@@ -1,6 +1,6 @@
 import "https://api.mapbox.com/mapbox-gl-js/v3.13.0/mapbox-gl.js";
 
-export function render({ model, el }) {
+function render({ model, el }) {
   // Create unique ID for this widget instance
   const widgetId = `anymap-mapbox-${Math.random().toString(36).substr(2, 9)}`;
 
@@ -354,3 +354,5 @@ export function render({ model, el }) {
     }
   };
 }
+
+export default { render };
