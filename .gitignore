@@ -3,6 +3,8 @@ __pycache__/
 private/
 *.py[cod]
 *$py.class
+CLAUDE.md
+todo.md
 
 # C extensions
 *.so
