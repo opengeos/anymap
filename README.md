@@ -10,12 +10,12 @@
 
 ## Features
 
-- 🗺️ **Interactive Maps**: Create beautiful, interactive maps in Jupyter notebooks
-- 🔄 **Bidirectional Communication**: Full Python ↔ JavaScript communication
-- 📱 **Multi-cell Support**: Render maps in multiple notebook cells without conflicts
-- 🎯 **MapLibre Integration**: Built-in support for MapLibre GL JS
-- 🛠️ **Extensible**: Easy to add support for other mapping libraries
-- 🚀 **Familiar API**: Similar to ipyleaflet for easy migration
+-   🗺️ **Interactive Maps**: Create beautiful, interactive maps in Jupyter notebooks
+-   🔄 **Bidirectional Communication**: Full Python ↔ JavaScript communication
+-   📱 **Multi-cell Support**: Render maps in multiple notebook cells without conflicts
+-   🎯 **MapLibre Integration**: Built-in support for MapLibre GL JS
+-   🛠️ **Extensible**: Easy to add support for other mapping libraries
+-   🚀 **Familiar API**: Similar to ipyleaflet for easy migration
 
 ## Installation
 
@@ -32,7 +32,7 @@ from anymap import MapLibreMap
 m = MapLibreMap(
     center=[37.7749, -122.4194],  # San Francisco
     zoom=12,
-    height="400px"
+    height="600px"
 )
 m
 ```
@@ -169,9 +169,9 @@ m.call_js_method('easeTo', {
 
 Check out the example notebooks in the `examples/` directory:
 
-- `basic_usage.ipynb` - Basic map creation and interaction
-- `advanced_features.ipynb` - Advanced layer management and styling
-- `multi_cell_test.ipynb` - Multi-cell rendering tests
+-   `basic_usage.ipynb` - Basic map creation and interaction
+-   `advanced_features.ipynb` - Advanced layer management and styling
+-   `multi_cell_test.ipynb` - Multi-cell rendering tests
 
 ## Development
 
@@ -191,11 +191,11 @@ python -m unittest tests.test_anymap -v
 
 ## Roadmap
 
-- ✅ MapLibre GL JS backend
-- 🔲 Mapbox GL JS backend
-- 🔲 Leaflet backend
-- 🔲 Cesium backend
-- 🔲 Potree backend
+-   ✅ MapLibre GL JS backend
+-   🔲 Mapbox GL JS backend
+-   🔲 Leaflet backend
+-   🔲 Cesium backend
+-   🔲 Potree backend
 
 ## Contributing
 

@@ -1,8 +1,12 @@
 import "https://unpkg.com/maplibre-gl@5.5.0/dist/maplibre-gl.js";
 
 export function render({ model, el }) {
+  // Create unique ID for this widget instance
+  const widgetId = `anymap-${Math.random().toString(36).substr(2, 9)}`;
+
   // Create container for the map
   const container = document.createElement("div");
+  container.id = widgetId;
   container.style.width = model.get("width");
   container.style.height = model.get("height");
   container.style.position = "relative";
@@ -12,7 +16,16 @@ export function render({ model, el }) {
   el.style.width = "100%";
   el.style.display = "block";
 
-  // Clear any existing content
+  // Clear any existing content and cleanup
+  if (el._map) {
+    el._map.remove();
+    el._map = null;
+  }
+  if (el._markers) {
+    el._markers.forEach(marker => marker.remove());
+    el._markers = [];
+  }
+
   el.innerHTML = "";
   el.appendChild(container);
 
@@ -30,6 +43,35 @@ export function render({ model, el }) {
   // Store map instance for cleanup
   el._map = map;
   el._markers = [];
+  el._widgetId = widgetId;
+
+  // Restore layers and sources from model state
+  const restoreMapState = () => {
+    const layers = model.get("_layers") || {};
+    const sources = model.get("_sources") || {};
+
+    // Add sources first
+    Object.entries(sources).forEach(([sourceId, sourceConfig]) => {
+      if (!map.getSource(sourceId)) {
+        try {
+          map.addSource(sourceId, sourceConfig);
+        } catch (error) {
+          console.warn(`Failed to restore source ${sourceId}:`, error);
+        }
+      }
+    });
+
+    // Then add layers
+    Object.entries(layers).forEach(([layerId, layerConfig]) => {
+      if (!map.getLayer(layerId)) {
+        try {
+          map.addLayer(layerConfig);
+        } catch (error) {
+          console.warn(`Failed to restore layer ${layerId}:`, error);
+        }
+      }
+    });
+  };
 
   // Setup resize observer to handle container size changes
   let resizeObserver;
@@ -50,6 +92,8 @@ export function render({ model, el }) {
   map.on('load', () => {
     setTimeout(() => {
       map.resize();
+      // Restore state after map is fully loaded
+      restoreMapState();
     }, 200);
   });
 
@@ -154,6 +198,11 @@ export function render({ model, el }) {
           const [sourceId, sourceConfig] = args;
           if (!map.getSource(sourceId)) {
             map.addSource(sourceId, sourceConfig);
+            // Persist source in model state
+            const currentSources = model.get("_sources") || {};
+            currentSources[sourceId] = sourceConfig;
+            model.set("_sources", currentSources);
+            model.save_changes();
           }
           break;
 
@@ -161,13 +210,24 @@ export function render({ model, el }) {
           const removeSourceId = args[0];
           if (map.getSource(removeSourceId)) {
             map.removeSource(removeSourceId);
+            // Remove from model state
+            const currentSources = model.get("_sources") || {};
+            delete currentSources[removeSourceId];
+            model.set("_sources", currentSources);
+            model.save_changes();
           }
           break;
 
         case 'addLayer':
           const [layerConfig, layerId] = args;
-          if (!map.getLayer(layerId || layerConfig.id)) {
+          const actualLayerId = layerId || layerConfig.id;
+          if (!map.getLayer(actualLayerId)) {
             map.addLayer(layerConfig);
+            // Persist layer in model state
+            const currentLayers = model.get("_layers") || {};
+            currentLayers[actualLayerId] = layerConfig;
+            model.set("_layers", currentLayers);
+            model.save_changes();
           }
           break;
 
@@ -175,6 +235,11 @@ export function render({ model, el }) {
           const removeLayerId = args[0];
           if (map.getLayer(removeLayerId)) {
             map.removeLayer(removeLayerId);
+            // Remove from model state
+            const currentLayers = model.get("_layers") || {};
+            delete currentLayers[removeLayerId];
+            model.set("_layers", currentLayers);
+            model.save_changes();
           }
           break;
 
