@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-         <loc>https://opengeos.github.io/anymap/</loc>
+         <loc>https://anymap.gishub.org/</loc>
          <lastmod>2025-07-02</lastmod>
     </url>
     <url>
-         <loc>https://opengeos.github.io/anymap/anymap/</loc>
+         <loc>https://anymap.gishub.org/anymap/</loc>
          <lastmod>2025-07-02</lastmod>
     </url>
     <url>
-         <loc>https://opengeos.github.io/anymap/changelog/</loc>
+         <loc>https://anymap.gishub.org/changelog/</loc>
          <lastmod>2025-07-02</lastmod>
     </url>
     <url>
-         <loc>https://opengeos.github.io/anymap/common/</loc>
+         <loc>https://anymap.gishub.org/common/</loc>
          <lastmod>2025-07-02</lastmod>
     </url>
     <url>
-         <loc>https://opengeos.github.io/anymap/contributing/</loc>
+         <loc>https://anymap.gishub.org/contributing/</loc>
          <lastmod>2025-07-02</lastmod>
     </url>
     <url>
-         <loc>https://opengeos.github.io/anymap/faq/</loc>
+         <loc>https://anymap.gishub.org/faq/</loc>
          <lastmod>2025-07-02</lastmod>
     </url>
     <url>
-         <loc>https://opengeos.github.io/anymap/installation/</loc>
+         <loc>https://anymap.gishub.org/installation/</loc>
          <lastmod>2025-07-02</lastmod>
     </url>
     <url>
-         <loc>https://opengeos.github.io/anymap/usage/</loc>
+         <loc>https://anymap.gishub.org/usage/</loc>
          <lastmod>2025-07-02</lastmod>
     </url>
     <url>
-         <loc>https://opengeos.github.io/anymap/examples/intro/</loc>
+         <loc>https://anymap.gishub.org/examples/intro/</loc>
          <lastmod>2025-07-02</lastmod>
     </url>
 </urlset>
