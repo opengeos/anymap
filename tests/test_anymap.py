@@ -4,7 +4,7 @@
 
 import unittest
 from unittest.mock import Mock, patch
-from anymap import MapWidget, MapLibreMap
+from anymap import MapWidget, MapLibreMap, MapboxMap
 
 
 class TestMapWidget(unittest.TestCase):
@@ -408,6 +408,158 @@ class TestLayerPersistence(unittest.TestCase):
 
         self.assertNotIn("temp", map_widget._layers)
         self.assertNotIn("test", map_widget._sources)
+
+
+class TestMapboxMap(unittest.TestCase):
+    """Test cases for the MapboxMap class."""
+
+    def setUp(self):
+        """Set up test fixtures."""
+        self.map = MapboxMap(
+            center=[37.7749, -122.4194],
+            zoom=12,
+            map_style="mapbox://styles/mapbox/streets-v12",
+        )
+
+    def test_initialization(self):
+        """Test Mapbox map initialization."""
+        self.assertEqual(self.map.center, [37.7749, -122.4194])
+        self.assertEqual(self.map.zoom, 12)
+        self.assertEqual(self.map.map_style, "mapbox://styles/mapbox/streets-v12")
+        self.assertEqual(self.map.bearing, 0.0)
+        self.assertEqual(self.map.pitch, 0.0)
+        self.assertTrue(self.map.antialias)
+        # Token handling depends on environment
+
+    def test_access_token_handling(self):
+        """Test access token management."""
+        # Test setting access token
+        test_token = "pk.test_token"
+        self.map.set_access_token(test_token)
+        self.assertEqual(self.map.access_token, test_token)
+
+        # Test creating map with custom token
+        custom_map = MapboxMap(access_token="pk.custom_token")
+        self.assertEqual(custom_map.access_token, "pk.custom_token")
+
+    def test_default_access_token(self):
+        """Test default access token retrieval."""
+        import warnings
+
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            token = MapboxMap._get_default_access_token()
+            # Token could be empty if no environment variable set
+            self.assertIsInstance(token, str)
+
+    def test_mapbox_specific_methods(self):
+        """Test Mapbox-specific methods."""
+        # Test adding controls
+        self.map.add_control("navigation", "top-left")
+        calls = self.map._js_calls
+        self.assertTrue(any(call["method"] == "addControl" for call in calls))
+
+        # Test terrain
+        terrain_config = {"source": "mapbox-terrain", "exaggeration": 1.5}
+        self.map.set_terrain(terrain_config)
+        calls = self.map._js_calls
+        self.assertTrue(any(call["method"] == "setTerrain" for call in calls))
+
+        # Test fog
+        fog_config = {"color": "rgb(186, 210, 235)", "high-color": "rgb(36, 92, 223)"}
+        self.map.set_fog(fog_config)
+        calls = self.map._js_calls
+        self.assertTrue(any(call["method"] == "setFog" for call in calls))
+
+    def test_add_3d_buildings(self):
+        """Test adding 3D buildings layer."""
+        self.map.add_3d_buildings()
+
+        # Check that the layer was added
+        layers = self.map.get_layers()
+        self.assertIn("3d-buildings", layers)
+
+        layer_config = layers["3d-buildings"]
+        self.assertEqual(layer_config["type"], "fill-extrusion")
+        self.assertEqual(layer_config["source"], "composite")
+        self.assertEqual(layer_config["source-layer"], "building")
+
+    def test_mapbox_styles(self):
+        """Test Mapbox style handling."""
+        # Test setting standard Mapbox style
+        self.map.set_style("mapbox://styles/mapbox/satellite-v9")
+        self.assertEqual(self.map.map_style, "mapbox://styles/mapbox/satellite-v9")
+
+        # Test setting custom style object
+        custom_style = {"version": 8, "sources": {}, "layers": []}
+        self.map.set_style(custom_style)
+
+        calls = self.map._js_calls
+        self.assertTrue(any(call["method"] == "setStyle" for call in calls))
+
+    def test_inheritance_from_mapwidget(self):
+        """Test that MapboxMap inherits all MapWidget functionality."""
+        # Test basic methods work
+        self.map.set_center(40.7128, -74.0060)
+        self.assertEqual(self.map.center, [40.7128, -74.0060])
+
+        # Test layer management
+        layer_config = {"id": "test", "type": "circle", "source": "test"}
+        self.map.add_layer("test", layer_config)
+        self.assertIn("test", self.map.get_layers())
+
+        # Test source management
+        source_config = {"type": "geojson", "data": {}}
+        self.map.add_source("test", source_config)
+        self.assertIn("test", self.map.get_sources())
+
+
+class TestMapboxMapboxInteraction(unittest.TestCase):
+    """Test interaction between MapLibre and Mapbox maps."""
+
+    def test_independent_map_instances(self):
+        """Test that MapLibre and Mapbox maps work independently."""
+        # Create one of each type
+        maplibre_map = MapLibreMap(center=[37.7749, -122.4194], zoom=10)
+        mapbox_map = MapboxMap(center=[40.7128, -74.0060], zoom=12)
+
+        # Verify they have different configurations
+        self.assertNotEqual(maplibre_map.center, mapbox_map.center)
+        self.assertNotEqual(maplibre_map.zoom, mapbox_map.zoom)
+        self.assertNotEqual(maplibre_map.map_style, mapbox_map.map_style)
+
+        # Add different layers to each
+        maplibre_map.add_geojson_layer(
+            "ml_layer", {"type": "FeatureCollection", "features": []}
+        )
+        mapbox_map.add_geojson_layer(
+            "mb_layer", {"type": "FeatureCollection", "features": []}
+        )
+
+        # Verify layers are independent
+        self.assertIn("ml_layer", maplibre_map.get_layers())
+        self.assertNotIn("ml_layer", mapbox_map.get_layers())
+        self.assertIn("mb_layer", mapbox_map.get_layers())
+        self.assertNotIn("mb_layer", maplibre_map.get_layers())
+
+    def test_different_javascript_modules(self):
+        """Test that different map types use different JavaScript modules."""
+        maplibre_map = MapLibreMap()
+        mapbox_map = MapboxMap()
+
+        # Check they use different implementations by verifying the content differs
+        maplibre_content = str(maplibre_map._esm)
+        mapbox_content = str(mapbox_map._esm)
+
+        # Verify they contain different library imports
+        self.assertIn("maplibre-gl", maplibre_content)
+        self.assertIn("mapbox-gl-js", mapbox_content)
+        self.assertNotEqual(maplibre_content, mapbox_content)
+
+        # Check they use different CSS
+        maplibre_css = str(maplibre_map._css)
+        mapbox_css = str(mapbox_map._css)
+        self.assertNotEqual(maplibre_css, mapbox_css)
 
 
 if __name__ == "__main__":
