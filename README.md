@@ -1,7 +1,11 @@
 # AnyMap
 
+[![image](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/opengeos/anymap/HEAD)
+[![image](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/opengeos/anymap/blob/main)
 [![image](https://img.shields.io/pypi/v/anymap.svg)](https://pypi.python.org/pypi/anymap)
 [![image](https://img.shields.io/conda/vn/conda-forge/anymap.svg)](https://anaconda.org/conda-forge/anymap)
+
+<!-- [![Docker Image](https://img.shields.io/badge/docker-opengeos%2Fanymap-blue?logo=docker)](https://hub.docker.com/r/opengeos/anymap/tags)     -->
 
 **A Python package for creating interactive maps with anywidget and JavaScript mapping libraries**
 
