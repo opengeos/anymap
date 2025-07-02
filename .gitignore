@@ -5,6 +5,7 @@ private/
 *$py.class
 CLAUDE.md
 todo.md
+private/
 
 # C extensions
 *.so
