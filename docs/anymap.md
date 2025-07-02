@@ -1,0 +1,4 @@
+
+# anymap module
+
+::: anymap.anymap
