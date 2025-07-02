@@ -2,13 +2,11 @@ on:
     push:
         branches:
             - main
-            - master
     pull_request:
         branches:
             - main
-            - master
 
-name: Linux build
+name: build
 jobs:
     py-check:
         runs-on: ${{ matrix.config.os }}
@@ -17,31 +15,29 @@ jobs:
             fail-fast: false
             matrix:
                 config:
+                    - { os: windows-latest, py: "3.12" }
+                    - { os: macOS-latest, py: "3.12" }
                     - { os: ubuntu-latest, py: "3.9" }
                     - { os: ubuntu-latest, py: "3.10" }
                     - { os: ubuntu-latest, py: "3.11" }
                     - { os: ubuntu-latest, py: "3.12" }
+                    - { os: ubuntu-latest, py: "3.13" }
+
+        env:
+            SDKROOT: /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
         steps:
-            - name: Checkout Code
-              uses: actions/checkout@v4
-            - name: Setup Python
-              uses: actions/setup-python@v5
+            - name: CHECKOUT CODE
+              uses: actions/checkout@v3
+            - name: SETUP PYTHON
+              uses: actions/setup-python@v4
               with:
                   python-version: ${{ matrix.config.py }}
-            - name: Install GDAL
-              run: |
-                  python -m pip install --upgrade pip
-                  pip install --no-cache-dir Cython
-                  pip install --find-links=https://girder.github.io/large_image_wheels --no-cache GDAL
-            - name: Test GDAL installation
-              run: |
-                  python -c "from osgeo import gdal"
-                  gdalinfo --version
             - name: Install dependencies
               run: |
+                  python -m pip install --upgrade pip
+                  pip install --user --no-cache-dir Cython
                   pip install --user -r requirements.txt
-                  pip install .
+                  pip install --user .
             - name: PKG-TEST
               run: |
                   python -m unittest discover tests/
-
