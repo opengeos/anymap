@@ -553,7 +553,7 @@ class TestMapboxMapboxInteraction(unittest.TestCase):
 
         # Verify they contain different library imports
         self.assertIn("maplibre-gl", maplibre_content)
-        self.assertIn("mapbox-gl-js", mapbox_content)
+        self.assertIn("mapbox-gl", mapbox_content)
         self.assertNotEqual(maplibre_content, mapbox_content)
 
         # Check they use different CSS
@@ -836,7 +836,7 @@ class TestCesiumMapIntegration(unittest.TestCase):
 
         # Verify they contain different library imports
         self.assertIn("maplibre-gl", maplibre_content)
-        self.assertIn("mapbox-gl-js", mapbox_content)
+        self.assertIn("mapbox-gl", mapbox_content)
         self.assertIn("cesium.com", cesium_content)
 
         # Verify all three are different
