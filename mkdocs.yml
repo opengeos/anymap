@@ -1,10 +1,10 @@
 site_name: anymap
-site_description: A Pytohon package for create interactive maps with anywidget and Javascript mapping libraries
+site_description: A Python package for creating interactive maps with anywidget and JavaScript mapping libraries
 site_author: giswqs
 site_url: https://anymap.gishub.org
 repo_url: https://github.com/opengeos/anymap
 
-copyright: "Copyright &copy; 2024 - 2024 Qiusheng Wu"
+copyright: "Copyright &copy; 2025 - 2025 Qiusheng Wu"
 
 theme:
     palette:
@@ -80,7 +80,12 @@ nav:
     - Changelog: changelog.md
     - Report Issues: https://github.com/opengeos/anymap/issues
     - Examples:
-          - examples/intro.ipynb
+          - examples/basic_usage.ipynb
+          - examples/maplibre_example.ipynb
+          - examples/mapbox_example.ipynb
+          - examples/cesium_example.ipynb
+          - examples/deckgl_example.ipynb
+          - examples/potree_example.ipynb
     - API Reference:
           - anymap module: anymap.md
-          - common module: common.md
+          - utils module: utils.md
