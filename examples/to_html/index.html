@@ -12,13 +12,9 @@
         <meta name="author" content="giswqs">
       
       
-        <link rel="canonical" href="https://anymap.gishub.org/examples/basic_usage/">
+        <link rel="canonical" href="https://anymap.gishub.org/examples/to_html/">
       
       
-        <link rel="prev" href="../../changelog/">
-      
-      
-        <link rel="next" href="../maplibre_example/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -26,7 +22,7 @@
     
     
       
-        <title>Basic usage - anymap</title>
+        <title>To html - anymap</title>
       
     
     
@@ -82,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#anymap-basic-usage-examples" class="md-skip">
+        <a href="#html-export-example" class="md-skip">
           Skip to content
         </a>
       
@@ -118,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Basic usage
+              To html
             
           </span>
         </div>
@@ -420,20 +416,18 @@
       
   
   
-    
   
   
-  
     
     
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
         
           
           <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
@@ -449,7 +443,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             Examples
@@ -460,32 +454,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    Basic usage
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../basic_usage/" class="md-nav__link">
         
   
   
@@ -496,98 +468,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#creating-a-basic-map" class="md-nav__link">
-    <span class="md-ellipsis">
-      Creating a Basic Map
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#changing-map-properties" class="md-nav__link">
-    <span class="md-ellipsis">
-      Changing Map Properties
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#adding-markers" class="md-nav__link">
-    <span class="md-ellipsis">
-      Adding Markers
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#working-with-geojson-data" class="md-nav__link">
-    <span class="md-ellipsis">
-      Working with GeoJSON Data
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#event-handling" class="md-nav__link">
-    <span class="md-ellipsis">
-      Event Handling
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#multi-cell-rendering-test" class="md-nav__link">
-    <span class="md-ellipsis">
-      Multi-cell Rendering Test
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#changing-map-styles" class="md-nav__link">
-    <span class="md-ellipsis">
-      Changing Map Styles
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#calling-javascript-methods" class="md-nav__link">
-    <span class="md-ellipsis">
-      Calling JavaScript Methods
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -833,74 +713,104 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#creating-a-basic-map" class="md-nav__link">
+  <a href="#maplibre-export-example" class="md-nav__link">
     <span class="md-ellipsis">
-      Creating a Basic Map
+      MapLibre Export Example
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="MapLibre Export Example">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#export-maplibre-map-to-html" class="md-nav__link">
+    <span class="md-ellipsis">
+      Export MapLibre Map to HTML
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#preview-the-html-content" class="md-nav__link">
+    <span class="md-ellipsis">
+      Preview the HTML Content
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mapbox-export-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mapbox Export Example
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#changing-map-properties" class="md-nav__link">
+  <a href="#advanced-export-options" class="md-nav__link">
     <span class="md-ellipsis">
-      Changing Map Properties
+      Advanced Export Options
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#adding-markers" class="md-nav__link">
+  <a href="#return-html-as-string-no-file" class="md-nav__link">
     <span class="md-ellipsis">
-      Adding Markers
+      Return HTML as String (No File)
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#working-with-geojson-data" class="md-nav__link">
+  <a href="#summary" class="md-nav__link">
     <span class="md-ellipsis">
-      Working with GeoJSON Data
+      Summary
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✨ Features:
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#event-handling" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#use-cases" class="md-nav__link">
     <span class="md-ellipsis">
-      Event Handling
+      🎯 Use Cases:
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#multi-cell-rendering-test" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#generated-files" class="md-nav__link">
     <span class="md-ellipsis">
-      Multi-cell Rendering Test
+      📂 Generated Files:
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#changing-map-styles" class="md-nav__link">
-    <span class="md-ellipsis">
-      Changing Map Styles
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#calling-javascript-methods" class="md-nav__link">
-    <span class="md-ellipsis">
-      Calling JavaScript Methods
-    </span>
-  </a>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -917,7 +827,7 @@
               <article class="md-content__inner md-typeset">
                 
 
-    <a href="/examples/basic_usage/basic_usage.ipynb" title="Download Notebook" class="md-content__button md-icon">
+    <a href="/examples/to_html/to_html.ipynb" title="Download Notebook" class="md-content__button md-icon">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 20h14v-2H5m14-9h-4V3H9v6H5l7 7z"/></svg>
     </a>
 
@@ -1400,7 +1310,8 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="anymap-basic-usage-examples">AnyMap Basic Usage Examples<a class="anchor-link" href="#anymap-basic-usage-examples">¶</a></h1><p>This notebook demonstrates the basic usage of the AnyMap package for creating interactive maps with MapLibre GL JS.</p>
+<h1 id="html-export-example">HTML Export Example<a class="anchor-link" href="#html-export-example">¶</a></h1><p>This notebook demonstrates how to export anymap maps to standalone HTML files using the <code>to_html()</code> method.</p>
+<p>The exported HTML files are self-contained and can be opened in any web browser while maintaining all map layers and interactivity.</p>
 </div>
 </div>
 </div>
@@ -1423,12 +1334,10 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Import the required modules</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">anymap</span><span class="w"> </span><span class="kn">import</span> <span class="n">MapLibreMap</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">anymap</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-1"># Import the required modules
-from anymap import MapLibreMap
+<div class="clipboard-copy-txt" id="cell-1">import anymap
 import json</div>
 </div>
 </div>
@@ -1442,7 +1351,7 @@ import json</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="creating-a-basic-map">Creating a Basic Map<a class="anchor-link" href="#creating-a-basic-map">¶</a></h2><p>Let's start by creating a simple map centered on San Francisco.</p>
+<h2 id="maplibre-export-example">MapLibre Export Example<a class="anchor-link" href="#maplibre-export-example">¶</a></h2><p>Create a MapLibre map with various layer types and export it to HTML.</p>
 </div>
 </div>
 </div>
@@ -1465,20 +1374,110 @@ import json</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Create a basic map</span>
-<span class="n">m</span> <span class="o">=</span> <span class="n">MapLibreMap</span><span class="p">(</span>
-    <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mf">37.7749</span><span class="p">,</span> <span class="o">-</span><span class="mf">122.4194</span><span class="p">],</span>  <span class="c1"># San Francisco coordinates [lat, lng]</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Create a MapLibre map</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">anymap</span><span class="o">.</span><span class="n">MapLibreMap</span><span class="p">(</span>
+    <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mf">37.7749</span><span class="p">,</span> <span class="o">-</span><span class="mf">122.4194</span><span class="p">],</span>  <span class="c1"># San Francisco</span>
     <span class="n">zoom</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
-    <span class="n">height</span><span class="o">=</span><span class="s2">"500px"</span><span class="p">,</span>
+    <span class="n">map_style</span><span class="o">=</span><span class="s2">"https://demotiles.maplibre.org/style.json"</span><span class="p">,</span>
 <span class="p">)</span>
+
+<span class="c1"># Add a GeoJSON layer with some sample data</span>
+<span class="n">sample_geojson</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"FeatureCollection"</span><span class="p">,</span>
+    <span class="s2">"features"</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Feature"</span><span class="p">,</span>
+            <span class="s2">"geometry"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Point"</span><span class="p">,</span> <span class="s2">"coordinates"</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">122.4194</span><span class="p">,</span> <span class="mf">37.7749</span><span class="p">]},</span>
+            <span class="s2">"properties"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"San Francisco"</span><span class="p">,</span>
+                <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"The beautiful city by the bay"</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Feature"</span><span class="p">,</span>
+            <span class="s2">"geometry"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Point"</span><span class="p">,</span> <span class="s2">"coordinates"</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">122.4594</span><span class="p">,</span> <span class="mf">37.7849</span><span class="p">]},</span>
+            <span class="s2">"properties"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Golden Gate Park"</span><span class="p">,</span>
+                <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Large urban park"</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">},</span>
+    <span class="p">],</span>
+<span class="p">}</span>
+
+<span class="c1"># Add the GeoJSON layer</span>
+<span class="n">m</span><span class="o">.</span><span class="n">add_geojson_layer</span><span class="p">(</span>
+    <span class="n">layer_id</span><span class="o">=</span><span class="s2">"sample_points"</span><span class="p">,</span>
+    <span class="n">geojson_data</span><span class="o">=</span><span class="n">sample_geojson</span><span class="p">,</span>
+    <span class="n">layer_type</span><span class="o">=</span><span class="s2">"circle"</span><span class="p">,</span>
+    <span class="n">paint</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">"circle-radius"</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="s2">"circle-color"</span><span class="p">:</span> <span class="s2">"#ff6b6b"</span><span class="p">,</span>
+        <span class="s2">"circle-stroke-color"</span><span class="p">:</span> <span class="s2">"#ffffff"</span><span class="p">,</span>
+        <span class="s2">"circle-stroke-width"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">)</span>
+
+<span class="c1"># Add a raster layer (OpenStreetMap tiles)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">add_raster_layer</span><span class="p">(</span>
+    <span class="n">layer_id</span><span class="o">=</span><span class="s2">"osm_overlay"</span><span class="p">,</span>
+    <span class="n">source_url</span><span class="o">=</span><span class="s2">"https://tile.openstreetmap.org/</span><span class="si">{z}</span><span class="s2">/</span><span class="si">{x}</span><span class="s2">/</span><span class="si">{y}</span><span class="s2">.png"</span><span class="p">,</span>
+    <span class="n">paint</span><span class="o">=</span><span class="p">{</span><span class="s2">"raster-opacity"</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">},</span>
+<span class="p">)</span>
+
+<span class="c1"># Display the map</span>
 <span class="n">m</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-2"># Create a basic map
-m = MapLibreMap(
-    center=[37.7749, -122.4194],  # San Francisco coordinates [lat, lng]
+<div class="clipboard-copy-txt" id="cell-2"># Create a MapLibre map
+m = anymap.MapLibreMap(
+    center=[37.7749, -122.4194],  # San Francisco
     zoom=12,
-    height="500px",
+    map_style="https://demotiles.maplibre.org/style.json",
 )
+
+# Add a GeoJSON layer with some sample data
+sample_geojson = {
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "geometry": {"type": "Point", "coordinates": [-122.4194, 37.7749]},
+            "properties": {
+                "name": "San Francisco",
+                "description": "The beautiful city by the bay",
+            },
+        },
+        {
+            "type": "Feature",
+            "geometry": {"type": "Point", "coordinates": [-122.4594, 37.7849]},
+            "properties": {
+                "name": "Golden Gate Park",
+                "description": "Large urban park",
+            },
+        },
+    ],
+}
+
+# Add the GeoJSON layer
+m.add_geojson_layer(
+    layer_id="sample_points",
+    geojson_data=sample_geojson,
+    layer_type="circle",
+    paint={
+        "circle-radius": 10,
+        "circle-color": "#ff6b6b",
+        "circle-stroke-color": "#ffffff",
+        "circle-stroke-width": 2,
+    },
+)
+
+# Add a raster layer (OpenStreetMap tiles)
+m.add_raster_layer(
+    layer_id="osm_overlay",
+    source_url="https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+    paint={"raster-opacity": 0.3},
+)
+
+# Display the map
 m</div>
 </div>
 </div>
@@ -1490,12 +1489,12 @@ m</div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
 <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[2]:</div>
-<div class="jupyter-widgets jp-OutputArea-output jp-OutputArea-executeResult" id="26a215f2-d972-460d-af90-88a0941af580" tabindex="0">
+<div class="jupyter-widgets jp-OutputArea-output jp-OutputArea-executeResult" id="3fc154a8-bdf8-40f0-90df-b7d62f27a94b" tabindex="0">
 <script type="text/javascript">
-var element = document.getElementById('26a215f2-d972-460d-af90-88a0941af580');
+var element = document.getElementById('3fc154a8-bdf8-40f0-90df-b7d62f27a94b');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
-{"version_major": 2, "version_minor": 1, "model_id": "d43eb210a70c4e74b56ebce1e80dc3c6"}
+{"version_major": 2, "version_minor": 1, "model_id": "961b5987e1084319ba102ac47256cbee"}
 </script>
 </div>
 </div>
@@ -1509,12 +1508,12 @@ var element = document.getElementById('26a215f2-d972-460d-af90-88a0941af580');
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="changing-map-properties">Changing Map Properties<a class="anchor-link" href="#changing-map-properties">¶</a></h2><p>You can dynamically change map properties after creation:</p>
+<h3 id="export-maplibre-map-to-html">Export MapLibre Map to HTML<a class="anchor-link" href="#export-maplibre-map-to-html">¶</a></h3><p>Now let's export this map to a standalone HTML file:</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1532,20 +1531,62 @@ var element = document.getElementById('26a215f2-d972-460d-af90-88a0941af580');
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Change the center and zoom</span>
-<span class="n">m</span><span class="o">.</span><span class="n">set_center</span><span class="p">(</span><span class="mf">40.7128</span><span class="p">,</span> <span class="o">-</span><span class="mf">74.0060</span><span class="p">)</span>  <span class="c1"># New York City</span>
-<span class="n">m</span><span class="o">.</span><span class="n">set_zoom</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Export to HTML file</span>
+<span class="n">html_content</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">to_html</span><span class="p">(</span>
+    <span class="n">filename</span><span class="o">=</span><span class="s2">"maplibre_export.html"</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">"San Francisco Map - MapLibre Export"</span><span class="p">,</span>
+    <span class="n">width</span><span class="o">=</span><span class="s2">"100%"</span><span class="p">,</span>
+    <span class="n">height</span><span class="o">=</span><span class="s2">"700px"</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"✅ Map exported to 'maplibre_export.html'"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"📄 HTML file size: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">html_content</span><span class="p">)</span><span class="si">}</span><span class="s2"> characters"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"🌐 You can now open the HTML file in any web browser!"</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-3"># Change the center and zoom
-m.set_center(40.7128, -74.0060)  # New York City
-m.set_zoom(10)</div>
+<div class="clipboard-copy-txt" id="cell-3"># Export to HTML file
+html_content = m.to_html(
+    filename="maplibre_export.html",
+    title="San Francisco Map - MapLibre Export",
+    width="100%",
+    height="700px",
+)
+
+print("✅ Map exported to 'maplibre_export.html'")
+print(f"📄 HTML file size: {len(html_content)} characters")
+print("🌐 You can now open the HTML file in any web browser!")</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>✅ Map exported to 'maplibre_export.html'
+📄 HTML file size: 4555 characters
+🌐 You can now open the HTML file in any web browser!
+</pre>
 </div>
 </div>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h3 id="preview-the-html-content">Preview the HTML Content<a class="anchor-link" href="#preview-the-html-content">¶</a></h3><p>Let's take a look at the generated HTML structure:</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1563,13 +1604,120 @@ m.set_zoom(10)</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Use fly_to for smooth animation</span>
-<span class="n">m</span><span class="o">.</span><span class="n">fly_to</span><span class="p">(</span><span class="mf">51.5074</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1278</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>  <span class="c1"># London</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Show the first 1000 characters of the HTML</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"HTML Preview (first 1000 characters):"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"="</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">html_content</span><span class="p">[:</span><span class="mi">1000</span><span class="p">]</span> <span class="o">+</span> <span class="s2">"..."</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"="</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+
+<span class="c1"># Check what layers are included</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">🗺️  Layers included in export:"</span><span class="p">)</span>
+<span class="k">if</span> <span class="s2">"sample_points"</span> <span class="ow">in</span> <span class="n">html_content</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"  ✓ Sample points layer"</span><span class="p">)</span>
+<span class="k">if</span> <span class="s2">"osm_overlay"</span> <span class="ow">in</span> <span class="n">html_content</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"  ✓ OpenStreetMap overlay layer"</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">📍 Map configuration:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  • Center: </span><span class="si">{</span><span class="n">m</span><span class="o">.</span><span class="n">center</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  • Zoom: </span><span class="si">{</span><span class="n">m</span><span class="o">.</span><span class="n">zoom</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  • Style: </span><span class="si">{</span><span class="n">m</span><span class="o">.</span><span class="n">map_style</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-4"># Use fly_to for smooth animation
-m.fly_to(51.5074, -0.1278, zoom=14)  # London</div>
+<div class="clipboard-copy-txt" id="cell-4"># Show the first 1000 characters of the HTML
+print("HTML Preview (first 1000 characters):")
+print("=" * 50)
+print(html_content[:1000] + "...")
+print("=" * 50)
+
+# Check what layers are included
+print("\n🗺️  Layers included in export:")
+if "sample_points" in html_content:
+    print("  ✓ Sample points layer")
+if "osm_overlay" in html_content:
+    print("  ✓ OpenStreetMap overlay layer")
+
+print("\n📍 Map configuration:")
+print(f"  • Center: {m.center}")
+print(f"  • Zoom: {m.zoom}")
+print(f"  • Style: {m.map_style}")</div>
 </div>
 </div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>HTML Preview (first 1000 characters):
+==================================================
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;San Francisco Map - MapLibre Export&lt;/title&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"&gt;&lt;/script&gt;
+    &lt;link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet"&gt;
+    &lt;style&gt;
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        #map {
+            width: 100%;
+            height: 700px;
+            border: 1px solid #ccc;
+        }
+        h1 {
+            margin-top: 0;
+            color: #333;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;San Francisco Map - MapLibre Export&lt;/h1&gt;
+    &lt;div id="map"&gt;&lt;/div&gt;
+
+    &lt;script&gt;
+        // Map state from Python
+        const mapState = {
+  "center": [
+    37.7749,
+    -122.4194
+  ],
+  "zoom": 12.0,
+  "width": "100%",
+  "height": "700px",
+  "style": "",
+  "_layers": {
+    "sampl...
+==================================================
+
+🗺️  Layers included in export:
+  ✓ Sample points layer
+  ✓ OpenStreetMap overlay layer
+
+📍 Map configuration:
+  • Center: [37.7749, -122.4194]
+  • Zoom: 12.0
+  • Style: https://demotiles.maplibre.org/style.json
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="mapbox-export-example">Mapbox Export Example<a class="anchor-link" href="#mapbox-export-example">¶</a></h2><p>Now let's create a Mapbox map and export it to HTML. Note that you'll need a Mapbox access token for this to work properly.</p>
 </div>
 </div>
 </div>
@@ -1592,9 +1740,101 @@ m.fly_to(51.5074, -0.1278, zoom=14)  # London</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">m</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Create a Mapbox map (you'll need to set your access token)</span>
+<span class="c1"># You can set the token via environment variable MAPBOX_ACCESS_TOKEN</span>
+<span class="c1"># or pass it directly as access_token parameter</span>
+
+<span class="n">m_mapbox</span> <span class="o">=</span> <span class="n">anymap</span><span class="o">.</span><span class="n">MapboxMap</span><span class="p">(</span>
+    <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mf">40.7128</span><span class="p">,</span> <span class="o">-</span><span class="mf">74.0060</span><span class="p">],</span>  <span class="c1"># New York</span>
+    <span class="n">zoom</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span>
+    <span class="n">map_style</span><span class="o">=</span><span class="s2">"mapbox://styles/mapbox/streets-v12"</span><span class="p">,</span>
+    <span class="c1"># access_token="your_mapbox_token_here"  # Uncomment and add your token</span>
+<span class="p">)</span>
+
+<span class="c1"># Add some NYC landmarks</span>
+<span class="n">nyc_landmarks</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"FeatureCollection"</span><span class="p">,</span>
+    <span class="s2">"features"</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Feature"</span><span class="p">,</span>
+            <span class="s2">"geometry"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Point"</span><span class="p">,</span> <span class="s2">"coordinates"</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">74.0445</span><span class="p">,</span> <span class="mf">40.6892</span><span class="p">]},</span>
+            <span class="s2">"properties"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Statue of Liberty"</span><span class="p">},</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Feature"</span><span class="p">,</span>
+            <span class="s2">"geometry"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Point"</span><span class="p">,</span> <span class="s2">"coordinates"</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">73.9857</span><span class="p">,</span> <span class="mf">40.7484</span><span class="p">]},</span>
+            <span class="s2">"properties"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Empire State Building"</span><span class="p">},</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Feature"</span><span class="p">,</span>
+            <span class="s2">"geometry"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Point"</span><span class="p">,</span> <span class="s2">"coordinates"</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">73.9781</span><span class="p">,</span> <span class="mf">40.7549</span><span class="p">]},</span>
+            <span class="s2">"properties"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Times Square"</span><span class="p">},</span>
+        <span class="p">},</span>
+    <span class="p">],</span>
+<span class="p">}</span>
+
+<span class="n">m_mapbox</span><span class="o">.</span><span class="n">add_geojson_layer</span><span class="p">(</span>
+    <span class="n">layer_id</span><span class="o">=</span><span class="s2">"nyc_landmarks"</span><span class="p">,</span>
+    <span class="n">geojson_data</span><span class="o">=</span><span class="n">nyc_landmarks</span><span class="p">,</span>
+    <span class="n">layer_type</span><span class="o">=</span><span class="s2">"circle"</span><span class="p">,</span>
+    <span class="n">paint</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">"circle-radius"</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+        <span class="s2">"circle-color"</span><span class="p">:</span> <span class="s2">"#4264fb"</span><span class="p">,</span>
+        <span class="s2">"circle-stroke-color"</span><span class="p">:</span> <span class="s2">"#ffffff"</span><span class="p">,</span>
+        <span class="s2">"circle-stroke-width"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">)</span>
+
+<span class="c1"># Display the map</span>
+<span class="n">m_mapbox</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-5">m</div>
+<div class="clipboard-copy-txt" id="cell-5"># Create a Mapbox map (you'll need to set your access token)
+# You can set the token via environment variable MAPBOX_ACCESS_TOKEN
+# or pass it directly as access_token parameter
+
+m_mapbox = anymap.MapboxMap(
+    center=[40.7128, -74.0060],  # New York
+    zoom=13,
+    map_style="mapbox://styles/mapbox/streets-v12",
+    # access_token="your_mapbox_token_here"  # Uncomment and add your token
+)
+
+# Add some NYC landmarks
+nyc_landmarks = {
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "geometry": {"type": "Point", "coordinates": [-74.0445, 40.6892]},
+            "properties": {"name": "Statue of Liberty"},
+        },
+        {
+            "type": "Feature",
+            "geometry": {"type": "Point", "coordinates": [-73.9857, 40.7484]},
+            "properties": {"name": "Empire State Building"},
+        },
+        {
+            "type": "Feature",
+            "geometry": {"type": "Point", "coordinates": [-73.9781, 40.7549]},
+            "properties": {"name": "Times Square"},
+        },
+    ],
+}
+
+m_mapbox.add_geojson_layer(
+    layer_id="nyc_landmarks",
+    geojson_data=nyc_landmarks,
+    layer_type="circle",
+    paint={
+        "circle-radius": 8,
+        "circle-color": "#4264fb",
+        "circle-stroke-color": "#ffffff",
+        "circle-stroke-width": 2,
+    },
+)
+
+# Display the map
+m_mapbox</div>
 </div>
 </div>
 </div>
@@ -1603,33 +1843,30 @@ m.fly_to(51.5074, -0.1278, zoom=14)  # London</div>
 <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
+<pre>/home/runner/work/anymap/anymap/anymap/anymap.py:573: UserWarning: No Mapbox access token found. Please set MAPBOX_ACCESS_TOKEN environment variable or pass access_token parameter. Get a free token at https://account.mapbox.com/access-tokens/
+  warnings.warn(
+</pre>
+</div>
+</div>
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
 <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[5]:</div>
-<div class="jupyter-widgets jp-OutputArea-output jp-OutputArea-executeResult" id="f6841c42-a0e2-42c1-b848-d22a7c703f27" tabindex="0">
+<div class="jupyter-widgets jp-OutputArea-output jp-OutputArea-executeResult" id="c1072357-9c45-49ad-90c5-6b7ea78a49f5" tabindex="0">
 <script type="text/javascript">
-var element = document.getElementById('f6841c42-a0e2-42c1-b848-d22a7c703f27');
+var element = document.getElementById('c1072357-9c45-49ad-90c5-6b7ea78a49f5');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
-{"version_major": 2, "version_minor": 1, "model_id": "d43eb210a70c4e74b56ebce1e80dc3c6"}
+{"version_major": 2, "version_minor": 1, "model_id": "146f6445cc254f5c9b18d768412c7150"}
 </script>
 </div>
 </div>
 </div>
 </div>
 </div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="adding-markers">Adding Markers<a class="anchor-link" href="#adding-markers">¶</a></h2><p>You can add markers to the map with optional popups:</p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1647,19 +1884,57 @@ var element = document.getElementById('f6841c42-a0e2-42c1-b848-d22a7c703f27');
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Add a marker with popup</span>
-<span class="n">m</span><span class="o">.</span><span class="n">add_marker</span><span class="p">(</span>
-    <span class="n">lat</span><span class="o">=</span><span class="mf">51.5074</span><span class="p">,</span>
-    <span class="n">lng</span><span class="o">=-</span><span class="mf">0.1278</span><span class="p">,</span>
-    <span class="n">popup</span><span class="o">=</span><span class="s2">"&lt;h3&gt;London&lt;/h3&gt;&lt;p&gt;Capital of the United Kingdom&lt;/p&gt;"</span><span class="p">,</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Export Mapbox map to HTML</span>
+<span class="n">mapbox_html</span> <span class="o">=</span> <span class="n">m_mapbox</span><span class="o">.</span><span class="n">to_html</span><span class="p">(</span>
+    <span class="n">filename</span><span class="o">=</span><span class="s2">"mapbox_export.html"</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">"New York Landmarks - Mapbox Export"</span><span class="p">,</span>
+    <span class="n">width</span><span class="o">=</span><span class="s2">"100%"</span><span class="p">,</span>
+    <span class="n">height</span><span class="o">=</span><span class="s2">"600px"</span><span class="p">,</span>
 <span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"✅ Mapbox map exported to 'mapbox_export.html'"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"📄 HTML file size: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">mapbox_html</span><span class="p">)</span><span class="si">}</span><span class="s2"> characters"</span><span class="p">)</span>
+
+<span class="c1"># Check if access token warning is present</span>
+<span class="k">if</span> <span class="s2">"access-token-warning"</span> <span class="ow">in</span> <span class="n">mapbox_html</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"⚠️  Warning: No Mapbox access token detected in export"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"   The exported map will need a valid Mapbox token to work properly"</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"✅ Access token included in export"</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-6"># Add a marker with popup
-m.add_marker(
-    lat=51.5074,
-    lng=-0.1278,
-    popup="<h3>London</h3><p>Capital of the United Kingdom</p>",
-)</div>
+<div class="clipboard-copy-txt" id="cell-6"># Export Mapbox map to HTML
+mapbox_html = m_mapbox.to_html(
+    filename="mapbox_export.html",
+    title="New York Landmarks - Mapbox Export",
+    width="100%",
+    height="600px",
+)
+
+print("✅ Mapbox map exported to 'mapbox_export.html'")
+print(f"📄 HTML file size: {len(mapbox_html)} characters")
+
+# Check if access token warning is present
+if "access-token-warning" in mapbox_html:
+    print("⚠️  Warning: No Mapbox access token detected in export")
+    print("   The exported map will need a valid Mapbox token to work properly")
+else:
+    print("✅ Access token included in export")</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>✅ Mapbox map exported to 'mapbox_export.html'
+📄 HTML file size: 4904 characters
+⚠️  Warning: No Mapbox access token detected in export
+   The exported map will need a valid Mapbox token to work properly
+</pre>
 </div>
 </div>
 </div>
@@ -1672,12 +1947,12 @@ m.add_marker(
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="working-with-geojson-data">Working with GeoJSON Data<a class="anchor-link" href="#working-with-geojson-data">¶</a></h2><p>Let's add some GeoJSON data to the map:</p>
+<h2 id="advanced-export-options">Advanced Export Options<a class="anchor-link" href="#advanced-export-options">¶</a></h2><p>The <code>to_html()</code> method supports various customization options:</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1695,65 +1970,129 @@ m.add_marker(
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Sample GeoJSON data</span>
-<span class="n">geojson_data</span> <span class="o">=</span> <span class="p">{</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Create a more complex map with multiple layer types</span>
+<span class="n">complex_map</span> <span class="o">=</span> <span class="n">anymap</span><span class="o">.</span><span class="n">MapLibreMap</span><span class="p">(</span>
+    <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mf">51.505</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.09</span><span class="p">],</span>  <span class="c1"># London</span>
+    <span class="n">zoom</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">bearing</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span>  <span class="c1"># Rotate the map</span>
+    <span class="n">pitch</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>  <span class="c1"># Add some tilt</span>
+<span class="p">)</span>
+
+<span class="c1"># Add a polygon layer (rough outline of central London)</span>
+<span class="n">london_boundary</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"FeatureCollection"</span><span class="p">,</span>
     <span class="s2">"features"</span><span class="p">:</span> <span class="p">[</span>
         <span class="p">{</span>
             <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Feature"</span><span class="p">,</span>
-            <span class="s2">"geometry"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Point"</span><span class="p">,</span> <span class="s2">"coordinates"</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.1278</span><span class="p">,</span> <span class="mf">51.5074</span><span class="p">]},</span>
-            <span class="s2">"properties"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"London"</span><span class="p">,</span> <span class="s2">"population"</span><span class="p">:</span> <span class="mi">8900000</span><span class="p">},</span>
-        <span class="p">},</span>
-        <span class="p">{</span>
-            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Feature"</span><span class="p">,</span>
-            <span class="s2">"geometry"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Point"</span><span class="p">,</span> <span class="s2">"coordinates"</span><span class="p">:</span> <span class="p">[</span><span class="mf">2.3522</span><span class="p">,</span> <span class="mf">48.8566</span><span class="p">]},</span>
-            <span class="s2">"properties"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Paris"</span><span class="p">,</span> <span class="s2">"population"</span><span class="p">:</span> <span class="mi">2141000</span><span class="p">},</span>
-        <span class="p">},</span>
+            <span class="s2">"geometry"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Polygon"</span><span class="p">,</span>
+                <span class="s2">"coordinates"</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="p">[</span>
+                        <span class="p">[</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">51.45</span><span class="p">],</span>
+                        <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">51.45</span><span class="p">],</span>
+                        <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">51.55</span><span class="p">],</span>
+                        <span class="p">[</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">51.55</span><span class="p">],</span>
+                        <span class="p">[</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">51.45</span><span class="p">],</span>
+                    <span class="p">]</span>
+                <span class="p">],</span>
+            <span class="p">},</span>
+            <span class="s2">"properties"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Central London Area"</span><span class="p">},</span>
+        <span class="p">}</span>
     <span class="p">],</span>
 <span class="p">}</span>
 
-<span class="c1"># Add GeoJSON layer</span>
-<span class="n">m</span><span class="o">.</span><span class="n">add_geojson_layer</span><span class="p">(</span>
-    <span class="n">layer_id</span><span class="o">=</span><span class="s2">"cities"</span><span class="p">,</span>
-    <span class="n">geojson_data</span><span class="o">=</span><span class="n">geojson_data</span><span class="p">,</span>
-    <span class="n">layer_type</span><span class="o">=</span><span class="s2">"circle"</span><span class="p">,</span>
-    <span class="n">paint</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">"circle-radius"</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
-        <span class="s2">"circle-color"</span><span class="p">:</span> <span class="s2">"#ff0000"</span><span class="p">,</span>
-        <span class="s2">"circle-stroke-width"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-        <span class="s2">"circle-stroke-color"</span><span class="p">:</span> <span class="s2">"#ffffff"</span><span class="p">,</span>
-    <span class="p">},</span>
+<span class="n">complex_map</span><span class="o">.</span><span class="n">add_geojson_layer</span><span class="p">(</span>
+    <span class="n">layer_id</span><span class="o">=</span><span class="s2">"london_area"</span><span class="p">,</span>
+    <span class="n">geojson_data</span><span class="o">=</span><span class="n">london_boundary</span><span class="p">,</span>
+    <span class="n">layer_type</span><span class="o">=</span><span class="s2">"fill"</span><span class="p">,</span>
+    <span class="n">paint</span><span class="o">=</span><span class="p">{</span><span class="s2">"fill-color"</span><span class="p">:</span> <span class="s2">"#088"</span><span class="p">,</span> <span class="s2">"fill-opacity"</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">},</span>
 <span class="p">)</span>
+
+<span class="c1"># Export with custom styling</span>
+<span class="n">custom_html</span> <span class="o">=</span> <span class="n">complex_map</span><span class="o">.</span><span class="n">to_html</span><span class="p">(</span>
+    <span class="n">filename</span><span class="o">=</span><span class="s2">"london_custom_export.html"</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">"London Map with Custom Styling"</span><span class="p">,</span>
+    <span class="n">width</span><span class="o">=</span><span class="s2">"1200px"</span><span class="p">,</span>
+    <span class="n">height</span><span class="o">=</span><span class="s2">"800px"</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"✅ Complex map exported to 'london_custom_export.html'"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"📐 Map properties preserved:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"   • Bearing: </span><span class="si">{</span><span class="n">complex_map</span><span class="o">.</span><span class="n">bearing</span><span class="si">}</span><span class="s2">°"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"   • Pitch: </span><span class="si">{</span><span class="n">complex_map</span><span class="o">.</span><span class="n">pitch</span><span class="si">}</span><span class="s2">°"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"   • Layers: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">complex_map</span><span class="o">.</span><span class="n">get_layers</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"   • Sources: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">complex_map</span><span class="o">.</span><span class="n">get_sources</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-7"># Sample GeoJSON data
-geojson_data = {
+<div class="clipboard-copy-txt" id="cell-7"># Create a more complex map with multiple layer types
+complex_map = anymap.MapLibreMap(
+    center=[51.505, -0.09],  # London
+    zoom=10,
+    bearing=45,  # Rotate the map
+    pitch=30,  # Add some tilt
+)
+
+# Add a polygon layer (rough outline of central London)
+london_boundary = {
     "type": "FeatureCollection",
     "features": [
         {
             "type": "Feature",
-            "geometry": {"type": "Point", "coordinates": [-0.1278, 51.5074]},
-            "properties": {"name": "London", "population": 8900000},
-        },
-        {
-            "type": "Feature",
-            "geometry": {"type": "Point", "coordinates": [2.3522, 48.8566]},
-            "properties": {"name": "Paris", "population": 2141000},
-        },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [-0.2, 51.45],
+                        [0.1, 51.45],
+                        [0.1, 51.55],
+                        [-0.2, 51.55],
+                        [-0.2, 51.45],
+                    ]
+                ],
+            },
+            "properties": {"name": "Central London Area"},
+        }
     ],
 }
 
-# Add GeoJSON layer
-m.add_geojson_layer(
-    layer_id="cities",
-    geojson_data=geojson_data,
-    layer_type="circle",
-    paint={
-        "circle-radius": 8,
-        "circle-color": "#ff0000",
-        "circle-stroke-width": 2,
-        "circle-stroke-color": "#ffffff",
-    },
-)</div>
+complex_map.add_geojson_layer(
+    layer_id="london_area",
+    geojson_data=london_boundary,
+    layer_type="fill",
+    paint={"fill-color": "#088", "fill-opacity": 0.3},
+)
+
+# Export with custom styling
+custom_html = complex_map.to_html(
+    filename="london_custom_export.html",
+    title="London Map with Custom Styling",
+    width="1200px",
+    height="800px",
+)
+
+print("✅ Complex map exported to 'london_custom_export.html'")
+print(f"📐 Map properties preserved:")
+print(f"   • Bearing: {complex_map.bearing}°")
+print(f"   • Pitch: {complex_map.pitch}°")
+print(f"   • Layers: {list(complex_map.get_layers().keys())}")
+print(f"   • Sources: {list(complex_map.get_sources().keys())}")</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>✅ Complex map exported to 'london_custom_export.html'
+📐 Map properties preserved:
+   • Bearing: 45.0°
+   • Pitch: 30.0°
+   • Layers: ['london_area']
+   • Sources: ['london_area_source']
+</pre>
 </div>
 </div>
 </div>
@@ -1766,12 +2105,12 @@ m.add_geojson_layer(
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="event-handling">Event Handling<a class="anchor-link" href="#event-handling">¶</a></h2><p>You can register event handlers for map interactions:</p>
+<h2 id="return-html-as-string-no-file">Return HTML as String (No File)<a class="anchor-link" href="#return-html-as-string-no-file">¶</a></h2><p>You can also get the HTML content as a string without saving to a file:</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1789,63 +2128,36 @@ m.add_geojson_layer(
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Define event handler</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">on_map_click</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
-    <span class="n">lat</span><span class="p">,</span> <span class="n">lng</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s2">"lngLat"</span><span class="p">]</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Map clicked at: </span><span class="si">{</span><span class="n">lat</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">lng</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Generate HTML without saving to file</span>
+<span class="n">html_string</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">to_html</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"String Export Example"</span><span class="p">)</span>
 
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"📝 Generated HTML string of </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">html_string</span><span class="p">)</span><span class="si">}</span><span class="s2"> characters"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">🔍 HTML validation checks:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  ✓ Contains DOCTYPE: </span><span class="si">{</span><span class="s1">'&lt;!DOCTYPE html&gt;'</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">html_string</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  ✓ Contains MapLibre: </span><span class="si">{</span><span class="s1">'maplibre-gl'</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">html_string</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  ✓ Contains map container: </span><span class="si">{</span><span class="s1">'id="map"'</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">html_string</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  ✓ Contains map state: </span><span class="si">{</span><span class="s1">'mapState'</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">html_string</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  ✓ Contains layers: </span><span class="si">{</span><span class="s1">'sample_points'</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">html_string</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-<span class="c1"># Register the event handler</span>
-<span class="n">m</span><span class="o">.</span><span class="n">on_map_event</span><span class="p">(</span><span class="s2">"click"</span><span class="p">,</span> <span class="n">on_map_click</span><span class="p">)</span>
+<span class="c1"># You could save this string manually if needed</span>
+<span class="c1"># with open("manual_export.html", "w") as f:</span>
+<span class="c1">#     f.write(html_string)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-8"># Define event handler
-def on_map_click(event):
-    lat, lng = event["lngLat"]
-    print(f"Map clicked at: {lat:.4f}, {lng:.4f}")
+<div class="clipboard-copy-txt" id="cell-8"># Generate HTML without saving to file
+html_string = m.to_html(title="String Export Example")
 
+print(f"📝 Generated HTML string of {len(html_string)} characters")
+print("\n🔍 HTML validation checks:")
+print(f"  ✓ Contains DOCTYPE: {'<!DOCTYPE html>
+' in html_string}")
+print(f"  ✓ Contains MapLibre: {'maplibre-gl' in html_string}")
+print(f"  ✓ Contains map container: {'id="map"' in html_string}")
+print(f"  ✓ Contains map state: {'mapState' in html_string}")
+print(f"  ✓ Contains layers: {'sample_points' in html_string}")
 
-# Register the event handler
-m.on_map_event("click", on_map_click)</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="multi-cell-rendering-test">Multi-cell Rendering Test<a class="anchor-link" href="#multi-cell-rendering-test">¶</a></h2><p>Let's test that the same map can be displayed in multiple cells without issues:</p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [9]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-9">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Display the same map instance again</span>
-<span class="n">m</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-9"># Display the same map instance again
-m</div>
+# You could save this string manually if needed
+# with open("manual_export.html", "w") as f:
+#     f.write(html_string)</div>
 </div>
 </div>
 </div>
@@ -1854,102 +2166,18 @@ m</div>
 <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[9]:</div>
-<div class="jupyter-widgets jp-OutputArea-output jp-OutputArea-executeResult" id="286058f0-3167-4dfb-8607-9cf16a8925e0" tabindex="0">
-<script type="text/javascript">
-var element = document.getElementById('286058f0-3167-4dfb-8607-9cf16a8925e0');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"version_major": 2, "version_minor": 1, "model_id": "d43eb210a70c4e74b56ebce1e80dc3c6"}
-</script>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [10]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-10">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Create a new map instance</span>
-<span class="n">m2</span> <span class="o">=</span> <span class="n">MapLibreMap</span><span class="p">(</span>
-    <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mf">35.6762</span><span class="p">,</span> <span class="mf">139.6503</span><span class="p">],</span>  <span class="c1"># Tokyo</span>
-    <span class="n">zoom</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-    <span class="n">height</span><span class="o">=</span><span class="s2">"600px"</span><span class="p">,</span>
-    <span class="n">map_style</span><span class="o">=</span><span class="s2">"https://demotiles.maplibre.org/style.json"</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="n">m2</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-10"># Create a new map instance
-m2 = MapLibreMap(
-    center=[35.6762, 139.6503],  # Tokyo
-    zoom=10,
-    height="600px",
-    map_style="https://demotiles.maplibre.org/style.json",
-)
-m2</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[10]:</div>
-<div class="jupyter-widgets jp-OutputArea-output jp-OutputArea-executeResult" id="f36bc31b-7851-4906-98df-9e9bc356d58a" tabindex="0">
-<script type="text/javascript">
-var element = document.getElementById('f36bc31b-7851-4906-98df-9e9bc356d58a');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"version_major": 2, "version_minor": 1, "model_id": "9b9a481cf6ad4463966ce994277895a0"}
-</script>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [11]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-11">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Both maps should work independently</span>
-<span class="n">m2</span><span class="o">.</span><span class="n">add_marker</span><span class="p">(</span><span class="mf">35.6762</span><span class="p">,</span> <span class="mf">139.6503</span><span class="p">,</span> <span class="n">popup</span><span class="o">=</span><span class="s2">"Tokyo, Japan"</span><span class="p">)</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-11"># Both maps should work independently
-m2.add_marker(35.6762, 139.6503, popup="Tokyo, Japan")</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>📝 Generated HTML string of 4527 characters
+
+🔍 HTML validation checks:
+  ✓ Contains DOCTYPE: True
+  ✓ Contains MapLibre: True
+  ✓ Contains map container: True
+  ✓ Contains map state: True
+  ✓ Contains layers: True
+</pre>
 </div>
 </div>
 </div>
@@ -1962,163 +2190,28 @@ m2.add_marker(35.6762, 139.6503, popup="Tokyo, Japan")</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="changing-map-styles">Changing Map Styles<a class="anchor-link" href="#changing-map-styles">¶</a></h2><p>You can change the map style dynamically:</p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [12]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-12">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Change to a different style</span>
-<span class="n">m2</span><span class="o">.</span><span class="n">set_style</span><span class="p">(</span><span class="s2">"https://demotiles.maplibre.org/style.json"</span><span class="p">)</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-12"># Change to a different style
-m2.set_style("https://demotiles.maplibre.org/style.json")</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="calling-javascript-methods">Calling JavaScript Methods<a class="anchor-link" href="#calling-javascript-methods">¶</a></h2><p>You can call any MapLibre GL JS methods directly:</p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [13]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-13">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Set bearing and pitch for 3D effect</span>
-<span class="n">m2</span><span class="o">.</span><span class="n">set_bearing</span><span class="p">(</span><span class="mi">45</span><span class="p">)</span>
-<span class="n">m2</span><span class="o">.</span><span class="n">set_pitch</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-13"># Set bearing and pitch for 3D effect
-m2.set_bearing(45)
-m2.set_pitch(60)</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [14]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-14">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Reset to default view</span>
-<span class="n">m2</span><span class="o">.</span><span class="n">set_bearing</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">m2</span><span class="o">.</span><span class="n">set_pitch</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-14"># Reset to default view
-m2.set_bearing(0)
-m2.set_pitch(0)</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-15">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-15"></div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-16">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-16"></div>
-</div>
-</div>
+<h2 id="summary">Summary<a class="anchor-link" href="#summary">¶</a></h2><p>The <code>to_html()</code> method provides a convenient way to export anymap maps to standalone HTML files:</p>
+<h3 id="features">✨ Features:<a class="anchor-link" href="#features">¶</a></h3><ul>
+<li><strong>Self-contained</strong>: No dependencies on Jupyter or Python runtime</li>
+<li><strong>Layer persistence</strong>: All layers and sources are preserved</li>
+<li><strong>Interactive</strong>: Full map interactivity (pan, zoom, layer visibility)</li>
+<li><strong>Customizable</strong>: Control title, dimensions, and styling</li>
+<li><strong>Cross-platform</strong>: Works in any modern web browser</li>
+</ul>
+<h3 id="use-cases">🎯 Use Cases:<a class="anchor-link" href="#use-cases">¶</a></h3><ul>
+<li>Share maps with non-technical users</li>
+<li>Embed maps in websites or presentations</li>
+<li>Create standalone map applications</li>
+<li>Archive map states for later viewing</li>
+<li>Generate reports with interactive maps</li>
+</ul>
+<h3 id="generated-files">📂 Generated Files:<a class="anchor-link" href="#generated-files">¶</a></h3><p>After running this notebook, you should have these exported HTML files:</p>
+<ul>
+<li><code>maplibre_export.html</code> - San Francisco map with points and raster overlay</li>
+<li><code>mapbox_export.html</code> - New York landmarks map</li>
+<li><code>london_custom_export.html</code> - London map with custom styling and polygon layer</li>
+</ul>
+<p>Open any of these files in your web browser to see the interactive maps!</p>
 </div>
 </div>
 </div>
@@ -2126,7 +2219,7 @@ m2.set_pitch(0)</div>
 </div> <!-- jp-Notebook -->
 </div> <!-- jupyter-wrapper -->
 <script type="application/vnd.jupyter.widget-state+json">
-{"state": {"18fde2a9b90a4dadbd26b166be22a930": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "d43eb210a70c4e74b56ebce1e80dc3c6": {"model_name": "AnyModel", "model_module": "anywidget", "model_module_version": "~0.9.*", "state": {"_anywidget_id": "anymap.anymap.MapLibreMap", "_css": "\/* Import MapLibre GL CSS *\/\n@import url(\"https:\/\/unpkg.com\/maplibre-gl@5.5.0\/dist\/maplibre-gl.css\");\n\n\/* Widget container styles *\/\n.anymap-container {\n  position: relative;\n  overflow: hidden;\n  border-radius: 4px;\n  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);\n}\n\n\/* Ensure map container fills the widget *\/\n.anymap-container .maplibregl-map {\n  width: 100% !important;\n  height: 100% !important;\n}\n\n\/* Ensure proper sizing for anywidget containers *\/\n.jp-OutputArea-output[data-mime-type=\"application\/vnd.jupyter.widget-view+json\"] {\n  width: 100% !important;\n}\n\n\/* Map canvas sizing fixes *\/\n.maplibregl-canvas-container {\n  width: 100% !important;\n  height: 100% !important;\n}\n\n.maplibregl-canvas {\n  width: 100% !important;\n  height: 100% !important;\n}\n\n\/* Custom control styles *\/\n.anymap-controls {\n  position: absolute;\n  top: 10px;\n  right: 10px;\n  z-index: 1000;\n}\n\n\/* Popup styles *\/\n.maplibregl-popup-content {\n  padding: 10px;\n  border-radius: 4px;\n  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;\n  font-size: 14px;\n  line-height: 1.4;\n}\n\n\/* Marker styles *\/\n.anymap-marker {\n  background-color: #3498db;\n  width: 20px;\n  height: 20px;\n  border-radius: 50%;\n  border: 2px solid #ffffff;\n  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);\n  cursor: pointer;\n}\n\n\/* Loading spinner *\/\n.anymap-loading {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  z-index: 1000;\n}\n\n.anymap-loading::after {\n  content: \"\";\n  display: block;\n  width: 32px;\n  height: 32px;\n  border: 3px solid #f3f3f3;\n  border-top: 3px solid #3498db;\n  border-radius: 50%;\n  animation: spin 1s linear infinite;\n}\n\n@keyframes spin {\n  0% { transform: rotate(0deg); }\n  100% { transform: rotate(360deg); }\n}", "_dom_classes": [], "_esm": "import maplibregl from \"https:\/\/cdn.skypack.dev\/maplibre-gl@5.5.0\";\n\nfunction render({ model, el }) {\n  \/\/ Create unique ID for this widget instance\n  const widgetId = `anymap-${Math.random().toString(36).substr(2, 9)}`;\n\n  \/\/ Create container for the map\n  const container = document.createElement(\"div\");\n  container.id = widgetId;\n  container.style.width = model.get(\"width\");\n  container.style.height = model.get(\"height\");\n  container.style.position = \"relative\";\n  container.style.overflow = \"hidden\";\n\n  \/\/ Ensure parent element has proper styling\n  el.style.width = \"100%\";\n  el.style.display = \"block\";\n\n  \/\/ Clear any existing content and cleanup\n  if (el._map) {\n    el._map.remove();\n    el._map = null;\n  }\n  if (el._markers) {\n    el._markers.forEach(marker => marker.remove());\n    el._markers = [];\n  }\n\n  el.innerHTML = \"\";\n  el.appendChild(container);\n\n  \/\/ Initialize MapLibre map\n  const map = new maplibregl.Map({\n    container: container,\n    style: model.get(\"map_style\"),\n    center: model.get(\"center\").slice().reverse(), \/\/ [lng, lat] for MapLibre\n    zoom: model.get(\"zoom\"),\n    bearing: model.get(\"bearing\"),\n    pitch: model.get(\"pitch\"),\n    antialias: model.get(\"antialias\")\n  });\n\n  \/\/ Store map instance for cleanup\n  el._map = map;\n  el._markers = [];\n  el._widgetId = widgetId;\n\n  \/\/ Restore layers and sources from model state\n  const restoreMapState = () => {\n    const layers = model.get(\"_layers\") || {};\n    const sources = model.get(\"_sources\") || {};\n\n    \/\/ Add sources first\n    Object.entries(sources).forEach(([sourceId, sourceConfig]) => {\n      if (!map.getSource(sourceId)) {\n        try {\n          map.addSource(sourceId, sourceConfig);\n        } catch (error) {\n          console.warn(`Failed to restore source ${sourceId}:`, error);\n        }\n      }\n    });\n\n    \/\/ Then add layers\n    Object.entries(layers).forEach(([layerId, layerConfig]) => {\n      if (!map.getLayer(layerId)) {\n        try {\n          map.addLayer(layerConfig);\n        } catch (error) {\n          console.warn(`Failed to restore layer ${layerId}:`, error);\n        }\n      }\n    });\n  };\n\n  \/\/ Setup resize observer to handle container size changes\n  let resizeObserver;\n  if (window.ResizeObserver) {\n    resizeObserver = new ResizeObserver(() => {\n      \/\/ Trigger map resize after a short delay to ensure container is sized\n      setTimeout(() => {\n        if (map && map.getContainer()) {\n          map.resize();\n        }\n      }, 100);\n    });\n    resizeObserver.observe(el);\n    resizeObserver.observe(container);\n  }\n\n  \/\/ Force initial resize after map loads and when container becomes visible\n  map.on('load', () => {\n    setTimeout(() => {\n      map.resize();\n      \/\/ Restore state after map is fully loaded\n      restoreMapState();\n    }, 200);\n  });\n\n  \/\/ Additional resize handling for late-rendered widgets\n  const checkAndResize = () => {\n    if (map && map.getContainer() && map.getContainer().offsetWidth > 0) {\n      map.resize();\n    }\n  };\n\n  \/\/ Use requestAnimationFrame to ensure DOM is ready\n  requestAnimationFrame(() => {\n    setTimeout(checkAndResize, 100);\n    setTimeout(checkAndResize, 500);\n    setTimeout(checkAndResize, 1000);\n  });\n\n  \/\/ Handle map events and send to Python\n  const sendEvent = (eventType, eventData) => {\n    const currentEvents = model.get(\"_js_events\") || [];\n    const newEvents = [...currentEvents, { type: eventType, ...eventData }];\n    model.set(\"_js_events\", newEvents);\n    model.save_changes();\n  };\n\n  \/\/ Map event handlers\n  map.on('load', () => {\n    sendEvent('load', {});\n  });\n\n  map.on('click', (e) => {\n    sendEvent('click', {\n      lngLat: [e.lngLat.lng, e.lngLat.lat],\n      point: [e.point.x, e.point.y]\n    });\n  });\n\n  map.on('moveend', () => {\n    const center = map.getCenter();\n    sendEvent('moveend', {\n      center: [center.lat, center.lng],\n      zoom: map.getZoom(),\n      bearing: map.getBearing(),\n      pitch: map.getPitch()\n    });\n  });\n\n  map.on('zoomend', () => {\n    sendEvent('zoomend', {\n      zoom: map.getZoom()\n    });\n  });\n\n  \/\/ Listen for trait changes from Python\n  model.on(\"change:center\", () => {\n    const center = model.get(\"center\");\n    map.setCenter([center[1], center[0]]); \/\/ Convert [lat, lng] to [lng, lat]\n  });\n\n  model.on(\"change:zoom\", () => {\n    map.setZoom(model.get(\"zoom\"));\n  });\n\n  model.on(\"change:map_style\", () => {\n    map.setStyle(model.get(\"map_style\"));\n  });\n\n  model.on(\"change:bearing\", () => {\n    map.setBearing(model.get(\"bearing\"));\n  });\n\n  model.on(\"change:pitch\", () => {\n    map.setPitch(model.get(\"pitch\"));\n  });\n\n  \/\/ Handle JavaScript method calls from Python\n  model.on(\"change:_js_calls\", () => {\n    const calls = model.get(\"_js_calls\") || [];\n    calls.forEach(call => {\n      executeMapMethod(map, call, el);\n    });\n    \/\/ Clear the calls after processing\n    model.set(\"_js_calls\", []);\n    model.save_changes();\n  });\n\n  \/\/ Method execution function\n  function executeMapMethod(map, call, el) {\n    const { method, args, kwargs } = call;\n\n    try {\n      switch (method) {\n        case 'flyTo':\n          const flyToOptions = args[0] || {};\n          if (flyToOptions.center) {\n            flyToOptions.center = [flyToOptions.center[1], flyToOptions.center[0]]; \/\/ [lat,lng] to [lng,lat]\n          }\n          map.flyTo(flyToOptions);\n          break;\n\n        case 'addSource':\n          const [sourceId, sourceConfig] = args;\n          if (!map.getSource(sourceId)) {\n            map.addSource(sourceId, sourceConfig);\n            \/\/ Persist source in model state\n            const currentSources = model.get(\"_sources\") || {};\n            currentSources[sourceId] = sourceConfig;\n            model.set(\"_sources\", currentSources);\n            model.save_changes();\n          }\n          break;\n\n        case 'removeSource':\n          const removeSourceId = args[0];\n          if (map.getSource(removeSourceId)) {\n            map.removeSource(removeSourceId);\n            \/\/ Remove from model state\n            const currentSources = model.get(\"_sources\") || {};\n            delete currentSources[removeSourceId];\n            model.set(\"_sources\", currentSources);\n            model.save_changes();\n          }\n          break;\n\n        case 'addLayer':\n          const [layerConfig, layerId] = args;\n          const actualLayerId = layerId || layerConfig.id;\n          if (!map.getLayer(actualLayerId)) {\n            map.addLayer(layerConfig);\n            \/\/ Persist layer in model state\n            const currentLayers = model.get(\"_layers\") || {};\n            currentLayers[actualLayerId] = layerConfig;\n            model.set(\"_layers\", currentLayers);\n            model.save_changes();\n          }\n          break;\n\n        case 'removeLayer':\n          const removeLayerId = args[0];\n          if (map.getLayer(removeLayerId)) {\n            map.removeLayer(removeLayerId);\n            \/\/ Remove from model state\n            const currentLayers = model.get(\"_layers\") || {};\n            delete currentLayers[removeLayerId];\n            model.set(\"_layers\", currentLayers);\n            model.save_changes();\n          }\n          break;\n\n        case 'setStyle':\n          map.setStyle(args[0]);\n          break;\n\n        case 'addMarker':\n          const markerData = args[0];\n          const marker = new maplibregl.Marker()\n            .setLngLat(markerData.coordinates)\n            .addTo(map);\n\n          if (markerData.popup) {\n            const popup = new maplibregl.Popup()\n              .setHTML(markerData.popup);\n            marker.setPopup(popup);\n          }\n\n          el._markers.push(marker);\n          break;\n\n        case 'fitBounds':\n          const [bounds, options] = args;\n          \/\/ Convert [[lat,lng], [lat,lng]] to [[lng,lat], [lng,lat]]\n          const mapBounds = bounds.map(bound => [bound[1], bound[0]]);\n          map.fitBounds(mapBounds, options || {});\n          break;\n\n        default:\n          \/\/ Try to call the method directly on the map object\n          if (typeof map[method] === 'function') {\n            map[method](...args);\n          } else {\n            console.warn(`Unknown map method: ${method}`);\n          }\n      }\n    } catch (error) {\n      console.error(`Error executing map method ${method}:`, error);\n      sendEvent('error', { method, error: error.message });\n    }\n  }\n\n  \/\/ Cleanup function\n  return () => {\n    if (resizeObserver) {\n      resizeObserver.disconnect();\n    }\n    if (el._markers) {\n      el._markers.forEach(marker => marker.remove());\n      el._markers = [];\n    }\n    if (el._map) {\n      el._map.remove();\n      el._map = null;\n    }\n  };\n}\n\n\nexport default { render };", "_js_calls": [{"id": 0, "method": "flyTo", "args": [{"center": [51.5074, -0.1278], "zoom": 14}], "kwargs": {}}, {"id": 1, "method": "addMarker", "args": [{"coordinates": [-0.1278, 51.5074], "popup": "<h3>London<\/h3><p>Capital of the United Kingdom<\/p>"}], "kwargs": {}}, {"id": 2, "method": "addSource", "args": ["cities_source", {"type": "geojson", "data": {"type": "FeatureCollection", "features": [{"type": "Feature", "geometry": {"type": "Point", "coordinates": [-0.1278, 51.5074]}, "properties": {"name": "London", "population": 8900000}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [2.3522, 48.8566]}, "properties": {"name": "Paris", "population": 2141000}}]}}], "kwargs": {}}, {"id": 3, "method": "addLayer", "args": [{"id": "cities", "type": "circle", "source": "cities_source", "paint": {"circle-radius": 8, "circle-color": "#ff0000", "circle-stroke-width": 2, "circle-stroke-color": "#ffffff"}}, "cities"], "kwargs": {}}], "_js_events": [], "_layers": {"cities": {"id": "cities", "type": "circle", "source": "cities_source", "paint": {"circle-radius": 8, "circle-color": "#ff0000", "circle-stroke-width": 2, "circle-stroke-color": "#ffffff"}}}, "_model_module": "anywidget", "_model_module_version": "~0.9.*", "_model_name": "AnyModel", "_sources": {"cities_source": {"type": "geojson", "data": {"type": "FeatureCollection", "features": [{"type": "Feature", "geometry": {"type": "Point", "coordinates": [-0.1278, 51.5074]}, "properties": {"name": "London", "population": 8900000}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [2.3522, 48.8566]}, "properties": {"name": "Paris", "population": 2141000}}]}}}, "_view_count": null, "_view_module": "anywidget", "_view_module_version": "~0.9.*", "_view_name": "AnyView", "antialias": true, "bearing": 0.0, "center": [40.7128, -74.006], "height": "500px", "layout": "IPY_MODEL_18fde2a9b90a4dadbd26b166be22a930", "map_style": "https:\/\/demotiles.maplibre.org\/style.json", "pitch": 0.0, "style": "", "tabbable": null, "tooltip": null, "width": "100%", "zoom": 10.0}}, "d4025a7424b84a7fbcf9df203c551db6": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "9b9a481cf6ad4463966ce994277895a0": {"model_name": "AnyModel", "model_module": "anywidget", "model_module_version": "~0.9.*", "state": {"_anywidget_id": "anymap.anymap.MapLibreMap", "_css": "\/* Import MapLibre GL CSS *\/\n@import url(\"https:\/\/unpkg.com\/maplibre-gl@5.5.0\/dist\/maplibre-gl.css\");\n\n\/* Widget container styles *\/\n.anymap-container {\n  position: relative;\n  overflow: hidden;\n  border-radius: 4px;\n  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);\n}\n\n\/* Ensure map container fills the widget *\/\n.anymap-container .maplibregl-map {\n  width: 100% !important;\n  height: 100% !important;\n}\n\n\/* Ensure proper sizing for anywidget containers *\/\n.jp-OutputArea-output[data-mime-type=\"application\/vnd.jupyter.widget-view+json\"] {\n  width: 100% !important;\n}\n\n\/* Map canvas sizing fixes *\/\n.maplibregl-canvas-container {\n  width: 100% !important;\n  height: 100% !important;\n}\n\n.maplibregl-canvas {\n  width: 100% !important;\n  height: 100% !important;\n}\n\n\/* Custom control styles *\/\n.anymap-controls {\n  position: absolute;\n  top: 10px;\n  right: 10px;\n  z-index: 1000;\n}\n\n\/* Popup styles *\/\n.maplibregl-popup-content {\n  padding: 10px;\n  border-radius: 4px;\n  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;\n  font-size: 14px;\n  line-height: 1.4;\n}\n\n\/* Marker styles *\/\n.anymap-marker {\n  background-color: #3498db;\n  width: 20px;\n  height: 20px;\n  border-radius: 50%;\n  border: 2px solid #ffffff;\n  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);\n  cursor: pointer;\n}\n\n\/* Loading spinner *\/\n.anymap-loading {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  z-index: 1000;\n}\n\n.anymap-loading::after {\n  content: \"\";\n  display: block;\n  width: 32px;\n  height: 32px;\n  border: 3px solid #f3f3f3;\n  border-top: 3px solid #3498db;\n  border-radius: 50%;\n  animation: spin 1s linear infinite;\n}\n\n@keyframes spin {\n  0% { transform: rotate(0deg); }\n  100% { transform: rotate(360deg); }\n}", "_dom_classes": [], "_esm": "import maplibregl from \"https:\/\/cdn.skypack.dev\/maplibre-gl@5.5.0\";\n\nfunction render({ model, el }) {\n  \/\/ Create unique ID for this widget instance\n  const widgetId = `anymap-${Math.random().toString(36).substr(2, 9)}`;\n\n  \/\/ Create container for the map\n  const container = document.createElement(\"div\");\n  container.id = widgetId;\n  container.style.width = model.get(\"width\");\n  container.style.height = model.get(\"height\");\n  container.style.position = \"relative\";\n  container.style.overflow = \"hidden\";\n\n  \/\/ Ensure parent element has proper styling\n  el.style.width = \"100%\";\n  el.style.display = \"block\";\n\n  \/\/ Clear any existing content and cleanup\n  if (el._map) {\n    el._map.remove();\n    el._map = null;\n  }\n  if (el._markers) {\n    el._markers.forEach(marker => marker.remove());\n    el._markers = [];\n  }\n\n  el.innerHTML = \"\";\n  el.appendChild(container);\n\n  \/\/ Initialize MapLibre map\n  const map = new maplibregl.Map({\n    container: container,\n    style: model.get(\"map_style\"),\n    center: model.get(\"center\").slice().reverse(), \/\/ [lng, lat] for MapLibre\n    zoom: model.get(\"zoom\"),\n    bearing: model.get(\"bearing\"),\n    pitch: model.get(\"pitch\"),\n    antialias: model.get(\"antialias\")\n  });\n\n  \/\/ Store map instance for cleanup\n  el._map = map;\n  el._markers = [];\n  el._widgetId = widgetId;\n\n  \/\/ Restore layers and sources from model state\n  const restoreMapState = () => {\n    const layers = model.get(\"_layers\") || {};\n    const sources = model.get(\"_sources\") || {};\n\n    \/\/ Add sources first\n    Object.entries(sources).forEach(([sourceId, sourceConfig]) => {\n      if (!map.getSource(sourceId)) {\n        try {\n          map.addSource(sourceId, sourceConfig);\n        } catch (error) {\n          console.warn(`Failed to restore source ${sourceId}:`, error);\n        }\n      }\n    });\n\n    \/\/ Then add layers\n    Object.entries(layers).forEach(([layerId, layerConfig]) => {\n      if (!map.getLayer(layerId)) {\n        try {\n          map.addLayer(layerConfig);\n        } catch (error) {\n          console.warn(`Failed to restore layer ${layerId}:`, error);\n        }\n      }\n    });\n  };\n\n  \/\/ Setup resize observer to handle container size changes\n  let resizeObserver;\n  if (window.ResizeObserver) {\n    resizeObserver = new ResizeObserver(() => {\n      \/\/ Trigger map resize after a short delay to ensure container is sized\n      setTimeout(() => {\n        if (map && map.getContainer()) {\n          map.resize();\n        }\n      }, 100);\n    });\n    resizeObserver.observe(el);\n    resizeObserver.observe(container);\n  }\n\n  \/\/ Force initial resize after map loads and when container becomes visible\n  map.on('load', () => {\n    setTimeout(() => {\n      map.resize();\n      \/\/ Restore state after map is fully loaded\n      restoreMapState();\n    }, 200);\n  });\n\n  \/\/ Additional resize handling for late-rendered widgets\n  const checkAndResize = () => {\n    if (map && map.getContainer() && map.getContainer().offsetWidth > 0) {\n      map.resize();\n    }\n  };\n\n  \/\/ Use requestAnimationFrame to ensure DOM is ready\n  requestAnimationFrame(() => {\n    setTimeout(checkAndResize, 100);\n    setTimeout(checkAndResize, 500);\n    setTimeout(checkAndResize, 1000);\n  });\n\n  \/\/ Handle map events and send to Python\n  const sendEvent = (eventType, eventData) => {\n    const currentEvents = model.get(\"_js_events\") || [];\n    const newEvents = [...currentEvents, { type: eventType, ...eventData }];\n    model.set(\"_js_events\", newEvents);\n    model.save_changes();\n  };\n\n  \/\/ Map event handlers\n  map.on('load', () => {\n    sendEvent('load', {});\n  });\n\n  map.on('click', (e) => {\n    sendEvent('click', {\n      lngLat: [e.lngLat.lng, e.lngLat.lat],\n      point: [e.point.x, e.point.y]\n    });\n  });\n\n  map.on('moveend', () => {\n    const center = map.getCenter();\n    sendEvent('moveend', {\n      center: [center.lat, center.lng],\n      zoom: map.getZoom(),\n      bearing: map.getBearing(),\n      pitch: map.getPitch()\n    });\n  });\n\n  map.on('zoomend', () => {\n    sendEvent('zoomend', {\n      zoom: map.getZoom()\n    });\n  });\n\n  \/\/ Listen for trait changes from Python\n  model.on(\"change:center\", () => {\n    const center = model.get(\"center\");\n    map.setCenter([center[1], center[0]]); \/\/ Convert [lat, lng] to [lng, lat]\n  });\n\n  model.on(\"change:zoom\", () => {\n    map.setZoom(model.get(\"zoom\"));\n  });\n\n  model.on(\"change:map_style\", () => {\n    map.setStyle(model.get(\"map_style\"));\n  });\n\n  model.on(\"change:bearing\", () => {\n    map.setBearing(model.get(\"bearing\"));\n  });\n\n  model.on(\"change:pitch\", () => {\n    map.setPitch(model.get(\"pitch\"));\n  });\n\n  \/\/ Handle JavaScript method calls from Python\n  model.on(\"change:_js_calls\", () => {\n    const calls = model.get(\"_js_calls\") || [];\n    calls.forEach(call => {\n      executeMapMethod(map, call, el);\n    });\n    \/\/ Clear the calls after processing\n    model.set(\"_js_calls\", []);\n    model.save_changes();\n  });\n\n  \/\/ Method execution function\n  function executeMapMethod(map, call, el) {\n    const { method, args, kwargs } = call;\n\n    try {\n      switch (method) {\n        case 'flyTo':\n          const flyToOptions = args[0] || {};\n          if (flyToOptions.center) {\n            flyToOptions.center = [flyToOptions.center[1], flyToOptions.center[0]]; \/\/ [lat,lng] to [lng,lat]\n          }\n          map.flyTo(flyToOptions);\n          break;\n\n        case 'addSource':\n          const [sourceId, sourceConfig] = args;\n          if (!map.getSource(sourceId)) {\n            map.addSource(sourceId, sourceConfig);\n            \/\/ Persist source in model state\n            const currentSources = model.get(\"_sources\") || {};\n            currentSources[sourceId] = sourceConfig;\n            model.set(\"_sources\", currentSources);\n            model.save_changes();\n          }\n          break;\n\n        case 'removeSource':\n          const removeSourceId = args[0];\n          if (map.getSource(removeSourceId)) {\n            map.removeSource(removeSourceId);\n            \/\/ Remove from model state\n            const currentSources = model.get(\"_sources\") || {};\n            delete currentSources[removeSourceId];\n            model.set(\"_sources\", currentSources);\n            model.save_changes();\n          }\n          break;\n\n        case 'addLayer':\n          const [layerConfig, layerId] = args;\n          const actualLayerId = layerId || layerConfig.id;\n          if (!map.getLayer(actualLayerId)) {\n            map.addLayer(layerConfig);\n            \/\/ Persist layer in model state\n            const currentLayers = model.get(\"_layers\") || {};\n            currentLayers[actualLayerId] = layerConfig;\n            model.set(\"_layers\", currentLayers);\n            model.save_changes();\n          }\n          break;\n\n        case 'removeLayer':\n          const removeLayerId = args[0];\n          if (map.getLayer(removeLayerId)) {\n            map.removeLayer(removeLayerId);\n            \/\/ Remove from model state\n            const currentLayers = model.get(\"_layers\") || {};\n            delete currentLayers[removeLayerId];\n            model.set(\"_layers\", currentLayers);\n            model.save_changes();\n          }\n          break;\n\n        case 'setStyle':\n          map.setStyle(args[0]);\n          break;\n\n        case 'addMarker':\n          const markerData = args[0];\n          const marker = new maplibregl.Marker()\n            .setLngLat(markerData.coordinates)\n            .addTo(map);\n\n          if (markerData.popup) {\n            const popup = new maplibregl.Popup()\n              .setHTML(markerData.popup);\n            marker.setPopup(popup);\n          }\n\n          el._markers.push(marker);\n          break;\n\n        case 'fitBounds':\n          const [bounds, options] = args;\n          \/\/ Convert [[lat,lng], [lat,lng]] to [[lng,lat], [lng,lat]]\n          const mapBounds = bounds.map(bound => [bound[1], bound[0]]);\n          map.fitBounds(mapBounds, options || {});\n          break;\n\n        default:\n          \/\/ Try to call the method directly on the map object\n          if (typeof map[method] === 'function') {\n            map[method](...args);\n          } else {\n            console.warn(`Unknown map method: ${method}`);\n          }\n      }\n    } catch (error) {\n      console.error(`Error executing map method ${method}:`, error);\n      sendEvent('error', { method, error: error.message });\n    }\n  }\n\n  \/\/ Cleanup function\n  return () => {\n    if (resizeObserver) {\n      resizeObserver.disconnect();\n    }\n    if (el._markers) {\n      el._markers.forEach(marker => marker.remove());\n      el._markers = [];\n    }\n    if (el._map) {\n      el._map.remove();\n      el._map = null;\n    }\n  };\n}\n\n\nexport default { render };", "_js_calls": [{"id": 0, "method": "addMarker", "args": [{"coordinates": [139.6503, 35.6762], "popup": "Tokyo, Japan"}], "kwargs": {}}], "_js_events": [], "_layers": {}, "_model_module": "anywidget", "_model_module_version": "~0.9.*", "_model_name": "AnyModel", "_sources": {}, "_view_count": null, "_view_module": "anywidget", "_view_module_version": "~0.9.*", "_view_name": "AnyView", "antialias": true, "bearing": 0.0, "center": [35.6762, 139.6503], "height": "600px", "layout": "IPY_MODEL_d4025a7424b84a7fbcf9df203c551db6", "map_style": "https:\/\/demotiles.maplibre.org\/style.json", "pitch": 0.0, "style": "", "tabbable": null, "tooltip": null, "width": "100%", "zoom": 10.0}}}, "version_major": 2, "version_minor": 0}
+{"state": {"9b14220dc0a6472da5ff7110022f2e5d": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "961b5987e1084319ba102ac47256cbee": {"model_name": "AnyModel", "model_module": "anywidget", "model_module_version": "~0.9.*", "state": {"_anywidget_id": "anymap.anymap.MapLibreMap", "_css": "\/* Import MapLibre GL CSS *\/\n@import url(\"https:\/\/unpkg.com\/maplibre-gl@5.5.0\/dist\/maplibre-gl.css\");\n\n\/* Widget container styles *\/\n.anymap-container {\n  position: relative;\n  overflow: hidden;\n  border-radius: 4px;\n  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);\n}\n\n\/* Ensure map container fills the widget *\/\n.anymap-container .maplibregl-map {\n  width: 100% !important;\n  height: 100% !important;\n}\n\n\/* Ensure proper sizing for anywidget containers *\/\n.jp-OutputArea-output[data-mime-type=\"application\/vnd.jupyter.widget-view+json\"] {\n  width: 100% !important;\n}\n\n\/* Map canvas sizing fixes *\/\n.maplibregl-canvas-container {\n  width: 100% !important;\n  height: 100% !important;\n}\n\n.maplibregl-canvas {\n  width: 100% !important;\n  height: 100% !important;\n}\n\n\/* Custom control styles *\/\n.anymap-controls {\n  position: absolute;\n  top: 10px;\n  right: 10px;\n  z-index: 1000;\n}\n\n\/* Popup styles *\/\n.maplibregl-popup-content {\n  padding: 10px;\n  border-radius: 4px;\n  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;\n  font-size: 14px;\n  line-height: 1.4;\n}\n\n\/* Marker styles *\/\n.anymap-marker {\n  background-color: #3498db;\n  width: 20px;\n  height: 20px;\n  border-radius: 50%;\n  border: 2px solid #ffffff;\n  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);\n  cursor: pointer;\n}\n\n\/* Loading spinner *\/\n.anymap-loading {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  z-index: 1000;\n}\n\n.anymap-loading::after {\n  content: \"\";\n  display: block;\n  width: 32px;\n  height: 32px;\n  border: 3px solid #f3f3f3;\n  border-top: 3px solid #3498db;\n  border-radius: 50%;\n  animation: spin 1s linear infinite;\n}\n\n@keyframes spin {\n  0% { transform: rotate(0deg); }\n  100% { transform: rotate(360deg); }\n}", "_dom_classes": [], "_esm": "import maplibregl from \"https:\/\/cdn.skypack.dev\/maplibre-gl@5.5.0\";\n\nfunction render({ model, el }) {\n  \/\/ Create unique ID for this widget instance\n  const widgetId = `anymap-${Math.random().toString(36).substr(2, 9)}`;\n\n  \/\/ Create container for the map\n  const container = document.createElement(\"div\");\n  container.id = widgetId;\n  container.style.width = model.get(\"width\");\n  container.style.height = model.get(\"height\");\n  container.style.position = \"relative\";\n  container.style.overflow = \"hidden\";\n\n  \/\/ Ensure parent element has proper styling\n  el.style.width = \"100%\";\n  el.style.display = \"block\";\n\n  \/\/ Clear any existing content and cleanup\n  if (el._map) {\n    el._map.remove();\n    el._map = null;\n  }\n  if (el._markers) {\n    el._markers.forEach(marker => marker.remove());\n    el._markers = [];\n  }\n\n  el.innerHTML = \"\";\n  el.appendChild(container);\n\n  \/\/ Initialize MapLibre map\n  const map = new maplibregl.Map({\n    container: container,\n    style: model.get(\"map_style\"),\n    center: model.get(\"center\").slice().reverse(), \/\/ [lng, lat] for MapLibre\n    zoom: model.get(\"zoom\"),\n    bearing: model.get(\"bearing\"),\n    pitch: model.get(\"pitch\"),\n    antialias: model.get(\"antialias\")\n  });\n\n  \/\/ Store map instance for cleanup\n  el._map = map;\n  el._markers = [];\n  el._widgetId = widgetId;\n\n  \/\/ Restore layers and sources from model state\n  const restoreMapState = () => {\n    const layers = model.get(\"_layers\") || {};\n    const sources = model.get(\"_sources\") || {};\n\n    \/\/ Add sources first\n    Object.entries(sources).forEach(([sourceId, sourceConfig]) => {\n      if (!map.getSource(sourceId)) {\n        try {\n          map.addSource(sourceId, sourceConfig);\n        } catch (error) {\n          console.warn(`Failed to restore source ${sourceId}:`, error);\n        }\n      }\n    });\n\n    \/\/ Then add layers\n    Object.entries(layers).forEach(([layerId, layerConfig]) => {\n      if (!map.getLayer(layerId)) {\n        try {\n          map.addLayer(layerConfig);\n        } catch (error) {\n          console.warn(`Failed to restore layer ${layerId}:`, error);\n        }\n      }\n    });\n  };\n\n  \/\/ Setup resize observer to handle container size changes\n  let resizeObserver;\n  if (window.ResizeObserver) {\n    resizeObserver = new ResizeObserver(() => {\n      \/\/ Trigger map resize after a short delay to ensure container is sized\n      setTimeout(() => {\n        if (map && map.getContainer()) {\n          map.resize();\n        }\n      }, 100);\n    });\n    resizeObserver.observe(el);\n    resizeObserver.observe(container);\n  }\n\n  \/\/ Force initial resize after map loads and when container becomes visible\n  map.on('load', () => {\n    setTimeout(() => {\n      map.resize();\n      \/\/ Restore state after map is fully loaded\n      restoreMapState();\n    }, 200);\n  });\n\n  \/\/ Additional resize handling for late-rendered widgets\n  const checkAndResize = () => {\n    if (map && map.getContainer() && map.getContainer().offsetWidth > 0) {\n      map.resize();\n    }\n  };\n\n  \/\/ Use requestAnimationFrame to ensure DOM is ready\n  requestAnimationFrame(() => {\n    setTimeout(checkAndResize, 100);\n    setTimeout(checkAndResize, 500);\n    setTimeout(checkAndResize, 1000);\n  });\n\n  \/\/ Handle map events and send to Python\n  const sendEvent = (eventType, eventData) => {\n    const currentEvents = model.get(\"_js_events\") || [];\n    const newEvents = [...currentEvents, { type: eventType, ...eventData }];\n    model.set(\"_js_events\", newEvents);\n    model.save_changes();\n  };\n\n  \/\/ Map event handlers\n  map.on('load', () => {\n    sendEvent('load', {});\n  });\n\n  map.on('click', (e) => {\n    sendEvent('click', {\n      lngLat: [e.lngLat.lng, e.lngLat.lat],\n      point: [e.point.x, e.point.y]\n    });\n  });\n\n  map.on('moveend', () => {\n    const center = map.getCenter();\n    sendEvent('moveend', {\n      center: [center.lat, center.lng],\n      zoom: map.getZoom(),\n      bearing: map.getBearing(),\n      pitch: map.getPitch()\n    });\n  });\n\n  map.on('zoomend', () => {\n    sendEvent('zoomend', {\n      zoom: map.getZoom()\n    });\n  });\n\n  \/\/ Listen for trait changes from Python\n  model.on(\"change:center\", () => {\n    const center = model.get(\"center\");\n    map.setCenter([center[1], center[0]]); \/\/ Convert [lat, lng] to [lng, lat]\n  });\n\n  model.on(\"change:zoom\", () => {\n    map.setZoom(model.get(\"zoom\"));\n  });\n\n  model.on(\"change:map_style\", () => {\n    map.setStyle(model.get(\"map_style\"));\n  });\n\n  model.on(\"change:bearing\", () => {\n    map.setBearing(model.get(\"bearing\"));\n  });\n\n  model.on(\"change:pitch\", () => {\n    map.setPitch(model.get(\"pitch\"));\n  });\n\n  \/\/ Handle JavaScript method calls from Python\n  model.on(\"change:_js_calls\", () => {\n    const calls = model.get(\"_js_calls\") || [];\n    calls.forEach(call => {\n      executeMapMethod(map, call, el);\n    });\n    \/\/ Clear the calls after processing\n    model.set(\"_js_calls\", []);\n    model.save_changes();\n  });\n\n  \/\/ Method execution function\n  function executeMapMethod(map, call, el) {\n    const { method, args, kwargs } = call;\n\n    try {\n      switch (method) {\n        case 'flyTo':\n          const flyToOptions = args[0] || {};\n          if (flyToOptions.center) {\n            flyToOptions.center = [flyToOptions.center[1], flyToOptions.center[0]]; \/\/ [lat,lng] to [lng,lat]\n          }\n          map.flyTo(flyToOptions);\n          break;\n\n        case 'addSource':\n          const [sourceId, sourceConfig] = args;\n          if (!map.getSource(sourceId)) {\n            map.addSource(sourceId, sourceConfig);\n            \/\/ Persist source in model state\n            const currentSources = model.get(\"_sources\") || {};\n            currentSources[sourceId] = sourceConfig;\n            model.set(\"_sources\", currentSources);\n            model.save_changes();\n          }\n          break;\n\n        case 'removeSource':\n          const removeSourceId = args[0];\n          if (map.getSource(removeSourceId)) {\n            map.removeSource(removeSourceId);\n            \/\/ Remove from model state\n            const currentSources = model.get(\"_sources\") || {};\n            delete currentSources[removeSourceId];\n            model.set(\"_sources\", currentSources);\n            model.save_changes();\n          }\n          break;\n\n        case 'addLayer':\n          const [layerConfig, layerId] = args;\n          const actualLayerId = layerId || layerConfig.id;\n          if (!map.getLayer(actualLayerId)) {\n            map.addLayer(layerConfig);\n            \/\/ Persist layer in model state\n            const currentLayers = model.get(\"_layers\") || {};\n            currentLayers[actualLayerId] = layerConfig;\n            model.set(\"_layers\", currentLayers);\n            model.save_changes();\n          }\n          break;\n\n        case 'removeLayer':\n          const removeLayerId = args[0];\n          if (map.getLayer(removeLayerId)) {\n            map.removeLayer(removeLayerId);\n            \/\/ Remove from model state\n            const currentLayers = model.get(\"_layers\") || {};\n            delete currentLayers[removeLayerId];\n            model.set(\"_layers\", currentLayers);\n            model.save_changes();\n          }\n          break;\n\n        case 'setStyle':\n          map.setStyle(args[0]);\n          break;\n\n        case 'addMarker':\n          const markerData = args[0];\n          const marker = new maplibregl.Marker()\n            .setLngLat(markerData.coordinates)\n            .addTo(map);\n\n          if (markerData.popup) {\n            const popup = new maplibregl.Popup()\n              .setHTML(markerData.popup);\n            marker.setPopup(popup);\n          }\n\n          el._markers.push(marker);\n          break;\n\n        case 'fitBounds':\n          const [bounds, options] = args;\n          \/\/ Convert [[lat,lng], [lat,lng]] to [[lng,lat], [lng,lat]]\n          const mapBounds = bounds.map(bound => [bound[1], bound[0]]);\n          map.fitBounds(mapBounds, options || {});\n          break;\n\n        default:\n          \/\/ Try to call the method directly on the map object\n          if (typeof map[method] === 'function') {\n            map[method](...args);\n          } else {\n            console.warn(`Unknown map method: ${method}`);\n          }\n      }\n    } catch (error) {\n      console.error(`Error executing map method ${method}:`, error);\n      sendEvent('error', { method, error: error.message });\n    }\n  }\n\n  \/\/ Cleanup function\n  return () => {\n    if (resizeObserver) {\n      resizeObserver.disconnect();\n    }\n    if (el._markers) {\n      el._markers.forEach(marker => marker.remove());\n      el._markers = [];\n    }\n    if (el._map) {\n      el._map.remove();\n      el._map = null;\n    }\n  };\n}\n\n\nexport default { render };", "_js_calls": [{"id": 0, "method": "addSource", "args": ["sample_points_source", {"type": "geojson", "data": {"type": "FeatureCollection", "features": [{"type": "Feature", "geometry": {"type": "Point", "coordinates": [-122.4194, 37.7749]}, "properties": {"name": "San Francisco", "description": "The beautiful city by the bay"}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-122.4594, 37.7849]}, "properties": {"name": "Golden Gate Park", "description": "Large urban park"}}]}}], "kwargs": {}}, {"id": 1, "method": "addLayer", "args": [{"id": "sample_points", "type": "circle", "source": "sample_points_source", "paint": {"circle-radius": 10, "circle-color": "#ff6b6b", "circle-stroke-color": "#ffffff", "circle-stroke-width": 2}}, "sample_points"], "kwargs": {}}, {"id": 2, "method": "addSource", "args": ["osm_overlay_source", {"type": "raster", "tiles": ["https:\/\/tile.openstreetmap.org\/{z}\/{x}\/{y}.png"], "tileSize": 256}], "kwargs": {}}, {"id": 3, "method": "addLayer", "args": [{"id": "osm_overlay", "type": "raster", "source": "osm_overlay_source", "paint": {"raster-opacity": 0.3}}, "osm_overlay"], "kwargs": {}}], "_js_events": [], "_layers": {"sample_points": {"id": "sample_points", "type": "circle", "source": "sample_points_source", "paint": {"circle-radius": 10, "circle-color": "#ff6b6b", "circle-stroke-color": "#ffffff", "circle-stroke-width": 2}}, "osm_overlay": {"id": "osm_overlay", "type": "raster", "source": "osm_overlay_source", "paint": {"raster-opacity": 0.3}}}, "_model_module": "anywidget", "_model_module_version": "~0.9.*", "_model_name": "AnyModel", "_sources": {"sample_points_source": {"type": "geojson", "data": {"type": "FeatureCollection", "features": [{"type": "Feature", "geometry": {"type": "Point", "coordinates": [-122.4194, 37.7749]}, "properties": {"name": "San Francisco", "description": "The beautiful city by the bay"}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-122.4594, 37.7849]}, "properties": {"name": "Golden Gate Park", "description": "Large urban park"}}]}}, "osm_overlay_source": {"type": "raster", "tiles": ["https:\/\/tile.openstreetmap.org\/{z}\/{x}\/{y}.png"], "tileSize": 256}}, "_view_count": null, "_view_module": "anywidget", "_view_module_version": "~0.9.*", "_view_name": "AnyView", "antialias": true, "bearing": 0.0, "center": [37.7749, -122.4194], "height": "600px", "layout": "IPY_MODEL_9b14220dc0a6472da5ff7110022f2e5d", "map_style": "https:\/\/demotiles.maplibre.org\/style.json", "pitch": 0.0, "style": "", "tabbable": null, "tooltip": null, "width": "100%", "zoom": 12.0}}, "72d3e4588026423e8cdc2d94a16984ea": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "146f6445cc254f5c9b18d768412c7150": {"model_name": "AnyModel", "model_module": "anywidget", "model_module_version": "~0.9.*", "state": {"_anywidget_id": "anymap.anymap.MapboxMap", "_css": "\/* Import Mapbox GL CSS *\/\n@import url(\"https:\/\/api.mapbox.com\/mapbox-gl-js\/v3.13.0\/mapbox-gl.css\");\n\n\/* Container styling for the map widget *\/\n.mapboxgl-map {\n    font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Oxygen, Ubuntu, Cantarell, \"Fira Sans\", \"Droid Sans\", \"Helvetica Neue\", Arial, sans-serif;\n    overflow: hidden;\n    position: relative;\n    border-radius: 4px;\n    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);\n}\n\n\/* Ensure the map container fills its parent *\/\n.mapboxgl-canvas-container {\n    width: 100% !important;\n    height: 100% !important;\n}\n\n.mapboxgl-canvas {\n    width: 100% !important;\n    height: 100% !important;\n}\n\n\/* Widget container styling *\/\n.anymap-mapbox-container {\n    width: 100%;\n    height: 100%;\n    display: block;\n    position: relative;\n    overflow: hidden;\n    border: 1px solid #ddd;\n    border-radius: 4px;\n}\n\n\/* Control styling for better visibility *\/\n.mapboxgl-ctrl-group {\n    background: rgba(255, 255, 255, 0.95);\n    backdrop-filter: blur(10px);\n    border-radius: 6px;\n    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);\n}\n\n.mapboxgl-ctrl-group > button {\n    background-color: transparent;\n    border: none;\n    color: #333;\n    padding: 8px;\n    cursor: pointer;\n    transition: background-color 0.2s ease;\n}\n\n.mapboxgl-ctrl-group > button:hover {\n    background-color: rgba(0, 0, 0, 0.05);\n}\n\n\/* Attribution styling *\/\n.mapboxgl-ctrl-attrib {\n    background: rgba(255, 255, 255, 0.9);\n    backdrop-filter: blur(10px);\n    border-radius: 4px;\n    font-size: 11px;\n    padding: 2px 6px;\n}\n\n\/* Popup styling *\/\n.mapboxgl-popup {\n    max-width: 300px;\n}\n\n.mapboxgl-popup-content {\n    background: white;\n    border-radius: 8px;\n    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);\n    padding: 12px 16px;\n    font-size: 14px;\n    line-height: 1.4;\n}\n\n.mapboxgl-popup-close-button {\n    background: transparent;\n    border: none;\n    color: #666;\n    cursor: pointer;\n    font-size: 16px;\n    padding: 0;\n    position: absolute;\n    right: 8px;\n    top: 8px;\n    width: 20px;\n    height: 20px;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mapboxgl-popup-close-button:hover {\n    color: #333;\n}\n\n\/* Marker styling *\/\n.mapboxgl-marker {\n    cursor: pointer;\n}\n\n\/* Loading indicator *\/\n.anymap-loading {\n    position: absolute;\n    top: 50%;\n    left: 50%;\n    transform: translate(-50%, -50%);\n    background: rgba(255, 255, 255, 0.9);\n    padding: 12px 20px;\n    border-radius: 6px;\n    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);\n    font-size: 14px;\n    color: #666;\n    z-index: 1000;\n}\n\n\/* Responsive adjustments *\/\n@media (max-width: 768px) {\n    .mapboxgl-ctrl-group {\n        margin: 8px;\n    }\n\n    .mapboxgl-ctrl-attrib {\n        font-size: 10px;\n        padding: 1px 4px;\n    }\n}\n\n\/* Dark mode support *\/\n@media (prefers-color-scheme: dark) {\n    .mapboxgl-ctrl-group {\n        background: rgba(40, 40, 40, 0.95);\n    }\n\n    .mapboxgl-ctrl-group > button {\n        color: #fff;\n    }\n\n    .mapboxgl-ctrl-group > button:hover {\n        background-color: rgba(255, 255, 255, 0.1);\n    }\n\n    .mapboxgl-ctrl-attrib {\n        background: rgba(40, 40, 40, 0.9);\n        color: #fff;\n    }\n\n    .mapboxgl-popup-content {\n        background: #333;\n        color: #fff;\n    }\n\n    .mapboxgl-popup-close-button {\n        color: #ccc;\n    }\n\n    .mapboxgl-popup-close-button:hover {\n        color: #fff;\n    }\n}", "_dom_classes": [], "_esm": "import mapboxgl from \"https:\/\/cdn.skypack.dev\/mapbox-gl@v3.13.0\";\n\nfunction render({ model, el }) {\n  \/\/ Create unique ID for this widget instance\n  const widgetId = `anymap-mapbox-${Math.random().toString(36).substr(2, 9)}`;\n\n  \/\/ Create container for the map\n  const container = document.createElement(\"div\");\n  container.id = widgetId;\n  container.style.width = model.get(\"width\");\n  container.style.height = model.get(\"height\");\n  container.style.position = \"relative\";\n  container.style.overflow = \"hidden\";\n\n  \/\/ Ensure parent element has proper styling\n  el.style.width = \"100%\";\n  el.style.display = \"block\";\n\n  \/\/ Clear any existing content and cleanup\n  if (el._map) {\n    el._map.remove();\n    el._map = null;\n  }\n  if (el._markers) {\n    el._markers.forEach(marker => marker.remove());\n    el._markers = [];\n  }\n\n  el.innerHTML = \"\";\n  el.appendChild(container);\n\n  \/\/ Set Mapbox access token\n  const accessToken = model.get(\"access_token\");\n  if (accessToken) {\n    mapboxgl.accessToken = accessToken;\n  }\n\n  \/\/ Initialize Mapbox map\n  const map = new mapboxgl.Map({\n    container: container,\n    style: model.get(\"map_style\"),\n    center: model.get(\"center\").slice().reverse(), \/\/ [lng, lat] for Mapbox\n    zoom: model.get(\"zoom\"),\n    bearing: model.get(\"bearing\"),\n    pitch: model.get(\"pitch\"),\n    antialias: model.get(\"antialias\")\n  });\n\n  \/\/ Store map instance for cleanup\n  el._map = map;\n  el._markers = [];\n  el._widgetId = widgetId;\n\n  \/\/ Restore layers and sources from model state\n  const restoreMapState = () => {\n    const layers = model.get(\"_layers\") || {};\n    const sources = model.get(\"_sources\") || {};\n\n    \/\/ Add sources first\n    Object.entries(sources).forEach(([sourceId, sourceConfig]) => {\n      if (!map.getSource(sourceId)) {\n        try {\n          map.addSource(sourceId, sourceConfig);\n        } catch (error) {\n          console.warn(`Failed to restore source ${sourceId}:`, error);\n        }\n      }\n    });\n\n    \/\/ Then add layers\n    Object.entries(layers).forEach(([layerId, layerConfig]) => {\n      if (!map.getLayer(layerId)) {\n        try {\n          map.addLayer(layerConfig);\n        } catch (error) {\n          console.warn(`Failed to restore layer ${layerId}:`, error);\n        }\n      }\n    });\n  };\n\n  \/\/ Setup resize observer to handle container size changes\n  let resizeObserver;\n  if (window.ResizeObserver) {\n    resizeObserver = new ResizeObserver(() => {\n      \/\/ Trigger map resize after a short delay to ensure container is sized\n      setTimeout(() => {\n        if (map && map.getContainer()) {\n          map.resize();\n        }\n      }, 100);\n    });\n    resizeObserver.observe(el);\n    resizeObserver.observe(container);\n  }\n\n  \/\/ Force initial resize after map loads and when container becomes visible\n  map.on('load', () => {\n    setTimeout(() => {\n      map.resize();\n      \/\/ Restore state after map is fully loaded\n      restoreMapState();\n    }, 200);\n  });\n\n  \/\/ Additional resize handling for late-rendered widgets\n  const checkAndResize = () => {\n    if (map && map.getContainer() && map.getContainer().offsetWidth > 0) {\n      map.resize();\n    }\n  };\n\n  \/\/ Use requestAnimationFrame to ensure DOM is ready\n  requestAnimationFrame(() => {\n    setTimeout(checkAndResize, 100);\n    setTimeout(checkAndResize, 500);\n    setTimeout(checkAndResize, 1000);\n  });\n\n  \/\/ Handle map events and send to Python\n  const sendEvent = (eventType, eventData) => {\n    const currentEvents = model.get(\"_js_events\") || [];\n    const newEvents = [...currentEvents, { type: eventType, ...eventData }];\n    model.set(\"_js_events\", newEvents);\n    model.save_changes();\n  };\n\n  \/\/ Map event handlers\n  map.on('load', () => {\n    sendEvent('load', {});\n  });\n\n  map.on('click', (e) => {\n    sendEvent('click', {\n      lngLat: [e.lngLat.lng, e.lngLat.lat],\n      point: [e.point.x, e.point.y]\n    });\n  });\n\n  map.on('moveend', () => {\n    const center = map.getCenter();\n    sendEvent('moveend', {\n      center: [center.lat, center.lng],\n      zoom: map.getZoom(),\n      bearing: map.getBearing(),\n      pitch: map.getPitch()\n    });\n  });\n\n  map.on('zoomend', () => {\n    sendEvent('zoomend', {\n      zoom: map.getZoom()\n    });\n  });\n\n  \/\/ Listen for trait changes from Python\n  model.on(\"change:center\", () => {\n    const center = model.get(\"center\");\n    map.setCenter([center[1], center[0]]); \/\/ Convert [lat, lng] to [lng, lat]\n  });\n\n  model.on(\"change:zoom\", () => {\n    map.setZoom(model.get(\"zoom\"));\n  });\n\n  model.on(\"change:map_style\", () => {\n    map.setStyle(model.get(\"map_style\"));\n  });\n\n  model.on(\"change:bearing\", () => {\n    map.setBearing(model.get(\"bearing\"));\n  });\n\n  model.on(\"change:pitch\", () => {\n    map.setPitch(model.get(\"pitch\"));\n  });\n\n  model.on(\"change:access_token\", () => {\n    const newToken = model.get(\"access_token\");\n    if (newToken) {\n      mapboxgl.accessToken = newToken;\n    }\n  });\n\n  \/\/ Handle JavaScript method calls from Python\n  model.on(\"change:_js_calls\", () => {\n    const calls = model.get(\"_js_calls\") || [];\n    calls.forEach(call => {\n      executeMapMethod(map, call, el);\n    });\n    \/\/ Clear the calls after processing\n    model.set(\"_js_calls\", []);\n    model.save_changes();\n  });\n\n  \/\/ Method execution function\n  function executeMapMethod(map, call, el) {\n    const { method, args, kwargs } = call;\n\n    try {\n      switch (method) {\n        case 'flyTo':\n          const flyToOptions = args[0] || {};\n          if (flyToOptions.center) {\n            flyToOptions.center = [flyToOptions.center[1], flyToOptions.center[0]]; \/\/ [lat,lng] to [lng,lat]\n          }\n          map.flyTo(flyToOptions);\n          break;\n\n        case 'addSource':\n          const [sourceId, sourceConfig] = args;\n          if (!map.getSource(sourceId)) {\n            map.addSource(sourceId, sourceConfig);\n            \/\/ Persist source in model state\n            const currentSources = model.get(\"_sources\") || {};\n            currentSources[sourceId] = sourceConfig;\n            model.set(\"_sources\", currentSources);\n            model.save_changes();\n          }\n          break;\n\n        case 'removeSource':\n          const removeSourceId = args[0];\n          if (map.getSource(removeSourceId)) {\n            map.removeSource(removeSourceId);\n            \/\/ Remove from model state\n            const currentSources = model.get(\"_sources\") || {};\n            delete currentSources[removeSourceId];\n            model.set(\"_sources\", currentSources);\n            model.save_changes();\n          }\n          break;\n\n        case 'addLayer':\n          const [layerConfig, layerId] = args;\n          const actualLayerId = layerId || layerConfig.id;\n          if (!map.getLayer(actualLayerId)) {\n            map.addLayer(layerConfig);\n            \/\/ Persist layer in model state\n            const currentLayers = model.get(\"_layers\") || {};\n            currentLayers[actualLayerId] = layerConfig;\n            model.set(\"_layers\", currentLayers);\n            model.save_changes();\n          }\n          break;\n\n        case 'removeLayer':\n          const removeLayerId = args[0];\n          if (map.getLayer(removeLayerId)) {\n            map.removeLayer(removeLayerId);\n            \/\/ Remove from model state\n            const currentLayers = model.get(\"_layers\") || {};\n            delete currentLayers[removeLayerId];\n            model.set(\"_layers\", currentLayers);\n            model.save_changes();\n          }\n          break;\n\n        case 'setStyle':\n          map.setStyle(args[0]);\n          break;\n\n        case 'addMarker':\n          const markerData = args[0];\n          const marker = new mapboxgl.Marker()\n            .setLngLat(markerData.coordinates)\n            .addTo(map);\n\n          if (markerData.popup) {\n            const popup = new mapboxgl.Popup()\n              .setHTML(markerData.popup);\n            marker.setPopup(popup);\n          }\n\n          el._markers.push(marker);\n          break;\n\n        case 'fitBounds':\n          const [bounds, options] = args;\n          \/\/ Convert [[lat,lng], [lat,lng]] to [[lng,lat], [lng,lat]]\n          const mapBounds = bounds.map(bound => [bound[1], bound[0]]);\n          map.fitBounds(mapBounds, options || {});\n          break;\n\n        case 'addControl':\n          const [controlType, controlOptions] = args;\n          let control;\n\n          switch (controlType) {\n            case 'navigation':\n              control = new mapboxgl.NavigationControl(controlOptions || {});\n              break;\n            case 'scale':\n              control = new mapboxgl.ScaleControl(controlOptions || {});\n              break;\n            case 'fullscreen':\n              control = new mapboxgl.FullscreenControl(controlOptions || {});\n              break;\n            case 'geolocate':\n              control = new mapboxgl.GeolocateControl(controlOptions || {});\n              break;\n            default:\n              console.warn(`Unknown control type: ${controlType}`);\n              return;\n          }\n\n          map.addControl(control, controlOptions?.position || 'top-right');\n          break;\n\n        case 'setTerrain':\n          const terrainConfig = args[0];\n          if (terrainConfig) {\n            map.setTerrain(terrainConfig);\n          } else {\n            map.setTerrain(null);\n          }\n          break;\n\n        case 'setFog':\n          const fogConfig = args[0];\n          if (fogConfig) {\n            map.setFog(fogConfig);\n          } else {\n            map.setFog(null);\n          }\n          break;\n\n        default:\n          \/\/ Try to call the method directly on the map object\n          if (typeof map[method] === 'function') {\n            map[method](...args);\n          } else {\n            console.warn(`Unknown map method: ${method}`);\n          }\n      }\n    } catch (error) {\n      console.error(`Error executing map method ${method}:`, error);\n      sendEvent('error', { method, error: error.message });\n    }\n  }\n\n  \/\/ Cleanup function\n  return () => {\n    if (resizeObserver) {\n      resizeObserver.disconnect();\n    }\n    if (el._markers) {\n      el._markers.forEach(marker => marker.remove());\n      el._markers = [];\n    }\n    if (el._map) {\n      el._map.remove();\n      el._map = null;\n    }\n  };\n}\n\nexport default { render };", "_js_calls": [{"id": 0, "method": "addSource", "args": ["nyc_landmarks_source", {"type": "geojson", "data": {"type": "FeatureCollection", "features": [{"type": "Feature", "geometry": {"type": "Point", "coordinates": [-74.0445, 40.6892]}, "properties": {"name": "Statue of Liberty"}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-73.9857, 40.7484]}, "properties": {"name": "Empire State Building"}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-73.9781, 40.7549]}, "properties": {"name": "Times Square"}}]}}], "kwargs": {}}, {"id": 1, "method": "addLayer", "args": [{"id": "nyc_landmarks", "type": "circle", "source": "nyc_landmarks_source", "paint": {"circle-radius": 8, "circle-color": "#4264fb", "circle-stroke-color": "#ffffff", "circle-stroke-width": 2}}, "nyc_landmarks"], "kwargs": {}}], "_js_events": [], "_layers": {"nyc_landmarks": {"id": "nyc_landmarks", "type": "circle", "source": "nyc_landmarks_source", "paint": {"circle-radius": 8, "circle-color": "#4264fb", "circle-stroke-color": "#ffffff", "circle-stroke-width": 2}}}, "_model_module": "anywidget", "_model_module_version": "~0.9.*", "_model_name": "AnyModel", "_sources": {"nyc_landmarks_source": {"type": "geojson", "data": {"type": "FeatureCollection", "features": [{"type": "Feature", "geometry": {"type": "Point", "coordinates": [-74.0445, 40.6892]}, "properties": {"name": "Statue of Liberty"}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-73.9857, 40.7484]}, "properties": {"name": "Empire State Building"}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-73.9781, 40.7549]}, "properties": {"name": "Times Square"}}]}}}, "_view_count": null, "_view_module": "anywidget", "_view_module_version": "~0.9.*", "_view_name": "AnyView", "access_token": "", "antialias": true, "bearing": 0.0, "center": [40.7128, -74.006], "height": "600px", "layout": "IPY_MODEL_72d3e4588026423e8cdc2d94a16984ea", "map_style": "mapbox:\/\/styles\/mapbox\/streets-v12", "pitch": 0.0, "style": "", "tabbable": null, "tooltip": null, "width": "100%", "zoom": 13.0}}, "8137edca15a940f8a218ddc5be0ba785": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "aafbd3ac5cd449e7aae9bf762b6b61ef": {"model_name": "AnyModel", "model_module": "anywidget", "model_module_version": "~0.9.*", "state": {"_anywidget_id": "anymap.anymap.MapLibreMap", "_css": "\/* Import MapLibre GL CSS *\/\n@import url(\"https:\/\/unpkg.com\/maplibre-gl@5.5.0\/dist\/maplibre-gl.css\");\n\n\/* Widget container styles *\/\n.anymap-container {\n  position: relative;\n  overflow: hidden;\n  border-radius: 4px;\n  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);\n}\n\n\/* Ensure map container fills the widget *\/\n.anymap-container .maplibregl-map {\n  width: 100% !important;\n  height: 100% !important;\n}\n\n\/* Ensure proper sizing for anywidget containers *\/\n.jp-OutputArea-output[data-mime-type=\"application\/vnd.jupyter.widget-view+json\"] {\n  width: 100% !important;\n}\n\n\/* Map canvas sizing fixes *\/\n.maplibregl-canvas-container {\n  width: 100% !important;\n  height: 100% !important;\n}\n\n.maplibregl-canvas {\n  width: 100% !important;\n  height: 100% !important;\n}\n\n\/* Custom control styles *\/\n.anymap-controls {\n  position: absolute;\n  top: 10px;\n  right: 10px;\n  z-index: 1000;\n}\n\n\/* Popup styles *\/\n.maplibregl-popup-content {\n  padding: 10px;\n  border-radius: 4px;\n  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;\n  font-size: 14px;\n  line-height: 1.4;\n}\n\n\/* Marker styles *\/\n.anymap-marker {\n  background-color: #3498db;\n  width: 20px;\n  height: 20px;\n  border-radius: 50%;\n  border: 2px solid #ffffff;\n  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);\n  cursor: pointer;\n}\n\n\/* Loading spinner *\/\n.anymap-loading {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  z-index: 1000;\n}\n\n.anymap-loading::after {\n  content: \"\";\n  display: block;\n  width: 32px;\n  height: 32px;\n  border: 3px solid #f3f3f3;\n  border-top: 3px solid #3498db;\n  border-radius: 50%;\n  animation: spin 1s linear infinite;\n}\n\n@keyframes spin {\n  0% { transform: rotate(0deg); }\n  100% { transform: rotate(360deg); }\n}", "_dom_classes": [], "_esm": "import maplibregl from \"https:\/\/cdn.skypack.dev\/maplibre-gl@5.5.0\";\n\nfunction render({ model, el }) {\n  \/\/ Create unique ID for this widget instance\n  const widgetId = `anymap-${Math.random().toString(36).substr(2, 9)}`;\n\n  \/\/ Create container for the map\n  const container = document.createElement(\"div\");\n  container.id = widgetId;\n  container.style.width = model.get(\"width\");\n  container.style.height = model.get(\"height\");\n  container.style.position = \"relative\";\n  container.style.overflow = \"hidden\";\n\n  \/\/ Ensure parent element has proper styling\n  el.style.width = \"100%\";\n  el.style.display = \"block\";\n\n  \/\/ Clear any existing content and cleanup\n  if (el._map) {\n    el._map.remove();\n    el._map = null;\n  }\n  if (el._markers) {\n    el._markers.forEach(marker => marker.remove());\n    el._markers = [];\n  }\n\n  el.innerHTML = \"\";\n  el.appendChild(container);\n\n  \/\/ Initialize MapLibre map\n  const map = new maplibregl.Map({\n    container: container,\n    style: model.get(\"map_style\"),\n    center: model.get(\"center\").slice().reverse(), \/\/ [lng, lat] for MapLibre\n    zoom: model.get(\"zoom\"),\n    bearing: model.get(\"bearing\"),\n    pitch: model.get(\"pitch\"),\n    antialias: model.get(\"antialias\")\n  });\n\n  \/\/ Store map instance for cleanup\n  el._map = map;\n  el._markers = [];\n  el._widgetId = widgetId;\n\n  \/\/ Restore layers and sources from model state\n  const restoreMapState = () => {\n    const layers = model.get(\"_layers\") || {};\n    const sources = model.get(\"_sources\") || {};\n\n    \/\/ Add sources first\n    Object.entries(sources).forEach(([sourceId, sourceConfig]) => {\n      if (!map.getSource(sourceId)) {\n        try {\n          map.addSource(sourceId, sourceConfig);\n        } catch (error) {\n          console.warn(`Failed to restore source ${sourceId}:`, error);\n        }\n      }\n    });\n\n    \/\/ Then add layers\n    Object.entries(layers).forEach(([layerId, layerConfig]) => {\n      if (!map.getLayer(layerId)) {\n        try {\n          map.addLayer(layerConfig);\n        } catch (error) {\n          console.warn(`Failed to restore layer ${layerId}:`, error);\n        }\n      }\n    });\n  };\n\n  \/\/ Setup resize observer to handle container size changes\n  let resizeObserver;\n  if (window.ResizeObserver) {\n    resizeObserver = new ResizeObserver(() => {\n      \/\/ Trigger map resize after a short delay to ensure container is sized\n      setTimeout(() => {\n        if (map && map.getContainer()) {\n          map.resize();\n        }\n      }, 100);\n    });\n    resizeObserver.observe(el);\n    resizeObserver.observe(container);\n  }\n\n  \/\/ Force initial resize after map loads and when container becomes visible\n  map.on('load', () => {\n    setTimeout(() => {\n      map.resize();\n      \/\/ Restore state after map is fully loaded\n      restoreMapState();\n    }, 200);\n  });\n\n  \/\/ Additional resize handling for late-rendered widgets\n  const checkAndResize = () => {\n    if (map && map.getContainer() && map.getContainer().offsetWidth > 0) {\n      map.resize();\n    }\n  };\n\n  \/\/ Use requestAnimationFrame to ensure DOM is ready\n  requestAnimationFrame(() => {\n    setTimeout(checkAndResize, 100);\n    setTimeout(checkAndResize, 500);\n    setTimeout(checkAndResize, 1000);\n  });\n\n  \/\/ Handle map events and send to Python\n  const sendEvent = (eventType, eventData) => {\n    const currentEvents = model.get(\"_js_events\") || [];\n    const newEvents = [...currentEvents, { type: eventType, ...eventData }];\n    model.set(\"_js_events\", newEvents);\n    model.save_changes();\n  };\n\n  \/\/ Map event handlers\n  map.on('load', () => {\n    sendEvent('load', {});\n  });\n\n  map.on('click', (e) => {\n    sendEvent('click', {\n      lngLat: [e.lngLat.lng, e.lngLat.lat],\n      point: [e.point.x, e.point.y]\n    });\n  });\n\n  map.on('moveend', () => {\n    const center = map.getCenter();\n    sendEvent('moveend', {\n      center: [center.lat, center.lng],\n      zoom: map.getZoom(),\n      bearing: map.getBearing(),\n      pitch: map.getPitch()\n    });\n  });\n\n  map.on('zoomend', () => {\n    sendEvent('zoomend', {\n      zoom: map.getZoom()\n    });\n  });\n\n  \/\/ Listen for trait changes from Python\n  model.on(\"change:center\", () => {\n    const center = model.get(\"center\");\n    map.setCenter([center[1], center[0]]); \/\/ Convert [lat, lng] to [lng, lat]\n  });\n\n  model.on(\"change:zoom\", () => {\n    map.setZoom(model.get(\"zoom\"));\n  });\n\n  model.on(\"change:map_style\", () => {\n    map.setStyle(model.get(\"map_style\"));\n  });\n\n  model.on(\"change:bearing\", () => {\n    map.setBearing(model.get(\"bearing\"));\n  });\n\n  model.on(\"change:pitch\", () => {\n    map.setPitch(model.get(\"pitch\"));\n  });\n\n  \/\/ Handle JavaScript method calls from Python\n  model.on(\"change:_js_calls\", () => {\n    const calls = model.get(\"_js_calls\") || [];\n    calls.forEach(call => {\n      executeMapMethod(map, call, el);\n    });\n    \/\/ Clear the calls after processing\n    model.set(\"_js_calls\", []);\n    model.save_changes();\n  });\n\n  \/\/ Method execution function\n  function executeMapMethod(map, call, el) {\n    const { method, args, kwargs } = call;\n\n    try {\n      switch (method) {\n        case 'flyTo':\n          const flyToOptions = args[0] || {};\n          if (flyToOptions.center) {\n            flyToOptions.center = [flyToOptions.center[1], flyToOptions.center[0]]; \/\/ [lat,lng] to [lng,lat]\n          }\n          map.flyTo(flyToOptions);\n          break;\n\n        case 'addSource':\n          const [sourceId, sourceConfig] = args;\n          if (!map.getSource(sourceId)) {\n            map.addSource(sourceId, sourceConfig);\n            \/\/ Persist source in model state\n            const currentSources = model.get(\"_sources\") || {};\n            currentSources[sourceId] = sourceConfig;\n            model.set(\"_sources\", currentSources);\n            model.save_changes();\n          }\n          break;\n\n        case 'removeSource':\n          const removeSourceId = args[0];\n          if (map.getSource(removeSourceId)) {\n            map.removeSource(removeSourceId);\n            \/\/ Remove from model state\n            const currentSources = model.get(\"_sources\") || {};\n            delete currentSources[removeSourceId];\n            model.set(\"_sources\", currentSources);\n            model.save_changes();\n          }\n          break;\n\n        case 'addLayer':\n          const [layerConfig, layerId] = args;\n          const actualLayerId = layerId || layerConfig.id;\n          if (!map.getLayer(actualLayerId)) {\n            map.addLayer(layerConfig);\n            \/\/ Persist layer in model state\n            const currentLayers = model.get(\"_layers\") || {};\n            currentLayers[actualLayerId] = layerConfig;\n            model.set(\"_layers\", currentLayers);\n            model.save_changes();\n          }\n          break;\n\n        case 'removeLayer':\n          const removeLayerId = args[0];\n          if (map.getLayer(removeLayerId)) {\n            map.removeLayer(removeLayerId);\n            \/\/ Remove from model state\n            const currentLayers = model.get(\"_layers\") || {};\n            delete currentLayers[removeLayerId];\n            model.set(\"_layers\", currentLayers);\n            model.save_changes();\n          }\n          break;\n\n        case 'setStyle':\n          map.setStyle(args[0]);\n          break;\n\n        case 'addMarker':\n          const markerData = args[0];\n          const marker = new maplibregl.Marker()\n            .setLngLat(markerData.coordinates)\n            .addTo(map);\n\n          if (markerData.popup) {\n            const popup = new maplibregl.Popup()\n              .setHTML(markerData.popup);\n            marker.setPopup(popup);\n          }\n\n          el._markers.push(marker);\n          break;\n\n        case 'fitBounds':\n          const [bounds, options] = args;\n          \/\/ Convert [[lat,lng], [lat,lng]] to [[lng,lat], [lng,lat]]\n          const mapBounds = bounds.map(bound => [bound[1], bound[0]]);\n          map.fitBounds(mapBounds, options || {});\n          break;\n\n        default:\n          \/\/ Try to call the method directly on the map object\n          if (typeof map[method] === 'function') {\n            map[method](...args);\n          } else {\n            console.warn(`Unknown map method: ${method}`);\n          }\n      }\n    } catch (error) {\n      console.error(`Error executing map method ${method}:`, error);\n      sendEvent('error', { method, error: error.message });\n    }\n  }\n\n  \/\/ Cleanup function\n  return () => {\n    if (resizeObserver) {\n      resizeObserver.disconnect();\n    }\n    if (el._markers) {\n      el._markers.forEach(marker => marker.remove());\n      el._markers = [];\n    }\n    if (el._map) {\n      el._map.remove();\n      el._map = null;\n    }\n  };\n}\n\n\nexport default { render };", "_js_calls": [{"id": 0, "method": "addSource", "args": ["london_area_source", {"type": "geojson", "data": {"type": "FeatureCollection", "features": [{"type": "Feature", "geometry": {"type": "Polygon", "coordinates": [[[-0.2, 51.45], [0.1, 51.45], [0.1, 51.55], [-0.2, 51.55], [-0.2, 51.45]]]}, "properties": {"name": "Central London Area"}}]}}], "kwargs": {}}, {"id": 1, "method": "addLayer", "args": [{"id": "london_area", "type": "fill", "source": "london_area_source", "paint": {"fill-color": "#088", "fill-opacity": 0.3}}, "london_area"], "kwargs": {}}], "_js_events": [], "_layers": {"london_area": {"id": "london_area", "type": "fill", "source": "london_area_source", "paint": {"fill-color": "#088", "fill-opacity": 0.3}}}, "_model_module": "anywidget", "_model_module_version": "~0.9.*", "_model_name": "AnyModel", "_sources": {"london_area_source": {"type": "geojson", "data": {"type": "FeatureCollection", "features": [{"type": "Feature", "geometry": {"type": "Polygon", "coordinates": [[[-0.2, 51.45], [0.1, 51.45], [0.1, 51.55], [-0.2, 51.55], [-0.2, 51.45]]]}, "properties": {"name": "Central London Area"}}]}}}, "_view_count": null, "_view_module": "anywidget", "_view_module_version": "~0.9.*", "_view_name": "AnyView", "antialias": true, "bearing": 45.0, "center": [51.505, -0.09], "height": "600px", "layout": "IPY_MODEL_8137edca15a940f8a218ddc5be0ba785", "map_style": "https:\/\/demotiles.maplibre.org\/style.json", "pitch": 30.0, "style": "", "tabbable": null, "tooltip": null, "width": "100%", "zoom": 10.0}}}, "version_major": 2, "version_minor": 0}
 </script>
 
         <style>
@@ -2155,7 +2248,7 @@ m2.set_pitch(0)</div>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 3, 2025 16:11:23 UTC"><span class="timeago" datetime="2025-07-03T16:11:23+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 3, 2025 16:11:23 UTC">2025-07-03</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 3, 2025 23:50:28 UTC"><span class="timeago" datetime="2025-07-03T23:50:28+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 3, 2025 23:50:28 UTC">2025-07-03</span>
   </span>
 
     
@@ -2165,7 +2258,7 @@ m2.set_pitch(0)</div>
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 2, 2025 02:12:20 UTC"><span class="timeago" datetime="2025-07-02T02:12:20+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 2, 2025 02:12:20 UTC">2025-07-02</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 3, 2025 23:50:28 UTC"><span class="timeago" datetime="2025-07-03T23:50:28+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 3, 2025 23:50:28 UTC">2025-07-03</span>
   </span>
 
     

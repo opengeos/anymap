@@ -1461,6 +1461,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#anymap.anymap.MapWidget.to_html" class="md-nav__link">
+    <span class="md-ellipsis">
+      to_html()
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2718,6 +2727,15 @@
   <a href="#anymap.anymap.MapWidget.set_zoom" class="md-nav__link">
     <span class="md-ellipsis">
       set_zoom()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.anymap.MapWidget.to_html" class="md-nav__link">
+    <span class="md-ellipsis">
+      to_html()
     </span>
   </a>
   
@@ -6781,6 +6799,104 @@ MapLibreMap            (<a class="autorefs autorefs-internal" title="anymap.anym
             <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;paint&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">paint</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">layer_id</span><span class="p">,</span> <span class="n">layer_config</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_html_template</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">map_state</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate HTML template for MapLibre GL JS.&quot;&quot;&quot;</span>
+        <span class="c1"># Serialize map state for JavaScript</span>
+        <span class="n">map_state_json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">map_state</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="n">html_template</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;&lt;!DOCTYPE html&gt;</span>
+<span class="s2">&lt;html&gt;</span>
+<span class="s2">&lt;head&gt;</span>
+<span class="s2">    &lt;title&gt;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2">&lt;/title&gt;</span>
+<span class="s2">    &lt;meta charset=&quot;utf-8&quot;&gt;</span>
+<span class="s2">    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;</span>
+<span class="s2">    &lt;script src=&quot;https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js&quot;&gt;&lt;/script&gt;</span>
+<span class="s2">    &lt;link href=&quot;https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css&quot; rel=&quot;stylesheet&quot;&gt;</span>
+<span class="s2">    &lt;style&gt;</span>
+<span class="s2">        body </span><span class="se">{{</span>
+<span class="s2">            margin: 0;</span>
+<span class="s2">            padding: 20px;</span>
+<span class="s2">            font-family: Arial, sans-serif;</span>
+<span class="s2">        </span><span class="se">}}</span>
+<span class="s2">        #map </span><span class="se">{{</span>
+<span class="s2">            width: </span><span class="si">{</span><span class="n">map_state</span><span class="p">[</span><span class="s1">&#39;width&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">;</span>
+<span class="s2">            height: </span><span class="si">{</span><span class="n">map_state</span><span class="p">[</span><span class="s1">&#39;height&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">;</span>
+<span class="s2">            border: 1px solid #ccc;</span>
+<span class="s2">        </span><span class="se">}}</span>
+<span class="s2">        h1 </span><span class="se">{{</span>
+<span class="s2">            margin-top: 0;</span>
+<span class="s2">            color: #333;</span>
+<span class="s2">        </span><span class="se">}}</span>
+<span class="s2">    &lt;/style&gt;</span>
+<span class="s2">&lt;/head&gt;</span>
+<span class="s2">&lt;body&gt;</span>
+<span class="s2">    &lt;h1&gt;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2">&lt;/h1&gt;</span>
+<span class="s2">    &lt;div id=&quot;map&quot;&gt;&lt;/div&gt;</span>
+
+<span class="s2">    &lt;script&gt;</span>
+<span class="s2">        // Map state from Python</span>
+<span class="s2">        const mapState = </span><span class="si">{</span><span class="n">map_state_json</span><span class="si">}</span><span class="s2">;</span>
+
+<span class="s2">        // Initialize MapLibre map</span>
+<span class="s2">        const map = new maplibregl.Map(</span><span class="se">{{</span>
+<span class="s2">            container: &#39;map&#39;,</span>
+<span class="s2">            style: mapState.map_style || &#39;https://demotiles.maplibre.org/style.json&#39;,</span>
+<span class="s2">            center: [mapState.center[1], mapState.center[0]], // Convert [lat, lng] to [lng, lat]</span>
+<span class="s2">            zoom: mapState.zoom || 2,</span>
+<span class="s2">            bearing: mapState.bearing || 0,</span>
+<span class="s2">            pitch: mapState.pitch || 0,</span>
+<span class="s2">            antialias: mapState.antialias !== undefined ? mapState.antialias : true</span>
+<span class="s2">        </span><span class="se">}}</span><span class="s2">);</span>
+
+<span class="s2">        // Restore layers and sources after map loads</span>
+<span class="s2">        map.on(&#39;load&#39;, function() </span><span class="se">{{</span>
+<span class="s2">            // Add sources first</span>
+<span class="s2">            const sources = mapState._sources || </span><span class="se">{{}}</span><span class="s2">;</span>
+<span class="s2">            Object.entries(sources).forEach(([sourceId, sourceConfig]) =&gt; </span><span class="se">{{</span>
+<span class="s2">                try </span><span class="se">{{</span>
+<span class="s2">                    map.addSource(sourceId, sourceConfig);</span>
+<span class="s2">                </span><span class="se">}}</span><span class="s2"> catch (error) </span><span class="se">{{</span>
+<span class="s2">                    console.warn(`Failed to add source $</span><span class="se">{{</span><span class="s2">sourceId</span><span class="se">}}</span><span class="s2">:`, error);</span>
+<span class="s2">                </span><span class="se">}}</span>
+<span class="s2">            </span><span class="se">}}</span><span class="s2">);</span>
+
+<span class="s2">            // Then add layers</span>
+<span class="s2">            const layers = mapState._layers || </span><span class="se">{{}}</span><span class="s2">;</span>
+<span class="s2">            Object.entries(layers).forEach(([layerId, layerConfig]) =&gt; </span><span class="se">{{</span>
+<span class="s2">                try </span><span class="se">{{</span>
+<span class="s2">                    map.addLayer(layerConfig);</span>
+<span class="s2">                </span><span class="se">}}</span><span class="s2"> catch (error) </span><span class="se">{{</span>
+<span class="s2">                    console.warn(`Failed to add layer $</span><span class="se">{{</span><span class="s2">layerId</span><span class="se">}}</span><span class="s2">:`, error);</span>
+<span class="s2">                </span><span class="se">}}</span>
+<span class="s2">            </span><span class="se">}}</span><span class="s2">);</span>
+<span class="s2">        </span><span class="se">}}</span><span class="s2">);</span>
+
+<span class="s2">        // Add navigation controls</span>
+<span class="s2">        map.addControl(new maplibregl.NavigationControl());</span>
+
+<span class="s2">        // Add scale control</span>
+<span class="s2">        map.addControl(new maplibregl.ScaleControl());</span>
+
+<span class="s2">        // Log map events for debugging</span>
+<span class="s2">        map.on(&#39;click&#39;, function(e) </span><span class="se">{{</span>
+<span class="s2">            console.log(&#39;Map clicked at:&#39;, e.lngLat);</span>
+<span class="s2">        </span><span class="se">}}</span><span class="s2">);</span>
+
+<span class="s2">        map.on(&#39;load&#39;, function() </span><span class="se">{{</span>
+<span class="s2">            console.log(&#39;Map loaded successfully&#39;);</span>
+<span class="s2">        </span><span class="se">}}</span><span class="s2">);</span>
+
+<span class="s2">        map.on(&#39;error&#39;, function(e) </span><span class="se">{{</span>
+<span class="s2">            console.error(&#39;Map error:&#39;, e);</span>
+<span class="s2">        </span><span class="se">}}</span><span class="s2">);</span>
+<span class="s2">    &lt;/script&gt;</span>
+<span class="s2">&lt;/body&gt;</span>
+<span class="s2">&lt;/html&gt;&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">html_template</span>
 </code></pre></div>
         </details>
 
@@ -7518,6 +7634,68 @@ MapWidget            (<span title="anywidget.widget.AnyWidget">AnyWidget</span>)
             <span class="bp">self</span><span class="o">.</span><span class="n">_sources</span> <span class="o">=</span> <span class="n">current_sources</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;removeSource&quot;</span><span class="p">,</span> <span class="n">source_id</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_html</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">filename</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Anymap Export&quot;</span><span class="p">,</span>
+        <span class="n">width</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;100%&quot;</span><span class="p">,</span>
+        <span class="n">height</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;600px&quot;</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Export the map to a standalone HTML file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filename: Optional filename to save the HTML. If None, returns HTML string.</span>
+<span class="sd">            title: Title for the HTML page</span>
+<span class="sd">            width: Width of the map container</span>
+<span class="sd">            height: Height of the map container</span>
+<span class="sd">            **kwargs: Additional arguments passed to the HTML template</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            HTML string content</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get the current map state</span>
+        <span class="n">map_state</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;center&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">,</span>
+            <span class="s2">&quot;zoom&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">zoom</span><span class="p">,</span>
+            <span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="n">width</span><span class="p">,</span>
+            <span class="s2">&quot;height&quot;</span><span class="p">:</span> <span class="n">height</span><span class="p">,</span>
+            <span class="s2">&quot;style&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">style</span><span class="p">,</span>
+            <span class="s2">&quot;_layers&quot;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_layers</span><span class="p">),</span>
+            <span class="s2">&quot;_sources&quot;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sources</span><span class="p">),</span>
+        <span class="p">}</span>
+
+        <span class="c1"># Add class-specific attributes</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;map_style&quot;</span><span class="p">):</span>
+            <span class="n">map_state</span><span class="p">[</span><span class="s2">&quot;map_style&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_style</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;bearing&quot;</span><span class="p">):</span>
+            <span class="n">map_state</span><span class="p">[</span><span class="s2">&quot;bearing&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bearing</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;pitch&quot;</span><span class="p">):</span>
+            <span class="n">map_state</span><span class="p">[</span><span class="s2">&quot;pitch&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pitch</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;antialias&quot;</span><span class="p">):</span>
+            <span class="n">map_state</span><span class="p">[</span><span class="s2">&quot;antialias&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">antialias</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;access_token&quot;</span><span class="p">):</span>
+            <span class="n">map_state</span><span class="p">[</span><span class="s2">&quot;access_token&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span>
+
+        <span class="c1"># Generate HTML content</span>
+        <span class="n">html_content</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_html_template</span><span class="p">(</span><span class="n">map_state</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c1"># Save to file if filename is provided</span>
+        <span class="k">if</span> <span class="n">filename</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">html_content</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">html_content</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_html_template</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">map_state</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate the HTML template with map state.</span>
+
+<span class="sd">        This method should be overridden by subclasses to provide library-specific templates.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Subclasses must implement _generate_html_template&quot;</span><span class="p">)</span>
 </code></pre></div>
         </details>
 
@@ -7851,6 +8029,140 @@ MapWidget            (<span title="anywidget.widget.AnyWidget">AnyWidget</span>)
 
 
 
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="anymap.anymap.MapWidget.to_html" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">to_html</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Anymap Export&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="s1">&#39;100%&#39;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s1">&#39;600px&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+
+<a href="#anymap.anymap.MapWidget.to_html" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Export the map to a standalone HTML file.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>filename</code></td>
+        <td><code>Optional[str]</code></td>
+        <td><p>Optional filename to save the HTML. If None, returns HTML string.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>title</code></td>
+        <td><code>str</code></td>
+        <td><p>Title for the HTML page</p></td>
+        <td><code>&#39;Anymap Export&#39;</code></td>
+      </tr>
+      <tr>
+        <td><code>width</code></td>
+        <td><code>str</code></td>
+        <td><p>Width of the map container</p></td>
+        <td><code>&#39;100%&#39;</code></td>
+      </tr>
+      <tr>
+        <td><code>height</code></td>
+        <td><code>str</code></td>
+        <td><p>Height of the map container</p></td>
+        <td><code>&#39;600px&#39;</code></td>
+      </tr>
+      <tr>
+        <td><code>**kwargs</code></td>
+        <td></td>
+        <td><p>Additional arguments passed to the HTML template</p></td>
+        <td><code>{}</code></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>str</code></td>
+      <td><p>HTML string content</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>anymap/anymap.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_html</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">filename</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Anymap Export&quot;</span><span class="p">,</span>
+    <span class="n">width</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;100%&quot;</span><span class="p">,</span>
+    <span class="n">height</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;600px&quot;</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Export the map to a standalone HTML file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        filename: Optional filename to save the HTML. If None, returns HTML string.</span>
+<span class="sd">        title: Title for the HTML page</span>
+<span class="sd">        width: Width of the map container</span>
+<span class="sd">        height: Height of the map container</span>
+<span class="sd">        **kwargs: Additional arguments passed to the HTML template</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        HTML string content</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get the current map state</span>
+    <span class="n">map_state</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;center&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">,</span>
+        <span class="s2">&quot;zoom&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">zoom</span><span class="p">,</span>
+        <span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="n">width</span><span class="p">,</span>
+        <span class="s2">&quot;height&quot;</span><span class="p">:</span> <span class="n">height</span><span class="p">,</span>
+        <span class="s2">&quot;style&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">style</span><span class="p">,</span>
+        <span class="s2">&quot;_layers&quot;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_layers</span><span class="p">),</span>
+        <span class="s2">&quot;_sources&quot;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sources</span><span class="p">),</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Add class-specific attributes</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;map_style&quot;</span><span class="p">):</span>
+        <span class="n">map_state</span><span class="p">[</span><span class="s2">&quot;map_style&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_style</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;bearing&quot;</span><span class="p">):</span>
+        <span class="n">map_state</span><span class="p">[</span><span class="s2">&quot;bearing&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bearing</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;pitch&quot;</span><span class="p">):</span>
+        <span class="n">map_state</span><span class="p">[</span><span class="s2">&quot;pitch&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pitch</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;antialias&quot;</span><span class="p">):</span>
+        <span class="n">map_state</span><span class="p">[</span><span class="s2">&quot;antialias&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">antialias</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;access_token&quot;</span><span class="p">):</span>
+        <span class="n">map_state</span><span class="p">[</span><span class="s2">&quot;access_token&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span>
+
+    <span class="c1"># Generate HTML content</span>
+    <span class="n">html_content</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_html_template</span><span class="p">(</span><span class="n">map_state</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="c1"># Save to file if filename is provided</span>
+    <span class="k">if</span> <span class="n">filename</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">html_content</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">html_content</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
 
 
   </div>
@@ -8174,6 +8486,116 @@ MapboxMap            (<a class="autorefs autorefs-internal" title="anymap.anymap
             <span class="p">},</span>
         <span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">layer_id</span><span class="p">,</span> <span class="n">layer_config</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_html_template</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">map_state</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate HTML template for Mapbox GL JS.&quot;&quot;&quot;</span>
+        <span class="c1"># Serialize map state for JavaScript</span>
+        <span class="n">map_state_json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">map_state</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="n">html_template</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;&lt;!DOCTYPE html&gt;</span>
+<span class="s2">&lt;html&gt;</span>
+<span class="s2">&lt;head&gt;</span>
+<span class="s2">    &lt;title&gt;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2">&lt;/title&gt;</span>
+<span class="s2">    &lt;meta charset=&quot;utf-8&quot;&gt;</span>
+<span class="s2">    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;</span>
+<span class="s2">    &lt;script src=&quot;https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.js&quot;&gt;&lt;/script&gt;</span>
+<span class="s2">    &lt;link href=&quot;https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.css&quot; rel=&quot;stylesheet&quot;&gt;</span>
+<span class="s2">    &lt;style&gt;</span>
+<span class="s2">        body </span><span class="se">{{</span>
+<span class="s2">            margin: 0;</span>
+<span class="s2">            padding: 20px;</span>
+<span class="s2">            font-family: Arial, sans-serif;</span>
+<span class="s2">        </span><span class="se">}}</span>
+<span class="s2">        #map </span><span class="se">{{</span>
+<span class="s2">            width: </span><span class="si">{</span><span class="n">map_state</span><span class="p">[</span><span class="s1">&#39;width&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">;</span>
+<span class="s2">            height: </span><span class="si">{</span><span class="n">map_state</span><span class="p">[</span><span class="s1">&#39;height&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">;</span>
+<span class="s2">            border: 1px solid #ccc;</span>
+<span class="s2">        </span><span class="se">}}</span>
+<span class="s2">        h1 </span><span class="se">{{</span>
+<span class="s2">            margin-top: 0;</span>
+<span class="s2">            color: #333;</span>
+<span class="s2">        </span><span class="se">}}</span>
+<span class="s2">        .access-token-warning </span><span class="se">{{</span>
+<span class="s2">            background-color: #fff3cd;</span>
+<span class="s2">            border: 1px solid #ffeaa7;</span>
+<span class="s2">            color: #856404;</span>
+<span class="s2">            padding: 10px;</span>
+<span class="s2">            margin-bottom: 20px;</span>
+<span class="s2">            border-radius: 4px;</span>
+<span class="s2">        </span><span class="se">}}</span>
+<span class="s2">    &lt;/style&gt;</span>
+<span class="s2">&lt;/head&gt;</span>
+<span class="s2">&lt;body&gt;</span>
+<span class="s2">    &lt;h1&gt;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2">&lt;/h1&gt;</span>
+<span class="s2">    </span><span class="si">{</span><span class="s2">&quot;&lt;div class=&#39;access-token-warning&#39;&gt;Warning: This map requires a Mapbox access token. Please add your token to the mapboxgl.accessToken property.&lt;/div&gt;&quot;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">map_state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;access_token&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="si">}</span>
+<span class="s2">    &lt;div id=&quot;map&quot;&gt;&lt;/div&gt;</span>
+
+<span class="s2">    &lt;script&gt;</span>
+<span class="s2">        // Map state from Python</span>
+<span class="s2">        const mapState = </span><span class="si">{</span><span class="n">map_state_json</span><span class="si">}</span><span class="s2">;</span>
+
+<span class="s2">        // Set Mapbox access token</span>
+<span class="s2">        mapboxgl.accessToken = mapState.access_token || &#39;&#39;;</span>
+
+<span class="s2">        // Initialize Mapbox map</span>
+<span class="s2">        const map = new mapboxgl.Map(</span><span class="se">{{</span>
+<span class="s2">            container: &#39;map&#39;,</span>
+<span class="s2">            style: mapState.map_style || &#39;mapbox://styles/mapbox/streets-v12&#39;,</span>
+<span class="s2">            center: [mapState.center[1], mapState.center[0]], // Convert [lat, lng] to [lng, lat]</span>
+<span class="s2">            zoom: mapState.zoom || 2,</span>
+<span class="s2">            bearing: mapState.bearing || 0,</span>
+<span class="s2">            pitch: mapState.pitch || 0,</span>
+<span class="s2">            antialias: mapState.antialias !== undefined ? mapState.antialias : true</span>
+<span class="s2">        </span><span class="se">}}</span><span class="s2">);</span>
+
+<span class="s2">        // Restore layers and sources after map loads</span>
+<span class="s2">        map.on(&#39;load&#39;, function() </span><span class="se">{{</span>
+<span class="s2">            // Add sources first</span>
+<span class="s2">            const sources = mapState._sources || </span><span class="se">{{}}</span><span class="s2">;</span>
+<span class="s2">            Object.entries(sources).forEach(([sourceId, sourceConfig]) =&gt; </span><span class="se">{{</span>
+<span class="s2">                try </span><span class="se">{{</span>
+<span class="s2">                    map.addSource(sourceId, sourceConfig);</span>
+<span class="s2">                </span><span class="se">}}</span><span class="s2"> catch (error) </span><span class="se">{{</span>
+<span class="s2">                    console.warn(`Failed to add source $</span><span class="se">{{</span><span class="s2">sourceId</span><span class="se">}}</span><span class="s2">:`, error);</span>
+<span class="s2">                </span><span class="se">}}</span>
+<span class="s2">            </span><span class="se">}}</span><span class="s2">);</span>
+
+<span class="s2">            // Then add layers</span>
+<span class="s2">            const layers = mapState._layers || </span><span class="se">{{}}</span><span class="s2">;</span>
+<span class="s2">            Object.entries(layers).forEach(([layerId, layerConfig]) =&gt; </span><span class="se">{{</span>
+<span class="s2">                try </span><span class="se">{{</span>
+<span class="s2">                    map.addLayer(layerConfig);</span>
+<span class="s2">                </span><span class="se">}}</span><span class="s2"> catch (error) </span><span class="se">{{</span>
+<span class="s2">                    console.warn(`Failed to add layer $</span><span class="se">{{</span><span class="s2">layerId</span><span class="se">}}</span><span class="s2">:`, error);</span>
+<span class="s2">                </span><span class="se">}}</span>
+<span class="s2">            </span><span class="se">}}</span><span class="s2">);</span>
+<span class="s2">        </span><span class="se">}}</span><span class="s2">);</span>
+
+<span class="s2">        // Add navigation controls</span>
+<span class="s2">        map.addControl(new mapboxgl.NavigationControl());</span>
+
+<span class="s2">        // Add scale control</span>
+<span class="s2">        map.addControl(new mapboxgl.ScaleControl());</span>
+
+<span class="s2">        // Log map events for debugging</span>
+<span class="s2">        map.on(&#39;click&#39;, function(e) </span><span class="se">{{</span>
+<span class="s2">            console.log(&#39;Map clicked at:&#39;, e.lngLat);</span>
+<span class="s2">        </span><span class="se">}}</span><span class="s2">);</span>
+
+<span class="s2">        map.on(&#39;load&#39;, function() </span><span class="se">{{</span>
+<span class="s2">            console.log(&#39;Map loaded successfully&#39;);</span>
+<span class="s2">        </span><span class="se">}}</span><span class="s2">);</span>
+
+<span class="s2">        map.on(&#39;error&#39;, function(e) </span><span class="se">{{</span>
+<span class="s2">            console.error(&#39;Map error:&#39;, e);</span>
+<span class="s2">        </span><span class="se">}}</span><span class="s2">);</span>
+<span class="s2">    &lt;/script&gt;</span>
+<span class="s2">&lt;/body&gt;</span>
+<span class="s2">&lt;/html&gt;&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">html_template</span>
 </code></pre></div>
         </details>
 
