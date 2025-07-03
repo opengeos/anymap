@@ -275,7 +275,7 @@ class MapLibreMap(MapWidget):
 
         # Add raster source
         self.add_source(
-            source_id, {"type": "raster", "url": source_url, "tileSize": 256}
+            source_id, {"type": "raster", "tiles": [source_url], "tileSize": 256}
         )
 
         # Add raster layer
@@ -503,7 +503,7 @@ class MapboxMap(MapWidget):
 
         # Add raster source
         self.add_source(
-            source_id, {"type": "raster", "url": source_url, "tileSize": 256}
+            source_id, {"type": "raster", "tiles": [source_url], "tileSize": 256}
         )
 
         # Add raster layer
