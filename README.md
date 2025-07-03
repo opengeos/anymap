@@ -5,13 +5,19 @@
 [![image](https://img.shields.io/pypi/v/anymap.svg)](https://pypi.python.org/pypi/anymap)
 [![image](https://img.shields.io/conda/vn/conda-forge/anymap.svg)](https://anaconda.org/conda-forge/anymap)
 [![Conda Recipe](https://img.shields.io/badge/recipe-anymap-green.svg)](https://github.com/conda-forge/anymap-feedstock)
+[![image](https://static.pepy.tech/badge/anymap)](https://pepy.tech/project/anymap)
+[![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/anymap.svg)](https://anaconda.org/conda-forge/anymap)
+[![image](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 <!-- [![Docker Image](https://img.shields.io/badge/docker-opengeos%2Fanymap-blue?logo=docker)](https://hub.docker.com/r/opengeos/anymap/tags)     -->
 
 **A Python package for creating interactive maps with anywidget and JavaScript mapping libraries**
 
+-   GitHub repo: <https://github.com/opengeos/anymap>
+-   Documentation: <https://anymap.gishub.org>
+-   PyPI: <https://pypi.org/project/anymap>
+-   Conda-forge: <https://anaconda.org/conda-forge/anymap>
 -   Free software: MIT License
--   Documentation: https://anymap.gishub.org
 
 ## Features
 
