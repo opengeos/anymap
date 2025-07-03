@@ -6,6 +6,37 @@ import traitlets
 from typing import Dict, List, Any, Optional, Union
 import json
 
+# Load js and css as strings
+with open(pathlib.Path(__file__).parent / "static" / "maplibre_widget.js", "r") as f:
+    _esm_maplibre = f.read()
+
+with open(pathlib.Path(__file__).parent / "static" / "maplibre_widget.css", "r") as f:
+    _css_maplibre = f.read()
+
+with open(pathlib.Path(__file__).parent / "static" / "mapbox_widget.js", "r") as f:
+    _esm_mapbox = f.read()
+
+with open(pathlib.Path(__file__).parent / "static" / "mapbox_widget.css", "r") as f:
+    _css_mapbox = f.read()
+
+with open(pathlib.Path(__file__).parent / "static" / "cesium_widget.js", "r") as f:
+    _esm_cesium = f.read()
+
+with open(pathlib.Path(__file__).parent / "static" / "cesium_widget.css", "r") as f:
+    _css_cesium = f.read()
+
+with open(pathlib.Path(__file__).parent / "static" / "potree_widget.js", "r") as f:
+    _esm_potree = f.read()
+
+with open(pathlib.Path(__file__).parent / "static" / "potree_widget.css", "r") as f:
+    _css_potree = f.read()
+
+with open(pathlib.Path(__file__).parent / "static" / "deck_widget.js", "r") as f:
+    _esm_deck = f.read()
+
+with open(pathlib.Path(__file__).parent / "static" / "deck_widget.css", "r") as f:
+    _css_deck = f.read()
+
 
 class MapWidget(anywidget.AnyWidget):
     """Base class for interactive map widgets using anywidget."""
@@ -128,8 +159,8 @@ class MapLibreMap(MapWidget):
     antialias = traitlets.Bool(True).tag(sync=True)
 
     # Define the JavaScript module path
-    _esm = pathlib.Path(__file__).parent / "static" / "maplibre_widget.js"
-    _css = pathlib.Path(__file__).parent / "static" / "maplibre_widget.css"
+    _esm = _esm_maplibre
+    _css = _css_maplibre
 
     def __init__(
         self,
@@ -322,8 +353,8 @@ class MapboxMap(MapWidget):
     access_token = traitlets.Unicode("").tag(sync=True)
 
     # Define the JavaScript module path
-    _esm = pathlib.Path(__file__).parent / "static" / "mapbox_widget.js"
-    _css = pathlib.Path(__file__).parent / "static" / "mapbox_widget.css"
+    _esm = _esm_mapbox
+    _css = _css_mapbox
 
     def __init__(
         self,
@@ -634,8 +665,8 @@ class CesiumMap(MapWidget):
     should_animate = traitlets.Bool(False).tag(sync=True)
 
     # Define the JavaScript module path
-    _esm = pathlib.Path(__file__).parent / "static" / "cesium_widget.js"
-    _css = pathlib.Path(__file__).parent / "static" / "cesium_widget.css"
+    _esm = _esm_cesium
+    _css = _css_cesium
 
     def __init__(
         self,
@@ -1078,8 +1109,8 @@ class PotreeMap(MapWidget):
     far_clip = traitlets.Float(1000.0).tag(sync=True)
 
     # Define the JavaScript module path
-    _esm = pathlib.Path(__file__).parent / "static" / "potree_widget.js"
-    _css = pathlib.Path(__file__).parent / "static" / "potree_widget.css"
+    _esm = _esm_potree
+    _css = _css_potree
 
     def __init__(
         self,
@@ -1331,8 +1362,8 @@ class DeckGLMap(MapWidget):
     min_zoom = traitlets.Float(0.0).tag(sync=True)
 
     # Define the JavaScript module path
-    _esm = pathlib.Path(__file__).parent / "static" / "deck_widget.js"
-    _css = pathlib.Path(__file__).parent / "static" / "deck_widget.css"
+    _esm = _esm_deck
+    _css = _css_deck
 
     def __init__(
         self,
