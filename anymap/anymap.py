@@ -146,6 +146,68 @@ class MapWidget(anywidget.AnyWidget):
 
         self.call_js_method("removeSource", source_id)
 
+    def to_html(
+        self,
+        filename: Optional[str] = None,
+        title: str = "Anymap Export",
+        width: str = "100%",
+        height: str = "600px",
+        **kwargs,
+    ) -> str:
+        """Export the map to a standalone HTML file.
+
+        Args:
+            filename: Optional filename to save the HTML. If None, returns HTML string.
+            title: Title for the HTML page
+            width: Width of the map container
+            height: Height of the map container
+            **kwargs: Additional arguments passed to the HTML template
+
+        Returns:
+            HTML string content
+        """
+        # Get the current map state
+        map_state = {
+            "center": self.center,
+            "zoom": self.zoom,
+            "width": width,
+            "height": height,
+            "style": self.style,
+            "_layers": dict(self._layers),
+            "_sources": dict(self._sources),
+        }
+
+        # Add class-specific attributes
+        if hasattr(self, "map_style"):
+            map_state["map_style"] = self.map_style
+        if hasattr(self, "bearing"):
+            map_state["bearing"] = self.bearing
+        if hasattr(self, "pitch"):
+            map_state["pitch"] = self.pitch
+        if hasattr(self, "antialias"):
+            map_state["antialias"] = self.antialias
+        if hasattr(self, "access_token"):
+            map_state["access_token"] = self.access_token
+
+        # Generate HTML content
+        html_content = self._generate_html_template(map_state, title, **kwargs)
+
+        # Save to file if filename is provided
+        if filename:
+            with open(filename, "w", encoding="utf-8") as f:
+                f.write(html_content)
+
+        return html_content
+
+    def _generate_html_template(
+        self, map_state: Dict[str, Any], title: str, **kwargs
+    ) -> str:
+        """Generate the HTML template with map state.
+
+        This method should be overridden by subclasses to provide library-specific templates.
+        """
+        raise NotImplementedError("Subclasses must implement _generate_html_template")
+
 
 class MapLibreMap(MapWidget):
     """MapLibre GL JS implementation of the map widget."""
@@ -340,6 +402,104 @@ class MapLibreMap(MapWidget):
             layer_config["paint"] = paint
 
         self.add_layer(layer_id, layer_config)
+
+    def _generate_html_template(
+        self, map_state: Dict[str, Any], title: str, **kwargs
+    ) -> str:
+        """Generate HTML template for MapLibre GL JS."""
+        # Serialize map state for JavaScript
+        map_state_json = json.dumps(map_state, indent=2)
+
+        html_template = f"""<!DOCTYPE html>
+<html>
+<head>
+    <title>{title}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+    <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
+    <style>
+        body {{
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }}
+        #map {{
+            width: {map_state['width']};
+            height: {map_state['height']};
+            border: 1px solid #ccc;
+        }}
+        h1 {{
+            margin-top: 0;
+            color: #333;
+        }}
+    </style>
+</head>
+<body>
+    <h1>{title}</h1>
+    <div id="map"></div>
+
+    <script>
+        // Map state from Python
+        const mapState = {map_state_json};
+
+        // Initialize MapLibre map
+        const map = new maplibregl.Map({{
+            container: 'map',
+            style: mapState.map_style || 'https://demotiles.maplibre.org/style.json',
+            center: [mapState.center[1], mapState.center[0]], // Convert [lat, lng] to [lng, lat]
+            zoom: mapState.zoom || 2,
+            bearing: mapState.bearing || 0,
+            pitch: mapState.pitch || 0,
+            antialias: mapState.antialias !== undefined ? mapState.antialias : true
+        }});
+
+        // Restore layers and sources after map loads
+        map.on('load', function() {{
+            // Add sources first
+            const sources = mapState._sources || {{}};
+            Object.entries(sources).forEach(([sourceId, sourceConfig]) => {{
+                try {{
+                    map.addSource(sourceId, sourceConfig);
+                }} catch (error) {{
+                    console.warn(`Failed to add source ${{sourceId}}:`, error);
+                }}
+            }});
+
+            // Then add layers
+            const layers = mapState._layers || {{}};
+            Object.entries(layers).forEach(([layerId, layerConfig]) => {{
+                try {{
+                    map.addLayer(layerConfig);
+                }} catch (error) {{
+                    console.warn(`Failed to add layer ${{layerId}}:`, error);
+                }}
+            }});
+        }});
+
+        // Add navigation controls
+        map.addControl(new maplibregl.NavigationControl());
+
+        // Add scale control
+        map.addControl(new maplibregl.ScaleControl());
+
+        // Log map events for debugging
+        map.on('click', function(e) {{
+            console.log('Map clicked at:', e.lngLat);
+        }});
+
+        map.on('load', function() {{
+            console.log('Map loaded successfully');
+        }});
+
+        map.on('error', function(e) {{
+            console.error('Map error:', e);
+        }});
+    </script>
+</body>
+</html>"""
+
+        return html_template
 
 
 class MapboxMap(MapWidget):
@@ -636,6 +796,116 @@ class MapboxMap(MapWidget):
             },
         }
         self.add_layer(layer_id, layer_config)
+
+    def _generate_html_template(
+        self, map_state: Dict[str, Any], title: str, **kwargs
+    ) -> str:
+        """Generate HTML template for Mapbox GL JS."""
+        # Serialize map state for JavaScript
+        map_state_json = json.dumps(map_state, indent=2)
+
+        html_template = f"""<!DOCTYPE html>
+<html>
+<head>
+    <title>{title}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.css" rel="stylesheet">
+    <style>
+        body {{
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }}
+        #map {{
+            width: {map_state['width']};
+            height: {map_state['height']};
+            border: 1px solid #ccc;
+        }}
+        h1 {{
+            margin-top: 0;
+            color: #333;
+        }}
+        .access-token-warning {{
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }}
+    </style>
+</head>
+<body>
+    <h1>{title}</h1>
+    {"<div class='access-token-warning'>Warning: This map requires a Mapbox access token. Please add your token to the mapboxgl.accessToken property.</div>" if not map_state.get('access_token') else ""}
+    <div id="map"></div>
+
+    <script>
+        // Map state from Python
+        const mapState = {map_state_json};
+
+        // Set Mapbox access token
+        mapboxgl.accessToken = mapState.access_token || '';
+
+        // Initialize Mapbox map
+        const map = new mapboxgl.Map({{
+            container: 'map',
+            style: mapState.map_style || 'mapbox://styles/mapbox/streets-v12',
+            center: [mapState.center[1], mapState.center[0]], // Convert [lat, lng] to [lng, lat]
+            zoom: mapState.zoom || 2,
+            bearing: mapState.bearing || 0,
+            pitch: mapState.pitch || 0,
+            antialias: mapState.antialias !== undefined ? mapState.antialias : true
+        }});
+
+        // Restore layers and sources after map loads
+        map.on('load', function() {{
+            // Add sources first
+            const sources = mapState._sources || {{}};
+            Object.entries(sources).forEach(([sourceId, sourceConfig]) => {{
+                try {{
+                    map.addSource(sourceId, sourceConfig);
+                }} catch (error) {{
+                    console.warn(`Failed to add source ${{sourceId}}:`, error);
+                }}
+            }});
+
+            // Then add layers
+            const layers = mapState._layers || {{}};
+            Object.entries(layers).forEach(([layerId, layerConfig]) => {{
+                try {{
+                    map.addLayer(layerConfig);
+                }} catch (error) {{
+                    console.warn(`Failed to add layer ${{layerId}}:`, error);
+                }}
+            }});
+        }});
+
+        // Add navigation controls
+        map.addControl(new mapboxgl.NavigationControl());
+
+        // Add scale control
+        map.addControl(new mapboxgl.ScaleControl());
+
+        // Log map events for debugging
+        map.on('click', function(e) {{
+            console.log('Map clicked at:', e.lngLat);
+        }});
+
+        map.on('load', function() {{
+            console.log('Map loaded successfully');
+        }});
+
+        map.on('error', function(e) {{
+            console.error('Map error:', e);
+        }});
+    </script>
+</body>
+</html>"""
+
+        return html_template
 
 
 class CesiumMap(MapWidget):
