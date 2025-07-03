@@ -1,4 +1,4 @@
-import "https://unpkg.com/maplibre-gl@5.5.0/dist/maplibre-gl.js";
+import maplibregl from "https://cdn.skypack.dev/maplibre-gl@5.5.0";
 
 function render({ model, el }) {
   // Create unique ID for this widget instance

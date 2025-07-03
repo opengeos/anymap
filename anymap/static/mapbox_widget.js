@@ -1,4 +1,4 @@
-import "https://api.mapbox.com/mapbox-gl-js/v3.13.0/mapbox-gl.js";
+import mapboxgl from "https://cdn.skypack.dev/mapbox-gl@v3.13.0";
 
 function render({ model, el }) {
   // Create unique ID for this widget instance
