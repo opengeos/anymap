@@ -13,10 +13,6 @@
          <lastmod>2025-07-03</lastmod>
     </url>
     <url>
-         <loc>https://anymap.gishub.org/common/</loc>
-         <lastmod>2025-07-03</lastmod>
-    </url>
-    <url>
          <loc>https://anymap.gishub.org/contributing/</loc>
          <lastmod>2025-07-03</lastmod>
     </url>
@@ -33,7 +29,31 @@
          <lastmod>2025-07-03</lastmod>
     </url>
     <url>
-         <loc>https://anymap.gishub.org/examples/intro/</loc>
+         <loc>https://anymap.gishub.org/utils/</loc>
+         <lastmod>2025-07-03</lastmod>
+    </url>
+    <url>
+         <loc>https://anymap.gishub.org/examples/basic_usage/</loc>
+         <lastmod>2025-07-03</lastmod>
+    </url>
+    <url>
+         <loc>https://anymap.gishub.org/examples/cesium_example/</loc>
+         <lastmod>2025-07-03</lastmod>
+    </url>
+    <url>
+         <loc>https://anymap.gishub.org/examples/deckgl_example/</loc>
+         <lastmod>2025-07-03</lastmod>
+    </url>
+    <url>
+         <loc>https://anymap.gishub.org/examples/mapbox_example/</loc>
+         <lastmod>2025-07-03</lastmod>
+    </url>
+    <url>
+         <loc>https://anymap.gishub.org/examples/maplibre_example/</loc>
+         <lastmod>2025-07-03</lastmod>
+    </url>
+    <url>
+         <loc>https://anymap.gishub.org/examples/potree_example/</loc>
          <lastmod>2025-07-03</lastmod>
     </url>
 </urlset>
