@@ -3127,8 +3127,8 @@ CesiumMap            (<a class="autorefs autorefs-internal" title="anymap.anymap
     <span class="n">should_animate</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># Define the JavaScript module path</span>
-    <span class="n">_esm</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;static&quot;</span> <span class="o">/</span> <span class="s2">&quot;cesium_widget.js&quot;</span>
-    <span class="n">_css</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;static&quot;</span> <span class="o">/</span> <span class="s2">&quot;cesium_widget.css&quot;</span>
+    <span class="n">_esm</span> <span class="o">=</span> <span class="n">_esm_cesium</span>
+    <span class="n">_css</span> <span class="o">=</span> <span class="n">_css_cesium</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -4840,8 +4840,8 @@ DeckGLMap            (<a class="autorefs autorefs-internal" title="anymap.anymap
     <span class="n">min_zoom</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Float</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># Define the JavaScript module path</span>
-    <span class="n">_esm</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;static&quot;</span> <span class="o">/</span> <span class="s2">&quot;deck_widget.js&quot;</span>
-    <span class="n">_css</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;static&quot;</span> <span class="o">/</span> <span class="s2">&quot;deck_widget.css&quot;</span>
+    <span class="n">_esm</span> <span class="o">=</span> <span class="n">_esm_deck</span>
+    <span class="n">_css</span> <span class="o">=</span> <span class="n">_css_deck</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -6485,8 +6485,8 @@ MapLibreMap            (<a class="autorefs autorefs-internal" title="anymap.anym
     <span class="n">antialias</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># Define the JavaScript module path</span>
-    <span class="n">_esm</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;static&quot;</span> <span class="o">/</span> <span class="s2">&quot;maplibre_widget.js&quot;</span>
-    <span class="n">_css</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;static&quot;</span> <span class="o">/</span> <span class="s2">&quot;maplibre_widget.css&quot;</span>
+    <span class="n">_esm</span> <span class="o">=</span> <span class="n">_esm_maplibre</span>
+    <span class="n">_css</span> <span class="o">=</span> <span class="n">_css_maplibre</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -6601,7 +6601,7 @@ MapLibreMap            (<a class="autorefs autorefs-internal" title="anymap.anym
 
         <span class="c1"># Add raster source</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_source</span><span class="p">(</span>
-            <span class="n">source_id</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;raster&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">source_url</span><span class="p">,</span> <span class="s2">&quot;tileSize&quot;</span><span class="p">:</span> <span class="mi">256</span><span class="p">}</span>
+            <span class="n">source_id</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;raster&quot;</span><span class="p">,</span> <span class="s2">&quot;tiles&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">source_url</span><span class="p">],</span> <span class="s2">&quot;tileSize&quot;</span><span class="p">:</span> <span class="mi">256</span><span class="p">}</span>
         <span class="p">)</span>
 
         <span class="c1"># Add raster layer</span>
@@ -6945,7 +6945,7 @@ MapLibreMap            (<a class="autorefs autorefs-internal" title="anymap.anym
 
     <span class="c1"># Add raster source</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">add_source</span><span class="p">(</span>
-        <span class="n">source_id</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;raster&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">source_url</span><span class="p">,</span> <span class="s2">&quot;tileSize&quot;</span><span class="p">:</span> <span class="mi">256</span><span class="p">}</span>
+        <span class="n">source_id</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;raster&quot;</span><span class="p">,</span> <span class="s2">&quot;tiles&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">source_url</span><span class="p">],</span> <span class="s2">&quot;tileSize&quot;</span><span class="p">:</span> <span class="mi">256</span><span class="p">}</span>
     <span class="p">)</span>
 
     <span class="c1"># Add raster layer</span>
@@ -7776,8 +7776,8 @@ MapboxMap            (<a class="autorefs autorefs-internal" title="anymap.anymap
     <span class="n">access_token</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Unicode</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># Define the JavaScript module path</span>
-    <span class="n">_esm</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;static&quot;</span> <span class="o">/</span> <span class="s2">&quot;mapbox_widget.js&quot;</span>
-    <span class="n">_css</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;static&quot;</span> <span class="o">/</span> <span class="s2">&quot;mapbox_widget.css&quot;</span>
+    <span class="n">_esm</span> <span class="o">=</span> <span class="n">_esm_mapbox</span>
+    <span class="n">_css</span> <span class="o">=</span> <span class="n">_css_mapbox</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -7926,7 +7926,7 @@ MapboxMap            (<a class="autorefs autorefs-internal" title="anymap.anymap
 
         <span class="c1"># Add raster source</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_source</span><span class="p">(</span>
-            <span class="n">source_id</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;raster&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">source_url</span><span class="p">,</span> <span class="s2">&quot;tileSize&quot;</span><span class="p">:</span> <span class="mi">256</span><span class="p">}</span>
+            <span class="n">source_id</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;raster&quot;</span><span class="p">,</span> <span class="s2">&quot;tiles&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">source_url</span><span class="p">],</span> <span class="s2">&quot;tileSize&quot;</span><span class="p">:</span> <span class="mi">256</span><span class="p">}</span>
         <span class="p">)</span>
 
         <span class="c1"># Add raster layer</span>
@@ -8485,7 +8485,7 @@ MapboxMap            (<a class="autorefs autorefs-internal" title="anymap.anymap
 
     <span class="c1"># Add raster source</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">add_source</span><span class="p">(</span>
-        <span class="n">source_id</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;raster&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">source_url</span><span class="p">,</span> <span class="s2">&quot;tileSize&quot;</span><span class="p">:</span> <span class="mi">256</span><span class="p">}</span>
+        <span class="n">source_id</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;raster&quot;</span><span class="p">,</span> <span class="s2">&quot;tiles&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">source_url</span><span class="p">],</span> <span class="s2">&quot;tileSize&quot;</span><span class="p">:</span> <span class="mi">256</span><span class="p">}</span>
     <span class="p">)</span>
 
     <span class="c1"># Add raster layer</span>
@@ -8990,8 +8990,8 @@ PotreeMap            (<a class="autorefs autorefs-internal" title="anymap.anymap
     <span class="n">far_clip</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Float</span><span class="p">(</span><span class="mf">1000.0</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># Define the JavaScript module path</span>
-    <span class="n">_esm</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;static&quot;</span> <span class="o">/</span> <span class="s2">&quot;potree_widget.js&quot;</span>
-    <span class="n">_css</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;static&quot;</span> <span class="o">/</span> <span class="s2">&quot;potree_widget.css&quot;</span>
+    <span class="n">_esm</span> <span class="o">=</span> <span class="n">_esm_potree</span>
+    <span class="n">_css</span> <span class="o">=</span> <span class="n">_css_potree</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
