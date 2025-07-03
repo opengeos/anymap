@@ -353,8 +353,8 @@ class MapboxMap(MapWidget):
     access_token = traitlets.Unicode("").tag(sync=True)
 
     # Define the JavaScript module path
-    _esm = _esm_mapbox 
-    _css = _css_mapbox 
+    _esm = _esm_mapbox
+    _css = _css_mapbox
 
     def __init__(
         self,
