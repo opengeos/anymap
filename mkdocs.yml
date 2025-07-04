@@ -92,6 +92,7 @@ nav:
           - cesium module: cesium.md
           - compare module: compare.md
           - deckgl module: deckgl.md
+          - leaflet module: leaflet.md
           - mapbox module: mapbox.md
           - maplibre module: maplibre.md
           - potree module: potree.md

@@ -1,0 +1,227 @@
+/* Leaflet widget styles */
+@import "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+
+.leaflet-container {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Override default Leaflet styles for better integration */
+.leaflet-container a {
+    color: #0078d4;
+    text-decoration: none;
+}
+
+.leaflet-container a:hover {
+    text-decoration: underline;
+}
+
+/* Custom popup styles */
+.leaflet-popup-content-wrapper {
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    border: 1px solid #ddd;
+}
+
+.leaflet-popup-content {
+    margin: 12px 16px;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.leaflet-popup-tip {
+    border-top-color: #ddd;
+}
+
+/* Custom control styles */
+.leaflet-control-zoom {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.leaflet-control-zoom a {
+    background-color: #fff;
+    border: none;
+    border-radius: 2px;
+    color: #333;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    display: block;
+    transition: background-color 0.2s;
+}
+
+.leaflet-control-zoom a:hover {
+    background-color: #f5f5f5;
+    color: #000;
+}
+
+.leaflet-control-zoom a:first-child {
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+.leaflet-control-zoom a:last-child {
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+/* Attribution control */
+.leaflet-control-attribution {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 4px;
+    font-size: 11px;
+    color: #666;
+}
+
+.leaflet-control-attribution a {
+    color: #0078d4;
+}
+
+/* Marker styles */
+.leaflet-marker-icon {
+    border-radius: 50%;
+    transition: transform 0.2s;
+}
+
+.leaflet-marker-icon:hover {
+    transform: scale(1.1);
+}
+
+/* Loading indicator */
+.leaflet-tile-loading {
+    opacity: 0.5;
+    transition: opacity 0.2s;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .leaflet-container {
+        font-size: 12px;
+    }
+
+    .leaflet-control-zoom a {
+        width: 28px;
+        height: 28px;
+        line-height: 28px;
+        font-size: 14px;
+    }
+
+    .leaflet-popup-content {
+        font-size: 12px;
+    }
+}
+
+/* Dark theme support */
+@media (prefers-color-scheme: dark) {
+    .leaflet-control-zoom a {
+        background-color: #333;
+        color: #fff;
+        border-color: #555;
+    }
+
+    .leaflet-control-zoom a:hover {
+        background-color: #444;
+    }
+
+    .leaflet-popup-content-wrapper {
+        background-color: #2d2d2d;
+        color: #fff;
+        border-color: #555;
+    }
+
+    .leaflet-popup-tip {
+        border-top-color: #555;
+    }
+
+    .leaflet-control-attribution {
+        background-color: rgba(45, 45, 45, 0.8);
+        color: #ccc;
+    }
+}
+
+/* Smooth animations */
+.leaflet-zoom-anim .leaflet-zoom-animated {
+    transition: transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Custom layer styles */
+.leaflet-interactive {
+    cursor: pointer;
+}
+
+.leaflet-interactive:hover {
+    stroke-width: 3px;
+    stroke-opacity: 0.8;
+}
+
+/* Tooltip styles */
+.leaflet-tooltip {
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 11px;
+    padding: 4px 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.leaflet-tooltip-top:before {
+    border-top-color: rgba(0, 0, 0, 0.8);
+}
+
+.leaflet-tooltip-bottom:before {
+    border-bottom-color: rgba(0, 0, 0, 0.8);
+}
+
+.leaflet-tooltip-left:before {
+    border-left-color: rgba(0, 0, 0, 0.8);
+}
+
+.leaflet-tooltip-right:before {
+    border-right-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Accessibility improvements */
+.leaflet-container:focus {
+    outline: 2px solid #0078d4;
+    outline-offset: 2px;
+}
+
+.leaflet-control-zoom a:focus {
+    outline: 2px solid #0078d4;
+    outline-offset: 1px;
+}
+
+/* Performance optimizations */
+.leaflet-container {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+}
+
+/* Widget container styles */
+.leaflet-widget-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Full screen mode */
+.leaflet-widget-fullscreen {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 9999 !important;
+    border-radius: 0 !important;
+}
