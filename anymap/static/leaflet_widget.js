@@ -1,45 +1,5 @@
 // Leaflet widget implementation for anywidget
-
-// Load Leaflet from CDN if not already loaded
-async function loadLeaflet() {
-    if (typeof L !== 'undefined') {
-        return;
-    }
-
-    // Load CSS (if not already)
-    if (!document.querySelector('link[href*="leaflet.css"]')) {
-        const cssLink = document.createElement('link');
-        cssLink.rel = 'stylesheet';
-        cssLink.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
-        cssLink.integrity = 'sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=';
-        cssLink.crossOrigin = '';
-        document.head.appendChild(cssLink);
-    }
-
-    // Load JS and wait until L is available
-    if (!document.querySelector('script[src*="leaflet.js"]')) {
-        await new Promise((resolve, reject) => {
-            const script = document.createElement('script');
-            script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
-            script.integrity = 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=';
-            script.crossOrigin = '';
-            script.onload = () => {
-                if (typeof L !== 'undefined') {
-                    resolve();
-                } else {
-                    reject(new Error('Leaflet loaded but L is still undefined.'));
-                }
-            };
-            script.onerror = () => reject(new Error('Failed to load Leaflet JS'));
-            document.head.appendChild(script);
-        });
-    } else {
-        // Wait for L to be defined (in case it’s loading)
-        while (typeof L === 'undefined') {
-            await new Promise((r) => setTimeout(r, 10));
-        }
-    }
-}
+import L from "https://cdn.skypack.dev/leaflet@1.9.4";
 
 function render({ model, el }) {
     // Create unique ID for this widget instance
@@ -76,9 +36,6 @@ function render({ model, el }) {
     // Initialize the map after ensuring Leaflet is loaded
     const initializeMap = async () => {
         try {
-            // Wait for Leaflet to load
-            await loadLeaflet();
-
             // Double-check that container exists in DOM
             if (!document.getElementById(widgetId)) {
                 console.error("Map container not found in DOM:", widgetId);
