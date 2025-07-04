@@ -1,0 +1,3 @@
+# compare module
+
+::: anymap.compare

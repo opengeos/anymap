@@ -88,4 +88,11 @@ nav:
           - examples/potree_example.ipynb
     - API Reference:
           - anymap module: anymap.md
+          - base module: base.md
+          - cesium module: cesium.md
+          - compare module: compare.md
+          - deckgl module: deckgl.md
+          - mapbox module: mapbox.md
+          - maplibre module: maplibre.md
+          - potree module: potree.md
           - utils module: utils.md
