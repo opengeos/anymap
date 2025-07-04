@@ -41,6 +41,10 @@
          <lastmod>2025-07-04</lastmod>
     </url>
     <url>
+         <loc>https://anymap.dev/keplergl/</loc>
+         <lastmod>2025-07-04</lastmod>
+    </url>
+    <url>
          <loc>https://anymap.dev/leaflet/</loc>
          <lastmod>2025-07-04</lastmod>
     </url>
@@ -78,6 +82,10 @@
     </url>
     <url>
          <loc>https://anymap.dev/examples/deckgl_example/</loc>
+         <lastmod>2025-07-04</lastmod>
+    </url>
+    <url>
+         <loc>https://anymap.dev/examples/keplergl_example/</loc>
          <lastmod>2025-07-04</lastmod>
     </url>
     <url>
