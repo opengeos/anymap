@@ -1,103 +1,103 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-         <loc>https://anymap.gishub.org/</loc>
+         <loc>https://anymap.dev/</loc>
          <lastmod>2025-07-04</lastmod>
     </url>
     <url>
-         <loc>https://anymap.gishub.org/anymap/</loc>
+         <loc>https://anymap.dev/anymap/</loc>
          <lastmod>2025-07-04</lastmod>
     </url>
     <url>
-         <loc>https://anymap.gishub.org/base/</loc>
+         <loc>https://anymap.dev/base/</loc>
          <lastmod>2025-07-04</lastmod>
     </url>
     <url>
-         <loc>https://anymap.gishub.org/cesium/</loc>
+         <loc>https://anymap.dev/cesium/</loc>
          <lastmod>2025-07-04</lastmod>
     </url>
     <url>
-         <loc>https://anymap.gishub.org/changelog/</loc>
+         <loc>https://anymap.dev/changelog/</loc>
          <lastmod>2025-07-04</lastmod>
     </url>
     <url>
-         <loc>https://anymap.gishub.org/compare/</loc>
+         <loc>https://anymap.dev/compare/</loc>
          <lastmod>2025-07-04</lastmod>
     </url>
     <url>
-         <loc>https://anymap.gishub.org/contributing/</loc>
+         <loc>https://anymap.dev/contributing/</loc>
          <lastmod>2025-07-04</lastmod>
     </url>
     <url>
-         <loc>https://anymap.gishub.org/deckgl/</loc>
+         <loc>https://anymap.dev/deckgl/</loc>
          <lastmod>2025-07-04</lastmod>
     </url>
     <url>
-         <loc>https://anymap.gishub.org/faq/</loc>
+         <loc>https://anymap.dev/faq/</loc>
          <lastmod>2025-07-04</lastmod>
     </url>
     <url>
-         <loc>https://anymap.gishub.org/installation/</loc>
+         <loc>https://anymap.dev/installation/</loc>
          <lastmod>2025-07-04</lastmod>
     </url>
     <url>
-         <loc>https://anymap.gishub.org/leaflet/</loc>
+         <loc>https://anymap.dev/leaflet/</loc>
          <lastmod>2025-07-04</lastmod>
     </url>
     <url>
-         <loc>https://anymap.gishub.org/mapbox/</loc>
+         <loc>https://anymap.dev/mapbox/</loc>
          <lastmod>2025-07-04</lastmod>
     </url>
     <url>
-         <loc>https://anymap.gishub.org/maplibre/</loc>
+         <loc>https://anymap.dev/maplibre/</loc>
          <lastmod>2025-07-04</lastmod>
     </url>
     <url>
-         <loc>https://anymap.gishub.org/potree/</loc>
+         <loc>https://anymap.dev/potree/</loc>
          <lastmod>2025-07-04</lastmod>
     </url>
     <url>
-         <loc>https://anymap.gishub.org/usage/</loc>
+         <loc>https://anymap.dev/usage/</loc>
          <lastmod>2025-07-04</lastmod>
     </url>
     <url>
-         <loc>https://anymap.gishub.org/utils/</loc>
+         <loc>https://anymap.dev/utils/</loc>
          <lastmod>2025-07-04</lastmod>
     </url>
     <url>
-         <loc>https://anymap.gishub.org/examples/basic_usage/</loc>
+         <loc>https://anymap.dev/examples/basic_usage/</loc>
          <lastmod>2025-07-04</lastmod>
     </url>
     <url>
-         <loc>https://anymap.gishub.org/examples/cesium_example/</loc>
+         <loc>https://anymap.dev/examples/cesium_example/</loc>
          <lastmod>2025-07-04</lastmod>
     </url>
     <url>
-         <loc>https://anymap.gishub.org/examples/deckgl_example/</loc>
+         <loc>https://anymap.dev/examples/deckgl_example/</loc>
          <lastmod>2025-07-04</lastmod>
     </url>
     <url>
-         <loc>https://anymap.gishub.org/examples/leaflet_example/</loc>
+         <loc>https://anymap.dev/examples/leaflet_example/</loc>
          <lastmod>2025-07-04</lastmod>
     </url>
     <url>
-         <loc>https://anymap.gishub.org/examples/map_comparison/</loc>
+         <loc>https://anymap.dev/examples/map_comparison/</loc>
          <lastmod>2025-07-04</lastmod>
     </url>
     <url>
-         <loc>https://anymap.gishub.org/examples/mapbox_example/</loc>
+         <loc>https://anymap.dev/examples/mapbox_example/</loc>
          <lastmod>2025-07-04</lastmod>
     </url>
     <url>
-         <loc>https://anymap.gishub.org/examples/maplibre_example/</loc>
+         <loc>https://anymap.dev/examples/maplibre_example/</loc>
          <lastmod>2025-07-04</lastmod>
     </url>
     <url>
-         <loc>https://anymap.gishub.org/examples/potree_example/</loc>
+         <loc>https://anymap.dev/examples/potree_example/</loc>
          <lastmod>2025-07-04</lastmod>
     </url>
     <url>
-         <loc>https://anymap.gishub.org/examples/to_html/</loc>
+         <loc>https://anymap.dev/examples/to_html/</loc>
          <lastmod>2025-07-04</lastmod>
     </url>
 </urlset>
