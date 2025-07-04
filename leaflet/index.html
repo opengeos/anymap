@@ -1336,6 +1336,7 @@ LeafletMap            (<a class="autorefs autorefs-internal" title="anymap.base.
         <span class="n">latlng</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
         <span class="n">popup</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="n">tooltip</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">tooltip_options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">icon</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">draggable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="o">**</span><span class="n">options</span><span class="p">,</span>
@@ -1346,6 +1347,7 @@ LeafletMap            (<a class="autorefs autorefs-internal" title="anymap.base.
 <span class="sd">            latlng: Marker position as [latitude, longitude]</span>
 <span class="sd">            popup: Popup text</span>
 <span class="sd">            tooltip: Tooltip text</span>
+<span class="sd">            tooltip_options: Tooltip options</span>
 <span class="sd">            icon: Icon configuration</span>
 <span class="sd">            draggable: Whether the marker is draggable</span>
 <span class="sd">            **options: Additional marker options</span>
@@ -1360,6 +1362,7 @@ LeafletMap            (<a class="autorefs autorefs-internal" title="anymap.base.
             <span class="s2">&quot;latlng&quot;</span><span class="p">:</span> <span class="n">latlng</span><span class="p">,</span>
             <span class="s2">&quot;popup&quot;</span><span class="p">:</span> <span class="n">popup</span><span class="p">,</span>
             <span class="s2">&quot;tooltip&quot;</span><span class="p">:</span> <span class="n">tooltip</span><span class="p">,</span>
+            <span class="s2">&quot;tooltip_options&quot;</span><span class="p">:</span> <span class="n">tooltip_options</span><span class="p">,</span>
             <span class="s2">&quot;draggable&quot;</span><span class="p">:</span> <span class="n">draggable</span><span class="p">,</span>
             <span class="o">**</span><span class="n">options</span><span class="p">,</span>
         <span class="p">}</span>
@@ -1377,6 +1380,8 @@ LeafletMap            (<a class="autorefs autorefs-internal" title="anymap.base.
         <span class="n">color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span>
         <span class="n">fillColor</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span>
         <span class="n">fillOpacity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span>
+        <span class="n">tooltip</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">tooltip_options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">options</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a circle to the map.</span>
@@ -1387,6 +1392,8 @@ LeafletMap            (<a class="autorefs autorefs-internal" title="anymap.base.
 <span class="sd">            color: Circle stroke color</span>
 <span class="sd">            fillColor: Circle fill color</span>
 <span class="sd">            fillOpacity: Circle fill opacity</span>
+<span class="sd">            tooltip: Tooltip text</span>
+<span class="sd">            tooltip_options: Tooltip options</span>
 <span class="sd">            **options: Additional circle options</span>
 
 <span class="sd">        Returns:</span>
@@ -1401,6 +1408,8 @@ LeafletMap            (<a class="autorefs autorefs-internal" title="anymap.base.
             <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="n">color</span><span class="p">,</span>
             <span class="s2">&quot;fillColor&quot;</span><span class="p">:</span> <span class="n">fillColor</span><span class="p">,</span>
             <span class="s2">&quot;fillOpacity&quot;</span><span class="p">:</span> <span class="n">fillOpacity</span><span class="p">,</span>
+            <span class="s2">&quot;tooltip&quot;</span><span class="p">:</span> <span class="n">tooltip</span><span class="p">,</span>
+            <span class="s2">&quot;tooltip_options&quot;</span><span class="p">:</span> <span class="n">tooltip_options</span><span class="p">,</span>
             <span class="o">**</span><span class="n">options</span><span class="p">,</span>
         <span class="p">}</span>
 
@@ -1413,6 +1422,8 @@ LeafletMap            (<a class="autorefs autorefs-internal" title="anymap.base.
         <span class="n">color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span>
         <span class="n">fillColor</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span>
         <span class="n">fillOpacity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span>
+        <span class="n">tooltip</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">tooltip_options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">options</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a polygon to the map.</span>
@@ -1435,6 +1446,8 @@ LeafletMap            (<a class="autorefs autorefs-internal" title="anymap.base.
             <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="n">color</span><span class="p">,</span>
             <span class="s2">&quot;fillColor&quot;</span><span class="p">:</span> <span class="n">fillColor</span><span class="p">,</span>
             <span class="s2">&quot;fillOpacity&quot;</span><span class="p">:</span> <span class="n">fillOpacity</span><span class="p">,</span>
+            <span class="s2">&quot;tooltip&quot;</span><span class="p">:</span> <span class="n">tooltip</span><span class="p">,</span>
+            <span class="s2">&quot;tooltip_options&quot;</span><span class="p">:</span> <span class="n">tooltip_options</span><span class="p">,</span>
             <span class="o">**</span><span class="n">options</span><span class="p">,</span>
         <span class="p">}</span>
 
@@ -1446,6 +1459,8 @@ LeafletMap            (<a class="autorefs autorefs-internal" title="anymap.base.
         <span class="n">latlngs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span>
         <span class="n">color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span>
         <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="n">tooltip</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">tooltip_options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">options</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a polyline to the map.</span>
@@ -1466,6 +1481,8 @@ LeafletMap            (<a class="autorefs autorefs-internal" title="anymap.base.
             <span class="s2">&quot;latlngs&quot;</span><span class="p">:</span> <span class="n">latlngs</span><span class="p">,</span>
             <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="n">color</span><span class="p">,</span>
             <span class="s2">&quot;weight&quot;</span><span class="p">:</span> <span class="n">weight</span><span class="p">,</span>
+            <span class="s2">&quot;tooltip&quot;</span><span class="p">:</span> <span class="n">tooltip</span><span class="p">,</span>
+            <span class="s2">&quot;tooltip_options&quot;</span><span class="p">:</span> <span class="n">tooltip_options</span><span class="p">,</span>
             <span class="o">**</span><span class="n">options</span><span class="p">,</span>
         <span class="p">}</span>
 
@@ -1743,7 +1760,7 @@ LeafletMap            (<a class="autorefs autorefs-internal" title="anymap.base.
 
 
 <h3 id="anymap.leaflet.LeafletMap.add_circle" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">add_circle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">latlng</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">fillColor</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">fillOpacity</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">add_circle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">latlng</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">fillColor</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">fillOpacity</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">tooltip</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">tooltip_options</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">)</span></code>
 
 
 <a href="#anymap.leaflet.LeafletMap.add_circle" class="headerlink" title="Permanent link">&para;</a></h3>
@@ -1794,6 +1811,18 @@ LeafletMap            (<a class="autorefs autorefs-internal" title="anymap.base.
         <td><code>0.2</code></td>
       </tr>
       <tr>
+        <td><code>tooltip</code></td>
+        <td><code>str</code></td>
+        <td><p>Tooltip text</p></td>
+        <td><code>&#39;&#39;</code></td>
+      </tr>
+      <tr>
+        <td><code>tooltip_options</code></td>
+        <td><code>Optional[Dict]</code></td>
+        <td><p>Tooltip options</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
         <td><code>**options</code></td>
         <td></td>
         <td><p>Additional circle options</p></td>
@@ -1825,6 +1854,8 @@ LeafletMap            (<a class="autorefs autorefs-internal" title="anymap.base.
     <span class="n">color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span>
     <span class="n">fillColor</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span>
     <span class="n">fillOpacity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span>
+    <span class="n">tooltip</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">tooltip_options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">options</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a circle to the map.</span>
@@ -1835,6 +1866,8 @@ LeafletMap            (<a class="autorefs autorefs-internal" title="anymap.base.
 <span class="sd">        color: Circle stroke color</span>
 <span class="sd">        fillColor: Circle fill color</span>
 <span class="sd">        fillOpacity: Circle fill opacity</span>
+<span class="sd">        tooltip: Tooltip text</span>
+<span class="sd">        tooltip_options: Tooltip options</span>
 <span class="sd">        **options: Additional circle options</span>
 
 <span class="sd">    Returns:</span>
@@ -1849,6 +1882,8 @@ LeafletMap            (<a class="autorefs autorefs-internal" title="anymap.base.
         <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="n">color</span><span class="p">,</span>
         <span class="s2">&quot;fillColor&quot;</span><span class="p">:</span> <span class="n">fillColor</span><span class="p">,</span>
         <span class="s2">&quot;fillOpacity&quot;</span><span class="p">:</span> <span class="n">fillOpacity</span><span class="p">,</span>
+        <span class="s2">&quot;tooltip&quot;</span><span class="p">:</span> <span class="n">tooltip</span><span class="p">,</span>
+        <span class="s2">&quot;tooltip_options&quot;</span><span class="p">:</span> <span class="n">tooltip_options</span><span class="p">,</span>
         <span class="o">**</span><span class="n">options</span><span class="p">,</span>
     <span class="p">}</span>
 
@@ -1966,7 +2001,7 @@ LeafletMap            (<a class="autorefs autorefs-internal" title="anymap.base.
 
 
 <h3 id="anymap.leaflet.LeafletMap.add_marker" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">add_marker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">latlng</span><span class="p">,</span> <span class="n">popup</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">tooltip</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">draggable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">add_marker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">latlng</span><span class="p">,</span> <span class="n">popup</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">tooltip</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">tooltip_options</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">draggable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">)</span></code>
 
 
 <a href="#anymap.leaflet.LeafletMap.add_marker" class="headerlink" title="Permanent link">&para;</a></h3>
@@ -2003,6 +2038,12 @@ LeafletMap            (<a class="autorefs autorefs-internal" title="anymap.base.
         <td><code>str</code></td>
         <td><p>Tooltip text</p></td>
         <td><code>&#39;&#39;</code></td>
+      </tr>
+      <tr>
+        <td><code>tooltip_options</code></td>
+        <td><code>Optional[Dict]</code></td>
+        <td><p>Tooltip options</p></td>
+        <td><code>None</code></td>
       </tr>
       <tr>
         <td><code>icon</code></td>
@@ -2046,6 +2087,7 @@ LeafletMap            (<a class="autorefs autorefs-internal" title="anymap.base.
     <span class="n">latlng</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
     <span class="n">popup</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
     <span class="n">tooltip</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">tooltip_options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">icon</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">draggable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="o">**</span><span class="n">options</span><span class="p">,</span>
@@ -2056,6 +2098,7 @@ LeafletMap            (<a class="autorefs autorefs-internal" title="anymap.base.
 <span class="sd">        latlng: Marker position as [latitude, longitude]</span>
 <span class="sd">        popup: Popup text</span>
 <span class="sd">        tooltip: Tooltip text</span>
+<span class="sd">        tooltip_options: Tooltip options</span>
 <span class="sd">        icon: Icon configuration</span>
 <span class="sd">        draggable: Whether the marker is draggable</span>
 <span class="sd">        **options: Additional marker options</span>
@@ -2070,6 +2113,7 @@ LeafletMap            (<a class="autorefs autorefs-internal" title="anymap.base.
         <span class="s2">&quot;latlng&quot;</span><span class="p">:</span> <span class="n">latlng</span><span class="p">,</span>
         <span class="s2">&quot;popup&quot;</span><span class="p">:</span> <span class="n">popup</span><span class="p">,</span>
         <span class="s2">&quot;tooltip&quot;</span><span class="p">:</span> <span class="n">tooltip</span><span class="p">,</span>
+        <span class="s2">&quot;tooltip_options&quot;</span><span class="p">:</span> <span class="n">tooltip_options</span><span class="p">,</span>
         <span class="s2">&quot;draggable&quot;</span><span class="p">:</span> <span class="n">draggable</span><span class="p">,</span>
         <span class="o">**</span><span class="n">options</span><span class="p">,</span>
     <span class="p">}</span>
@@ -2092,7 +2136,7 @@ LeafletMap            (<a class="autorefs autorefs-internal" title="anymap.base.
 
 
 <h3 id="anymap.leaflet.LeafletMap.add_polygon" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">add_polygon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">latlngs</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">fillColor</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">fillOpacity</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">add_polygon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">latlngs</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">fillColor</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">fillOpacity</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">tooltip</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">tooltip_options</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">)</span></code>
 
 
 <a href="#anymap.leaflet.LeafletMap.add_polygon" class="headerlink" title="Permanent link">&para;</a></h3>
@@ -2167,6 +2211,8 @@ LeafletMap            (<a class="autorefs autorefs-internal" title="anymap.base.
     <span class="n">color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span>
     <span class="n">fillColor</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span>
     <span class="n">fillOpacity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span>
+    <span class="n">tooltip</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">tooltip_options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">options</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a polygon to the map.</span>
@@ -2189,6 +2235,8 @@ LeafletMap            (<a class="autorefs autorefs-internal" title="anymap.base.
         <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="n">color</span><span class="p">,</span>
         <span class="s2">&quot;fillColor&quot;</span><span class="p">:</span> <span class="n">fillColor</span><span class="p">,</span>
         <span class="s2">&quot;fillOpacity&quot;</span><span class="p">:</span> <span class="n">fillOpacity</span><span class="p">,</span>
+        <span class="s2">&quot;tooltip&quot;</span><span class="p">:</span> <span class="n">tooltip</span><span class="p">,</span>
+        <span class="s2">&quot;tooltip_options&quot;</span><span class="p">:</span> <span class="n">tooltip_options</span><span class="p">,</span>
         <span class="o">**</span><span class="n">options</span><span class="p">,</span>
     <span class="p">}</span>
 
@@ -2207,7 +2255,7 @@ LeafletMap            (<a class="autorefs autorefs-internal" title="anymap.base.
 
 
 <h3 id="anymap.leaflet.LeafletMap.add_polyline" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">add_polyline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">latlngs</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">add_polyline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">latlngs</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">tooltip</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">tooltip_options</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">)</span></code>
 
 
 <a href="#anymap.leaflet.LeafletMap.add_polyline" class="headerlink" title="Permanent link">&para;</a></h3>
@@ -2275,6 +2323,8 @@ LeafletMap            (<a class="autorefs autorefs-internal" title="anymap.base.
     <span class="n">latlngs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span>
     <span class="n">color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span>
     <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="n">tooltip</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">tooltip_options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">options</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a polyline to the map.</span>
@@ -2295,6 +2345,8 @@ LeafletMap            (<a class="autorefs autorefs-internal" title="anymap.base.
         <span class="s2">&quot;latlngs&quot;</span><span class="p">:</span> <span class="n">latlngs</span><span class="p">,</span>
         <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="n">color</span><span class="p">,</span>
         <span class="s2">&quot;weight&quot;</span><span class="p">:</span> <span class="n">weight</span><span class="p">,</span>
+        <span class="s2">&quot;tooltip&quot;</span><span class="p">:</span> <span class="n">tooltip</span><span class="p">,</span>
+        <span class="s2">&quot;tooltip_options&quot;</span><span class="p">:</span> <span class="n">tooltip_options</span><span class="p">,</span>
         <span class="o">**</span><span class="n">options</span><span class="p">,</span>
     <span class="p">}</span>
 
