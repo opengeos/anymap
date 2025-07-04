@@ -12,13 +12,9 @@
         <meta name="author" content="giswqs">
       
       
-        <link rel="canonical" href="https://anymap.gishub.org/examples/cesium_example/">
+        <link rel="canonical" href="https://anymap.gishub.org/examples/map_comparison/">
       
       
-        <link rel="prev" href="../mapbox_example/">
-      
-      
-        <link rel="next" href="../deckgl_example/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -26,7 +22,7 @@
     
     
       
-        <title>Cesium example - anymap</title>
+        <title>Map comparison - anymap</title>
       
     
     
@@ -82,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#cesium-3d-globe-example" class="md-skip">
+        <a href="#map-comparison-example" class="md-skip">
           Skip to content
         </a>
       
@@ -118,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Cesium example
+              Map comparison
             
           </span>
         </div>
@@ -420,20 +416,18 @@
       
   
   
-    
   
   
-  
     
     
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
         
           
           <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
@@ -449,7 +443,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             Examples
@@ -529,32 +523,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    Cesium example
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../cesium_example/" class="md-nav__link">
         
   
   
@@ -565,143 +537,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#setup" class="md-nav__link">
-    <span class="md-ellipsis">
-      Setup
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#basic-3d-globe" class="md-nav__link">
-    <span class="md-ellipsis">
-      Basic 3D Globe
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#adding-points-and-markers" class="md-nav__link">
-    <span class="md-ellipsis">
-      Adding Points and Markers
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#camera-controls-and-navigation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Camera Controls and Navigation
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#adding-3d-geometries" class="md-nav__link">
-    <span class="md-ellipsis">
-      Adding 3D Geometries
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#working-with-geojson-data" class="md-nav__link">
-    <span class="md-ellipsis">
-      Working with GeoJSON Data
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#terrain-and-imagery" class="md-nav__link">
-    <span class="md-ellipsis">
-      Terrain and Imagery
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#scene-modes-and-effects" class="md-nav__link">
-    <span class="md-ellipsis">
-      Scene Modes and Effects
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#event-handling" class="md-nav__link">
-    <span class="md-ellipsis">
-      Event Handling
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#multi-cell-rendering-test" class="md-nav__link">
-    <span class="md-ellipsis">
-      Multi-cell Rendering Test
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#creating-a-second-globe-instance" class="md-nav__link">
-    <span class="md-ellipsis">
-      Creating a Second Globe Instance
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reset-and-home-view" class="md-nav__link">
-    <span class="md-ellipsis">
-      Reset and Home View
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#summary" class="md-nav__link">
-    <span class="md-ellipsis">
-      Summary
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -878,72 +713,81 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#setup" class="md-nav__link">
+  <a href="#features" class="md-nav__link">
     <span class="md-ellipsis">
-      Setup
+      Features
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#basic-3d-globe" class="md-nav__link">
+  <a href="#basic-maplibre-comparison" class="md-nav__link">
     <span class="md-ellipsis">
-      Basic 3D Globe
+      Basic MapLibre Comparison
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#adding-points-and-markers" class="md-nav__link">
+  <a href="#controlling-the-slider-position" class="md-nav__link">
     <span class="md-ellipsis">
-      Adding Points and Markers
+      Controlling the Slider Position
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#camera-controls-and-navigation" class="md-nav__link">
+  <a href="#changing-orientation" class="md-nav__link">
     <span class="md-ellipsis">
-      Camera Controls and Navigation
+      Changing Orientation
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#adding-3d-geometries" class="md-nav__link">
+  <a href="#enablingdisabling-mouse-move" class="md-nav__link">
     <span class="md-ellipsis">
-      Adding 3D Geometries
+      Enabling/Disabling Mouse Move
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#working-with-geojson-data" class="md-nav__link">
+  <a href="#updating-map-styles" class="md-nav__link">
     <span class="md-ellipsis">
-      Working with GeoJSON Data
+      Updating Map Styles
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#terrain-and-imagery" class="md-nav__link">
+  <a href="#flying-to-different-locations" class="md-nav__link">
     <span class="md-ellipsis">
-      Terrain and Imagery
+      Flying to Different Locations
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#scene-modes-and-effects" class="md-nav__link">
+  <a href="#synchronization-options" class="md-nav__link">
     <span class="md-ellipsis">
-      Scene Modes and Effects
+      Synchronization Options
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mapbox-comparison-requires-access-token" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mapbox Comparison (requires access token)
     </span>
   </a>
   
@@ -959,36 +803,27 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#multi-cell-rendering-test" class="md-nav__link">
+  <a href="#conclusion" class="md-nav__link">
     <span class="md-ellipsis">
-      Multi-cell Rendering Test
+      Conclusion
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#creating-a-second-globe-instance" class="md-nav__link">
+  <a href="#html-export" class="md-nav__link">
     <span class="md-ellipsis">
-      Creating a Second Globe Instance
+      HTML Export
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#reset-and-home-view" class="md-nav__link">
+  <a href="#conclusion_1" class="md-nav__link">
     <span class="md-ellipsis">
-      Reset and Home View
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#summary" class="md-nav__link">
-    <span class="md-ellipsis">
-      Summary
+      Conclusion
     </span>
   </a>
   
@@ -1007,7 +842,7 @@
               <article class="md-content__inner md-typeset">
                 
 
-    <a href="/examples/cesium_example/cesium_example.ipynb" title="Download Notebook" class="md-content__button md-icon">
+    <a href="/examples/map_comparison/map_comparison.ipynb" title="Download Notebook" class="md-content__button md-icon">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 20h14v-2H5m14-9h-4V3H9v6H5l7 7z"/></svg>
     </a>
 
@@ -1490,13 +1325,19 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="cesium-3d-globe-example">Cesium 3D Globe Example<a class="anchor-link" href="#cesium-3d-globe-example">¶</a></h1><p>This notebook demonstrates the capabilities of the anymap CesiumMap widget for creating interactive 3D globe visualizations.</p>
-<h2 id="setup">Setup<a class="anchor-link" href="#setup">¶</a></h2><p>First, make sure you have a Cesium ion access token. You can get a free one at <a href="https://cesium.com/ion/signup">https://cesium.com/ion/signup</a></p>
+<h1 id="map-comparison-example">Map Comparison Example<a class="anchor-link" href="#map-comparison-example">¶</a></h1><p>This notebook demonstrates the map comparison functionality in anymap using the MapCompare widget. You can compare two maps side-by-side with different styles, data layers, or temporal states.</p>
+<h2 id="features">Features<a class="anchor-link" href="#features">¶</a></h2><ul>
+<li>Side-by-side map comparison with swipe control</li>
+<li>Support for both MapLibre and Mapbox backends</li>
+<li>Configurable orientation (vertical/horizontal)</li>
+<li>Map synchronization options</li>
+<li>Interactive slider control</li>
+</ul>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1514,36 +1355,9 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">anymap</span><span class="w"> </span><span class="kn">import</span> <span class="n">CesiumMap</span>
-
-<span class="c1"># Set your Cesium token (get a free one at https://cesium.com/ion/signup)</span>
-<span class="c1"># You can either set it as an environment variable CESIUM_TOKEN or pass it directly</span>
-<span class="c1"># os.environ['CESIUM_TOKEN'] = 'your_token_here'</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Cesium backend loaded successfully!"</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">anymap</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-1">import os
-from anymap import CesiumMap
-
-# Set your Cesium token (get a free one at https://cesium.com/ion/signup)
-# You can either set it as an environment variable CESIUM_TOKEN or pass it directly
-# os.environ['CESIUM_TOKEN'] = 'your_token_here'
-
-print("Cesium backend loaded successfully!")</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Cesium backend loaded successfully!
-</pre>
+<div class="clipboard-copy-txt" id="cell-1">import anymap</div>
 </div>
 </div>
 </div>
@@ -1556,7 +1370,7 @@ print("Cesium backend loaded successfully!")</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="basic-3d-globe">Basic 3D Globe<a class="anchor-link" href="#basic-3d-globe">¶</a></h2><p>Create a basic 3D globe centered on a specific location:</p>
+<h2 id="basic-maplibre-comparison">Basic MapLibre Comparison<a class="anchor-link" href="#basic-maplibre-comparison">¶</a></h2><p>Let's start with a basic comparison of two different MapLibre styles.</p>
 </div>
 </div>
 </div>
@@ -1579,31 +1393,45 @@ print("Cesium backend loaded successfully!")</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">anymap</span><span class="w"> </span><span class="kn">import</span> <span class="n">CesiumMap</span>
-
-<span class="c1"># Create a basic Cesium map centered on New York City</span>
-<span class="n">globe</span> <span class="o">=</span> <span class="n">CesiumMap</span><span class="p">(</span>
-    <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mf">40.7128</span><span class="p">,</span> <span class="o">-</span><span class="mf">74.0060</span><span class="p">],</span>  <span class="c1"># NYC coordinates</span>
-    <span class="n">camera_height</span><span class="o">=</span><span class="mi">2000000</span><span class="p">,</span>  <span class="c1"># 2000 km above surface</span>
-    <span class="n">width</span><span class="o">=</span><span class="s2">"100%"</span><span class="p">,</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Basic MapLibre comparison with different styles</span>
+<span class="n">compare</span> <span class="o">=</span> <span class="n">anymap</span><span class="o">.</span><span class="n">MapCompare</span><span class="p">(</span>
+    <span class="n">left_map</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">"center"</span><span class="p">:</span> <span class="p">[</span><span class="mf">37.7749</span><span class="p">,</span> <span class="o">-</span><span class="mf">122.4194</span><span class="p">],</span>  <span class="c1"># San Francisco</span>
+        <span class="s2">"zoom"</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
+        <span class="s2">"style"</span><span class="p">:</span> <span class="s2">"https://demotiles.maplibre.org/style.json"</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">right_map</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">"center"</span><span class="p">:</span> <span class="p">[</span><span class="mf">37.7749</span><span class="p">,</span> <span class="o">-</span><span class="mf">122.4194</span><span class="p">],</span>
+        <span class="s2">"zoom"</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
+        <span class="s2">"style"</span><span class="p">:</span> <span class="s2">"https://tiles.stadiamaps.com/styles/alidade_smooth.json"</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">backend</span><span class="o">=</span><span class="s2">"maplibre"</span><span class="p">,</span>
+    <span class="n">orientation</span><span class="o">=</span><span class="s2">"vertical"</span><span class="p">,</span>
+    <span class="n">mousemove</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="n">height</span><span class="o">=</span><span class="s2">"600px"</span><span class="p">,</span>
-    <span class="n">navigation_help_button</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="n">globe</span>
+<span class="n">compare</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-2">from anymap import CesiumMap
-
-# Create a basic Cesium map centered on New York City
-globe = CesiumMap(
-    center=[40.7128, -74.0060],  # NYC coordinates
-    camera_height=2000000,  # 2000 km above surface
-    width="100%",
+<div class="clipboard-copy-txt" id="cell-2"># Basic MapLibre comparison with different styles
+compare = anymap.MapCompare(
+    left_map={
+        "center": [37.7749, -122.4194],  # San Francisco
+        "zoom": 12,
+        "style": "https://demotiles.maplibre.org/style.json",
+    },
+    right_map={
+        "center": [37.7749, -122.4194],
+        "zoom": 12,
+        "style": "https://tiles.stadiamaps.com/styles/alidade_smooth.json",
+    },
+    backend="maplibre",
+    orientation="vertical",
+    mousemove=False,
     height="600px",
-    navigation_help_button=False,
 )
 
-globe</div>
+compare</div>
 </div>
 </div>
 </div>
@@ -1612,22 +1440,14 @@ globe</div>
 <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>/home/runner/work/anymap/anymap/anymap/anymap.py:1039: UserWarning: No Cesium access token found. Please set CESIUM_TOKEN environment variable or pass access_token parameter. Get a free token at https://cesium.com/ion/signup
-  warnings.warn(
-</pre>
-</div>
-</div>
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
 <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[2]:</div>
-<div class="jupyter-widgets jp-OutputArea-output jp-OutputArea-executeResult" id="96dd8d9a-f5d3-4e87-9a2d-a333cafa0da8" tabindex="0">
+<div class="jupyter-widgets jp-OutputArea-output jp-OutputArea-executeResult" id="0f7d2780-026a-49d9-8a83-00c88c37cf1b" tabindex="0">
 <script type="text/javascript">
-var element = document.getElementById('96dd8d9a-f5d3-4e87-9a2d-a333cafa0da8');
+var element = document.getElementById('0f7d2780-026a-49d9-8a83-00c88c37cf1b');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
-{"version_major": 2, "version_minor": 1, "model_id": "2165e7f28aec4597b4cf175f20819418"}
+{"version_major": 2, "version_minor": 1, "model_id": "06d947e9f7b84de189f49c2d5f8a86c5"}
 </script>
 </div>
 </div>
@@ -1641,12 +1461,12 @@ var element = document.getElementById('96dd8d9a-f5d3-4e87-9a2d-a333cafa0da8');
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="adding-points-and-markers">Adding Points and Markers<a class="anchor-link" href="#adding-points-and-markers">¶</a></h2><p>Add various points and billboards to the globe:</p>
+<h2 id="controlling-the-slider-position">Controlling the Slider Position<a class="anchor-link" href="#controlling-the-slider-position">¶</a></h2><p>You can programmatically control the slider position.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1664,102 +1484,18 @@ var element = document.getElementById('96dd8d9a-f5d3-4e87-9a2d-a333cafa0da8');
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Add some famous landmarks as points</span>
-<span class="n">globe</span><span class="o">.</span><span class="n">add_point</span><span class="p">(</span>
-    <span class="mf">40.7128</span><span class="p">,</span>
-    <span class="o">-</span><span class="mf">74.0060</span><span class="p">,</span>
-    <span class="n">height</span><span class="o">=</span><span class="mi">200000</span><span class="p">,</span>  <span class="c1"># 200 km above NYC</span>
-    <span class="n">name</span><span class="o">=</span><span class="s2">"New York City"</span><span class="p">,</span>
-    <span class="n">description</span><span class="o">=</span><span class="s2">"The Big Apple"</span><span class="p">,</span>
-    <span class="n">color</span><span class="o">=</span><span class="s2">"#ff0000"</span><span class="p">,</span>
-    <span class="n">pixel_size</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="n">globe</span><span class="o">.</span><span class="n">add_point</span><span class="p">(</span>
-    <span class="mf">51.5074</span><span class="p">,</span>
-    <span class="o">-</span><span class="mf">0.1278</span><span class="p">,</span>
-    <span class="n">height</span><span class="o">=</span><span class="mi">150000</span><span class="p">,</span>  <span class="c1"># 150 km above London</span>
-    <span class="n">name</span><span class="o">=</span><span class="s2">"London"</span><span class="p">,</span>
-    <span class="n">description</span><span class="o">=</span><span class="s2">"Capital of England"</span><span class="p">,</span>
-    <span class="n">color</span><span class="o">=</span><span class="s2">"#0000ff"</span><span class="p">,</span>
-    <span class="n">pixel_size</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="n">globe</span><span class="o">.</span><span class="n">add_point</span><span class="p">(</span>
-    <span class="mf">35.6762</span><span class="p">,</span>
-    <span class="mf">139.6503</span><span class="p">,</span>
-    <span class="n">height</span><span class="o">=</span><span class="mi">100000</span><span class="p">,</span>  <span class="c1"># 100 km above Tokyo</span>
-    <span class="n">name</span><span class="o">=</span><span class="s2">"Tokyo"</span><span class="p">,</span>
-    <span class="n">description</span><span class="o">=</span><span class="s2">"Capital of Japan"</span><span class="p">,</span>
-    <span class="n">color</span><span class="o">=</span><span class="s2">"#00ff00"</span><span class="p">,</span>
-    <span class="n">pixel_size</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Added landmark points to the globe!"</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Move slider to 25% position (more of the left map visible)</span>
+<span class="n">compare</span><span class="o">.</span><span class="n">set_slider_position</span><span class="p">(</span><span class="mf">0.25</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-3"># Add some famous landmarks as points
-globe.add_point(
-    40.7128,
-    -74.0060,
-    height=200000,  # 200 km above NYC
-    name="New York City",
-    description="The Big Apple",
-    color="#ff0000",
-    pixel_size=20,
-)
-
-globe.add_point(
-    51.5074,
-    -0.1278,
-    height=150000,  # 150 km above London
-    name="London",
-    description="Capital of England",
-    color="#0000ff",
-    pixel_size=15,
-)
-
-globe.add_point(
-    35.6762,
-    139.6503,
-    height=100000,  # 100 km above Tokyo
-    name="Tokyo",
-    description="Capital of Japan",
-    color="#00ff00",
-    pixel_size=18,
-)
-
-print("Added landmark points to the globe!")</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Added landmark points to the globe!
-</pre>
+<div class="clipboard-copy-txt" id="cell-3"># Move slider to 25% position (more of the left map visible)
+compare.set_slider_position(0.25)</div>
 </div>
 </div>
 </div>
 </div>
 </div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="camera-controls-and-navigation">Camera Controls and Navigation<a class="anchor-link" href="#camera-controls-and-navigation">¶</a></h2><p>Demonstrate camera movement and positioning:</p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1777,49 +1513,18 @@ print("Added landmark points to the globe!")</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Fly to different locations with smooth transitions</span>
-<span class="n">globe</span><span class="o">.</span><span class="n">fly_to</span><span class="p">(</span>
-    <span class="mf">51.5074</span><span class="p">,</span>
-    <span class="o">-</span><span class="mf">0.1278</span><span class="p">,</span>  <span class="c1"># London</span>
-    <span class="n">height</span><span class="o">=</span><span class="mi">5000000</span><span class="p">,</span>  <span class="c1"># 5000 km above</span>
-    <span class="n">duration</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span>
-    <span class="n">heading</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span>
-    <span class="n">pitch</span><span class="o">=-</span><span class="mi">30</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Flying to London..."</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Move slider to 75% position (more of the right map visible)</span>
+<span class="n">compare</span><span class="o">.</span><span class="n">set_slider_position</span><span class="p">(</span><span class="mf">0.75</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-4"># Fly to different locations with smooth transitions
-globe.fly_to(
-    51.5074,
-    -0.1278,  # London
-    height=5000000,  # 5000 km above
-    duration=3.0,
-    heading=45,
-    pitch=-30,
-)
-
-print("Flying to London...")</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Flying to London...
-</pre>
+<div class="clipboard-copy-txt" id="cell-4"># Move slider to 75% position (more of the right map visible)
+compare.set_slider_position(0.75)</div>
 </div>
 </div>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1837,42 +1542,11 @@ print("Flying to London...")</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Fly to Tokyo with different camera angle</span>
-<span class="n">globe</span><span class="o">.</span><span class="n">fly_to</span><span class="p">(</span>
-    <span class="mf">35.6762</span><span class="p">,</span>
-    <span class="mf">139.6503</span><span class="p">,</span>  <span class="c1"># Tokyo</span>
-    <span class="n">height</span><span class="o">=</span><span class="mi">3000000</span><span class="p">,</span>  <span class="c1"># 3000 km above</span>
-    <span class="n">duration</span><span class="o">=</span><span class="mf">4.0</span><span class="p">,</span>
-    <span class="n">heading</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span>
-    <span class="n">pitch</span><span class="o">=-</span><span class="mi">45</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Flying to Tokyo..."</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Center the slider"</span>
+<span class="n">compare</span><span class="o">.</span><span class="n">set_slider_position</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-5"># Fly to Tokyo with different camera angle
-globe.fly_to(
-    35.6762,
-    139.6503,  # Tokyo
-    height=3000000,  # 3000 km above
-    duration=4.0,
-    heading=90,
-    pitch=-45,
-)
-
-print("Flying to Tokyo...")</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Flying to Tokyo...
-</pre>
+<div class="clipboard-copy-txt" id="cell-5"># Center the slider"
+compare.set_slider_position(0.5)</div>
 </div>
 </div>
 </div>
@@ -1885,12 +1559,12 @@ print("Flying to Tokyo...")</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="adding-3d-geometries">Adding 3D Geometries<a class="anchor-link" href="#adding-3d-geometries">¶</a></h2><p>Add polylines and polygons to show connections and regions:</p>
+<h2 id="changing-orientation">Changing Orientation<a class="anchor-link" href="#changing-orientation">¶</a></h2><p>You can switch between vertical and horizontal orientations.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1908,59 +1582,18 @@ print("Flying to Tokyo...")</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Add a flight path polyline from NYC to London</span>
-<span class="n">flight_path</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">[</span><span class="mf">40.7128</span><span class="p">,</span> <span class="o">-</span><span class="mf">74.0060</span><span class="p">,</span> <span class="mi">10000</span><span class="p">],</span>  <span class="c1"># NYC at 10km altitude</span>
-    <span class="p">[</span><span class="mf">45.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">30.0</span><span class="p">,</span> <span class="mi">12000</span><span class="p">],</span>  <span class="c1"># Midpoint over Atlantic</span>
-    <span class="p">[</span><span class="mf">51.5074</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1278</span><span class="p">,</span> <span class="mi">10000</span><span class="p">],</span>  <span class="c1"># London at 10km altitude</span>
-<span class="p">]</span>
-
-<span class="n">globe</span><span class="o">.</span><span class="n">add_polyline</span><span class="p">(</span>
-    <span class="n">flight_path</span><span class="p">,</span>
-    <span class="n">width</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-    <span class="n">color</span><span class="o">=</span><span class="s2">"#ffff00"</span><span class="p">,</span>
-    <span class="n">name</span><span class="o">=</span><span class="s2">"NYC to London Flight Path"</span><span class="p">,</span>
-    <span class="n">description</span><span class="o">=</span><span class="s2">"Transatlantic flight route"</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Added flight path polyline!"</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Switch to horizontal orientation (top/bottom comparison)</span>
+<span class="n">compare</span><span class="o">.</span><span class="n">set_orientation</span><span class="p">(</span><span class="s2">"horizontal"</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-6"># Add a flight path polyline from NYC to London
-flight_path = [
-    [40.7128, -74.0060, 10000],  # NYC at 10km altitude
-    [45.0, -30.0, 12000],  # Midpoint over Atlantic
-    [51.5074, -0.1278, 10000],  # London at 10km altitude
-]
-
-globe.add_polyline(
-    flight_path,
-    width=3,
-    color="#ffff00",
-    name="NYC to London Flight Path",
-    description="Transatlantic flight route",
-)
-
-print("Added flight path polyline!")</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Added flight path polyline!
-</pre>
+<div class="clipboard-copy-txt" id="cell-6"># Switch to horizontal orientation (top/bottom comparison)
+compare.set_orientation("horizontal")</div>
 </div>
 </div>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1978,56 +1611,11 @@ print("Added flight path polyline!")</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Add a polygon area around the Mediterranean Sea</span>
-<span class="n">mediterranean_bounds</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">[</span><span class="mf">30.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">6.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>  <span class="c1"># Gibraltar area</span>
-    <span class="p">[</span><span class="mf">30.0</span><span class="p">,</span> <span class="mf">36.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>  <span class="c1"># Eastern Mediterranean</span>
-    <span class="p">[</span><span class="mf">46.0</span><span class="p">,</span> <span class="mf">36.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>  <span class="c1"># Turkey area</span>
-    <span class="p">[</span><span class="mf">46.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">6.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>  <span class="c1"># Spain area</span>
-    <span class="p">[</span><span class="mf">30.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">6.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>  <span class="c1"># Close the polygon</span>
-<span class="p">]</span>
-
-<span class="n">globe</span><span class="o">.</span><span class="n">add_polygon</span><span class="p">(</span>
-    <span class="n">mediterranean_bounds</span><span class="p">,</span>
-    <span class="n">color</span><span class="o">=</span><span class="s2">"rgba(0, 100, 255, 0.3)"</span><span class="p">,</span>  <span class="c1"># Semi-transparent blue</span>
-    <span class="n">outline_color</span><span class="o">=</span><span class="s2">"#0064ff"</span><span class="p">,</span>
-    <span class="n">name</span><span class="o">=</span><span class="s2">"Mediterranean Region"</span><span class="p">,</span>
-    <span class="n">description</span><span class="o">=</span><span class="s2">"Mediterranean Sea region"</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Added Mediterranean polygon!"</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Switch back to vertical orientation (left/right comparison)</span>
+<span class="n">compare</span><span class="o">.</span><span class="n">set_orientation</span><span class="p">(</span><span class="s2">"vertical"</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-7"># Add a polygon area around the Mediterranean Sea
-mediterranean_bounds = [
-    [30.0, -6.0, 0],  # Gibraltar area
-    [30.0, 36.0, 0],  # Eastern Mediterranean
-    [46.0, 36.0, 0],  # Turkey area
-    [46.0, -6.0, 0],  # Spain area
-    [30.0, -6.0, 0],  # Close the polygon
-]
-
-globe.add_polygon(
-    mediterranean_bounds,
-    color="rgba(0, 100, 255, 0.3)",  # Semi-transparent blue
-    outline_color="#0064ff",
-    name="Mediterranean Region",
-    description="Mediterranean Sea region",
-)
-
-print("Added Mediterranean polygon!")</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Added Mediterranean polygon!
-</pre>
+<div class="clipboard-copy-txt" id="cell-7"># Switch back to vertical orientation (left/right comparison)
+compare.set_orientation("vertical")</div>
 </div>
 </div>
 </div>
@@ -2040,12 +1628,12 @@ print("Added Mediterranean polygon!")</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="working-with-geojson-data">Working with GeoJSON Data<a class="anchor-link" href="#working-with-geojson-data">¶</a></h2><p>Load and display GeoJSON data on the globe:</p>
+<h2 id="enablingdisabling-mouse-move">Enabling/Disabling Mouse Move<a class="anchor-link" href="#enablingdisabling-mouse-move">¶</a></h2><p>You can control whether the slider follows mouse movement or requires dragging.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2063,122 +1651,18 @@ print("Added Mediterranean polygon!")</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Sample GeoJSON data with world capitals</span>
-<span class="n">world_capitals_geojson</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"FeatureCollection"</span><span class="p">,</span>
-    <span class="s2">"features"</span><span class="p">:</span> <span class="p">[</span>
-        <span class="p">{</span>
-            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Feature"</span><span class="p">,</span>
-            <span class="s2">"geometry"</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Point"</span><span class="p">,</span>
-                <span class="s2">"coordinates"</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">77.0369</span><span class="p">,</span> <span class="mf">38.9072</span><span class="p">],</span>  <span class="c1"># Washington DC</span>
-            <span class="p">},</span>
-            <span class="s2">"properties"</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Washington DC"</span><span class="p">,</span>
-                <span class="s2">"country"</span><span class="p">:</span> <span class="s2">"USA"</span><span class="p">,</span>
-                <span class="s2">"population"</span><span class="p">:</span> <span class="mi">705749</span><span class="p">,</span>
-            <span class="p">},</span>
-        <span class="p">},</span>
-        <span class="p">{</span>
-            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Feature"</span><span class="p">,</span>
-            <span class="s2">"geometry"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Point"</span><span class="p">,</span> <span class="s2">"coordinates"</span><span class="p">:</span> <span class="p">[</span><span class="mf">2.3522</span><span class="p">,</span> <span class="mf">48.8566</span><span class="p">]},</span>  <span class="c1"># Paris</span>
-            <span class="s2">"properties"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Paris"</span><span class="p">,</span> <span class="s2">"country"</span><span class="p">:</span> <span class="s2">"France"</span><span class="p">,</span> <span class="s2">"population"</span><span class="p">:</span> <span class="mi">2161000</span><span class="p">},</span>
-        <span class="p">},</span>
-        <span class="p">{</span>
-            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Feature"</span><span class="p">,</span>
-            <span class="s2">"geometry"</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Point"</span><span class="p">,</span>
-                <span class="s2">"coordinates"</span><span class="p">:</span> <span class="p">[</span><span class="mf">116.4074</span><span class="p">,</span> <span class="mf">39.9042</span><span class="p">],</span>  <span class="c1"># Beijing</span>
-            <span class="p">},</span>
-            <span class="s2">"properties"</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Beijing"</span><span class="p">,</span>
-                <span class="s2">"country"</span><span class="p">:</span> <span class="s2">"China"</span><span class="p">,</span>
-                <span class="s2">"population"</span><span class="p">:</span> <span class="mi">21540000</span><span class="p">,</span>
-            <span class="p">},</span>
-        <span class="p">},</span>
-    <span class="p">],</span>
-<span class="p">}</span>
-
-<span class="c1"># Add GeoJSON data to the globe</span>
-<span class="n">globe</span><span class="o">.</span><span class="n">add_geojson</span><span class="p">(</span>
-    <span class="n">world_capitals_geojson</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"World Capitals"</span><span class="p">,</span> <span class="s2">"clampToGround"</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
-<span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Added world capitals GeoJSON data!"</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Disable mouse move (slider must be dragged)</span>
+<span class="n">compare</span><span class="o">.</span><span class="n">enable_mousemove</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-8"># Sample GeoJSON data with world capitals
-world_capitals_geojson = {
-    "type": "FeatureCollection",
-    "features": [
-        {
-            "type": "Feature",
-            "geometry": {
-                "type": "Point",
-                "coordinates": [-77.0369, 38.9072],  # Washington DC
-            },
-            "properties": {
-                "name": "Washington DC",
-                "country": "USA",
-                "population": 705749,
-            },
-        },
-        {
-            "type": "Feature",
-            "geometry": {"type": "Point", "coordinates": [2.3522, 48.8566]},  # Paris
-            "properties": {"name": "Paris", "country": "France", "population": 2161000},
-        },
-        {
-            "type": "Feature",
-            "geometry": {
-                "type": "Point",
-                "coordinates": [116.4074, 39.9042],  # Beijing
-            },
-            "properties": {
-                "name": "Beijing",
-                "country": "China",
-                "population": 21540000,
-            },
-        },
-    ],
-}
-
-# Add GeoJSON data to the globe
-globe.add_geojson(
-    world_capitals_geojson, options={"name": "World Capitals", "clampToGround": True}
-)
-
-print("Added world capitals GeoJSON data!")</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Added world capitals GeoJSON data!
-</pre>
+<div class="clipboard-copy-txt" id="cell-8"># Disable mouse move (slider must be dragged)
+compare.enable_mousemove(False)</div>
 </div>
 </div>
 </div>
 </div>
 </div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="terrain-and-imagery">Terrain and Imagery<a class="anchor-link" href="#terrain-and-imagery">¶</a></h2><p>Configure terrain and satellite imagery:</p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2196,35 +1680,29 @@ print("Added world capitals GeoJSON data!")</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Enable Cesium World Terrain for realistic 3D terrain</span>
-<span class="n">globe</span><span class="o">.</span><span class="n">set_cesium_world_terrain</span><span class="p">(</span><span class="n">request_water_mask</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">request_vertex_normals</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Enabled Cesium World Terrain!"</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Re-enable mouse move</span>
+<span class="n">compare</span><span class="o">.</span><span class="n">enable_mousemove</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-9"># Enable Cesium World Terrain for realistic 3D terrain
-globe.set_cesium_world_terrain(request_water_mask=True, request_vertex_normals=True)
-
-print("Enabled Cesium World Terrain!")</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Enabled Cesium World Terrain!
-</pre>
+<div class="clipboard-copy-txt" id="cell-9"># Re-enable mouse move
+compare.enable_mousemove(True)</div>
 </div>
 </div>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="updating-map-styles">Updating Map Styles<a class="anchor-link" href="#updating-map-styles">¶</a></h2><p>You can dynamically update the styles of either map.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2242,58 +1720,18 @@ print("Enabled Cesium World Terrain!")</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Switch to satellite imagery (requires Bing Maps key for best results)</span>
-<span class="c1"># You can get a Bing Maps key at https://www.bingmapsportal.com/</span>
-<span class="n">globe</span><span class="o">.</span><span class="n">set_imagery</span><span class="p">(</span>
-    <span class="p">{</span>
-        <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"osm"</span><span class="p">,</span>  <span class="c1"># Using OpenStreetMap as fallback</span>
-        <span class="s2">"url"</span><span class="p">:</span> <span class="s2">"https://tile.openstreetmap.org/"</span><span class="p">,</span>
-    <span class="p">}</span>
-<span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Changed to OpenStreetMap imagery!"</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Update the left map to a different style</span>
+<span class="n">compare</span><span class="o">.</span><span class="n">update_left_map</span><span class="p">({</span><span class="s2">"style"</span><span class="p">:</span> <span class="s2">"https://tiles.stadiamaps.com/styles/outdoors.json"</span><span class="p">})</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-10"># Switch to satellite imagery (requires Bing Maps key for best results)
-# You can get a Bing Maps key at https://www.bingmapsportal.com/
-globe.set_imagery(
-    {
-        "type": "osm",  # Using OpenStreetMap as fallback
-        "url": "https://tile.openstreetmap.org/",
-    }
-)
-
-print("Changed to OpenStreetMap imagery!")</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Changed to OpenStreetMap imagery!
-</pre>
+<div class="clipboard-copy-txt" id="cell-10"># Update the left map to a different style
+compare.update_left_map({"style": "https://tiles.stadiamaps.com/styles/outdoors.json"})</div>
 </div>
 </div>
 </div>
 </div>
 </div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="scene-modes-and-effects">Scene Modes and Effects<a class="anchor-link" href="#scene-modes-and-effects">¶</a></h2><p>Experiment with different viewing modes and atmospheric effects:</p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2311,37 +1749,33 @@ print("Changed to OpenStreetMap imagery!")</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Enable atmospheric effects</span>
-<span class="n">globe</span><span class="o">.</span><span class="n">enable_lighting</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">globe</span><span class="o">.</span><span class="n">enable_fog</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Enabled lighting and atmospheric fog!"</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Update the right map to a satellite style</span>
+<span class="n">compare</span><span class="o">.</span><span class="n">update_right_map</span><span class="p">(</span>
+    <span class="p">{</span><span class="s2">"style"</span><span class="p">:</span> <span class="s2">"https://tiles.stadiamaps.com/styles/alidade_satellite.json"</span><span class="p">}</span>
+<span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-11"># Enable atmospheric effects
-globe.enable_lighting(True)
-globe.enable_fog(True)
-
-print("Enabled lighting and atmospheric fog!")</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Enabled lighting and atmospheric fog!
-</pre>
+<div class="clipboard-copy-txt" id="cell-11"># Update the right map to a satellite style
+compare.update_right_map(
+    {"style": "https://tiles.stadiamaps.com/styles/alidade_satellite.json"}
+)</div>
 </div>
 </div>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="flying-to-different-locations">Flying to Different Locations<a class="anchor-link" href="#flying-to-different-locations">¶</a></h2><p>You can fly both maps to a new location simultaneously.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2359,35 +1793,18 @@ print("Enabled lighting and atmospheric fog!")</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Switch to 2D mode for flat map view</span>
-<span class="n">globe</span><span class="o">.</span><span class="n">set_scene_mode_2d</span><span class="p">()</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Switched to 2D mode!"</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Fly to New York City</span>
+<span class="n">compare</span><span class="o">.</span><span class="n">fly_to</span><span class="p">(</span><span class="mf">40.7128</span><span class="p">,</span> <span class="o">-</span><span class="mf">74.0060</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-12"># Switch to 2D mode for flat map view
-globe.set_scene_mode_2d()
-
-print("Switched to 2D mode!")</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Switched to 2D mode!
-</pre>
+<div class="clipboard-copy-txt" id="cell-12"># Fly to New York City
+compare.fly_to(40.7128, -74.0060, zoom=13)</div>
 </div>
 </div>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2405,35 +1822,29 @@ print("Switched to 2D mode!")</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Switch to Columbus view (2.5D)</span>
-<span class="n">globe</span><span class="o">.</span><span class="n">set_scene_mode_columbus</span><span class="p">()</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Switched to Columbus view!"</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Fly to London</span>
+<span class="n">compare</span><span class="o">.</span><span class="n">fly_to</span><span class="p">(</span><span class="mf">51.5074</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1278</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-13"># Switch to Columbus view (2.5D)
-globe.set_scene_mode_columbus()
-
-print("Switched to Columbus view!")</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Switched to Columbus view!
-</pre>
+<div class="clipboard-copy-txt" id="cell-13"># Fly to London
+compare.fly_to(51.5074, -0.1278, zoom=12)</div>
 </div>
 </div>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="synchronization-options">Synchronization Options<a class="anchor-link" href="#synchronization-options">¶</a></h2><p>You can control which aspects of the maps are synchronized.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2451,46 +1862,18 @@ print("Switched to Columbus view!")</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Back to full 3D mode</span>
-<span class="n">globe</span><span class="o">.</span><span class="n">set_scene_mode_3d</span><span class="p">()</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Switched back to 3D mode!"</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Disable center synchronization but keep zoom sync</span>
+<span class="n">compare</span><span class="o">.</span><span class="n">set_sync_options</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bearing</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pitch</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-14"># Back to full 3D mode
-globe.set_scene_mode_3d()
-
-print("Switched back to 3D mode!")</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Switched back to 3D mode!
-</pre>
+<div class="clipboard-copy-txt" id="cell-14"># Disable center synchronization but keep zoom sync
+compare.set_sync_options(center=False, zoom=True, bearing=True, pitch=True)</div>
 </div>
 </div>
 </div>
 </div>
 </div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="event-handling">Event Handling<a class="anchor-link" href="#event-handling">¶</a></h2><p>Set up event handlers to respond to user interactions:</p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2508,60 +1891,11 @@ print("Switched back to 3D mode!")</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Define event handler functions</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">on_click</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span>
-        <span class="sa">f</span><span class="s2">"Globe clicked at: Lat </span><span class="si">{</span><span class="n">event</span><span class="p">[</span><span class="s1">'latitude'</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, Lon </span><span class="si">{</span><span class="n">event</span><span class="p">[</span><span class="s1">'longitude'</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, Height </span><span class="si">{</span><span class="n">event</span><span class="p">[</span><span class="s1">'height'</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">m"</span>
-    <span class="p">)</span>
-    <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"pickedObject"</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Clicked on object: </span><span class="si">{</span><span class="n">event</span><span class="p">[</span><span class="s1">'pickedObject'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">on_camera_move</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span>
-        <span class="sa">f</span><span class="s2">"Camera moved to: Lat </span><span class="si">{</span><span class="n">event</span><span class="p">[</span><span class="s1">'latitude'</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, Lon </span><span class="si">{</span><span class="n">event</span><span class="p">[</span><span class="s1">'longitude'</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, Height </span><span class="si">{</span><span class="n">event</span><span class="p">[</span><span class="s1">'height'</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">m"</span>
-    <span class="p">)</span>
-
-
-<span class="c1"># Register event handlers</span>
-<span class="n">globe</span><span class="o">.</span><span class="n">on_map_event</span><span class="p">(</span><span class="s2">"click"</span><span class="p">,</span> <span class="n">on_click</span><span class="p">)</span>
-<span class="n">globe</span><span class="o">.</span><span class="n">on_map_event</span><span class="p">(</span><span class="s2">"moveend"</span><span class="p">,</span> <span class="n">on_camera_move</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Event handlers registered! Click on the globe or move the camera to see events."</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Re-enable all synchronization</span>
+<span class="n">compare</span><span class="o">.</span><span class="n">set_sync_options</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bearing</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pitch</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-15"># Define event handler functions
-def on_click(event):
-    print(
-        f"Globe clicked at: Lat {event['latitude']:.4f}, Lon {event['longitude']:.4f}, Height {event['height']:.0f}m"
-    )
-    if event.get("pickedObject"):
-        print(f"Clicked on object: {event['pickedObject']}")
-
-
-def on_camera_move(event):
-    print(
-        f"Camera moved to: Lat {event['latitude']:.4f}, Lon {event['longitude']:.4f}, Height {event['height']:.0f}m"
-    )
-
-
-# Register event handlers
-globe.on_map_event("click", on_click)
-globe.on_map_event("moveend", on_camera_move)
-
-print("Event handlers registered! Click on the globe or move the camera to see events.")</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Event handlers registered! Click on the globe or move the camera to see events.
-</pre>
+<div class="clipboard-copy-txt" id="cell-15"># Re-enable all synchronization
+compare.set_sync_options(center=True, zoom=True, bearing=True, pitch=True)</div>
 </div>
 </div>
 </div>
@@ -2574,12 +1908,12 @@ print("Event handlers registered! Click on the globe or move the camera to see e
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="multi-cell-rendering-test">Multi-cell Rendering Test<a class="anchor-link" href="#multi-cell-rendering-test">¶</a></h2><p>Test that the globe works correctly when displayed in multiple cells:</p>
+<h2 id="mapbox-comparison-requires-access-token">Mapbox Comparison (requires access token)<a class="anchor-link" href="#mapbox-comparison-requires-access-token">¶</a></h2><p>If you have a Mapbox access token, you can use Mapbox styles for comparison.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2597,37 +1931,69 @@ print("Event handlers registered! Click on the globe or move the camera to see e
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Display the same globe instance again</span>
-<span class="c1"># This should maintain all the data and state from above</span>
-<span class="n">globe</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Uncomment and set your Mapbox access token</span>
+<span class="c1"># import os</span>
+<span class="c1"># os.environ['MAPBOX_ACCESS_TOKEN'] = 'your_mapbox_token_here'</span>
+
+<span class="c1"># mapbox_compare = anymap.MapCompare(</span>
+<span class="c1">#     left_map={</span>
+<span class="c1">#         "center": [37.7749, -122.4194],</span>
+<span class="c1">#         "zoom": 12,</span>
+<span class="c1">#         "style": "mapbox://styles/mapbox/streets-v12"</span>
+<span class="c1">#     },</span>
+<span class="c1">#     right_map={</span>
+<span class="c1">#         "center": [37.7749, -122.4194],</span>
+<span class="c1">#         "zoom": 12,</span>
+<span class="c1">#         "style": "mapbox://styles/mapbox/satellite-v9"</span>
+<span class="c1">#     },</span>
+<span class="c1">#     backend="mapbox",</span>
+<span class="c1">#     orientation="vertical",</span>
+<span class="c1">#     mousemove=True,</span>
+<span class="c1">#     height="500px"</span>
+<span class="c1"># )</span>
+
+<span class="c1"># mapbox_compare</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-16"># Display the same globe instance again
-# This should maintain all the data and state from above
-globe</div>
+<div class="clipboard-copy-txt" id="cell-16"># Uncomment and set your Mapbox access token
+# import os
+# os.environ['MAPBOX_ACCESS_TOKEN'] = 'your_mapbox_token_here'
+
+# mapbox_compare = anymap.MapCompare(
+#     left_map={
+#         "center": [37.7749, -122.4194],
+#         "zoom": 12,
+#         "style": "mapbox://styles/mapbox/streets-v12"
+#     },
+#     right_map={
+#         "center": [37.7749, -122.4194],
+#         "zoom": 12,
+#         "style": "mapbox://styles/mapbox/satellite-v9"
+#     },
+#     backend="mapbox",
+#     orientation="vertical",
+#     mousemove=True,
+#     height="500px"
+# )
+
+# mapbox_compare</div>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
 </div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[16]:</div>
-<div class="jupyter-widgets jp-OutputArea-output jp-OutputArea-executeResult" id="82c038cc-f92c-4c00-a73b-09485206c092" tabindex="0">
-<script type="text/javascript">
-var element = document.getElementById('82c038cc-f92c-4c00-a73b-09485206c092');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"version_major": 2, "version_minor": 1, "model_id": "2165e7f28aec4597b4cf175f20819418"}
-</script>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="event-handling">Event Handling<a class="anchor-link" href="#event-handling">¶</a></h2><p>You can listen to events from the comparison widget.</p>
 </div>
 </div>
 </div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2645,44 +2011,21 @@ var element = document.getElementById('82c038cc-f92c-4c00-a73b-09485206c092');
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Add another point while displayed in multiple cells</span>
-<span class="n">globe</span><span class="o">.</span><span class="n">add_point</span><span class="p">(</span>
-    <span class="o">-</span><span class="mf">33.8688</span><span class="p">,</span>
-    <span class="mf">151.2093</span><span class="p">,</span>  <span class="c1"># Sydney</span>
-    <span class="n">height</span><span class="o">=</span><span class="mi">500000</span><span class="p">,</span>
-    <span class="n">name</span><span class="o">=</span><span class="s2">"Sydney"</span><span class="p">,</span>
-    <span class="n">description</span><span class="o">=</span><span class="s2">"Largest city in Australia"</span><span class="p">,</span>
-    <span class="n">color</span><span class="o">=</span><span class="s2">"#ff8800"</span><span class="p">,</span>
-    <span class="n">pixel_size</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
-<span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Define an event handler</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">on_slide_end</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Slider moved to position: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'position'</span><span class="p">,</span><span class="w"> </span><span class="s1">'unknown'</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Added Sydney! The point should appear on all globe instances above."</span><span class="p">)</span>
+
+<span class="c1"># Register the event handler</span>
+<span class="n">compare</span><span class="o">.</span><span class="n">on_event</span><span class="p">(</span><span class="s2">"slideend"</span><span class="p">,</span> <span class="n">on_slide_end</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-17"># Add another point while displayed in multiple cells
-globe.add_point(
-    -33.8688,
-    151.2093,  # Sydney
-    height=500000,
-    name="Sydney",
-    description="Largest city in Australia",
-    color="#ff8800",
-    pixel_size=16,
-)
+<div class="clipboard-copy-txt" id="cell-17"># Define an event handler
+def on_slide_end(event):
+    print(f"Slider moved to position: {event.get('position', 'unknown')}")
 
-print("Added Sydney! The point should appear on all globe instances above.")</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Added Sydney! The point should appear on all globe instances above.
-</pre>
+
+# Register the event handler
+compare.on_event("slideend", on_slide_end)</div>
 </div>
 </div>
 </div>
@@ -2695,7 +2038,25 @@ print("Added Sydney! The point should appear on all globe instances above.")</di
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="creating-a-second-globe-instance">Creating a Second Globe Instance<a class="anchor-link" href="#creating-a-second-globe-instance">¶</a></h2><p>Create a separate globe to verify independence:</p>
+<h2 id="conclusion">Conclusion<a class="anchor-link" href="#conclusion">¶</a></h2><p>The MapCompare widget provides a powerful way to compare different map styles, data layers, or temporal states side-by-side. Key features include:</p>
+<ol>
+<li><strong>Interactive Swipe Control</strong>: Easily compare maps by dragging the slider or moving the mouse</li>
+<li><strong>Multiple Backends</strong>: Support for both MapLibre and Mapbox</li>
+<li><strong>Flexible Orientation</strong>: Choose between vertical and horizontal comparisons</li>
+<li><strong>Synchronization Options</strong>: Control which map properties are synchronized</li>
+<li><strong>Dynamic Updates</strong>: Change styles and settings programmatically</li>
+<li><strong>Multiple Widgets</strong>: Create multiple comparisons in the same notebook</li>
+<li><strong>HTML Export</strong>: Export comparisons to standalone HTML files</li>
+</ol>
+<p>This makes it ideal for:</p>
+<ul>
+<li>Comparing different map styles</li>
+<li>Before/after visualizations</li>
+<li>Temporal data comparisons</li>
+<li>A/B testing of map designs</li>
+<li>Educational demonstrations</li>
+<li>Sharing interactive comparisons as HTML files</li>
+</ul>
 </div>
 </div>
 </div>
@@ -2718,67 +2079,45 @@ print("Added Sydney! The point should appear on all globe instances above.")</di
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Create a second, independent globe</span>
-<span class="n">globe2</span> <span class="o">=</span> <span class="n">CesiumMap</span><span class="p">(</span>
-    <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">33.8688</span><span class="p">,</span> <span class="mf">151.2093</span><span class="p">],</span>  <span class="c1"># Centered on Sydney</span>
-    <span class="n">camera_height</span><span class="o">=</span><span class="mi">1000000</span><span class="p">,</span>  <span class="c1"># 1000 km above</span>
-    <span class="n">width</span><span class="o">=</span><span class="s2">"100%"</span><span class="p">,</span>
-    <span class="n">height</span><span class="o">=</span><span class="s2">"500px"</span><span class="p">,</span>
-    <span class="n">timeline</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># Disable timeline for cleaner look</span>
-    <span class="n">animation</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># Disable animation controls</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Second comparison with different settings</span>
+<span class="n">compare2</span> <span class="o">=</span> <span class="n">anymap</span><span class="o">.</span><span class="n">MapCompare</span><span class="p">(</span>
+    <span class="n">left_map</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">"center"</span><span class="p">:</span> <span class="p">[</span><span class="mf">51.5074</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1278</span><span class="p">],</span>  <span class="c1"># London</span>
+        <span class="s2">"zoom"</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="s2">"style"</span><span class="p">:</span> <span class="s2">"https://demotiles.maplibre.org/style.json"</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">right_map</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">"center"</span><span class="p">:</span> <span class="p">[</span><span class="mf">51.5074</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1278</span><span class="p">],</span>
+        <span class="s2">"zoom"</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="s2">"style"</span><span class="p">:</span> <span class="s2">"https://tiles.stadiamaps.com/styles/alidade_smooth_dark.json"</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">backend</span><span class="o">=</span><span class="s2">"maplibre"</span><span class="p">,</span>
+    <span class="n">orientation</span><span class="o">=</span><span class="s2">"horizontal"</span><span class="p">,</span>
+    <span class="n">mousemove</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">height</span><span class="o">=</span><span class="s2">"400px"</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="c1"># Add different content to the second globe</span>
-<span class="n">globe2</span><span class="o">.</span><span class="n">add_point</span><span class="p">(</span>
-    <span class="o">-</span><span class="mf">33.8688</span><span class="p">,</span>
-    <span class="mf">151.2093</span><span class="p">,</span>
-    <span class="n">height</span><span class="o">=</span><span class="mi">50000</span><span class="p">,</span>
-    <span class="n">name</span><span class="o">=</span><span class="s2">"Sydney Opera House Area"</span><span class="p">,</span>
-    <span class="n">color</span><span class="o">=</span><span class="s2">"#9900ff"</span><span class="p">,</span>
-    <span class="n">pixel_size</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="n">globe2</span><span class="o">.</span><span class="n">add_point</span><span class="p">(</span>
-    <span class="o">-</span><span class="mf">37.8136</span><span class="p">,</span>
-    <span class="mf">144.9631</span><span class="p">,</span>  <span class="c1"># Melbourne</span>
-    <span class="n">height</span><span class="o">=</span><span class="mi">40000</span><span class="p">,</span>
-    <span class="n">name</span><span class="o">=</span><span class="s2">"Melbourne"</span><span class="p">,</span>
-    <span class="n">color</span><span class="o">=</span><span class="s2">"#00ffff"</span><span class="p">,</span>
-    <span class="n">pixel_size</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="n">globe2</span>
+<span class="n">compare2</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-18"># Create a second, independent globe
-globe2 = CesiumMap(
-    center=[-33.8688, 151.2093],  # Centered on Sydney
-    camera_height=1000000,  # 1000 km above
-    width="100%",
-    height="500px",
-    timeline=False,  # Disable timeline for cleaner look
-    animation=False,  # Disable animation controls
+<div class="clipboard-copy-txt" id="cell-18"># Second comparison with different settings
+compare2 = anymap.MapCompare(
+    left_map={
+        "center": [51.5074, -0.1278],  # London
+        "zoom": 10,
+        "style": "https://demotiles.maplibre.org/style.json",
+    },
+    right_map={
+        "center": [51.5074, -0.1278],
+        "zoom": 10,
+        "style": "https://tiles.stadiamaps.com/styles/alidade_smooth_dark.json",
+    },
+    backend="maplibre",
+    orientation="horizontal",
+    mousemove=False,
+    height="400px",
 )
 
-# Add different content to the second globe
-globe2.add_point(
-    -33.8688,
-    151.2093,
-    height=50000,
-    name="Sydney Opera House Area",
-    color="#9900ff",
-    pixel_size=25,
-)
-
-globe2.add_point(
-    -37.8136,
-    144.9631,  # Melbourne
-    height=40000,
-    name="Melbourne",
-    color="#00ffff",
-    pixel_size=20,
-)
-
-globe2</div>
+compare2</div>
 </div>
 </div>
 </div>
@@ -2789,12 +2128,12 @@ globe2</div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
 <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[18]:</div>
-<div class="jupyter-widgets jp-OutputArea-output jp-OutputArea-executeResult" id="bf5d26c7-0586-4911-b742-89835fce901b" tabindex="0">
+<div class="jupyter-widgets jp-OutputArea-output jp-OutputArea-executeResult" id="a993f964-358b-4063-9b9e-5fd372d8930e" tabindex="0">
 <script type="text/javascript">
-var element = document.getElementById('bf5d26c7-0586-4911-b742-89835fce901b');
+var element = document.getElementById('a993f964-358b-4063-9b9e-5fd372d8930e');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
-{"version_major": 2, "version_minor": 1, "model_id": "078dfd9ac8b5448ca57363b89731899c"}
+{"version_major": 2, "version_minor": 1, "model_id": "7ccbb4713a57456984b9771622aaed34"}
 </script>
 </div>
 </div>
@@ -2808,7 +2147,7 @@ var element = document.getElementById('bf5d26c7-0586-4911-b742-89835fce901b');
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="reset-and-home-view">Reset and Home View<a class="anchor-link" href="#reset-and-home-view">¶</a></h2><p>Return to the home view:</p>
+<h2 id="html-export">HTML Export<a class="anchor-link" href="#html-export">¶</a></h2><p>You can export any comparison widget to a standalone HTML file.</p>
 </div>
 </div>
 </div>
@@ -2831,15 +2170,15 @@ var element = document.getElementById('bf5d26c7-0586-4911-b742-89835fce901b');
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Reset camera to home position</span>
-<span class="n">globe</span><span class="o">.</span><span class="n">home</span><span class="p">()</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Camera reset to home position!"</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># You can also get the HTML content without saving to file</span>
+<span class="n">html_content</span> <span class="o">=</span> <span class="n">compare</span><span class="o">.</span><span class="n">to_html</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"My Map Comparison"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"HTML content generated (first 500 characters):"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">html_content</span><span class="p">[:</span><span class="mi">500</span><span class="p">]</span> <span class="o">+</span> <span class="s2">"..."</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-19"># Reset camera to home position
-globe.home()
-
-print("Camera reset to home position!")</div>
+<div class="clipboard-copy-txt" id="cell-19"># You can also get the HTML content without saving to file
+html_content = compare.to_html(title="My Map Comparison")
+print("HTML content generated (first 500 characters):")
+print(html_content[:500] + "...")</div>
 </div>
 </div>
 </div>
@@ -2851,7 +2190,70 @@ print("Camera reset to home position!")</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Camera reset to home position!
+<pre>HTML content generated (first 500 characters):
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;My Map Comparison&lt;/title&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;script src="https://unpkg.com/maplibre-gl@5.6.1/dist/maplibre-gl.js"&gt;&lt;/script&gt;
+    &lt;link href="https://unpkg.com/maplibre-gl@5.6.1/dist/maplibre-gl.css" rel="stylesheet"&gt;
+    &lt;script src="https://unpkg.com/@maplibre/maplibre-gl-compare@0.5.0/dist/maplibre-gl-compare.js"&gt;&lt;/script&gt;
+    &lt;link href="https://unpkg.com/@maplibre/m...
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [20]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-20">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Export to HTML file</span>
+<span class="n">html_content</span> <span class="o">=</span> <span class="n">compare</span><span class="o">.</span><span class="n">to_html</span><span class="p">(</span>
+    <span class="n">filename</span><span class="o">=</span><span class="s2">"map_comparison.html"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"San Francisco Map Style Comparison"</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Map comparison exported to map_comparison.html"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"HTML file size: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">html_content</span><span class="p">)</span><span class="si">}</span><span class="s2"> characters"</span><span class="p">)</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-20"># Export to HTML file
+html_content = compare.to_html(
+    filename="map_comparison.html", title="San Francisco Map Style Comparison"
+)
+
+print("Map comparison exported to map_comparison.html")
+print(f"HTML file size: {len(html_content)} characters")</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Map comparison exported to map_comparison.html
+HTML file size: 11190 characters
 </pre>
 </div>
 </div>
@@ -2865,20 +2267,23 @@ print("Camera reset to home position!")</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="summary">Summary<a class="anchor-link" href="#summary">¶</a></h2><p>This notebook demonstrated the key features of the anymap CesiumMap widget:</p>
+<h2 id="conclusion">Conclusion<a class="anchor-link" href="#conclusion">¶</a></h2><p>The MapCompare widget provides a powerful way to compare different map styles, data layers, or temporal states side-by-side. Key features include:</p>
 <ol>
-<li><strong>3D Globe Visualization</strong>: Interactive 3D globe with realistic Earth rendering</li>
-<li><strong>Points and Markers</strong>: Adding labeled points at various heights</li>
-<li><strong>3D Geometries</strong>: Polylines and polygons for paths and regions</li>
-<li><strong>GeoJSON Support</strong>: Loading external geographic data</li>
-<li><strong>Terrain and Imagery</strong>: Realistic 3D terrain and satellite imagery</li>
-<li><strong>Scene Modes</strong>: 3D, 2D, and Columbus view modes</li>
-<li><strong>Camera Controls</strong>: Smooth fly-to animations and positioning</li>
-<li><strong>Event Handling</strong>: Responding to user interactions</li>
-<li><strong>Multi-cell Rendering</strong>: Persistent state across notebook cells</li>
-<li><strong>Multiple Instances</strong>: Independent globe widgets</li>
+<li><strong>Interactive Swipe Control</strong>: Easily compare maps by dragging the slider or moving the mouse</li>
+<li><strong>Multiple Backends</strong>: Support for both MapLibre and Mapbox</li>
+<li><strong>Flexible Orientation</strong>: Choose between vertical and horizontal comparisons</li>
+<li><strong>Synchronization Options</strong>: Control which map properties are synchronized</li>
+<li><strong>Dynamic Updates</strong>: Change styles and settings programmatically</li>
+<li><strong>Multiple Widgets</strong>: Create multiple comparisons in the same notebook</li>
 </ol>
-<p>The CesiumMap widget provides a powerful platform for creating interactive 3D geospatial visualizations with the full capabilities of Cesium.js in a Jupyter environment.</p>
+<p>This makes it ideal for:</p>
+<ul>
+<li>Comparing different map styles</li>
+<li>Before/after visualizations</li>
+<li>Temporal data comparisons</li>
+<li>A/B testing of map designs</li>
+<li>Educational demonstrations</li>
+</ul>
 </div>
 </div>
 </div>
@@ -2886,7 +2291,7 @@ print("Camera reset to home position!")</div>
 </div> <!-- jp-Notebook -->
 </div> <!-- jupyter-wrapper -->
 <script type="application/vnd.jupyter.widget-state+json">
-{"state": {"3eb5089293274486a5f3ee5b79f184a0": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "2165e7f28aec4597b4cf175f20819418": {"model_name": "AnyModel", "model_module": "anywidget", "model_module_version": "~0.9.*", "state": {"_anywidget_id": "anymap.anymap.CesiumMap", "_css": "@import url(\"https:\/\/cesium.com\/downloads\/cesiumjs\/releases\/1.131\/Build\/Cesium\/Widgets\/widgets.css\");\n\n\/* Optional: make canvas interactive *\/\n.cesium-widget canvas {\n    pointer-events: auto;\n    cursor: grab;\n}\n", "_dom_classes": [], "_esm": "\/\/ Load Cesium library from CDN\nfunction loadCesium() {\n  return new Promise((resolve, reject) => {\n    \/\/ Check if Cesium is already loaded\n    if (window.Cesium) {\n      resolve();\n      return;\n    }\n\n    \/\/ Check if script is already being loaded\n    const existingScript = document.head.querySelector('script[src*=\"Cesium.js\"]');\n    if (existingScript) {\n      existingScript.addEventListener('load', resolve);\n      existingScript.addEventListener('error', reject);\n      return;\n    }\n\n    \/\/ Create and load the script\n    const script = document.createElement('script');\n    script.src = 'https:\/\/cesium.com\/downloads\/cesiumjs\/releases\/1.131\/Build\/Cesium\/Cesium.js';\n    script.async = false;\n    script.addEventListener('load', resolve);\n    script.addEventListener('error', reject);\n    document.head.appendChild(script);\n  });\n}\n\nfunction render({ model, el }) {\n  \/\/ Create unique ID for this widget instance\n  const widgetId = `anymap-cesium-${Math.random().toString(36).substr(2, 9)}`;\n\n  \/\/ Create container for the map\n  const container = document.createElement(\"div\");\n  container.id = widgetId;\n  container.style.width = model.get(\"width\");\n  container.style.height = model.get(\"height\");\n  container.style.position = \"relative\";\n  container.style.overflow = \"hidden\";\n\n  \/\/ Ensure parent element has proper styling\n  el.style.width = \"100%\";\n  el.style.display = \"block\";\n\n  \/\/ Clear any existing content and cleanup\n  if (el._viewer) {\n    el._viewer.destroy();\n    el._viewer = null;\n  }\n  if (el._entities) {\n    el._entities = [];\n  }\n\n  el.innerHTML = \"\";\n  el.appendChild(container);\n\n  \/\/ Show loading indicator\n  const loadingDiv = document.createElement(\"div\");\n  loadingDiv.className = \"anymap-cesium-loading\";\n  loadingDiv.textContent = \"Loading Cesium...\";\n  container.appendChild(loadingDiv);\n\n  \/\/ Load Cesium and initialize when ready\n  loadCesium().then(() => {\n    initializeCesium();\n  }).catch((error) => {\n    console.error(\"Failed to load Cesium:\", error);\n    loadingDiv.textContent = \"Failed to load Cesium library\";\n    loadingDiv.style.color = \"red\";\n  });\n\n  \/\/ Function to initialize Cesium when library is ready\n  function initializeCesium() {\n    if (!window.Cesium) {\n      console.error(\"Cesium library not loaded\");\n      return;\n    }\n\n    \/\/ Remove loading indicator\n    if (loadingDiv.parentNode) {\n      loadingDiv.parentNode.removeChild(loadingDiv);\n    }\n\n    \/\/ Set Cesium ion access token\n    const accessToken = model.get(\"access_token\");\n    if (accessToken) {\n      window.Cesium.Ion.defaultAccessToken = accessToken;\n    }\n\n    \/\/ Get configuration options\n    const viewerOptions = {\n      baseLayerPicker: model.get(\"base_layer_picker\") !== false,\n      fullscreenButton: model.get(\"fullscreen_button\") !== false,\n      vrButton: model.get(\"vr_button\") !== false,\n      geocoder: model.get(\"geocoder\") !== false,\n      homeButton: model.get(\"home_button\") !== false,\n      infoBox: model.get(\"info_box\") !== false,\n      sceneModePicker: model.get(\"scene_mode_picker\") !== false,\n      selectionIndicator: model.get(\"selection_indicator\") !== false,\n      timeline: model.get(\"timeline\") !== false,\n      navigationHelpButton: false, \/\/ Disable navigation help to prevent arrows\n      navigationInstructionsInitiallyVisible: false,\n      animation: model.get(\"animation\") !== false,\n      shouldAnimate: model.get(\"should_animate\") !== false,\n      clockViewModel: undefined,\n      selectedImageryProviderViewModel: undefined,\n      imageryProviderViewModels: window.Cesium.createDefaultImageryProviderViewModels(),\n      selectedTerrainProviderViewModel: undefined,\n      terrainProviderViewModels: window.Cesium.createDefaultTerrainProviderViewModels(),\n      skyBox: undefined,\n      skyAtmosphere: undefined,\n      fullscreenElement: document.body,\n      useDefaultRenderLoop: true,\n      targetFrameRate: undefined,\n      showRenderLoopErrors: true,\n      useBrowserRecommendedResolution: true,\n      automaticallyTrackDataSourceClocks: true,\n      contextOptions: undefined,\n      sceneMode: window.Cesium.SceneMode.SCENE3D,\n      mapProjection: new window.Cesium.WebMercatorProjection(),\n      dataSources: new window.Cesium.DataSourceCollection()\n    };\n\n    \/\/ Initialize Cesium viewer\n    const viewer = new window.Cesium.Viewer(container, viewerOptions);\n\n    \/\/ Disable navigation help overlay completely\n    if (viewer.cesiumWidget.scene && viewer.cesiumWidget.scene.screenSpaceCameraController) {\n      viewer.cesiumWidget.scene.screenSpaceCameraController.enableRotate = true;\n      viewer.cesiumWidget.scene.screenSpaceCameraController.enableTranslate = true;\n      viewer.cesiumWidget.scene.screenSpaceCameraController.enableZoom = true;\n      viewer.cesiumWidget.scene.screenSpaceCameraController.enableTilt = true;\n      viewer.cesiumWidget.scene.screenSpaceCameraController.enableLook = true;\n    }\n\n    \/\/ Aggressively hide all navigation help elements\n    const hideNavigationHelp = () => {\n      \/\/ Hide all possible navigation help selectors\n      const selectors = [\n        '.cesium-navigation-help',\n        '.cesium-navigation-help-pan',\n        '.cesium-navigation-help-zoom',\n        '.cesium-navigation-help-rotate',\n        '.cesium-navigation-help-tilt',\n        '.cesium-navigation-help-instructions',\n        '.cesium-viewer-navigationHelpButton-wrapper',\n        '.cesium-navigation-help-button',\n        '.cesium-click-navigation-help',\n        '.cesium-touch-navigation-help',\n        '[class*=\"navigation-help\"]',\n        '[class*=\"cesium-navigation\"]'\n      ];\n\n      selectors.forEach(selector => {\n        const elements = container.querySelectorAll(selector);\n        elements.forEach(el => {\n          el.style.display = 'none';\n          el.style.visibility = 'hidden';\n          el.style.opacity = '0';\n          el.style.pointerEvents = 'none';\n          el.style.zIndex = '-1000';\n          el.remove();\n        });\n      });\n\n      \/\/ Also check document body for any navigation help overlays\n      document.querySelectorAll('[class*=\"cesium-navigation\"]').forEach(el => {\n        if (el.style) {\n          el.style.display = 'none';\n          el.style.visibility = 'hidden';\n        }\n      });\n\n      \/\/ Ensure canvas gets focus for mouse events\n      const canvas = container.querySelector('canvas');\n      if (canvas) {\n        canvas.style.outline = 'none';\n        canvas.setAttribute('tabindex', '0');\n        canvas.style.pointerEvents = 'auto';\n        canvas.style.touchAction = 'none';\n      }\n    };\n\n    \/\/ Run immediately and then with timeouts to catch delayed elements\n    hideNavigationHelp();\n    setTimeout(hideNavigationHelp, 100);\n    setTimeout(hideNavigationHelp, 500);\n    setTimeout(hideNavigationHelp, 1000);\n\n    \/\/ Set up mutation observer to catch dynamically added navigation help elements\n    if (window.MutationObserver) {\n      const observer = new MutationObserver((mutations) => {\n        mutations.forEach((mutation) => {\n          mutation.addedNodes.forEach((node) => {\n            if (node.nodeType === 1) { \/\/ Element node\n              const className = node.className || '';\n              if (typeof className === 'string' && className.includes('navigation-help')) {\n                hideNavigationHelp();\n              }\n            }\n          });\n        });\n      });\n\n      observer.observe(container, {\n        childList: true,\n        subtree: true,\n        attributes: true,\n        attributeFilter: ['class']\n      });\n\n      \/\/ Store observer for cleanup\n      el._navigationObserver = observer;\n    }\n\n    \/\/ Store viewer instance for cleanup\n    el._viewer = viewer;\n    el._entities = [];\n    el._widgetId = widgetId;\n\n    \/\/ Set initial camera position\n    const center = model.get(\"center\");\n    const zoom = model.get(\"zoom\");\n    const height = model.get(\"camera_height\") || 10000000; \/\/ Default 10M meters\n\n    if (center && center.length >= 2) {\n      viewer.camera.setView({\n        destination: window.Cesium.Cartesian3.fromDegrees(center[1], center[0], height),\n        orientation: {\n          heading: window.Cesium.Math.toRadians(model.get(\"heading\") || 0),\n          pitch: window.Cesium.Math.toRadians(model.get(\"pitch\") || -90),\n          roll: window.Cesium.Math.toRadians(model.get(\"roll\") || 0)\n        }\n      });\n    }\n\n    \/\/ Handle map events and send to Python\n    const sendEvent = (eventType, eventData) => {\n      const currentEvents = model.get(\"_js_events\") || [];\n      const newEvents = [...currentEvents, { type: eventType, ...eventData }];\n      model.set(\"_js_events\", newEvents);\n      model.save_changes();\n    };\n\n    \/\/ Map event handlers\n    viewer.cesiumWidget.screenSpaceEventHandler.setInputAction((event) => {\n      const pickedObject = viewer.scene.pick(event.position);\n      const cartesian = viewer.camera.pickEllipsoid(event.position, viewer.scene.globe.ellipsoid);\n\n      if (cartesian) {\n        const cartographic = window.Cesium.Cartographic.fromCartesian(cartesian);\n        const longitude = window.Cesium.Math.toDegrees(cartographic.longitude);\n        const latitude = window.Cesium.Math.toDegrees(cartographic.latitude);\n\n        sendEvent('click', {\n          longitude: longitude,\n          latitude: latitude,\n          height: cartographic.height,\n          pickedObject: pickedObject ? pickedObject.id : null\n        });\n      }\n    }, window.Cesium.ScreenSpaceEventType.LEFT_CLICK);\n\n    \/\/ Camera move event\n    viewer.camera.moveEnd.addEventListener(() => {\n      const center = viewer.camera.positionCartographic;\n      sendEvent('moveend', {\n        longitude: window.Cesium.Math.toDegrees(center.longitude),\n        latitude: window.Cesium.Math.toDegrees(center.latitude),\n        height: center.height,\n        heading: window.Cesium.Math.toDegrees(viewer.camera.heading),\n        pitch: window.Cesium.Math.toDegrees(viewer.camera.pitch),\n        roll: window.Cesium.Math.toDegrees(viewer.camera.roll)\n      });\n    });\n\n    \/\/ Listen for trait changes from Python\n    model.on(\"change:center\", () => {\n      const newCenter = model.get(\"center\");\n      if (newCenter && newCenter.length >= 2) {\n        viewer.camera.setView({\n          destination: window.Cesium.Cartesian3.fromDegrees(newCenter[1], newCenter[0], height)\n        });\n      }\n    });\n\n    model.on(\"change:access_token\", () => {\n      const newToken = model.get(\"access_token\");\n      if (newToken) {\n        window.Cesium.Ion.defaultAccessToken = newToken;\n      }\n    });\n\n    \/\/ Handle JavaScript method calls from Python\n    model.on(\"change:_js_calls\", () => {\n      const calls = model.get(\"_js_calls\") || [];\n      calls.forEach(call => {\n        executeCesiumMethod(viewer, call, el, sendEvent);\n      });\n      \/\/ Clear the calls after processing\n      model.set(\"_js_calls\", []);\n      model.save_changes();\n    });\n  }\n\n  \/\/ Method execution function\n  function executeCesiumMethod(viewer, call, el, sendEvent) {\n    const { method, args, kwargs } = call;\n\n    try {\n      switch (method) {\n        case 'flyTo':\n          const flyToOptions = args[0] || {};\n          if (flyToOptions.longitude !== undefined && flyToOptions.latitude !== undefined) {\n            const destination = window.Cesium.Cartesian3.fromDegrees(\n              flyToOptions.longitude,\n              flyToOptions.latitude,\n              flyToOptions.height || 10000000\n            );\n\n            const flyToConfig = {\n              destination: destination,\n              duration: flyToOptions.duration || 3.0\n            };\n\n            if (flyToOptions.heading !== undefined || flyToOptions.pitch !== undefined || flyToOptions.roll !== undefined) {\n              flyToConfig.orientation = {\n                heading: window.Cesium.Math.toRadians(flyToOptions.heading || 0),\n                pitch: window.Cesium.Math.toRadians(flyToOptions.pitch || -90),\n                roll: window.Cesium.Math.toRadians(flyToOptions.roll || 0)\n              };\n            }\n\n            viewer.camera.flyTo(flyToConfig);\n          }\n          break;\n\n        case 'addEntity':\n          const entityConfig = args[0];\n\n          \/\/ Convert point color from string or array to Cesium.Color\n          if (entityConfig.point) {\n              if (typeof entityConfig.point.color === 'string') {\n                  entityConfig.point.color = Cesium.Color.fromCssColorString(entityConfig.point.color);\n              } else if (Array.isArray(entityConfig.point.color)) {\n                  entityConfig.point.color = new Cesium.Color(...entityConfig.point.color);\n              }\n\n              if (typeof entityConfig.point.outlineColor === 'string') {\n                  entityConfig.point.outlineColor = Cesium.Color.fromCssColorString(entityConfig.point.outlineColor);\n              } else if (Array.isArray(entityConfig.point.outlineColor)) {\n                  entityConfig.point.outlineColor = new Cesium.Color(...entityConfig.point.outlineColor);\n              }\n          }\n\n          const entity = viewer.entities.add(entityConfig);\n          el._entities.push(entity);\n          break;\n\n\n        case 'removeEntity':\n          const entityId = args[0];\n          const entityToRemove = viewer.entities.getById(entityId);\n          if (entityToRemove) {\n            viewer.entities.remove(entityToRemove);\n            const index = el._entities.indexOf(entityToRemove);\n            if (index > -1) {\n              el._entities.splice(index, 1);\n            }\n          }\n          break;\n\n        case 'home':\n          viewer.camera.setView({\n            destination: window.Cesium.Cartesian3.fromDegrees(0, 0, 10000000)\n          });\n          break;\n\n        default:\n          console.warn(`Unknown Cesium method: ${method}`);\n      }\n    } catch (error) {\n      console.error(`Error executing Cesium method ${method}:`, error);\n      if (sendEvent) {\n        sendEvent('error', { method, error: error.message });\n      }\n    }\n  }\n\n  \/\/ Cleanup function\n  return () => {\n    if (el._navigationObserver) {\n      el._navigationObserver.disconnect();\n      el._navigationObserver = null;\n    }\n    if (el._entities) {\n      el._entities = [];\n    }\n    if (el._viewer) {\n      el._viewer.destroy();\n      el._viewer = null;\n    }\n  };\n}\n\nexport default { render };", "_js_calls": [{"id": 0, "method": "addEntity", "args": [{"id": "point_0", "position": {"longitude": -74.006, "latitude": 40.7128, "height": 200000}, "point": {"pixelSize": 20, "color": "#ff0000", "outlineColor": "#000000", "outlineWidth": 2, "heightReference": "NONE"}, "name": "New York City", "description": "The Big Apple"}], "kwargs": {}}, {"id": 1, "method": "addEntity", "args": [{"id": "point_0", "position": {"longitude": -0.1278, "latitude": 51.5074, "height": 150000}, "point": {"pixelSize": 15, "color": "#0000ff", "outlineColor": "#000000", "outlineWidth": 2, "heightReference": "NONE"}, "name": "London", "description": "Capital of England"}], "kwargs": {}}, {"id": 2, "method": "addEntity", "args": [{"id": "point_0", "position": {"longitude": 139.6503, "latitude": 35.6762, "height": 100000}, "point": {"pixelSize": 18, "color": "#00ff00", "outlineColor": "#000000", "outlineWidth": 2, "heightReference": "NONE"}, "name": "Tokyo", "description": "Capital of Japan"}], "kwargs": {}}, {"id": 3, "method": "flyTo", "args": [{"latitude": 51.5074, "longitude": -0.1278, "duration": 3.0, "height": 5000000, "heading": 45, "pitch": -30}], "kwargs": {}}, {"id": 4, "method": "flyTo", "args": [{"latitude": 35.6762, "longitude": 139.6503, "duration": 4.0, "height": 3000000, "heading": 90, "pitch": -45}], "kwargs": {}}, {"id": 5, "method": "addEntity", "args": [{"id": "polyline_0", "polyline": {"positions": [-74.006, 40.7128, 10000, -30.0, 45.0, 12000, -0.1278, 51.5074, 10000], "width": 3, "material": "#ffff00", "clampToGround": true}, "name": "NYC to London Flight Path", "description": "Transatlantic flight route"}], "kwargs": {}}, {"id": 6, "method": "addEntity", "args": [{"id": "polygon_0", "polygon": {"hierarchy": [-6.0, 30.0, 36.0, 30.0, 36.0, 46.0, -6.0, 46.0, -6.0, 30.0], "material": "rgba(0, 100, 255, 0.3)", "outline": true, "outlineColor": "#0064ff", "height": 0.0}, "name": "Mediterranean Region", "description": "Mediterranean Sea region"}], "kwargs": {}}, {"id": 7, "method": "addDataSource", "args": ["geojson", {"data": {"type": "FeatureCollection", "features": [{"type": "Feature", "geometry": {"type": "Point", "coordinates": [-77.0369, 38.9072]}, "properties": {"name": "Washington DC", "country": "USA", "population": 705749}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [2.3522, 48.8566]}, "properties": {"name": "Paris", "country": "France", "population": 2161000}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [116.4074, 39.9042]}, "properties": {"name": "Beijing", "country": "China", "population": 21540000}}]}, "options": {"name": "World Capitals", "clampToGround": true}}], "kwargs": {}}, {"id": 8, "method": "setTerrain", "args": [{"type": "cesium-world-terrain", "requestWaterMask": true, "requestVertexNormals": true}], "kwargs": {}}, {"id": 9, "method": "setImagery", "args": [{"type": "osm", "url": "https:\/\/tile.openstreetmap.org\/"}], "kwargs": {}}, {"id": 10, "method": "enableLighting", "args": [true], "kwargs": {}}, {"id": 11, "method": "enableFog", "args": [true], "kwargs": {}}, {"id": 12, "method": "setScene2D", "args": [], "kwargs": {}}, {"id": 13, "method": "setSceneColumbusView", "args": [], "kwargs": {}}, {"id": 14, "method": "setScene3D", "args": [], "kwargs": {}}, {"id": 15, "method": "addEntity", "args": [{"id": "point_0", "position": {"longitude": 151.2093, "latitude": -33.8688, "height": 500000}, "point": {"pixelSize": 16, "color": "#ff8800", "outlineColor": "#000000", "outlineWidth": 2, "heightReference": "NONE"}, "name": "Sydney", "description": "Largest city in Australia"}], "kwargs": {}}, {"id": 16, "method": "home", "args": [], "kwargs": {}}], "_js_events": [], "_layers": {}, "_model_module": "anywidget", "_model_module_version": "~0.9.*", "_model_name": "AnyModel", "_sources": {}, "_view_count": null, "_view_module": "anywidget", "_view_module_version": "~0.9.*", "_view_name": "AnyView", "access_token": "", "animation": false, "base_layer_picker": true, "camera_height": 2000000.0, "center": [40.7128, -74.006], "fullscreen_button": true, "geocoder": true, "heading": 0.0, "height": "600px", "home_button": true, "info_box": true, "layout": "IPY_MODEL_3eb5089293274486a5f3ee5b79f184a0", "navigation_help_button": false, "pitch": -90.0, "roll": 0.0, "scene_mode_picker": true, "selection_indicator": true, "should_animate": false, "style": "", "tabbable": null, "timeline": false, "tooltip": null, "vr_button": false, "width": "100%", "zoom": 2.0}}, "8f0658a2555e449d86a4d6994dfa4bb9": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "078dfd9ac8b5448ca57363b89731899c": {"model_name": "AnyModel", "model_module": "anywidget", "model_module_version": "~0.9.*", "state": {"_anywidget_id": "anymap.anymap.CesiumMap", "_css": "@import url(\"https:\/\/cesium.com\/downloads\/cesiumjs\/releases\/1.131\/Build\/Cesium\/Widgets\/widgets.css\");\n\n\/* Optional: make canvas interactive *\/\n.cesium-widget canvas {\n    pointer-events: auto;\n    cursor: grab;\n}\n", "_dom_classes": [], "_esm": "\/\/ Load Cesium library from CDN\nfunction loadCesium() {\n  return new Promise((resolve, reject) => {\n    \/\/ Check if Cesium is already loaded\n    if (window.Cesium) {\n      resolve();\n      return;\n    }\n\n    \/\/ Check if script is already being loaded\n    const existingScript = document.head.querySelector('script[src*=\"Cesium.js\"]');\n    if (existingScript) {\n      existingScript.addEventListener('load', resolve);\n      existingScript.addEventListener('error', reject);\n      return;\n    }\n\n    \/\/ Create and load the script\n    const script = document.createElement('script');\n    script.src = 'https:\/\/cesium.com\/downloads\/cesiumjs\/releases\/1.131\/Build\/Cesium\/Cesium.js';\n    script.async = false;\n    script.addEventListener('load', resolve);\n    script.addEventListener('error', reject);\n    document.head.appendChild(script);\n  });\n}\n\nfunction render({ model, el }) {\n  \/\/ Create unique ID for this widget instance\n  const widgetId = `anymap-cesium-${Math.random().toString(36).substr(2, 9)}`;\n\n  \/\/ Create container for the map\n  const container = document.createElement(\"div\");\n  container.id = widgetId;\n  container.style.width = model.get(\"width\");\n  container.style.height = model.get(\"height\");\n  container.style.position = \"relative\";\n  container.style.overflow = \"hidden\";\n\n  \/\/ Ensure parent element has proper styling\n  el.style.width = \"100%\";\n  el.style.display = \"block\";\n\n  \/\/ Clear any existing content and cleanup\n  if (el._viewer) {\n    el._viewer.destroy();\n    el._viewer = null;\n  }\n  if (el._entities) {\n    el._entities = [];\n  }\n\n  el.innerHTML = \"\";\n  el.appendChild(container);\n\n  \/\/ Show loading indicator\n  const loadingDiv = document.createElement(\"div\");\n  loadingDiv.className = \"anymap-cesium-loading\";\n  loadingDiv.textContent = \"Loading Cesium...\";\n  container.appendChild(loadingDiv);\n\n  \/\/ Load Cesium and initialize when ready\n  loadCesium().then(() => {\n    initializeCesium();\n  }).catch((error) => {\n    console.error(\"Failed to load Cesium:\", error);\n    loadingDiv.textContent = \"Failed to load Cesium library\";\n    loadingDiv.style.color = \"red\";\n  });\n\n  \/\/ Function to initialize Cesium when library is ready\n  function initializeCesium() {\n    if (!window.Cesium) {\n      console.error(\"Cesium library not loaded\");\n      return;\n    }\n\n    \/\/ Remove loading indicator\n    if (loadingDiv.parentNode) {\n      loadingDiv.parentNode.removeChild(loadingDiv);\n    }\n\n    \/\/ Set Cesium ion access token\n    const accessToken = model.get(\"access_token\");\n    if (accessToken) {\n      window.Cesium.Ion.defaultAccessToken = accessToken;\n    }\n\n    \/\/ Get configuration options\n    const viewerOptions = {\n      baseLayerPicker: model.get(\"base_layer_picker\") !== false,\n      fullscreenButton: model.get(\"fullscreen_button\") !== false,\n      vrButton: model.get(\"vr_button\") !== false,\n      geocoder: model.get(\"geocoder\") !== false,\n      homeButton: model.get(\"home_button\") !== false,\n      infoBox: model.get(\"info_box\") !== false,\n      sceneModePicker: model.get(\"scene_mode_picker\") !== false,\n      selectionIndicator: model.get(\"selection_indicator\") !== false,\n      timeline: model.get(\"timeline\") !== false,\n      navigationHelpButton: false, \/\/ Disable navigation help to prevent arrows\n      navigationInstructionsInitiallyVisible: false,\n      animation: model.get(\"animation\") !== false,\n      shouldAnimate: model.get(\"should_animate\") !== false,\n      clockViewModel: undefined,\n      selectedImageryProviderViewModel: undefined,\n      imageryProviderViewModels: window.Cesium.createDefaultImageryProviderViewModels(),\n      selectedTerrainProviderViewModel: undefined,\n      terrainProviderViewModels: window.Cesium.createDefaultTerrainProviderViewModels(),\n      skyBox: undefined,\n      skyAtmosphere: undefined,\n      fullscreenElement: document.body,\n      useDefaultRenderLoop: true,\n      targetFrameRate: undefined,\n      showRenderLoopErrors: true,\n      useBrowserRecommendedResolution: true,\n      automaticallyTrackDataSourceClocks: true,\n      contextOptions: undefined,\n      sceneMode: window.Cesium.SceneMode.SCENE3D,\n      mapProjection: new window.Cesium.WebMercatorProjection(),\n      dataSources: new window.Cesium.DataSourceCollection()\n    };\n\n    \/\/ Initialize Cesium viewer\n    const viewer = new window.Cesium.Viewer(container, viewerOptions);\n\n    \/\/ Disable navigation help overlay completely\n    if (viewer.cesiumWidget.scene && viewer.cesiumWidget.scene.screenSpaceCameraController) {\n      viewer.cesiumWidget.scene.screenSpaceCameraController.enableRotate = true;\n      viewer.cesiumWidget.scene.screenSpaceCameraController.enableTranslate = true;\n      viewer.cesiumWidget.scene.screenSpaceCameraController.enableZoom = true;\n      viewer.cesiumWidget.scene.screenSpaceCameraController.enableTilt = true;\n      viewer.cesiumWidget.scene.screenSpaceCameraController.enableLook = true;\n    }\n\n    \/\/ Aggressively hide all navigation help elements\n    const hideNavigationHelp = () => {\n      \/\/ Hide all possible navigation help selectors\n      const selectors = [\n        '.cesium-navigation-help',\n        '.cesium-navigation-help-pan',\n        '.cesium-navigation-help-zoom',\n        '.cesium-navigation-help-rotate',\n        '.cesium-navigation-help-tilt',\n        '.cesium-navigation-help-instructions',\n        '.cesium-viewer-navigationHelpButton-wrapper',\n        '.cesium-navigation-help-button',\n        '.cesium-click-navigation-help',\n        '.cesium-touch-navigation-help',\n        '[class*=\"navigation-help\"]',\n        '[class*=\"cesium-navigation\"]'\n      ];\n\n      selectors.forEach(selector => {\n        const elements = container.querySelectorAll(selector);\n        elements.forEach(el => {\n          el.style.display = 'none';\n          el.style.visibility = 'hidden';\n          el.style.opacity = '0';\n          el.style.pointerEvents = 'none';\n          el.style.zIndex = '-1000';\n          el.remove();\n        });\n      });\n\n      \/\/ Also check document body for any navigation help overlays\n      document.querySelectorAll('[class*=\"cesium-navigation\"]').forEach(el => {\n        if (el.style) {\n          el.style.display = 'none';\n          el.style.visibility = 'hidden';\n        }\n      });\n\n      \/\/ Ensure canvas gets focus for mouse events\n      const canvas = container.querySelector('canvas');\n      if (canvas) {\n        canvas.style.outline = 'none';\n        canvas.setAttribute('tabindex', '0');\n        canvas.style.pointerEvents = 'auto';\n        canvas.style.touchAction = 'none';\n      }\n    };\n\n    \/\/ Run immediately and then with timeouts to catch delayed elements\n    hideNavigationHelp();\n    setTimeout(hideNavigationHelp, 100);\n    setTimeout(hideNavigationHelp, 500);\n    setTimeout(hideNavigationHelp, 1000);\n\n    \/\/ Set up mutation observer to catch dynamically added navigation help elements\n    if (window.MutationObserver) {\n      const observer = new MutationObserver((mutations) => {\n        mutations.forEach((mutation) => {\n          mutation.addedNodes.forEach((node) => {\n            if (node.nodeType === 1) { \/\/ Element node\n              const className = node.className || '';\n              if (typeof className === 'string' && className.includes('navigation-help')) {\n                hideNavigationHelp();\n              }\n            }\n          });\n        });\n      });\n\n      observer.observe(container, {\n        childList: true,\n        subtree: true,\n        attributes: true,\n        attributeFilter: ['class']\n      });\n\n      \/\/ Store observer for cleanup\n      el._navigationObserver = observer;\n    }\n\n    \/\/ Store viewer instance for cleanup\n    el._viewer = viewer;\n    el._entities = [];\n    el._widgetId = widgetId;\n\n    \/\/ Set initial camera position\n    const center = model.get(\"center\");\n    const zoom = model.get(\"zoom\");\n    const height = model.get(\"camera_height\") || 10000000; \/\/ Default 10M meters\n\n    if (center && center.length >= 2) {\n      viewer.camera.setView({\n        destination: window.Cesium.Cartesian3.fromDegrees(center[1], center[0], height),\n        orientation: {\n          heading: window.Cesium.Math.toRadians(model.get(\"heading\") || 0),\n          pitch: window.Cesium.Math.toRadians(model.get(\"pitch\") || -90),\n          roll: window.Cesium.Math.toRadians(model.get(\"roll\") || 0)\n        }\n      });\n    }\n\n    \/\/ Handle map events and send to Python\n    const sendEvent = (eventType, eventData) => {\n      const currentEvents = model.get(\"_js_events\") || [];\n      const newEvents = [...currentEvents, { type: eventType, ...eventData }];\n      model.set(\"_js_events\", newEvents);\n      model.save_changes();\n    };\n\n    \/\/ Map event handlers\n    viewer.cesiumWidget.screenSpaceEventHandler.setInputAction((event) => {\n      const pickedObject = viewer.scene.pick(event.position);\n      const cartesian = viewer.camera.pickEllipsoid(event.position, viewer.scene.globe.ellipsoid);\n\n      if (cartesian) {\n        const cartographic = window.Cesium.Cartographic.fromCartesian(cartesian);\n        const longitude = window.Cesium.Math.toDegrees(cartographic.longitude);\n        const latitude = window.Cesium.Math.toDegrees(cartographic.latitude);\n\n        sendEvent('click', {\n          longitude: longitude,\n          latitude: latitude,\n          height: cartographic.height,\n          pickedObject: pickedObject ? pickedObject.id : null\n        });\n      }\n    }, window.Cesium.ScreenSpaceEventType.LEFT_CLICK);\n\n    \/\/ Camera move event\n    viewer.camera.moveEnd.addEventListener(() => {\n      const center = viewer.camera.positionCartographic;\n      sendEvent('moveend', {\n        longitude: window.Cesium.Math.toDegrees(center.longitude),\n        latitude: window.Cesium.Math.toDegrees(center.latitude),\n        height: center.height,\n        heading: window.Cesium.Math.toDegrees(viewer.camera.heading),\n        pitch: window.Cesium.Math.toDegrees(viewer.camera.pitch),\n        roll: window.Cesium.Math.toDegrees(viewer.camera.roll)\n      });\n    });\n\n    \/\/ Listen for trait changes from Python\n    model.on(\"change:center\", () => {\n      const newCenter = model.get(\"center\");\n      if (newCenter && newCenter.length >= 2) {\n        viewer.camera.setView({\n          destination: window.Cesium.Cartesian3.fromDegrees(newCenter[1], newCenter[0], height)\n        });\n      }\n    });\n\n    model.on(\"change:access_token\", () => {\n      const newToken = model.get(\"access_token\");\n      if (newToken) {\n        window.Cesium.Ion.defaultAccessToken = newToken;\n      }\n    });\n\n    \/\/ Handle JavaScript method calls from Python\n    model.on(\"change:_js_calls\", () => {\n      const calls = model.get(\"_js_calls\") || [];\n      calls.forEach(call => {\n        executeCesiumMethod(viewer, call, el, sendEvent);\n      });\n      \/\/ Clear the calls after processing\n      model.set(\"_js_calls\", []);\n      model.save_changes();\n    });\n  }\n\n  \/\/ Method execution function\n  function executeCesiumMethod(viewer, call, el, sendEvent) {\n    const { method, args, kwargs } = call;\n\n    try {\n      switch (method) {\n        case 'flyTo':\n          const flyToOptions = args[0] || {};\n          if (flyToOptions.longitude !== undefined && flyToOptions.latitude !== undefined) {\n            const destination = window.Cesium.Cartesian3.fromDegrees(\n              flyToOptions.longitude,\n              flyToOptions.latitude,\n              flyToOptions.height || 10000000\n            );\n\n            const flyToConfig = {\n              destination: destination,\n              duration: flyToOptions.duration || 3.0\n            };\n\n            if (flyToOptions.heading !== undefined || flyToOptions.pitch !== undefined || flyToOptions.roll !== undefined) {\n              flyToConfig.orientation = {\n                heading: window.Cesium.Math.toRadians(flyToOptions.heading || 0),\n                pitch: window.Cesium.Math.toRadians(flyToOptions.pitch || -90),\n                roll: window.Cesium.Math.toRadians(flyToOptions.roll || 0)\n              };\n            }\n\n            viewer.camera.flyTo(flyToConfig);\n          }\n          break;\n\n        case 'addEntity':\n          const entityConfig = args[0];\n\n          \/\/ Convert point color from string or array to Cesium.Color\n          if (entityConfig.point) {\n              if (typeof entityConfig.point.color === 'string') {\n                  entityConfig.point.color = Cesium.Color.fromCssColorString(entityConfig.point.color);\n              } else if (Array.isArray(entityConfig.point.color)) {\n                  entityConfig.point.color = new Cesium.Color(...entityConfig.point.color);\n              }\n\n              if (typeof entityConfig.point.outlineColor === 'string') {\n                  entityConfig.point.outlineColor = Cesium.Color.fromCssColorString(entityConfig.point.outlineColor);\n              } else if (Array.isArray(entityConfig.point.outlineColor)) {\n                  entityConfig.point.outlineColor = new Cesium.Color(...entityConfig.point.outlineColor);\n              }\n          }\n\n          const entity = viewer.entities.add(entityConfig);\n          el._entities.push(entity);\n          break;\n\n\n        case 'removeEntity':\n          const entityId = args[0];\n          const entityToRemove = viewer.entities.getById(entityId);\n          if (entityToRemove) {\n            viewer.entities.remove(entityToRemove);\n            const index = el._entities.indexOf(entityToRemove);\n            if (index > -1) {\n              el._entities.splice(index, 1);\n            }\n          }\n          break;\n\n        case 'home':\n          viewer.camera.setView({\n            destination: window.Cesium.Cartesian3.fromDegrees(0, 0, 10000000)\n          });\n          break;\n\n        default:\n          console.warn(`Unknown Cesium method: ${method}`);\n      }\n    } catch (error) {\n      console.error(`Error executing Cesium method ${method}:`, error);\n      if (sendEvent) {\n        sendEvent('error', { method, error: error.message });\n      }\n    }\n  }\n\n  \/\/ Cleanup function\n  return () => {\n    if (el._navigationObserver) {\n      el._navigationObserver.disconnect();\n      el._navigationObserver = null;\n    }\n    if (el._entities) {\n      el._entities = [];\n    }\n    if (el._viewer) {\n      el._viewer.destroy();\n      el._viewer = null;\n    }\n  };\n}\n\nexport default { render };", "_js_calls": [{"id": 0, "method": "addEntity", "args": [{"id": "point_0", "position": {"longitude": 151.2093, "latitude": -33.8688, "height": 50000}, "point": {"pixelSize": 25, "color": "#9900ff", "outlineColor": "#000000", "outlineWidth": 2, "heightReference": "NONE"}, "name": "Sydney Opera House Area"}], "kwargs": {}}, {"id": 1, "method": "addEntity", "args": [{"id": "point_0", "position": {"longitude": 144.9631, "latitude": -37.8136, "height": 40000}, "point": {"pixelSize": 20, "color": "#00ffff", "outlineColor": "#000000", "outlineWidth": 2, "heightReference": "NONE"}, "name": "Melbourne"}], "kwargs": {}}], "_js_events": [], "_layers": {}, "_model_module": "anywidget", "_model_module_version": "~0.9.*", "_model_name": "AnyModel", "_sources": {}, "_view_count": null, "_view_module": "anywidget", "_view_module_version": "~0.9.*", "_view_name": "AnyView", "access_token": "", "animation": false, "base_layer_picker": true, "camera_height": 1000000.0, "center": [-33.8688, 151.2093], "fullscreen_button": true, "geocoder": true, "heading": 0.0, "height": "500px", "home_button": true, "info_box": true, "layout": "IPY_MODEL_8f0658a2555e449d86a4d6994dfa4bb9", "navigation_help_button": false, "pitch": -90.0, "roll": 0.0, "scene_mode_picker": true, "selection_indicator": true, "should_animate": false, "style": "", "tabbable": null, "timeline": false, "tooltip": null, "vr_button": false, "width": "100%", "zoom": 2.0}}}, "version_major": 2, "version_minor": 0}
+{"state": {"26f7c7896f6145c9b377e6b65088989d": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "06d947e9f7b84de189f49c2d5f8a86c5": {"model_name": "AnyModel", "model_module": "anywidget", "model_module_version": "~0.9.*", "state": {"_anywidget_id": "anymap.anymap.MapCompare", "_dom_classes": [], "_esm": "\/\/ Load MapLibre GL JS and Compare library\nlet maplibreLoaded = false;\nlet compareLoaded = false;\n\nfunction loadScript(src) {\n    return new Promise((resolve, reject) => {\n        const script = document.createElement('script');\n        script.src = src;\n        script.onload = resolve;\n        script.onerror = reject;\n        document.head.appendChild(script);\n    });\n}\n\nfunction loadCSS(href) {\n    return new Promise((resolve, reject) => {\n        const link = document.createElement('link');\n        link.rel = 'stylesheet';\n        link.href = href;\n        link.onload = resolve;\n        link.onerror = reject;\n        document.head.appendChild(link);\n    });\n}\n\n\/\/ Load dependencies if not already loaded\nasync function loadDependencies() {\n    if (!window.maplibregl && !maplibreLoaded) {\n        await Promise.all([\n            loadScript('https:\/\/unpkg.com\/maplibre-gl@5.6.1\/dist\/maplibre-gl.js'),\n            loadCSS('https:\/\/unpkg.com\/maplibre-gl@5.6.1\/dist\/maplibre-gl.css')\n        ]);\n        maplibreLoaded = true;\n    }\n\n    if (!window.maplibregl?.Compare && !compareLoaded) {\n        await Promise.all([\n            loadScript('https:\/\/unpkg.com\/@maplibre\/maplibre-gl-compare@0.5.0\/dist\/maplibre-gl-compare.js'),\n            loadCSS('https:\/\/unpkg.com\/@maplibre\/maplibre-gl-compare@0.5.0\/dist\/maplibre-gl-compare.css')\n        ]);\n        compareLoaded = true;\n    }\n}\n\nasync function render({ model, el }) {\n    \/\/ Clear any existing content\n    el.innerHTML = '';\n\n    \/\/ Load dependencies first\n    await loadDependencies();\n\n    \/\/ Create container structure\n    const container = document.createElement('div');\n    container.style.width = model.get('width');\n    container.style.height = model.get('height');\n    container.style.position = 'relative';\n    container.id = 'comparison-container-' + Math.random().toString(36).substr(2, 9);\n\n    const beforeContainer = document.createElement('div');\n    beforeContainer.id = 'before-' + Math.random().toString(36).substr(2, 9);\n    beforeContainer.style.position = 'absolute';\n    beforeContainer.style.top = '0';\n    beforeContainer.style.bottom = '0';\n    beforeContainer.style.width = '100%';\n    beforeContainer.style.height = '100%';\n\n    const afterContainer = document.createElement('div');\n    afterContainer.id = 'after-' + Math.random().toString(36).substr(2, 9);\n    afterContainer.style.position = 'absolute';\n    afterContainer.style.top = '0';\n    afterContainer.style.bottom = '0';\n    afterContainer.style.width = '100%';\n    afterContainer.style.height = '100%';\n\n    container.appendChild(beforeContainer);\n    container.appendChild(afterContainer);\n    el.appendChild(container);\n\n    \/\/ Initialize maps\n    let beforeMap, afterMap, compare;\n    let isSettingSliderProgrammatically = false;\n\n    function initializeMaps() {\n        const leftMapConfig = model.get('left_map_config');\n        const rightMapConfig = model.get('right_map_config');\n\n        \/\/ Create before map\n        beforeMap = new maplibregl.Map({\n            container: beforeContainer.id,\n            style: leftMapConfig.style || 'https:\/\/demotiles.maplibre.org\/style.json',\n            center: leftMapConfig.center ? [leftMapConfig.center[1], leftMapConfig.center[0]] : [0, 0],\n            zoom: leftMapConfig.zoom || 2,\n            bearing: leftMapConfig.bearing || 0,\n            pitch: leftMapConfig.pitch || 0,\n            antialias: leftMapConfig.antialias !== undefined ? leftMapConfig.antialias : true\n        });\n\n        \/\/ Create after map\n        afterMap = new maplibregl.Map({\n            container: afterContainer.id,\n            style: rightMapConfig.style || 'https:\/\/demotiles.maplibre.org\/style.json',\n            center: rightMapConfig.center ? [rightMapConfig.center[1], rightMapConfig.center[0]] : [0, 0],\n            zoom: rightMapConfig.zoom || 2,\n            bearing: rightMapConfig.bearing || 0,\n            pitch: rightMapConfig.pitch || 0,\n            antialias: rightMapConfig.antialias !== undefined ? rightMapConfig.antialias : true\n        });\n\n        \/\/ Wait for both maps to load\n        Promise.all([\n            new Promise(resolve => beforeMap.on('load', resolve)),\n            new Promise(resolve => afterMap.on('load', resolve))\n        ]).then(() => {\n            \/\/ Initialize comparison\n            compare = new maplibregl.Compare(beforeMap, afterMap, '#' + container.id, {\n                orientation: model.get('orientation') || 'vertical',\n                mousemove: model.get('mousemove') || false\n            });\n\n            \/\/ Wait for the compare widget to be fully rendered before setting slider position\n            const sliderPosition = model.get('slider_position');\n            if (sliderPosition !== undefined && sliderPosition !== 0.5) {\n                isSettingSliderProgrammatically = true;\n\n                \/\/ Convert percentage to pixels\n                const containerRect = container.getBoundingClientRect();\n                const isVertical = (model.get('orientation') || 'vertical') === 'vertical';\n                const containerSize = isVertical ? containerRect.width : containerRect.height;\n                const pixelPosition = sliderPosition * containerSize;\n\n                \/\/ Set slider position with retry logic\n                setTimeout(() => {\n                    compare.setSlider(pixelPosition);\n                    setTimeout(() => {\n                        isSettingSliderProgrammatically = false;\n                    }, 100);\n                }, 100);\n            } else {\n                setTimeout(() => {\n                    isSettingSliderProgrammatically = false;\n                }, 100);\n            }\n\n            \/\/ Set up event listeners\n            compare.on('slideend', function(event) {\n                if (!isSettingSliderProgrammatically) {\n                    \/\/ Convert pixels to percentage\n                    const containerRect = container.getBoundingClientRect();\n                    const isVertical = (model.get('orientation') || 'vertical') === 'vertical';\n                    const containerSize = isVertical ? containerRect.width : containerRect.height;\n                    const percentagePosition = containerSize > 0 ? event.currentPosition \/ containerSize : 0.5;\n\n                    model.set('slider_position', percentagePosition);\n                    const events = model.get('_js_events') || [];\n                    events.push({\n                        type: 'slideend',\n                        position: percentagePosition\n                    });\n                    model.set('_js_events', events);\n                    model.save_changes();\n                }\n            });\n\n            \/\/ Set up JavaScript method handlers\n            setupMethodHandlers();\n\n            \/\/ Note: MapLibre Compare plugin handles basic map synchronization internally\n            \/\/ Custom synchronization disabled to prevent performance issues\n        });\n    }\n\n    function setupSynchronization() {\n        const syncCenter = model.get('sync_center');\n        const syncZoom = model.get('sync_zoom');\n        const syncBearing = model.get('sync_bearing');\n        const syncPitch = model.get('sync_pitch');\n\n        if (syncCenter || syncZoom || syncBearing || syncPitch) {\n            let isSync = false;\n\n            function syncMaps(sourceMap, targetMap) {\n                if (isSync) return; \/\/ Prevent infinite loops\n                isSync = true;\n\n                try {\n                    if (syncCenter) {\n                        targetMap.setCenter(sourceMap.getCenter());\n                    }\n                    if (syncZoom) {\n                        targetMap.setZoom(sourceMap.getZoom());\n                    }\n                    if (syncBearing) {\n                        targetMap.setBearing(sourceMap.getBearing());\n                    }\n                    if (syncPitch) {\n                        targetMap.setPitch(sourceMap.getPitch());\n                    }\n                } finally {\n                    \/\/ Use requestAnimationFrame to reset flag after current event loop\n                    requestAnimationFrame(() => {\n                        isSync = false;\n                    });\n                }\n            }\n\n            \/\/ Use 'moveend' instead of 'move' to avoid interfering with scroll zoom\n            beforeMap.on('moveend', () => syncMaps(beforeMap, afterMap));\n            afterMap.on('moveend', () => syncMaps(afterMap, beforeMap));\n        }\n    }\n\n    function setupLightweightSynchronization() {\n        \/\/ The MapLibre Compare plugin handles most synchronization automatically\n        \/\/ We only add minimal custom sync for specific cases if explicitly requested\n        const syncCenter = model.get('sync_center');\n        const syncZoom = model.get('sync_zoom');\n        const syncBearing = model.get('sync_bearing');\n        const syncPitch = model.get('sync_pitch');\n\n        \/\/ Only add custom sync if any are explicitly disabled (Compare plugin handles the basic sync)\n        if (!syncCenter || !syncZoom || !syncBearing || !syncPitch) {\n            console.log('Custom synchronization disabled for some properties');\n            \/\/ Note: When sync is disabled, maps can operate independently\n            \/\/ The Compare plugin's built-in sync will still work for basic comparison\n        }\n    }\n\n    function setupMethodHandlers() {\n        \/\/ Handle JavaScript method calls from Python\n        model.on('change:_js_calls', function() {\n            const calls = model.get('_js_calls') || [];\n            calls.forEach(call => {\n                handleJavaScriptCall(call);\n            });\n        });\n    }\n\n    function handleJavaScriptCall(call) {\n        const { method, args, kwargs } = call;\n\n        try {\n            switch (method) {\n                case 'setSlider':\n                    if (compare) {\n                        const position = args[0]; \/\/ This is a percentage (0-1)\n                        isSettingSliderProgrammatically = true;\n\n                        \/\/ Convert percentage to pixels\n                        const containerRect = container.getBoundingClientRect();\n                        const isVertical = (model.get('orientation') || 'vertical') === 'vertical';\n                        const containerSize = isVertical ? containerRect.width : containerRect.height;\n                        const pixelPosition = position * containerSize;\n\n                        setTimeout(() => {\n                            compare.setSlider(pixelPosition);\n                            setTimeout(() => {\n                                isSettingSliderProgrammatically = false;\n                            }, 100);\n                        }, 50);\n                        model.set('slider_position', position);\n                    }\n                    break;\n\n                case 'setOrientation':\n                    if (compare) {\n                        const orientation = args[0];\n                        \/\/ Note: MapLibre Compare doesn't support dynamic orientation change\n                        \/\/ This would require recreating the comparison\n                        model.set('orientation', orientation);\n                        recreateComparison();\n                    }\n                    break;\n\n                case 'setMousemove':\n                    if (compare) {\n                        const mousemove = args[0];\n                        model.set('mousemove', mousemove);\n                        recreateComparison();\n                    }\n                    break;\n\n                case 'setSyncOptions':\n                    const syncOptions = args[0];\n                    if (syncOptions) {\n                        model.set('sync_center', syncOptions.center);\n                        model.set('sync_zoom', syncOptions.zoom);\n                        model.set('sync_bearing', syncOptions.bearing);\n                        model.set('sync_pitch', syncOptions.pitch);\n                        setupSynchronization();\n                    }\n                    break;\n\n                case 'updateLeftMap':\n                    const leftConfig = args[0];\n                    if (beforeMap && leftConfig) {\n                        if (leftConfig.style) {\n                            beforeMap.setStyle(leftConfig.style);\n                        }\n                        if (leftConfig.center) {\n                            beforeMap.setCenter([leftConfig.center[1], leftConfig.center[0]]);\n                        }\n                        if (leftConfig.zoom !== undefined) {\n                            beforeMap.setZoom(leftConfig.zoom);\n                        }\n                        if (leftConfig.bearing !== undefined) {\n                            beforeMap.setBearing(leftConfig.bearing);\n                        }\n                        if (leftConfig.pitch !== undefined) {\n                            beforeMap.setPitch(leftConfig.pitch);\n                        }\n                        model.set('left_map_config', leftConfig);\n                    }\n                    break;\n\n                case 'updateRightMap':\n                    const rightConfig = args[0];\n                    if (afterMap && rightConfig) {\n                        if (rightConfig.style) {\n                            afterMap.setStyle(rightConfig.style);\n                        }\n                        if (rightConfig.center) {\n                            afterMap.setCenter([rightConfig.center[1], rightConfig.center[0]]);\n                        }\n                        if (rightConfig.zoom !== undefined) {\n                            afterMap.setZoom(rightConfig.zoom);\n                        }\n                        if (rightConfig.bearing !== undefined) {\n                            afterMap.setBearing(rightConfig.bearing);\n                        }\n                        if (rightConfig.pitch !== undefined) {\n                            afterMap.setPitch(rightConfig.pitch);\n                        }\n                        model.set('right_map_config', rightConfig);\n                    }\n                    break;\n\n                case 'flyTo':\n                    const options = args[0];\n                    if (beforeMap && afterMap && options) {\n                        const flyToOptions = {\n                            center: [options.center[1], options.center[0]],\n                            zoom: options.zoom,\n                            bearing: options.bearing,\n                            pitch: options.pitch,\n                            essential: true\n                        };\n                        beforeMap.flyTo(flyToOptions);\n                        afterMap.flyTo(flyToOptions);\n                    }\n                    break;\n\n                default:\n                    console.warn(`Unknown method: ${method}`);\n            }\n        } catch (error) {\n            console.error(`Error executing method ${method}:`, error);\n        }\n    }\n\n    function recreateComparison() {\n        if (compare) {\n            compare.remove();\n        }\n\n        \/\/ Recreate comparison with new options\n        compare = new maplibregl.Compare(beforeMap, afterMap, '#' + container.id, {\n            orientation: model.get('orientation') || 'vertical',\n            mousemove: model.get('mousemove') || false\n        });\n\n        \/\/ Restore slider position with delay\n        const sliderPosition = model.get('slider_position');\n        if (sliderPosition !== undefined) {\n            isSettingSliderProgrammatically = true;\n\n            \/\/ Convert percentage to pixels\n            const containerRect = container.getBoundingClientRect();\n            const isVertical = (model.get('orientation') || 'vertical') === 'vertical';\n            const containerSize = isVertical ? containerRect.width : containerRect.height;\n            const pixelPosition = sliderPosition * containerSize;\n\n            setTimeout(() => {\n                compare.setSlider(pixelPosition);\n                setTimeout(() => {\n                    isSettingSliderProgrammatically = false;\n                }, 100);\n            }, 100);\n        }\n\n        \/\/ Re-setup event listeners\n        compare.on('slideend', function(event) {\n            if (!isSettingSliderProgrammatically) {\n                \/\/ Convert pixels to percentage\n                const containerRect = container.getBoundingClientRect();\n                const isVertical = (model.get('orientation') || 'vertical') === 'vertical';\n                const containerSize = isVertical ? containerRect.width : containerRect.height;\n                const percentagePosition = containerSize > 0 ? event.currentPosition \/ containerSize : 0.5;\n\n                model.set('slider_position', percentagePosition);\n                const events = model.get('_js_events') || [];\n                events.push({\n                    type: 'slideend',\n                    position: percentagePosition\n                });\n                model.set('_js_events', events);\n                model.save_changes();\n            }\n        });\n    }\n\n    \/\/ Handle model changes\n    model.on('change:width', function() {\n        container.style.width = model.get('width');\n    });\n\n    model.on('change:height', function() {\n        container.style.height = model.get('height');\n    });\n\n    model.on('change:left_map_config', function() {\n        const leftConfig = model.get('left_map_config');\n        if (beforeMap && leftConfig) {\n            if (leftConfig.style) {\n                beforeMap.setStyle(leftConfig.style);\n            }\n            if (leftConfig.center) {\n                beforeMap.setCenter([leftConfig.center[1], leftConfig.center[0]]);\n            }\n            if (leftConfig.zoom !== undefined) {\n                beforeMap.setZoom(leftConfig.zoom);\n            }\n        }\n    });\n\n    model.on('change:right_map_config', function() {\n        const rightConfig = model.get('right_map_config');\n        if (afterMap && rightConfig) {\n            if (rightConfig.style) {\n                afterMap.setStyle(rightConfig.style);\n            }\n            if (rightConfig.center) {\n                afterMap.setCenter([rightConfig.center[1], rightConfig.center[0]]);\n            }\n            if (rightConfig.zoom !== undefined) {\n                afterMap.setZoom(rightConfig.zoom);\n            }\n        }\n    });\n\n    model.on('change:slider_position', function() {\n        if (compare && !isSettingSliderProgrammatically) {\n            const position = model.get('slider_position'); \/\/ percentage (0-1)\n            isSettingSliderProgrammatically = true;\n\n            \/\/ Convert percentage to pixels\n            const containerRect = container.getBoundingClientRect();\n            const isVertical = (model.get('orientation') || 'vertical') === 'vertical';\n            const containerSize = isVertical ? containerRect.width : containerRect.height;\n            const pixelPosition = position * containerSize;\n\n            setTimeout(() => {\n                compare.setSlider(pixelPosition);\n                setTimeout(() => {\n                    isSettingSliderProgrammatically = false;\n                }, 100);\n            }, 50);\n        }\n    });\n\n    model.on('change:orientation', function() {\n        recreateComparison();\n    });\n\n    model.on('change:mousemove', function() {\n        recreateComparison();\n    });\n\n    \/\/ Initialize the maps\n    initializeMaps();\n\n    \/\/ Cleanup function\n    return () => {\n        if (compare) {\n            compare.remove();\n        }\n        if (beforeMap) {\n            beforeMap.remove();\n        }\n        if (afterMap) {\n            afterMap.remove();\n        }\n    };\n}\n\nexport default { render };", "_js_calls": [{"id": 0, "method": "setSlider", "args": [0.25], "kwargs": {}}, {"id": 1, "method": "setSlider", "args": [0.75], "kwargs": {}}, {"id": 2, "method": "setSlider", "args": [0.5], "kwargs": {}}, {"id": 3, "method": "setOrientation", "args": ["horizontal"], "kwargs": {}}, {"id": 4, "method": "setOrientation", "args": ["vertical"], "kwargs": {}}, {"id": 5, "method": "setMousemove", "args": [false], "kwargs": {}}, {"id": 6, "method": "setMousemove", "args": [true], "kwargs": {}}, {"id": 7, "method": "updateLeftMap", "args": [{"style": "https:\/\/tiles.stadiamaps.com\/styles\/outdoors.json"}], "kwargs": {}}, {"id": 8, "method": "updateRightMap", "args": [{"style": "https:\/\/tiles.stadiamaps.com\/styles\/alidade_satellite.json"}], "kwargs": {}}, {"id": 9, "method": "flyTo", "args": [{"center": [40.7128, -74.006], "zoom": 13}], "kwargs": {}}, {"id": 10, "method": "flyTo", "args": [{"center": [51.5074, -0.1278], "zoom": 12}], "kwargs": {}}, {"id": 11, "method": "setSyncOptions", "args": [{"center": false, "zoom": true, "bearing": true, "pitch": true}], "kwargs": {}}, {"id": 12, "method": "setSyncOptions", "args": [{"center": true, "zoom": true, "bearing": true, "pitch": true}], "kwargs": {}}], "_js_events": [], "_model_module": "anywidget", "_model_module_version": "~0.9.*", "_model_name": "AnyModel", "_view_count": null, "_view_module": "anywidget", "_view_module_version": "~0.9.*", "_view_name": "AnyView", "backend": "maplibre", "height": "600px", "layout": "IPY_MODEL_26f7c7896f6145c9b377e6b65088989d", "left_map_config": {"style": "https:\/\/tiles.stadiamaps.com\/styles\/outdoors.json"}, "mousemove": true, "orientation": "vertical", "right_map_config": {"style": "https:\/\/tiles.stadiamaps.com\/styles\/alidade_satellite.json"}, "slider_position": 0.5, "sync_bearing": true, "sync_center": true, "sync_pitch": true, "sync_zoom": true, "tabbable": null, "tooltip": null, "width": "100%"}}, "e790b6dedb1344788d3ae58fdedc2408": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "7ccbb4713a57456984b9771622aaed34": {"model_name": "AnyModel", "model_module": "anywidget", "model_module_version": "~0.9.*", "state": {"_anywidget_id": "anymap.anymap.MapCompare", "_dom_classes": [], "_esm": "\/\/ Load MapLibre GL JS and Compare library\nlet maplibreLoaded = false;\nlet compareLoaded = false;\n\nfunction loadScript(src) {\n    return new Promise((resolve, reject) => {\n        const script = document.createElement('script');\n        script.src = src;\n        script.onload = resolve;\n        script.onerror = reject;\n        document.head.appendChild(script);\n    });\n}\n\nfunction loadCSS(href) {\n    return new Promise((resolve, reject) => {\n        const link = document.createElement('link');\n        link.rel = 'stylesheet';\n        link.href = href;\n        link.onload = resolve;\n        link.onerror = reject;\n        document.head.appendChild(link);\n    });\n}\n\n\/\/ Load dependencies if not already loaded\nasync function loadDependencies() {\n    if (!window.maplibregl && !maplibreLoaded) {\n        await Promise.all([\n            loadScript('https:\/\/unpkg.com\/maplibre-gl@5.6.1\/dist\/maplibre-gl.js'),\n            loadCSS('https:\/\/unpkg.com\/maplibre-gl@5.6.1\/dist\/maplibre-gl.css')\n        ]);\n        maplibreLoaded = true;\n    }\n\n    if (!window.maplibregl?.Compare && !compareLoaded) {\n        await Promise.all([\n            loadScript('https:\/\/unpkg.com\/@maplibre\/maplibre-gl-compare@0.5.0\/dist\/maplibre-gl-compare.js'),\n            loadCSS('https:\/\/unpkg.com\/@maplibre\/maplibre-gl-compare@0.5.0\/dist\/maplibre-gl-compare.css')\n        ]);\n        compareLoaded = true;\n    }\n}\n\nasync function render({ model, el }) {\n    \/\/ Clear any existing content\n    el.innerHTML = '';\n\n    \/\/ Load dependencies first\n    await loadDependencies();\n\n    \/\/ Create container structure\n    const container = document.createElement('div');\n    container.style.width = model.get('width');\n    container.style.height = model.get('height');\n    container.style.position = 'relative';\n    container.id = 'comparison-container-' + Math.random().toString(36).substr(2, 9);\n\n    const beforeContainer = document.createElement('div');\n    beforeContainer.id = 'before-' + Math.random().toString(36).substr(2, 9);\n    beforeContainer.style.position = 'absolute';\n    beforeContainer.style.top = '0';\n    beforeContainer.style.bottom = '0';\n    beforeContainer.style.width = '100%';\n    beforeContainer.style.height = '100%';\n\n    const afterContainer = document.createElement('div');\n    afterContainer.id = 'after-' + Math.random().toString(36).substr(2, 9);\n    afterContainer.style.position = 'absolute';\n    afterContainer.style.top = '0';\n    afterContainer.style.bottom = '0';\n    afterContainer.style.width = '100%';\n    afterContainer.style.height = '100%';\n\n    container.appendChild(beforeContainer);\n    container.appendChild(afterContainer);\n    el.appendChild(container);\n\n    \/\/ Initialize maps\n    let beforeMap, afterMap, compare;\n    let isSettingSliderProgrammatically = false;\n\n    function initializeMaps() {\n        const leftMapConfig = model.get('left_map_config');\n        const rightMapConfig = model.get('right_map_config');\n\n        \/\/ Create before map\n        beforeMap = new maplibregl.Map({\n            container: beforeContainer.id,\n            style: leftMapConfig.style || 'https:\/\/demotiles.maplibre.org\/style.json',\n            center: leftMapConfig.center ? [leftMapConfig.center[1], leftMapConfig.center[0]] : [0, 0],\n            zoom: leftMapConfig.zoom || 2,\n            bearing: leftMapConfig.bearing || 0,\n            pitch: leftMapConfig.pitch || 0,\n            antialias: leftMapConfig.antialias !== undefined ? leftMapConfig.antialias : true\n        });\n\n        \/\/ Create after map\n        afterMap = new maplibregl.Map({\n            container: afterContainer.id,\n            style: rightMapConfig.style || 'https:\/\/demotiles.maplibre.org\/style.json',\n            center: rightMapConfig.center ? [rightMapConfig.center[1], rightMapConfig.center[0]] : [0, 0],\n            zoom: rightMapConfig.zoom || 2,\n            bearing: rightMapConfig.bearing || 0,\n            pitch: rightMapConfig.pitch || 0,\n            antialias: rightMapConfig.antialias !== undefined ? rightMapConfig.antialias : true\n        });\n\n        \/\/ Wait for both maps to load\n        Promise.all([\n            new Promise(resolve => beforeMap.on('load', resolve)),\n            new Promise(resolve => afterMap.on('load', resolve))\n        ]).then(() => {\n            \/\/ Initialize comparison\n            compare = new maplibregl.Compare(beforeMap, afterMap, '#' + container.id, {\n                orientation: model.get('orientation') || 'vertical',\n                mousemove: model.get('mousemove') || false\n            });\n\n            \/\/ Wait for the compare widget to be fully rendered before setting slider position\n            const sliderPosition = model.get('slider_position');\n            if (sliderPosition !== undefined && sliderPosition !== 0.5) {\n                isSettingSliderProgrammatically = true;\n\n                \/\/ Convert percentage to pixels\n                const containerRect = container.getBoundingClientRect();\n                const isVertical = (model.get('orientation') || 'vertical') === 'vertical';\n                const containerSize = isVertical ? containerRect.width : containerRect.height;\n                const pixelPosition = sliderPosition * containerSize;\n\n                \/\/ Set slider position with retry logic\n                setTimeout(() => {\n                    compare.setSlider(pixelPosition);\n                    setTimeout(() => {\n                        isSettingSliderProgrammatically = false;\n                    }, 100);\n                }, 100);\n            } else {\n                setTimeout(() => {\n                    isSettingSliderProgrammatically = false;\n                }, 100);\n            }\n\n            \/\/ Set up event listeners\n            compare.on('slideend', function(event) {\n                if (!isSettingSliderProgrammatically) {\n                    \/\/ Convert pixels to percentage\n                    const containerRect = container.getBoundingClientRect();\n                    const isVertical = (model.get('orientation') || 'vertical') === 'vertical';\n                    const containerSize = isVertical ? containerRect.width : containerRect.height;\n                    const percentagePosition = containerSize > 0 ? event.currentPosition \/ containerSize : 0.5;\n\n                    model.set('slider_position', percentagePosition);\n                    const events = model.get('_js_events') || [];\n                    events.push({\n                        type: 'slideend',\n                        position: percentagePosition\n                    });\n                    model.set('_js_events', events);\n                    model.save_changes();\n                }\n            });\n\n            \/\/ Set up JavaScript method handlers\n            setupMethodHandlers();\n\n            \/\/ Note: MapLibre Compare plugin handles basic map synchronization internally\n            \/\/ Custom synchronization disabled to prevent performance issues\n        });\n    }\n\n    function setupSynchronization() {\n        const syncCenter = model.get('sync_center');\n        const syncZoom = model.get('sync_zoom');\n        const syncBearing = model.get('sync_bearing');\n        const syncPitch = model.get('sync_pitch');\n\n        if (syncCenter || syncZoom || syncBearing || syncPitch) {\n            let isSync = false;\n\n            function syncMaps(sourceMap, targetMap) {\n                if (isSync) return; \/\/ Prevent infinite loops\n                isSync = true;\n\n                try {\n                    if (syncCenter) {\n                        targetMap.setCenter(sourceMap.getCenter());\n                    }\n                    if (syncZoom) {\n                        targetMap.setZoom(sourceMap.getZoom());\n                    }\n                    if (syncBearing) {\n                        targetMap.setBearing(sourceMap.getBearing());\n                    }\n                    if (syncPitch) {\n                        targetMap.setPitch(sourceMap.getPitch());\n                    }\n                } finally {\n                    \/\/ Use requestAnimationFrame to reset flag after current event loop\n                    requestAnimationFrame(() => {\n                        isSync = false;\n                    });\n                }\n            }\n\n            \/\/ Use 'moveend' instead of 'move' to avoid interfering with scroll zoom\n            beforeMap.on('moveend', () => syncMaps(beforeMap, afterMap));\n            afterMap.on('moveend', () => syncMaps(afterMap, beforeMap));\n        }\n    }\n\n    function setupLightweightSynchronization() {\n        \/\/ The MapLibre Compare plugin handles most synchronization automatically\n        \/\/ We only add minimal custom sync for specific cases if explicitly requested\n        const syncCenter = model.get('sync_center');\n        const syncZoom = model.get('sync_zoom');\n        const syncBearing = model.get('sync_bearing');\n        const syncPitch = model.get('sync_pitch');\n\n        \/\/ Only add custom sync if any are explicitly disabled (Compare plugin handles the basic sync)\n        if (!syncCenter || !syncZoom || !syncBearing || !syncPitch) {\n            console.log('Custom synchronization disabled for some properties');\n            \/\/ Note: When sync is disabled, maps can operate independently\n            \/\/ The Compare plugin's built-in sync will still work for basic comparison\n        }\n    }\n\n    function setupMethodHandlers() {\n        \/\/ Handle JavaScript method calls from Python\n        model.on('change:_js_calls', function() {\n            const calls = model.get('_js_calls') || [];\n            calls.forEach(call => {\n                handleJavaScriptCall(call);\n            });\n        });\n    }\n\n    function handleJavaScriptCall(call) {\n        const { method, args, kwargs } = call;\n\n        try {\n            switch (method) {\n                case 'setSlider':\n                    if (compare) {\n                        const position = args[0]; \/\/ This is a percentage (0-1)\n                        isSettingSliderProgrammatically = true;\n\n                        \/\/ Convert percentage to pixels\n                        const containerRect = container.getBoundingClientRect();\n                        const isVertical = (model.get('orientation') || 'vertical') === 'vertical';\n                        const containerSize = isVertical ? containerRect.width : containerRect.height;\n                        const pixelPosition = position * containerSize;\n\n                        setTimeout(() => {\n                            compare.setSlider(pixelPosition);\n                            setTimeout(() => {\n                                isSettingSliderProgrammatically = false;\n                            }, 100);\n                        }, 50);\n                        model.set('slider_position', position);\n                    }\n                    break;\n\n                case 'setOrientation':\n                    if (compare) {\n                        const orientation = args[0];\n                        \/\/ Note: MapLibre Compare doesn't support dynamic orientation change\n                        \/\/ This would require recreating the comparison\n                        model.set('orientation', orientation);\n                        recreateComparison();\n                    }\n                    break;\n\n                case 'setMousemove':\n                    if (compare) {\n                        const mousemove = args[0];\n                        model.set('mousemove', mousemove);\n                        recreateComparison();\n                    }\n                    break;\n\n                case 'setSyncOptions':\n                    const syncOptions = args[0];\n                    if (syncOptions) {\n                        model.set('sync_center', syncOptions.center);\n                        model.set('sync_zoom', syncOptions.zoom);\n                        model.set('sync_bearing', syncOptions.bearing);\n                        model.set('sync_pitch', syncOptions.pitch);\n                        setupSynchronization();\n                    }\n                    break;\n\n                case 'updateLeftMap':\n                    const leftConfig = args[0];\n                    if (beforeMap && leftConfig) {\n                        if (leftConfig.style) {\n                            beforeMap.setStyle(leftConfig.style);\n                        }\n                        if (leftConfig.center) {\n                            beforeMap.setCenter([leftConfig.center[1], leftConfig.center[0]]);\n                        }\n                        if (leftConfig.zoom !== undefined) {\n                            beforeMap.setZoom(leftConfig.zoom);\n                        }\n                        if (leftConfig.bearing !== undefined) {\n                            beforeMap.setBearing(leftConfig.bearing);\n                        }\n                        if (leftConfig.pitch !== undefined) {\n                            beforeMap.setPitch(leftConfig.pitch);\n                        }\n                        model.set('left_map_config', leftConfig);\n                    }\n                    break;\n\n                case 'updateRightMap':\n                    const rightConfig = args[0];\n                    if (afterMap && rightConfig) {\n                        if (rightConfig.style) {\n                            afterMap.setStyle(rightConfig.style);\n                        }\n                        if (rightConfig.center) {\n                            afterMap.setCenter([rightConfig.center[1], rightConfig.center[0]]);\n                        }\n                        if (rightConfig.zoom !== undefined) {\n                            afterMap.setZoom(rightConfig.zoom);\n                        }\n                        if (rightConfig.bearing !== undefined) {\n                            afterMap.setBearing(rightConfig.bearing);\n                        }\n                        if (rightConfig.pitch !== undefined) {\n                            afterMap.setPitch(rightConfig.pitch);\n                        }\n                        model.set('right_map_config', rightConfig);\n                    }\n                    break;\n\n                case 'flyTo':\n                    const options = args[0];\n                    if (beforeMap && afterMap && options) {\n                        const flyToOptions = {\n                            center: [options.center[1], options.center[0]],\n                            zoom: options.zoom,\n                            bearing: options.bearing,\n                            pitch: options.pitch,\n                            essential: true\n                        };\n                        beforeMap.flyTo(flyToOptions);\n                        afterMap.flyTo(flyToOptions);\n                    }\n                    break;\n\n                default:\n                    console.warn(`Unknown method: ${method}`);\n            }\n        } catch (error) {\n            console.error(`Error executing method ${method}:`, error);\n        }\n    }\n\n    function recreateComparison() {\n        if (compare) {\n            compare.remove();\n        }\n\n        \/\/ Recreate comparison with new options\n        compare = new maplibregl.Compare(beforeMap, afterMap, '#' + container.id, {\n            orientation: model.get('orientation') || 'vertical',\n            mousemove: model.get('mousemove') || false\n        });\n\n        \/\/ Restore slider position with delay\n        const sliderPosition = model.get('slider_position');\n        if (sliderPosition !== undefined) {\n            isSettingSliderProgrammatically = true;\n\n            \/\/ Convert percentage to pixels\n            const containerRect = container.getBoundingClientRect();\n            const isVertical = (model.get('orientation') || 'vertical') === 'vertical';\n            const containerSize = isVertical ? containerRect.width : containerRect.height;\n            const pixelPosition = sliderPosition * containerSize;\n\n            setTimeout(() => {\n                compare.setSlider(pixelPosition);\n                setTimeout(() => {\n                    isSettingSliderProgrammatically = false;\n                }, 100);\n            }, 100);\n        }\n\n        \/\/ Re-setup event listeners\n        compare.on('slideend', function(event) {\n            if (!isSettingSliderProgrammatically) {\n                \/\/ Convert pixels to percentage\n                const containerRect = container.getBoundingClientRect();\n                const isVertical = (model.get('orientation') || 'vertical') === 'vertical';\n                const containerSize = isVertical ? containerRect.width : containerRect.height;\n                const percentagePosition = containerSize > 0 ? event.currentPosition \/ containerSize : 0.5;\n\n                model.set('slider_position', percentagePosition);\n                const events = model.get('_js_events') || [];\n                events.push({\n                    type: 'slideend',\n                    position: percentagePosition\n                });\n                model.set('_js_events', events);\n                model.save_changes();\n            }\n        });\n    }\n\n    \/\/ Handle model changes\n    model.on('change:width', function() {\n        container.style.width = model.get('width');\n    });\n\n    model.on('change:height', function() {\n        container.style.height = model.get('height');\n    });\n\n    model.on('change:left_map_config', function() {\n        const leftConfig = model.get('left_map_config');\n        if (beforeMap && leftConfig) {\n            if (leftConfig.style) {\n                beforeMap.setStyle(leftConfig.style);\n            }\n            if (leftConfig.center) {\n                beforeMap.setCenter([leftConfig.center[1], leftConfig.center[0]]);\n            }\n            if (leftConfig.zoom !== undefined) {\n                beforeMap.setZoom(leftConfig.zoom);\n            }\n        }\n    });\n\n    model.on('change:right_map_config', function() {\n        const rightConfig = model.get('right_map_config');\n        if (afterMap && rightConfig) {\n            if (rightConfig.style) {\n                afterMap.setStyle(rightConfig.style);\n            }\n            if (rightConfig.center) {\n                afterMap.setCenter([rightConfig.center[1], rightConfig.center[0]]);\n            }\n            if (rightConfig.zoom !== undefined) {\n                afterMap.setZoom(rightConfig.zoom);\n            }\n        }\n    });\n\n    model.on('change:slider_position', function() {\n        if (compare && !isSettingSliderProgrammatically) {\n            const position = model.get('slider_position'); \/\/ percentage (0-1)\n            isSettingSliderProgrammatically = true;\n\n            \/\/ Convert percentage to pixels\n            const containerRect = container.getBoundingClientRect();\n            const isVertical = (model.get('orientation') || 'vertical') === 'vertical';\n            const containerSize = isVertical ? containerRect.width : containerRect.height;\n            const pixelPosition = position * containerSize;\n\n            setTimeout(() => {\n                compare.setSlider(pixelPosition);\n                setTimeout(() => {\n                    isSettingSliderProgrammatically = false;\n                }, 100);\n            }, 50);\n        }\n    });\n\n    model.on('change:orientation', function() {\n        recreateComparison();\n    });\n\n    model.on('change:mousemove', function() {\n        recreateComparison();\n    });\n\n    \/\/ Initialize the maps\n    initializeMaps();\n\n    \/\/ Cleanup function\n    return () => {\n        if (compare) {\n            compare.remove();\n        }\n        if (beforeMap) {\n            beforeMap.remove();\n        }\n        if (afterMap) {\n            afterMap.remove();\n        }\n    };\n}\n\nexport default { render };", "_js_calls": [], "_js_events": [], "_model_module": "anywidget", "_model_module_version": "~0.9.*", "_model_name": "AnyModel", "_view_count": null, "_view_module": "anywidget", "_view_module_version": "~0.9.*", "_view_name": "AnyView", "backend": "maplibre", "height": "400px", "layout": "IPY_MODEL_e790b6dedb1344788d3ae58fdedc2408", "left_map_config": {"center": [51.5074, -0.1278], "zoom": 10, "style": "https:\/\/demotiles.maplibre.org\/style.json"}, "mousemove": false, "orientation": "horizontal", "right_map_config": {"center": [51.5074, -0.1278], "zoom": 10, "style": "https:\/\/tiles.stadiamaps.com\/styles\/alidade_smooth_dark.json"}, "slider_position": 0.5, "sync_bearing": true, "sync_center": true, "sync_pitch": true, "sync_zoom": true, "tabbable": null, "tooltip": null, "width": "100%"}}}, "version_major": 2, "version_minor": 0}
 </script>
 
         <style>
@@ -2915,7 +2320,7 @@ print("Camera reset to home position!")</div>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 3, 2025 16:11:23 UTC"><span class="timeago" datetime="2025-07-03T16:11:23+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 3, 2025 16:11:23 UTC">2025-07-03</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 4, 2025 03:56:49 UTC"><span class="timeago" datetime="2025-07-04T03:56:49+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 4, 2025 03:56:49 UTC">2025-07-04</span>
   </span>
 
     
@@ -2925,7 +2330,7 @@ print("Camera reset to home position!")</div>
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 2, 2025 04:51:33 UTC"><span class="timeago" datetime="2025-07-02T04:51:33+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 2, 2025 04:51:33 UTC">2025-07-02</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 4, 2025 03:56:49 UTC"><span class="timeago" datetime="2025-07-04T03:56:49+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 4, 2025 03:56:49 UTC">2025-07-04</span>
   </span>
 
     
