@@ -10,7 +10,9 @@ from .base import MapWidget
 # Load KeplerGL-specific js and css
 try:
     with open(
-        pathlib.Path(__file__).parent / "static" / "keplergl_widget.js", "r"
+        pathlib.Path(__file__).parent / "static" / "keplergl_widget.js",
+        "r",
+        encoding="utf-8",
     ) as f:
         _esm_keplergl = f.read()
 except FileNotFoundError:
@@ -18,7 +20,9 @@ except FileNotFoundError:
 
 try:
     with open(
-        pathlib.Path(__file__).parent / "static" / "keplergl_widget.css", "r"
+        pathlib.Path(__file__).parent / "static" / "keplergl_widget.css",
+        "r",
+        encoding="utf-8",
     ) as f:
         _css_keplergl = f.read()
 except FileNotFoundError:
