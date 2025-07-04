@@ -1,6 +1,15 @@
 // Leaflet widget implementation for anywidget
 import L from "https://cdn.skypack.dev/leaflet@1.9.4";
 
+if (!document.querySelector(`link[href*="leaflet.css"]`)) {
+    const cssLink = document.createElement("link");
+    cssLink.rel = "stylesheet";
+    cssLink.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+    cssLink.integrity = 'sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=';
+    cssLink.crossOrigin = '';
+    document.head.appendChild(cssLink);
+}
+
 function render({ model, el }) {
     // Create unique ID for this widget instance
     const widgetId = `leaflet-map-${Math.random().toString(36).substr(2, 9)}`;
