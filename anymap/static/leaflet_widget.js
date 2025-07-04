@@ -228,7 +228,13 @@ function addLayerToMap(map, el, layerId, layerConfig) {
             }
 
             if (layerConfig.tooltip) {
-                layer.bindTooltip(layerConfig.tooltip);
+                if (layerConfig.tooltip_options){
+                    layer.bindTooltip(layerConfig.tooltip,
+                        layerConfig.tooltip_options
+                    );
+                }else{
+                    layer.bindTooltip(layerConfig.tooltip);
+                }
             }
 
             if (layerConfig.icon) {

@@ -93,6 +93,7 @@ class LeafletMap(MapWidget):
         latlng: List[float],
         popup: str = "",
         tooltip: str = "",
+        tooltip_options: Optional[Dict] = None,
         icon: Optional[Dict[str, Any]] = None,
         draggable: bool = False,
         **options,
@@ -103,6 +104,7 @@ class LeafletMap(MapWidget):
             latlng: Marker position as [latitude, longitude]
             popup: Popup text
             tooltip: Tooltip text
+            tooltip_options: Tooltip options
             icon: Icon configuration
             draggable: Whether the marker is draggable
             **options: Additional marker options
@@ -117,6 +119,7 @@ class LeafletMap(MapWidget):
             "latlng": latlng,
             "popup": popup,
             "tooltip": tooltip,
+            "tooltip_options": tooltip_options,
             "draggable": draggable,
             **options,
         }
