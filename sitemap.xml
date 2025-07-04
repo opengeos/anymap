@@ -9,11 +9,27 @@
          <lastmod>2025-07-04</lastmod>
     </url>
     <url>
+         <loc>https://anymap.gishub.org/base/</loc>
+         <lastmod>2025-07-04</lastmod>
+    </url>
+    <url>
+         <loc>https://anymap.gishub.org/cesium/</loc>
+         <lastmod>2025-07-04</lastmod>
+    </url>
+    <url>
          <loc>https://anymap.gishub.org/changelog/</loc>
          <lastmod>2025-07-04</lastmod>
     </url>
     <url>
+         <loc>https://anymap.gishub.org/compare/</loc>
+         <lastmod>2025-07-04</lastmod>
+    </url>
+    <url>
          <loc>https://anymap.gishub.org/contributing/</loc>
+         <lastmod>2025-07-04</lastmod>
+    </url>
+    <url>
+         <loc>https://anymap.gishub.org/deckgl/</loc>
          <lastmod>2025-07-04</lastmod>
     </url>
     <url>
@@ -22,6 +38,18 @@
     </url>
     <url>
          <loc>https://anymap.gishub.org/installation/</loc>
+         <lastmod>2025-07-04</lastmod>
+    </url>
+    <url>
+         <loc>https://anymap.gishub.org/mapbox/</loc>
+         <lastmod>2025-07-04</lastmod>
+    </url>
+    <url>
+         <loc>https://anymap.gishub.org/maplibre/</loc>
+         <lastmod>2025-07-04</lastmod>
+    </url>
+    <url>
+         <loc>https://anymap.gishub.org/potree/</loc>
          <lastmod>2025-07-04</lastmod>
     </url>
     <url>
