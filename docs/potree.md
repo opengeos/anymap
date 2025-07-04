@@ -1,0 +1,3 @@
+# potree module
+
+::: anymap.potree
