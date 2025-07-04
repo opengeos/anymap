@@ -41,6 +41,10 @@
          <lastmod>2025-07-04</lastmod>
     </url>
     <url>
+         <loc>https://anymap.gishub.org/leaflet/</loc>
+         <lastmod>2025-07-04</lastmod>
+    </url>
+    <url>
          <loc>https://anymap.gishub.org/mapbox/</loc>
          <lastmod>2025-07-04</lastmod>
     </url>
@@ -70,6 +74,10 @@
     </url>
     <url>
          <loc>https://anymap.gishub.org/examples/deckgl_example/</loc>
+         <lastmod>2025-07-04</lastmod>
+    </url>
+    <url>
+         <loc>https://anymap.gishub.org/examples/leaflet_example/</loc>
          <lastmod>2025-07-04</lastmod>
     </url>
     <url>
