@@ -53,6 +53,10 @@
          <lastmod>2025-07-04</lastmod>
     </url>
     <url>
+         <loc>https://anymap.dev/openlayers/</loc>
+         <lastmod>2025-07-04</lastmod>
+    </url>
+    <url>
          <loc>https://anymap.dev/potree/</loc>
          <lastmod>2025-07-04</lastmod>
     </url>
@@ -90,6 +94,10 @@
     </url>
     <url>
          <loc>https://anymap.dev/examples/maplibre_example/</loc>
+         <lastmod>2025-07-04</lastmod>
+    </url>
+    <url>
+         <loc>https://anymap.dev/examples/openlayers_example/</loc>
          <lastmod>2025-07-04</lastmod>
     </url>
     <url>
