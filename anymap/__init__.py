@@ -11,6 +11,7 @@ from .cesium import CesiumMap
 from .potree import PotreeMap
 from .deckgl import DeckGLMap
 from .leaflet import LeafletMap
+from .openlayers import OpenLayersMap
 from .compare import MapCompare
 
 __all__ = [
@@ -21,5 +22,6 @@ __all__ = [
     "PotreeMap",
     "DeckGLMap",
     "LeafletMap",
+    "OpenLayersMap",
     "MapCompare",
 ]
