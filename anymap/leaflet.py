@@ -93,6 +93,7 @@ class LeafletMap(MapWidget):
         latlng: List[float],
         popup: str = "",
         tooltip: str = "",
+        tooltip_options: Optional[Dict] = None,
         icon: Optional[Dict[str, Any]] = None,
         draggable: bool = False,
         **options,
@@ -103,6 +104,7 @@ class LeafletMap(MapWidget):
             latlng: Marker position as [latitude, longitude]
             popup: Popup text
             tooltip: Tooltip text
+            tooltip_options: Tooltip options
             icon: Icon configuration
             draggable: Whether the marker is draggable
             **options: Additional marker options
@@ -117,6 +119,7 @@ class LeafletMap(MapWidget):
             "latlng": latlng,
             "popup": popup,
             "tooltip": tooltip,
+            "tooltip_options": tooltip_options,
             "draggable": draggable,
             **options,
         }
@@ -134,6 +137,8 @@ class LeafletMap(MapWidget):
         color: str = "blue",
         fillColor: str = "blue",
         fillOpacity: float = 0.2,
+        tooltip: str = "",
+        tooltip_options: Optional[Dict] = None,
         **options,
     ) -> str:
         """Add a circle to the map.
@@ -144,6 +149,8 @@ class LeafletMap(MapWidget):
             color: Circle stroke color
             fillColor: Circle fill color
             fillOpacity: Circle fill opacity
+            tooltip: Tooltip text
+            tooltip_options: Tooltip options
             **options: Additional circle options
 
         Returns:
@@ -158,6 +165,8 @@ class LeafletMap(MapWidget):
             "color": color,
             "fillColor": fillColor,
             "fillOpacity": fillOpacity,
+            "tooltip": tooltip,
+            "tooltip_options": tooltip_options,
             **options,
         }
 
@@ -170,6 +179,8 @@ class LeafletMap(MapWidget):
         color: str = "blue",
         fillColor: str = "blue",
         fillOpacity: float = 0.2,
+        tooltip: str = "",
+        tooltip_options: Optional[Dict] = None,
         **options,
     ) -> str:
         """Add a polygon to the map.
@@ -192,6 +203,8 @@ class LeafletMap(MapWidget):
             "color": color,
             "fillColor": fillColor,
             "fillOpacity": fillOpacity,
+            "tooltip": tooltip,
+            "tooltip_options": tooltip_options,
             **options,
         }
 
@@ -203,6 +216,8 @@ class LeafletMap(MapWidget):
         latlngs: List[List[float]],
         color: str = "blue",
         weight: float = 3,
+        tooltip: str = "",
+        tooltip_options: Optional[Dict] = None,
         **options,
     ) -> str:
         """Add a polyline to the map.
@@ -223,6 +238,8 @@ class LeafletMap(MapWidget):
             "latlngs": latlngs,
             "color": color,
             "weight": weight,
+            "tooltip": tooltip,
+            "tooltip_options": tooltip_options,
             **options,
         }
 
