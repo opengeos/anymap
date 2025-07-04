@@ -14,7 +14,7 @@
 **A Python package for creating interactive maps with anywidget and JavaScript mapping libraries**
 
 -   GitHub repo: <https://github.com/opengeos/anymap>
--   Documentation: <https://anymap.gishub.org>
+-   Documentation: <https://anymap.dev>
 -   PyPI: <https://pypi.org/project/anymap>
 -   Conda-forge: <https://anaconda.org/conda-forge/anymap>
 -   Free software: MIT License
