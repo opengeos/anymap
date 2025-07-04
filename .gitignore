@@ -6,6 +6,8 @@ private/
 CLAUDE.md
 todo.md
 private/
+docs/examples/*.html
+*.html
 
 # C extensions
 *.so
