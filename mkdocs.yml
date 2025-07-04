@@ -1,7 +1,7 @@
 site_name: anymap
 site_description: A Python package for creating interactive maps with anywidget and JavaScript mapping libraries
 site_author: giswqs
-site_url: https://anymap.gishub.org
+site_url: https://anymap.dev
 repo_url: https://github.com/opengeos/anymap
 
 copyright: "Copyright &copy; 2025 - 2025 Qiusheng Wu"
