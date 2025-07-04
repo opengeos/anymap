@@ -10,6 +10,7 @@ from .mapbox import MapboxMap
 from .cesium import CesiumMap
 from .potree import PotreeMap
 from .deckgl import DeckGLMap
+from .leaflet import LeafletMap
 from .compare import MapCompare
 
 __all__ = [
@@ -19,5 +20,6 @@ __all__ = [
     "CesiumMap",
     "PotreeMap",
     "DeckGLMap",
+    "LeafletMap",
     "MapCompare",
 ]
