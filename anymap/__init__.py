@@ -12,6 +12,7 @@ from .potree import PotreeMap
 from .deckgl import DeckGLMap
 from .leaflet import LeafletMap
 from .openlayers import OpenLayersMap
+from .keplergl import KeplerGLMap
 from .compare import MapCompare
 
 __all__ = [
@@ -23,5 +24,6 @@ __all__ = [
     "DeckGLMap",
     "LeafletMap",
     "OpenLayersMap",
+    "KeplerGLMap",
     "MapCompare",
 ]

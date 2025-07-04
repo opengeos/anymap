@@ -87,6 +87,7 @@ nav:
           - examples/openlayers_example.ipynb
           - examples/cesium_example.ipynb
           - examples/deckgl_example.ipynb
+          - examples/keplergl_example.ipynb
           - examples/potree_example.ipynb
     - API Reference:
           - anymap module: anymap.md
@@ -94,6 +95,7 @@ nav:
           - cesium module: cesium.md
           - compare module: compare.md
           - deckgl module: deckgl.md
+          - keplergl module: keplergl.md
           - leaflet module: leaflet.md
           - mapbox module: mapbox.md
           - maplibre module: maplibre.md
