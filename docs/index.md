@@ -210,8 +210,8 @@ python -m unittest tests.test_anymap -v
 -   ✅ Mapbox GL JS backend
 -   ✅ Leaflet backend
 -   ✅ OpenLayers backend
--   🔲 DeckGL backend
--   🔲 KeplerGL backend
+-   ✅ DeckGL backend
+-   ✅ KeplerGL backend
 -   🔲 Cesium backend
 -   🔲 Potree backend
 

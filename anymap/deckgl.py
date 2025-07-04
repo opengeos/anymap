@@ -1,44 +1,47 @@
-"""DeckGL implementation of the map widget for high-performance data visualization."""
+"""DeckGL implementation of the map widget that extends MapLibre."""
 
 import pathlib
 import traitlets
 from typing import Dict, List, Any, Optional, Union
+import json
 
-from .base import MapWidget
+from .maplibre import MapLibreMap
 
 # Load DeckGL-specific js and css
-with open(pathlib.Path(__file__).parent / "static" / "deck_widget.js", "r") as f:
-    _esm_deck = f.read()
+with open(
+    pathlib.Path(__file__).parent / "static" / "deckgl_widget.js", "r", encoding="utf-8"
+) as f:
+    _esm_deckgl = f.read()
 
-with open(pathlib.Path(__file__).parent / "static" / "deck_widget.css", "r") as f:
-    _css_deck = f.read()
+with open(
+    pathlib.Path(__file__).parent / "static" / "deckgl_widget.css",
+    "r",
+    encoding="utf-8",
+) as f:
+    _css_deckgl = f.read()
 
 
-class DeckGLMap(MapWidget):
-    """DeckGL implementation of the map widget for high-performance data visualization."""
+class DeckGLMap(MapLibreMap):
+    """DeckGL implementation of the map widget that extends MapLibre."""
 
     # DeckGL-specific traits
-    controller = traitlets.Bool(True).tag(sync=True)
-    bearing = traitlets.Float(0.0).tag(sync=True)
-    pitch = traitlets.Float(0.0).tag(sync=True)
-    max_zoom = traitlets.Float(20.0).tag(sync=True)
-    min_zoom = traitlets.Float(0.0).tag(sync=True)
+    deckgl_layers = traitlets.List([]).tag(sync=True)
+    controller_options = traitlets.Dict({}).tag(sync=True)
 
-    # Define the JavaScript module path
-    _esm = _esm_deck
-    _css = _css_deck
+    # Override the JavaScript module
+    _esm = _esm_deckgl
+    _css = _css_deckgl
 
     def __init__(
         self,
         center: List[float] = [0.0, 0.0],
         zoom: float = 2.0,
+        map_style: str = "https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json",
         width: str = "100%",
         height: str = "600px",
         bearing: float = 0.0,
         pitch: float = 0.0,
-        controller: bool = True,
-        max_zoom: float = 20.0,
-        min_zoom: float = 0.0,
+        controller_options: Dict[str, Any] = None,
         **kwargs,
     ):
         """Initialize DeckGL map widget.
@@ -46,456 +49,356 @@ class DeckGLMap(MapWidget):
         Args:
             center: Map center as [latitude, longitude]
             zoom: Initial zoom level
+            map_style: MapLibre style URL or style object
             width: Widget width
             height: Widget height
             bearing: Map bearing (rotation) in degrees
             pitch: Map pitch (tilt) in degrees
-            controller: Enable map controls (pan, zoom, rotate)
-            max_zoom: Maximum zoom level
-            min_zoom: Minimum zoom level
+            controller_options: DeckGL controller options
         """
         super().__init__(
             center=center,
             zoom=zoom,
+            map_style=map_style,
             width=width,
             height=height,
             bearing=bearing,
             pitch=pitch,
-            controller=controller,
-            max_zoom=max_zoom,
-            min_zoom=min_zoom,
             **kwargs,
         )
 
-    def set_bearing(self, bearing: float) -> None:
-        """Set the map bearing (rotation)."""
-        self.bearing = bearing
+        if controller_options is None:
+            controller_options = {"doubleClickZoom": False}
+        self.controller_options = controller_options
 
-    def set_pitch(self, pitch: float) -> None:
-        """Set the map pitch (tilt)."""
-        self.pitch = pitch
+    def add_deckgl_layer(self, layer_config: Dict[str, Any]) -> None:
+        """Add a DeckGL layer to the map.
 
-    def set_view_state(
-        self,
-        longitude: Optional[float] = None,
-        latitude: Optional[float] = None,
-        zoom: Optional[float] = None,
-        bearing: Optional[float] = None,
-        pitch: Optional[float] = None,
-    ) -> None:
-        """Set the view state of the map."""
-        view_state = {}
-        if longitude is not None:
-            view_state["longitude"] = longitude
-        if latitude is not None:
-            view_state["latitude"] = latitude
-        if zoom is not None:
-            view_state["zoom"] = zoom
-        if bearing is not None:
-            view_state["bearing"] = bearing
-        if pitch is not None:
-            view_state["pitch"] = pitch
+        Args:
+            layer_config: DeckGL layer configuration dictionary
+        """
+        current_layers = list(self.deckgl_layers)
+        current_layers.append(layer_config)
+        self.deckgl_layers = current_layers
 
-        self.call_js_method("setViewState", view_state)
+    def remove_deckgl_layer(self, layer_id: str) -> None:
+        """Remove a DeckGL layer from the map.
 
-    def add_scatterplot_layer(
-        self,
-        layer_id: str,
-        data: List[Dict[str, Any]],
-        get_position: str = "position",
-        get_radius: Union[str, int, float] = 100,
-        get_color: Union[str, List[int]] = [255, 0, 0, 255],
-        radius_scale: float = 1.0,
-        radius_min_pixels: int = 1,
-        radius_max_pixels: int = 100,
-        **kwargs,
-    ) -> None:
-        """Add a scatterplot layer to the map."""
-        layer_config = {
-            "type": "ScatterplotLayer",
-            "data": data,
-            "getPosition": get_position,
-            "getRadius": get_radius,
-            "getFillColor": get_color,
-            "radiusScale": radius_scale,
-            "radiusMinPixels": radius_min_pixels,
-            "radiusMaxPixels": radius_max_pixels,
-            **kwargs,
-        }
-        self.add_layer(layer_id, layer_config)
+        Args:
+            layer_id: ID of the layer to remove
+        """
+        current_layers = [
+            layer for layer in self.deckgl_layers if layer.get("id") != layer_id
+        ]
+        self.deckgl_layers = current_layers
 
-    def add_line_layer(
-        self,
-        layer_id: str,
-        data: List[Dict[str, Any]],
-        get_source_position: str = "sourcePosition",
-        get_target_position: str = "targetPosition",
-        get_color: Union[str, List[int]] = [0, 255, 0, 255],
-        get_width: Union[str, int, float] = 1,
-        width_scale: float = 1.0,
-        width_min_pixels: int = 1,
-        width_max_pixels: int = 10,
-        **kwargs,
-    ) -> None:
-        """Add a line layer to the map."""
-        layer_config = {
-            "type": "LineLayer",
-            "data": data,
-            "getSourcePosition": get_source_position,
-            "getTargetPosition": get_target_position,
-            "getColor": get_color,
-            "getWidth": get_width,
-            "widthScale": width_scale,
-            "widthMinPixels": width_min_pixels,
-            "widthMaxPixels": width_max_pixels,
-            **kwargs,
-        }
-        self.add_layer(layer_id, layer_config)
-
-    def add_arc_layer(
-        self,
-        layer_id: str,
-        data: List[Dict[str, Any]],
-        get_source_position: str = "sourcePosition",
-        get_target_position: str = "targetPosition",
-        get_source_color: Union[str, List[int]] = [255, 0, 0, 255],
-        get_target_color: Union[str, List[int]] = [0, 255, 0, 255],
-        get_width: Union[str, int, float] = 1,
-        width_scale: float = 1.0,
-        width_min_pixels: int = 1,
-        width_max_pixels: int = 10,
-        **kwargs,
-    ) -> None:
-        """Add an arc layer to the map."""
-        layer_config = {
-            "type": "ArcLayer",
-            "data": data,
-            "getSourcePosition": get_source_position,
-            "getTargetPosition": get_target_position,
-            "getSourceColor": get_source_color,
-            "getTargetColor": get_target_color,
-            "getWidth": get_width,
-            "widthScale": width_scale,
-            "widthMinPixels": width_min_pixels,
-            "widthMaxPixels": width_max_pixels,
-            **kwargs,
-        }
-        self.add_layer(layer_id, layer_config)
-
-    def add_path_layer(
-        self,
-        layer_id: str,
-        data: List[Dict[str, Any]],
-        get_path: str = "path",
-        get_color: Union[str, List[int]] = [255, 0, 0, 255],
-        get_width: Union[str, int, float] = 1,
-        width_scale: float = 1.0,
-        width_min_pixels: int = 1,
-        width_max_pixels: int = 10,
-        **kwargs,
-    ) -> None:
-        """Add a path layer to the map."""
-        layer_config = {
-            "type": "PathLayer",
-            "data": data,
-            "getPath": get_path,
-            "getColor": get_color,
-            "getWidth": get_width,
-            "widthScale": width_scale,
-            "widthMinPixels": width_min_pixels,
-            "widthMaxPixels": width_max_pixels,
-            **kwargs,
-        }
-        self.add_layer(layer_id, layer_config)
-
-    def add_polygon_layer(
-        self,
-        layer_id: str,
-        data: List[Dict[str, Any]],
-        get_polygon: str = "polygon",
-        get_fill_color: Union[str, List[int]] = [255, 0, 0, 128],
-        get_line_color: Union[str, List[int]] = [0, 0, 0, 255],
-        get_line_width: Union[str, int, float] = 1,
-        filled: bool = True,
-        stroked: bool = True,
-        **kwargs,
-    ) -> None:
-        """Add a polygon layer to the map."""
-        layer_config = {
-            "type": "PolygonLayer",
-            "data": data,
-            "getPolygon": get_polygon,
-            "getFillColor": get_fill_color,
-            "getLineColor": get_line_color,
-            "getLineWidth": get_line_width,
-            "filled": filled,
-            "stroked": stroked,
-            **kwargs,
-        }
-        self.add_layer(layer_id, layer_config)
+    def clear_deckgl_layers(self) -> None:
+        """Clear all DeckGL layers from the map."""
+        self.deckgl_layers = []
 
     def add_geojson_layer(
         self,
         layer_id: str,
-        data: Dict[str, Any],
-        get_fill_color: Union[str, List[int]] = [255, 0, 0, 128],
-        get_line_color: Union[str, List[int]] = [0, 0, 0, 255],
-        get_line_width: Union[str, int, float] = 1,
-        get_radius: Union[str, int, float] = 100,
-        filled: bool = True,
-        stroked: bool = True,
-        **kwargs,
+        geojson_data: Dict[str, Any],
+        layer_type: str = "GeoJsonLayer",
+        **layer_props,
     ) -> None:
-        """Add a GeoJSON layer to the map."""
-        layer_config = {
-            "type": "GeoJsonLayer",
-            "data": data,
-            "getFillColor": get_fill_color,
-            "getLineColor": get_line_color,
-            "getLineWidth": get_line_width,
-            "getRadius": get_radius,
-            "filled": filled,
-            "stroked": stroked,
-            **kwargs,
-        }
-        self.add_layer(layer_id, layer_config)
-
-    def add_hexagon_layer(
-        self,
-        layer_id: str,
-        data: List[Dict[str, Any]],
-        get_position: str = "position",
-        get_weight: Union[str, int, float] = 1,
-        radius: int = 1000,
-        elevation_scale: float = 4,
-        elevation_range: List[int] = [0, 1000],
-        coverage: float = 1.0,
-        color_range: Optional[List[List[int]]] = None,
-        **kwargs,
-    ) -> None:
-        """Add a hexagon layer to the map."""
-        if color_range is None:
-            color_range = [
-                [1, 152, 189],
-                [73, 227, 206],
-                [216, 254, 181],
-                [254, 237, 177],
-                [254, 173, 84],
-                [209, 55, 78],
-            ]
-
-        layer_config = {
-            "type": "HexagonLayer",
-            "data": data,
-            "getPosition": get_position,
-            "getWeight": get_weight,
-            "radius": radius,
-            "elevationScale": elevation_scale,
-            "elevationRange": elevation_range,
-            "coverage": coverage,
-            "colorRange": color_range,
-            **kwargs,
-        }
-        self.add_layer(layer_id, layer_config)
-
-    def add_grid_layer(
-        self,
-        layer_id: str,
-        data: List[Dict[str, Any]],
-        get_position: str = "position",
-        get_weight: Union[str, int, float] = 1,
-        cell_size: int = 200,
-        elevation_scale: float = 4,
-        elevation_range: List[int] = [0, 1000],
-        coverage: float = 1.0,
-        color_range: Optional[List[List[int]]] = None,
-        **kwargs,
-    ) -> None:
-        """Add a grid layer to the map."""
-        if color_range is None:
-            color_range = [
-                [1, 152, 189],
-                [73, 227, 206],
-                [216, 254, 181],
-                [254, 237, 177],
-                [254, 173, 84],
-                [209, 55, 78],
-            ]
-
-        layer_config = {
-            "type": "GridLayer",
-            "data": data,
-            "getPosition": get_position,
-            "getWeight": get_weight,
-            "cellSize": cell_size,
-            "elevationScale": elevation_scale,
-            "elevationRange": elevation_range,
-            "coverage": coverage,
-            "colorRange": color_range,
-            **kwargs,
-        }
-        self.add_layer(layer_id, layer_config)
-
-    def add_heatmap_layer(
-        self,
-        layer_id: str,
-        data: List[Dict[str, Any]],
-        get_position: str = "position",
-        get_weight: Union[str, int, float] = 1,
-        radius_pixels: int = 60,
-        intensity: float = 1.0,
-        threshold: float = 0.05,
-        color_range: Optional[List[List[int]]] = None,
-        **kwargs,
-    ) -> None:
-        """Add a heatmap layer to the map."""
-        if color_range is None:
-            color_range = [
-                [255, 255, 178],
-                [254, 204, 92],
-                [253, 141, 60],
-                [240, 59, 32],
-                [189, 0, 38],
-            ]
-
-        layer_config = {
-            "type": "HeatmapLayer",
-            "data": data,
-            "getPosition": get_position,
-            "getWeight": get_weight,
-            "radiusPixels": radius_pixels,
-            "intensity": intensity,
-            "threshold": threshold,
-            "colorRange": color_range,
-            **kwargs,
-        }
-        self.add_layer(layer_id, layer_config)
-
-    def add_column_layer(
-        self,
-        layer_id: str,
-        data: List[Dict[str, Any]],
-        get_position: str = "position",
-        get_elevation: Union[str, int, float] = 0,
-        get_fill_color: Union[str, List[int]] = [255, 0, 0, 255],
-        get_line_color: Union[str, List[int]] = [0, 0, 0, 255],
-        radius: int = 1000,
-        elevation_scale: float = 1.0,
-        filled: bool = True,
-        stroked: bool = False,
-        **kwargs,
-    ) -> None:
-        """Add a column layer to the map."""
-        layer_config = {
-            "type": "ColumnLayer",
-            "data": data,
-            "getPosition": get_position,
-            "getElevation": get_elevation,
-            "getFillColor": get_fill_color,
-            "getLineColor": get_line_color,
-            "radius": radius,
-            "elevationScale": elevation_scale,
-            "filled": filled,
-            "stroked": stroked,
-            **kwargs,
-        }
-        self.add_layer(layer_id, layer_config)
-
-    def add_text_layer(
-        self,
-        layer_id: str,
-        data: List[Dict[str, Any]],
-        get_position: str = "position",
-        get_text: str = "text",
-        get_color: Union[str, List[int]] = [0, 0, 0, 255],
-        get_size: Union[str, int, float] = 32,
-        get_angle: Union[str, int, float] = 0,
-        font_family: str = "Monaco, monospace",
-        **kwargs,
-    ) -> None:
-        """Add a text layer to the map."""
-        layer_config = {
-            "type": "TextLayer",
-            "data": data,
-            "getPosition": get_position,
-            "getText": get_text,
-            "getColor": get_color,
-            "getSize": get_size,
-            "getAngle": get_angle,
-            "fontFamily": font_family,
-            **kwargs,
-        }
-        self.add_layer(layer_id, layer_config)
-
-    def add_icon_layer(
-        self,
-        layer_id: str,
-        data: List[Dict[str, Any]],
-        get_position: str = "position",
-        get_icon: str = "icon",
-        get_color: Union[str, List[int]] = [255, 255, 255, 255],
-        get_size: Union[str, int, float] = 1,
-        size_scale: float = 1.0,
-        icon_atlas: Optional[str] = None,
-        icon_mapping: Optional[Dict[str, Any]] = None,
-        **kwargs,
-    ) -> None:
-        """Add an icon layer to the map."""
-        layer_config = {
-            "type": "IconLayer",
-            "data": data,
-            "getPosition": get_position,
-            "getIcon": get_icon,
-            "getColor": get_color,
-            "getSize": get_size,
-            "sizeScale": size_scale,
-            **kwargs,
-        }
-
-        if icon_atlas:
-            layer_config["iconAtlas"] = icon_atlas
-        if icon_mapping:
-            layer_config["iconMapping"] = icon_mapping
-
-        self.add_layer(layer_id, layer_config)
-
-    def update_layer(self, layer_id: str, **props) -> None:
-        """Update properties of an existing layer."""
-        self.call_js_method("updateLayer", layer_id, props)
-
-    def fit_bounds(
-        self,
-        bounds: List[List[float]],
-        padding: Union[int, Dict[str, int]] = 20,
-        max_zoom: Optional[float] = None,
-    ) -> None:
-        """Fit the map to given bounds.
+        """Add a GeoJSON layer using DeckGL.
 
         Args:
-            bounds: Bounds in format [[minLng, minLat], [maxLng, maxLat]]
-            padding: Padding around bounds in pixels
-            max_zoom: Maximum zoom level when fitting
+            layer_id: Unique identifier for the layer
+            geojson_data: GeoJSON data
+            layer_type: DeckGL layer type (e.g., 'GeoJsonLayer')
+            **layer_props: Additional DeckGL layer properties
         """
-        options = {"padding": padding}
-        if max_zoom is not None:
-            options["maxZoom"] = max_zoom
+        layer_config = {
+            "@@type": layer_type,
+            "id": layer_id,
+            "data": geojson_data,
+            "pickable": True,
+            "autoHighlight": True,
+            **layer_props,
+        }
+        self.add_deckgl_layer(layer_config)
 
-        self.call_js_method("fitBounds", bounds, options)
+    def add_arc_layer(
+        self,
+        layer_id: str,
+        data: Union[str, List[Dict[str, Any]]],
+        get_source_position: Union[List[float], str] = None,
+        get_target_position: Union[List[float], str] = None,
+        **layer_props,
+    ) -> None:
+        """Add an Arc layer using DeckGL.
 
-    def clear_layers(self) -> None:
-        """Remove all layers from the map."""
-        for layer_id in list(self._layers.keys()):
-            self.remove_layer(layer_id)
+        Args:
+            layer_id: Unique identifier for the layer
+            data: Data source (URL or array of objects)
+            get_source_position: Source position accessor (coordinates or accessor function)
+            get_target_position: Target position accessor (coordinates or accessor function)
+            **layer_props: Additional DeckGL layer properties
+        """
+        layer_config = {
+            "@@type": "ArcLayer",
+            "id": layer_id,
+            "data": data,
+            "pickable": True,
+            "autoHighlight": True,
+            **layer_props,
+        }
 
-    def clear_all(self) -> None:
-        """Clear all layers from the map."""
-        self.clear_layers()
+        if get_source_position:
+            layer_config["getSourcePosition"] = get_source_position
+        if get_target_position:
+            layer_config["getTargetPosition"] = get_target_position
 
-    def enable_controller(self, enabled: bool = True) -> None:
-        """Enable or disable map controls."""
-        self.controller = enabled
+        self.add_deckgl_layer(layer_config)
 
-    def set_zoom_range(self, min_zoom: float, max_zoom: float) -> None:
-        """Set the zoom range for the map."""
-        self.min_zoom = min_zoom
-        self.max_zoom = max_zoom
+    def add_scatterplot_layer(
+        self,
+        layer_id: str,
+        data: Union[str, List[Dict[str, Any]]],
+        get_position: List[float] = None,
+        get_radius: Union[int, List[int]] = 100,
+        get_fill_color: List[int] = [255, 140, 0, 160],
+        **layer_props,
+    ) -> None:
+        """Add a Scatterplot layer using DeckGL.
+
+        Args:
+            layer_id: Unique identifier for the layer
+            data: Data source (URL or array of objects)
+            get_position: Position accessor
+            get_radius: Radius accessor
+            get_fill_color: Fill color accessor
+            **layer_props: Additional DeckGL layer properties
+        """
+        layer_config = {
+            "@@type": "ScatterplotLayer",
+            "id": layer_id,
+            "data": data,
+            "pickable": True,
+            "autoHighlight": True,
+            "radiusMinPixels": 2,
+            "radiusMaxPixels": 100,
+            "getRadius": get_radius,
+            "getFillColor": get_fill_color,
+            **layer_props,
+        }
+
+        if get_position:
+            layer_config["getPosition"] = get_position
+
+        self.add_deckgl_layer(layer_config)
+
+    def to_html(
+        self,
+        filename: Optional[str] = None,
+        title: str = "DeckGL Map Export",
+        width: str = "100%",
+        height: str = "600px",
+        **kwargs,
+    ) -> str:
+        """Export the DeckGL map to a standalone HTML file.
+
+        Args:
+            filename: Optional filename to save the HTML. If None, returns HTML string.
+            title: Title for the HTML page
+            width: Width of the map container
+            height: Height of the map container
+            **kwargs: Additional arguments passed to the HTML template
+
+        Returns:
+            HTML string content
+        """
+        # Get the current map state
+        map_state = {
+            "center": self.center,
+            "zoom": self.zoom,
+            "width": width,
+            "height": height,
+            "style": self.style,
+            "_layers": dict(self._layers),
+            "_sources": dict(self._sources),
+            "deckgl_layers": list(self.deckgl_layers),  # Include DeckGL layers
+            "controller_options": dict(self.controller_options),
+        }
+
+        # Add class-specific attributes
+        if hasattr(self, "map_style"):
+            map_state["map_style"] = self.map_style
+        if hasattr(self, "bearing"):
+            map_state["bearing"] = self.bearing
+        if hasattr(self, "pitch"):
+            map_state["pitch"] = self.pitch
+        if hasattr(self, "antialias"):
+            map_state["antialias"] = self.antialias
+
+        # Generate HTML content
+        html_content = self._generate_html_template(map_state, title, **kwargs)
+
+        # Save to file if filename is provided
+        if filename:
+            with open(filename, "w", encoding="utf-8") as f:
+                f.write(html_content)
+
+        return html_content
+
+    def _generate_html_template(
+        self, map_state: Dict[str, Any], title: str, **kwargs
+    ) -> str:
+        """Generate HTML template for DeckGL."""
+        # Serialize map state for JavaScript
+        map_state_json = json.dumps(map_state, indent=2)
+
+        html_template = f"""<!DOCTYPE html>
+<html>
+<head>
+    <title>{title}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/deck.gl@9.1.12/dist.min.js"></script>
+    <script src="https://unpkg.com/maplibre-gl@5.6.1/dist/maplibre-gl.js"></script>
+    <link href="https://unpkg.com/maplibre-gl@5.6.1/dist/maplibre-gl.css" rel="stylesheet">
+    <style>
+        body {{
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }}
+        #map {{
+            width: {map_state['width']};
+            height: {map_state['height']};
+            border: 1px solid #ccc;
+        }}
+        h1 {{
+            margin-top: 0;
+            color: #333;
+        }}
+    </style>
+</head>
+<body>
+    <h1>{title}</h1>
+    <div id="map"></div>
+
+    <script>
+        // Map state from Python
+        const mapState = {map_state_json};
+
+        // Parse DeckGL layers from configuration
+        function parseDeckGLLayers(layerConfigs) {{
+            // Helper function to convert accessor expressions to functions
+            function parseAccessor(accessor) {{
+                if (typeof accessor === 'string' && accessor.startsWith('@@=')) {{
+                    const expression = accessor.substring(3); // Remove '@@=' prefix
+
+                    try {{
+                        // Handle arrow function expressions directly
+                        if (expression.includes('=>')) {{
+                            // This is already an arrow function, just evaluate it
+                            return eval(`(${{expression}})`);
+                        }}
+                        // Create a function from the expression
+                        // Handle different variable contexts (d = data item, f = feature, etc.)
+                        else if (expression.includes('f.geometry.coordinates')) {{
+                            return new Function('f', `return ${{expression}}`);
+                        }} else if (expression.includes('f.properties')) {{
+                            return new Function('f', `return ${{expression}}`);
+                        }} else if (expression.includes('d.features')) {{
+                            // For dataTransform functions
+                            return new Function('d', `return ${{expression}}`);
+                        }} else if (expression.includes('d.')) {{
+                            return new Function('d', `return ${{expression}}`);
+                        }} else {{
+                            // Default context
+                            return new Function('d', `return ${{expression}}`);
+                        }}
+                    }} catch (error) {{
+                        console.warn('Failed to parse accessor expression:', accessor, error);
+                        return accessor; // Return original if parsing fails
+                    }}
+                }}
+                return accessor;
+            }}
+
+            // Helper function to process layer properties and convert accessors
+            function processLayerProps(props) {{
+                const processed = {{ ...props }};
+
+                // List of properties that should be treated as accessors
+                const accessorProps = [
+                    'getSourcePosition', 'getTargetPosition', 'getPosition',
+                    'getRadius', 'getFillColor', 'getLineColor', 'getWidth',
+                    'getPointRadius', 'dataTransform'
+                ];
+
+                accessorProps.forEach(prop => {{
+                    if (prop in processed) {{
+                        processed[prop] = parseAccessor(processed[prop]);
+                    }}
+                }});
+
+                return processed;
+            }}
+
+            return layerConfigs.map(config => {{
+                const layerType = config["@@type"];
+                const layerProps = processLayerProps({{ ...config }});
+                delete layerProps["@@type"];
+
+                try {{
+                    switch (layerType) {{
+                        case "GeoJsonLayer":
+                            return new deck.GeoJsonLayer(layerProps);
+                        case "ArcLayer":
+                            return new deck.ArcLayer(layerProps);
+                        case "ScatterplotLayer":
+                            return new deck.ScatterplotLayer(layerProps);
+                        default:
+                            console.warn(`Unknown DeckGL layer type: ${{layerType}}`);
+                            return null;
+                    }}
+                }} catch (error) {{
+                    console.error(`Error creating ${{layerType}}:`, error, layerProps);
+                    return null;
+                }}
+            }}).filter(layer => layer !== null);
+        }}
+
+        // Initialize DeckGL with MapLibre
+        const deckgl = new deck.DeckGL({{
+            container: 'map',
+            mapStyle: mapState.map_style || 'https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json',
+            initialViewState: {{
+                latitude: mapState.center[0],
+                longitude: mapState.center[1],
+                zoom: mapState.zoom || 2,
+                bearing: mapState.bearing || 0,
+                pitch: mapState.pitch || 0
+            }},
+            controller: true,
+            layers: parseDeckGLLayers(mapState.deckgl_layers || []),
+            onViewStateChange: ({{viewState}}) => {{
+                console.log('View state changed:', viewState);
+            }},
+            onClick: (info) => {{
+                if (info.object) {{
+                    console.log('Clicked object:', info.object);
+                    if (info.object.properties && info.object.properties.name) {{
+                        alert(`${{info.object.properties.name}} (${{info.object.properties.abbrev || 'N/A'}})`);
+                    }}
+                }}
+            }}
+        }});
+
+        // Add navigation controls styling
+        const mapContainer = document.getElementById('map');
+        mapContainer.style.position = 'relative';
+
+        console.log('DeckGL map initialized successfully');
+        console.log('Loaded layers:', mapState.deckgl_layers ? mapState.deckgl_layers.length : 0);
+    </script>
+</body>
+</html>"""
+
+        return html_template
