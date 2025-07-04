@@ -210,6 +210,18 @@ function updateLayers(map, el, model) {
     }
 }
 
+function bindTooltip(layer, layerConfig){
+    if (layerConfig.tooltip) {
+        if (layerConfig.tooltip_options){
+            layer.bindTooltip(layerConfig.tooltip,
+                layerConfig.tooltip_options
+            );
+        }else{
+            layer.bindTooltip(layerConfig.tooltip);
+        }
+    }
+}
+
 function addLayerToMap(map, el, layerId, layerConfig) {
     let layer = null;
 
@@ -227,15 +239,7 @@ function addLayerToMap(map, el, layerId, layerConfig) {
                 layer.bindPopup(layerConfig.popup);
             }
 
-            if (layerConfig.tooltip) {
-                if (layerConfig.tooltip_options){
-                    layer.bindTooltip(layerConfig.tooltip,
-                        layerConfig.tooltip_options
-                    );
-                }else{
-                    layer.bindTooltip(layerConfig.tooltip);
-                }
-            }
+            bindTooltip(layer, layerConfig)
 
             if (layerConfig.icon) {
                 const icon = L.icon(layerConfig.icon);
@@ -249,6 +253,7 @@ function addLayerToMap(map, el, layerId, layerConfig) {
                 fillOpacity: layerConfig.fillOpacity || 0.2,
                 weight: layerConfig.weight || 3
             });
+            bindTooltip(layer, layerConfig);
         } else if (layerConfig.type === "polygon") {
             layer = L.polygon(layerConfig.latlngs, {
                 color: layerConfig.color || "blue",
@@ -256,11 +261,13 @@ function addLayerToMap(map, el, layerId, layerConfig) {
                 fillOpacity: layerConfig.fillOpacity || 0.2,
                 weight: layerConfig.weight || 3
             });
+            bindTooltip(layer, layerConfig);
         } else if (layerConfig.type === "polyline") {
             layer = L.polyline(layerConfig.latlngs, {
                 color: layerConfig.color || "blue",
                 weight: layerConfig.weight || 3
             });
+            bindTooltip(layer, layerConfig);
         } else if (layerConfig.type === "geojson") {
             layer = L.geoJSON(layerConfig.data, layerConfig.style || {});
         }

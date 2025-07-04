@@ -137,6 +137,8 @@ class LeafletMap(MapWidget):
         color: str = "blue",
         fillColor: str = "blue",
         fillOpacity: float = 0.2,
+        tooltip: str = "",
+        tooltip_options: Optional[Dict] = None,
         **options,
     ) -> str:
         """Add a circle to the map.
@@ -147,6 +149,8 @@ class LeafletMap(MapWidget):
             color: Circle stroke color
             fillColor: Circle fill color
             fillOpacity: Circle fill opacity
+            tooltip: Tooltip text
+            tooltip_options: Tooltip options           
             **options: Additional circle options
 
         Returns:
@@ -161,6 +165,8 @@ class LeafletMap(MapWidget):
             "color": color,
             "fillColor": fillColor,
             "fillOpacity": fillOpacity,
+            "tooltip": tooltip,
+            "tooltip_options": tooltip_options,
             **options,
         }
 
@@ -173,6 +179,8 @@ class LeafletMap(MapWidget):
         color: str = "blue",
         fillColor: str = "blue",
         fillOpacity: float = 0.2,
+        tooltip: str = "",
+        tooltip_options: Optional[Dict] = None,
         **options,
     ) -> str:
         """Add a polygon to the map.
@@ -195,6 +203,8 @@ class LeafletMap(MapWidget):
             "color": color,
             "fillColor": fillColor,
             "fillOpacity": fillOpacity,
+            "tooltip": tooltip,
+            "tooltip_options": tooltip_options,
             **options,
         }
 
@@ -206,6 +216,8 @@ class LeafletMap(MapWidget):
         latlngs: List[List[float]],
         color: str = "blue",
         weight: float = 3,
+        tooltip: str = "",
+        tooltip_options: Optional[Dict] = None,
         **options,
     ) -> str:
         """Add a polyline to the map.
@@ -226,6 +238,8 @@ class LeafletMap(MapWidget):
             "latlngs": latlngs,
             "color": color,
             "weight": weight,
+            "tooltip": tooltip,
+            "tooltip_options": tooltip_options,
             **options,
         }
 
