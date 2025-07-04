@@ -1,0 +1,364 @@
+/* KeplerGL Widget CSS */
+
+/* Base container styling */
+.keplergl-widget {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-color: #2a2a2a;
+    color: #ffffff;
+}
+
+/* Map container */
+.keplergl-map-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Loading indicator */
+.keplergl-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    background-color: rgba(42, 42, 42, 0.9);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.keplergl-loading-text {
+    font-size: 16px;
+    font-weight: 500;
+    color: #ffffff;
+    margin-top: 12px;
+}
+
+.keplergl-loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    border-top-color: #00c896;
+    animation: keplergl-spin 1s linear infinite;
+}
+
+@keyframes keplergl-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Error display */
+.keplergl-error {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ff6b6b;
+    color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    max-width: 400px;
+    text-align: center;
+    z-index: 1000;
+}
+
+.keplergl-error-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.keplergl-error-message {
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+/* KeplerGL component overrides */
+.keplergl-widget .kepler-gl {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Panel styling */
+.keplergl-widget .side-panel {
+    background-color: #2a2a2a !important;
+    border-right: 1px solid #3a3a3a !important;
+}
+
+.keplergl-widget .side-panel__panel-header {
+    background-color: #2a2a2a !important;
+    border-bottom: 1px solid #3a3a3a !important;
+}
+
+/* Button styling */
+.keplergl-widget .button {
+    background-color: #00c896 !important;
+    border: none !important;
+    border-radius: 4px !important;
+    padding: 8px 16px !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    cursor: pointer !important;
+    transition: background-color 0.2s !important;
+}
+
+.keplergl-widget .button:hover {
+    background-color: #00b085 !important;
+}
+
+.keplergl-widget .button:disabled {
+    background-color: #666666 !important;
+    cursor: not-allowed !important;
+}
+
+/* Input styling */
+.keplergl-widget input[type="text"],
+.keplergl-widget input[type="number"],
+.keplergl-widget select,
+.keplergl-widget textarea {
+    background-color: #3a3a3a !important;
+    border: 1px solid #555555 !important;
+    border-radius: 4px !important;
+    color: #ffffff !important;
+    padding: 8px 12px !important;
+    font-size: 14px !important;
+}
+
+.keplergl-widget input[type="text"]:focus,
+.keplergl-widget input[type="number"]:focus,
+.keplergl-widget select:focus,
+.keplergl-widget textarea:focus {
+    border-color: #00c896 !important;
+    outline: none !important;
+    box-shadow: 0 0 0 2px rgba(0, 200, 150, 0.2) !important;
+}
+
+/* Slider styling */
+.keplergl-widget .range-slider {
+    background-color: #3a3a3a !important;
+}
+
+.keplergl-widget .range-slider__handle {
+    background-color: #00c896 !important;
+    border: 2px solid #00c896 !important;
+}
+
+.keplergl-widget .range-slider__track {
+    background-color: #555555 !important;
+}
+
+.keplergl-widget .range-slider__selection {
+    background-color: #00c896 !important;
+}
+
+/* Dropdown styling */
+.keplergl-widget .dropdown {
+    background-color: #3a3a3a !important;
+    border: 1px solid #555555 !important;
+    border-radius: 4px !important;
+}
+
+.keplergl-widget .dropdown__list {
+    background-color: #3a3a3a !important;
+    border: 1px solid #555555 !important;
+    border-radius: 4px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+.keplergl-widget .dropdown__list-item {
+    color: #ffffff !important;
+    padding: 8px 12px !important;
+}
+
+.keplergl-widget .dropdown__list-item:hover {
+    background-color: #4a4a4a !important;
+}
+
+.keplergl-widget .dropdown__list-item.selected {
+    background-color: #00c896 !important;
+    color: #ffffff !important;
+}
+
+/* Tooltip styling */
+.keplergl-widget .tooltip {
+    background-color: rgba(42, 42, 42, 0.95) !important;
+    border: 1px solid #555555 !important;
+    border-radius: 4px !important;
+    color: #ffffff !important;
+    font-size: 12px !important;
+    padding: 8px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Layer panel styling */
+.keplergl-widget .layer-panel {
+    background-color: #2a2a2a !important;
+}
+
+.keplergl-widget .layer-panel__header {
+    background-color: #3a3a3a !important;
+    border-bottom: 1px solid #555555 !important;
+    padding: 12px !important;
+}
+
+.keplergl-widget .layer-configurator {
+    background-color: #2a2a2a !important;
+    padding: 16px !important;
+}
+
+/* Filter panel styling */
+.keplergl-widget .filter-panel {
+    background-color: #2a2a2a !important;
+}
+
+.keplergl-widget .filter-panel__header {
+    background-color: #3a3a3a !important;
+    border-bottom: 1px solid #555555 !important;
+    padding: 12px !important;
+}
+
+/* Map control styling */
+.keplergl-widget .map-control {
+    background-color: rgba(42, 42, 42, 0.9) !important;
+    border: 1px solid #555555 !important;
+    border-radius: 4px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+.keplergl-widget .map-control button {
+    background-color: transparent !important;
+    border: none !important;
+    color: #ffffff !important;
+    padding: 8px !important;
+    cursor: pointer !important;
+    transition: background-color 0.2s !important;
+}
+
+.keplergl-widget .map-control button:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Modal styling */
+.keplergl-widget .modal {
+    background-color: rgba(0, 0, 0, 0.7) !important;
+}
+
+.keplergl-widget .modal-content {
+    background-color: #2a2a2a !important;
+    border: 1px solid #555555 !important;
+    border-radius: 8px !important;
+    color: #ffffff !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+}
+
+.keplergl-widget .modal-header {
+    background-color: #3a3a3a !important;
+    border-bottom: 1px solid #555555 !important;
+    padding: 16px !important;
+}
+
+.keplergl-widget .modal-body {
+    padding: 20px !important;
+}
+
+.keplergl-widget .modal-footer {
+    background-color: #3a3a3a !important;
+    border-top: 1px solid #555555 !important;
+    padding: 16px !important;
+}
+
+/* Color picker styling */
+.keplergl-widget .color-picker {
+    background-color: #2a2a2a !important;
+    border: 1px solid #555555 !important;
+    border-radius: 4px !important;
+}
+
+.keplergl-widget .color-swatch {
+    border: 2px solid #555555 !important;
+    border-radius: 2px !important;
+}
+
+/* Progress bar styling */
+.keplergl-widget .progress-bar {
+    background-color: #3a3a3a !important;
+    border-radius: 4px !important;
+    overflow: hidden !important;
+}
+
+.keplergl-widget .progress-bar__fill {
+    background-color: #00c896 !important;
+    transition: width 0.3s ease !important;
+}
+
+/* Scrollbar styling */
+.keplergl-widget ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.keplergl-widget ::-webkit-scrollbar-track {
+    background-color: #2a2a2a;
+}
+
+.keplergl-widget ::-webkit-scrollbar-thumb {
+    background-color: #555555;
+    border-radius: 4px;
+}
+
+.keplergl-widget ::-webkit-scrollbar-thumb:hover {
+    background-color: #666666;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .keplergl-widget .side-panel {
+        width: 100% !important;
+        height: auto !important;
+        position: relative !important;
+    }
+
+    .keplergl-widget .map-container {
+        margin-left: 0 !important;
+    }
+}
+
+/* Dark theme enhancements */
+.keplergl-widget.dark-theme {
+    background-color: #1a1a1a;
+}
+
+.keplergl-widget.dark-theme .side-panel {
+    background-color: #1a1a1a !important;
+}
+
+.keplergl-widget.dark-theme input,
+.keplergl-widget.dark-theme select,
+.keplergl-widget.dark-theme textarea {
+    background-color: #2a2a2a !important;
+    border-color: #3a3a3a !important;
+}
+
+/* Animation for smooth transitions */
+.keplergl-widget * {
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+/* Focus indicators for accessibility */
+.keplergl-widget button:focus,
+.keplergl-widget input:focus,
+.keplergl-widget select:focus {
+    outline: 2px solid #00c896;
+    outline-offset: 2px;
+}
