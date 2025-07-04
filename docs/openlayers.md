@@ -1,0 +1,3 @@
+# openlayers module
+
+::: anymap.openlayers

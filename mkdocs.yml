@@ -83,6 +83,8 @@ nav:
           - examples/basic_usage.ipynb
           - examples/maplibre_example.ipynb
           - examples/mapbox_example.ipynb
+          - examples/leaflet_example.ipynb
+          - examples/openlayers_example.ipynb
           - examples/cesium_example.ipynb
           - examples/deckgl_example.ipynb
           - examples/potree_example.ipynb
@@ -95,5 +97,6 @@ nav:
           - leaflet module: leaflet.md
           - mapbox module: mapbox.md
           - maplibre module: maplibre.md
+          - openlayers module: openlayers.md
           - potree module: potree.md
           - utils module: utils.md

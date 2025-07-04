@@ -82,6 +82,21 @@ function render({ model, el }) {
             el._map = map;
             el._layers = {};
 
+            // Throttle model updates for performance
+            let updateTimeout = null;
+            const throttledModelUpdate = () => {
+                if (updateTimeout) {
+                    clearTimeout(updateTimeout);
+                }
+                updateTimeout = setTimeout(() => {
+                    const center = map.getCenter();
+                    model.set("center", [center.lat, center.lng]);
+                    model.set("zoom", map.getZoom());
+                    model.save_changes();
+                    updateTimeout = null;
+                }, 150); // Throttle to 150ms
+            };
+
             // Add default tile layer
             const tileLayer = model.get("tile_layer");
             addDefaultTileLayer(map, tileLayer);
@@ -108,18 +123,9 @@ function render({ model, el }) {
                 updateLayers(map, el, model);
             });
 
-            // Handle map events - update model when map changes
-            map.on("moveend", () => {
-                const center = map.getCenter();
-                model.set("center", [center.lat, center.lng]);
-                model.set("zoom", map.getZoom());
-                model.save_changes();
-            });
-
-            map.on("zoomend", () => {
-                model.set("zoom", map.getZoom());
-                model.save_changes();
-            });
+            // Handle map events - update model when map changes (throttled)
+            map.on("moveend", throttledModelUpdate);
+            map.on("zoomend", throttledModelUpdate);
 
             // Handle resize
             const resizeObserver = new ResizeObserver(() => {
