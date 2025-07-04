@@ -150,7 +150,7 @@ class LeafletMap(MapWidget):
             fillColor: Circle fill color
             fillOpacity: Circle fill opacity
             tooltip: Tooltip text
-            tooltip_options: Tooltip options           
+            tooltip_options: Tooltip options
             **options: Additional circle options
 
         Returns:
