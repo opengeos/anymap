@@ -316,7 +316,7 @@ class TestEnhancedMapFeatures(unittest.TestCase):
         self.assertEqual(len(self.map.get_layers()), 0)
         self.assertEqual(len(self.map.get_sources()), 0)
 
-    def test_add_raster_layer(self):
+    def test_add_tile_layer(self):
         """Test adding a raster layer."""
         self.map.add_tile_layer(
             layer_id="raster_test",

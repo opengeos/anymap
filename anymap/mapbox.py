@@ -142,7 +142,7 @@ class MapboxMap(MapWidget):
         """Fit the map to given bounds."""
         self.call_js_method("fitBounds", bounds, {"padding": padding})
 
-    def add_raster_layer(
+    def add_tile_layer(
         self,
         layer_id: str,
         source_url: str,
@@ -310,7 +310,7 @@ class MapboxMap(MapWidget):
         attribution = basemap_config.get("attribution", "")
 
         # Add as raster layer
-        self.add_raster_layer(
+        self.add_tile_layer(
             layer_id=layer_id, source_url=tile_url, paint={"raster-opacity": 1.0}
         )
 
