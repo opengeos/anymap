@@ -1220,6 +1220,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.add_cog_layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_cog_layer()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.add_control" class="md-nav__link">
     <span class="md-ellipsis">
       add_control()
@@ -1835,6 +1844,15 @@
   <a href="#anymap.maplibre.MapLibreMap.add_basemap" class="md-nav__link">
     <span class="md-ellipsis">
       add_basemap()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.add_cog_layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_cog_layer()
     </span>
   </a>
   
@@ -5849,6 +5867,49 @@ data sources, custom styling, and interactive features.</p>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;removeControl&quot;</span><span class="p">,</span> <span class="n">control_type</span><span class="p">,</span> <span class="n">position</span><span class="p">)</span>
 
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_cog_layer</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">layer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">cog_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">opacity</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">visible</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">paint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">before_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a Cloud Optimized GeoTIFF (COG) layer to the map.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            layer_id: Unique identifier for the COG layer.</span>
+<span class="sd">            cog_url: URL to the COG file.</span>
+<span class="sd">            opacity: Layer opacity between 0.0 and 1.0.</span>
+<span class="sd">            visible: Whether the layer should be visible initially.</span>
+<span class="sd">            paint: Optional paint properties for the layer.</span>
+<span class="sd">            before_id: Optional layer ID to insert this layer before.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">source_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">layer_id</span><span class="si">}</span><span class="s2">_source&quot;</span>
+
+        <span class="c1"># Add COG source using cog:// protocol</span>
+        <span class="n">cog_source_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;cog://</span><span class="si">{</span><span class="n">cog_url</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_source</span><span class="p">(</span>
+            <span class="n">source_id</span><span class="p">,</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;raster&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">cog_source_url</span><span class="p">,</span>
+                <span class="s2">&quot;tileSize&quot;</span><span class="p">:</span> <span class="mi">256</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Add raster layer</span>
+        <span class="n">layer_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">layer_id</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;raster&quot;</span><span class="p">,</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">source_id</span><span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">paint</span><span class="p">:</span>
+            <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;paint&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">paint</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span>
+            <span class="n">layer_id</span><span class="p">,</span> <span class="n">layer_config</span><span class="p">,</span> <span class="n">before_id</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="n">opacity</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="n">visible</span>
+        <span class="p">)</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">add_basemap</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">basemap</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -5939,7 +6000,11 @@ data sources, custom styling, and interactive features.</p>
 <span class="s2">    &lt;h1&gt;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2">&lt;/h1&gt;</span>
 <span class="s2">    &lt;div id=&quot;map&quot;&gt;&lt;/div&gt;</span>
 
+<span class="s2">    &lt;script src=&quot;https://unpkg.com/@geomatico/maplibre-cog-protocol@0.4.0/dist/index.js&quot;&gt;&lt;/script&gt;</span>
 <span class="s2">    &lt;script&gt;</span>
+<span class="s2">        // Register COG protocol</span>
+<span class="s2">        maplibregl.addProtocol(&quot;cog&quot;, MaplibreCOGProtocol.cogProtocol);</span>
+
 <span class="s2">        // Map state from Python</span>
 <span class="s2">        const mapState = </span><span class="si">{</span><span class="n">map_state_json</span><span class="si">}</span><span class="s2">;</span>
 
@@ -5977,11 +6042,42 @@ data sources, custom styling, and interactive features.</p>
 <span class="s2">            </span><span class="se">}}</span><span class="s2">);</span>
 <span class="s2">        </span><span class="se">}}</span><span class="s2">);</span>
 
-<span class="s2">        // Add navigation controls</span>
-<span class="s2">        map.addControl(new maplibregl.NavigationControl());</span>
+<span class="s2">        // Add controls from map state</span>
+<span class="s2">        const controls = mapState._controls || </span><span class="se">{{}}</span><span class="s2">;</span>
+<span class="s2">        Object.entries(controls).forEach(([controlKey, controlConfig]) =&gt; </span><span class="se">{{</span>
+<span class="s2">            try </span><span class="se">{{</span>
+<span class="s2">                const </span><span class="se">{{</span><span class="s2"> type: controlType, position, options: controlOptions </span><span class="se">}}</span><span class="s2"> = controlConfig;</span>
+<span class="s2">                let control;</span>
 
-<span class="s2">        // Add scale control</span>
-<span class="s2">        map.addControl(new maplibregl.ScaleControl());</span>
+<span class="s2">                switch (controlType) </span><span class="se">{{</span>
+<span class="s2">                    case &#39;navigation&#39;:</span>
+<span class="s2">                        control = new maplibregl.NavigationControl(controlOptions || </span><span class="se">{{}}</span><span class="s2">);</span>
+<span class="s2">                        break;</span>
+<span class="s2">                    case &#39;scale&#39;:</span>
+<span class="s2">                        control = new maplibregl.ScaleControl(controlOptions || </span><span class="se">{{}}</span><span class="s2">);</span>
+<span class="s2">                        break;</span>
+<span class="s2">                    case &#39;fullscreen&#39;:</span>
+<span class="s2">                        control = new maplibregl.FullscreenControl(controlOptions || </span><span class="se">{{}}</span><span class="s2">);</span>
+<span class="s2">                        break;</span>
+<span class="s2">                    case &#39;geolocate&#39;:</span>
+<span class="s2">                        control = new maplibregl.GeolocateControl(controlOptions || </span><span class="se">{{}}</span><span class="s2">);</span>
+<span class="s2">                        break;</span>
+<span class="s2">                    case &#39;attribution&#39;:</span>
+<span class="s2">                        control = new maplibregl.AttributionControl(controlOptions || </span><span class="se">{{}}</span><span class="s2">);</span>
+<span class="s2">                        break;</span>
+<span class="s2">                    case &#39;globe&#39;:</span>
+<span class="s2">                        control = new maplibregl.GlobeControl(controlOptions || </span><span class="se">{{}}</span><span class="s2">);</span>
+<span class="s2">                        break;</span>
+<span class="s2">                    default:</span>
+<span class="s2">                        console.warn(`Unknown control type during restore: $</span><span class="se">{{</span><span class="s2">controlType</span><span class="se">}}</span><span class="s2">`);</span>
+<span class="s2">                        return;</span>
+<span class="s2">                </span><span class="se">}}</span>
+
+<span class="s2">                map.addControl(control, position);</span>
+<span class="s2">            </span><span class="se">}}</span><span class="s2"> catch (error) </span><span class="se">{{</span>
+<span class="s2">                console.warn(`Failed to add control $</span><span class="se">{{</span><span class="s2">controlKey</span><span class="se">}}</span><span class="s2">:`, error);</span>
+<span class="s2">            </span><span class="se">}}</span>
+<span class="s2">        </span><span class="se">}}</span><span class="s2">);</span>
 
 <span class="s2">        // Log map events for debugging</span>
 <span class="s2">        map.on(&#39;click&#39;, function(e) </span><span class="se">{{</span>
@@ -6355,6 +6451,121 @@ data sources, custom styling, and interactive features.</p>
         <span class="n">source_url</span><span class="o">=</span><span class="n">tile_url</span><span class="p">,</span>
         <span class="n">paint</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;raster-opacity&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
         <span class="n">before_id</span><span class="o">=</span><span class="n">before_id</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="anymap.maplibre.MapLibreMap.add_cog_layer" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">add_cog_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer_id</span><span class="p">,</span> <span class="n">cog_url</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">paint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">before_id</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+
+<a href="#anymap.maplibre.MapLibreMap.add_cog_layer" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Add a Cloud Optimized GeoTIFF (COG) layer to the map.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>layer_id</code></td>
+        <td><code>str</code></td>
+        <td><p>Unique identifier for the COG layer.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>cog_url</code></td>
+        <td><code>str</code></td>
+        <td><p>URL to the COG file.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>opacity</code></td>
+        <td><code>Optional[float]</code></td>
+        <td><p>Layer opacity between 0.0 and 1.0.</p></td>
+        <td><code>1.0</code></td>
+      </tr>
+      <tr>
+        <td><code>visible</code></td>
+        <td><code>Optional[bool]</code></td>
+        <td><p>Whether the layer should be visible initially.</p></td>
+        <td><code>True</code></td>
+      </tr>
+      <tr>
+        <td><code>paint</code></td>
+        <td><code>Optional[Dict[str, Any]]</code></td>
+        <td><p>Optional paint properties for the layer.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>before_id</code></td>
+        <td><code>Optional[str]</code></td>
+        <td><p>Optional layer ID to insert this layer before.</p></td>
+        <td><code>None</code></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>anymap/maplibre.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_cog_layer</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">layer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">cog_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">opacity</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">visible</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">paint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">before_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a Cloud Optimized GeoTIFF (COG) layer to the map.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        layer_id: Unique identifier for the COG layer.</span>
+<span class="sd">        cog_url: URL to the COG file.</span>
+<span class="sd">        opacity: Layer opacity between 0.0 and 1.0.</span>
+<span class="sd">        visible: Whether the layer should be visible initially.</span>
+<span class="sd">        paint: Optional paint properties for the layer.</span>
+<span class="sd">        before_id: Optional layer ID to insert this layer before.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">source_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">layer_id</span><span class="si">}</span><span class="s2">_source&quot;</span>
+
+    <span class="c1"># Add COG source using cog:// protocol</span>
+    <span class="n">cog_source_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;cog://</span><span class="si">{</span><span class="n">cog_url</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_source</span><span class="p">(</span>
+        <span class="n">source_id</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;raster&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">cog_source_url</span><span class="p">,</span>
+            <span class="s2">&quot;tileSize&quot;</span><span class="p">:</span> <span class="mi">256</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Add raster layer</span>
+    <span class="n">layer_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">layer_id</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;raster&quot;</span><span class="p">,</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">source_id</span><span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">paint</span><span class="p">:</span>
+        <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;paint&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">paint</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span>
+        <span class="n">layer_id</span><span class="p">,</span> <span class="n">layer_config</span><span class="p">,</span> <span class="n">before_id</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="n">opacity</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="n">visible</span>
     <span class="p">)</span>
 </code></pre></div>
         </details>
