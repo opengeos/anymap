@@ -29,6 +29,7 @@ class LeafletMap(MapWidget):
     # Leaflet-specific traits
     tile_layer = traitlets.Unicode("OpenStreetMap").tag(sync=True)
     attribution = traitlets.Unicode("").tag(sync=True)
+    map_options = traitlets.Dict(default_value={}).tag(sync=True)
 
     # Define the JavaScript module path
     _esm = _esm_leaflet
@@ -51,6 +52,7 @@ class LeafletMap(MapWidget):
             tile_layer: Tile layer provider name or URL template
             width: Widget width
             height: Widget height
+            map_options: Leaflet Map Options (see https://leafletjs.com/reference.html#map-option)
             **kwargs: Additional widget arguments
         """
         super().__init__(
