@@ -1,4 +1,28 @@
-"""Mapbox GL JS implementation of the map widget."""
+"""Mapbox GL JS implementation of the map widget.
+
+This module provides the MapboxMap class which implements an interactive map
+widget using the Mapbox GL JS library. Mapbox GL JS provides fast vector map
+rendering with WebGL and requires an access token for Mapbox services.
+
+Classes:
+    MapboxMap: Main map widget class for Mapbox GL JS.
+
+Note:
+    Mapbox services require an access token. You can get a free token at
+    https://account.mapbox.com/access-tokens/
+
+Example:
+    Basic usage of MapboxMap:
+
+    >>> from anymap.mapbox import MapboxMap
+    >>> m = MapboxMap(
+    ...     center=[40.7, -74.0],
+    ...     zoom=10,
+    ...     access_token="your_mapbox_token"
+    ... )
+    >>> m.add_basemap("OpenStreetMap.Mapnik")
+    >>> m
+"""
 
 import pathlib
 import traitlets
@@ -6,6 +30,7 @@ from typing import Dict, List, Any, Optional, Union
 import json
 
 from .base import MapWidget
+from .basemaps import available_basemaps
 
 # Load Mapbox-specific js and css
 with open(pathlib.Path(__file__).parent / "static" / "mapbox_widget.js", "r") as f:
@@ -141,7 +166,7 @@ class MapboxMap(MapWidget):
         """Fit the map to given bounds."""
         self.call_js_method("fitBounds", bounds, {"padding": padding})
 
-    def add_raster_layer(
+    def add_tile_layer(
         self,
         layer_id: str,
         source_url: str,
@@ -286,6 +311,32 @@ class MapboxMap(MapWidget):
             },
         }
         self.add_layer(layer_id, layer_config)
+
+    def add_basemap(self, basemap: str, layer_id: str = "basemap") -> None:
+        """Add a basemap to the map using xyzservices providers.
+
+        Args:
+            basemap: Name of the basemap from xyzservices (e.g., "Esri.WorldImagery")
+            layer_id: ID for the basemap layer (default: "basemap")
+        """
+        if basemap not in available_basemaps:
+            available_names = list(available_basemaps.keys())
+            raise ValueError(
+                f"Basemap '{basemap}' not found. Available basemaps: {available_names}"
+            )
+
+        basemap_config = available_basemaps[basemap]
+
+        # Convert xyzservices URL template to tile URL
+        tile_url = basemap_config.build_url()
+
+        # Get attribution if available
+        attribution = basemap_config.get("attribution", "")
+
+        # Add as raster layer
+        self.add_tile_layer(
+            layer_id=layer_id, source_url=tile_url, paint={"raster-opacity": 1.0}
+        )
 
     def _generate_html_template(
         self, map_state: Dict[str, Any], title: str, **kwargs

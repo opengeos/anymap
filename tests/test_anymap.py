@@ -117,14 +117,17 @@ class TestMapLibreMap(unittest.TestCase):
         self.map = MapLibreMap(
             center=[37.7749, -122.4194],
             zoom=12,
-            style="https://example.com/style.json",
+            style="dark-matter",
         )
 
     def test_initialization(self):
         """Test MapLibre map initialization."""
         self.assertEqual(self.map.center, [37.7749, -122.4194])
         self.assertEqual(self.map.zoom, 12)
-        self.assertEqual(self.map.style, "https://example.com/style.json")
+        self.assertEqual(
+            self.map.style,
+            "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json",
+        )
         self.assertEqual(self.map.bearing, 0.0)
         self.assertEqual(self.map.pitch, 0.0)
         self.assertTrue(self.map.antialias)
@@ -316,9 +319,9 @@ class TestEnhancedMapFeatures(unittest.TestCase):
         self.assertEqual(len(self.map.get_layers()), 0)
         self.assertEqual(len(self.map.get_sources()), 0)
 
-    def test_add_raster_layer(self):
+    def test_add_tile_layer(self):
         """Test adding a raster layer."""
-        self.map.add_raster_layer(
+        self.map.add_tile_layer(
             layer_id="raster_test",
             source_url="https://example.com/tiles/{z}/{x}/{y}.png",
         )
