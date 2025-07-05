@@ -2,3 +2,4 @@ anywidget>=0.9.0
 ipywidgets>=8.0.0
 numpy
 traitlets>=5.0.0
+xyzservices

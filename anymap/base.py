@@ -75,7 +75,11 @@ class MapWidget(anywidget.AnyWidget):
             options["zoom"] = zoom
         self.call_js_method("flyTo", options)
 
-    def add_layer(self, layer_id: str, layer_config: Dict[str, Any]) -> None:
+    def add_layer(
+        self,
+        layer_id: str,
+        layer_config: Dict[str, Any],
+    ) -> None:
         """Add a layer to the map."""
         # Store layer in local state for persistence
         current_layers = dict(self._layers)

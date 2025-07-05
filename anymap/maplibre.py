@@ -7,6 +7,7 @@ import json
 
 from .base import MapWidget
 
+
 # Load MapLibre-specific js and css
 with open(pathlib.Path(__file__).parent / "static" / "maplibre_widget.js", "r") as f:
     _esm_maplibre = f.read()
@@ -78,12 +79,70 @@ class MapLibreMap(MapWidget):
         """Set the map pitch (tilt)."""
         self.pitch = pitch
 
+    def set_layout_property(self, layer_id: str, name: str, value: Any) -> None:
+        """Set a layout property for a layer."""
+        self.call_js_method("setLayoutProperty", layer_id, name, value)
+
+    def set_paint_property(self, layer_id: str, name: str, value: Any) -> None:
+        """Set a paint property for a layer."""
+        self.call_js_method("setPaintProperty", layer_id, name, value)
+
+    def set_layer_visibility(self, layer_id: str, visible: bool) -> None:
+        """Set the visibility of a layer."""
+        if visible:
+            visibility = "visible"
+        else:
+            visibility = "none"
+        self.set_layout_property(layer_id, "visibility", visibility)
+
+    def set_layer_opacity(self, layer_id: str, opacity: float) -> None:
+        """Set the opacity of a layer."""
+        layer_type = self.get_layer_type(layer_id)
+
+        if layer_type != "symbol":
+            self.set_paint_property(layer_id, f"{layer_type}-opacity", opacity)
+        else:
+            self.set_paint_property(layer_id, "icon-opacity", opacity)
+            self.set_paint_property(layer_id, "text-opacity", opacity)
+
+    def get_layer_type(self, layer_id: str) -> str:
+        """Get the type of a layer."""
+        if layer_id in self._layers:
+            return self._layers[layer_id]["type"]
+        else:
+            return None
+
+    def add_layer(
+        self,
+        layer_id: str,
+        layer_config: Dict[str, Any],
+        before_id: Optional[str] = None,
+    ) -> None:
+        """Add a layer to the map.
+
+        Args:
+            layer_id: ID for the layer
+            layer_config: Layer configuration dictionary
+            before_id: ID of the layer to insert this layer before (optional)
+        """
+        # Store layer in local state for persistence
+        current_layers = dict(self._layers)
+        current_layers[layer_id] = layer_config
+        self._layers = current_layers
+
+        # Call JavaScript method with before_id if provided
+        if before_id:
+            self.call_js_method("addLayer", layer_config, before_id)
+        else:
+            self.call_js_method("addLayer", layer_config, layer_id)
+
     def add_geojson_layer(
         self,
         layer_id: str,
         geojson_data: Dict[str, Any],
         layer_type: str = "fill",
         paint: Optional[Dict[str, Any]] = None,
+        before_id: Optional[str] = None,
     ) -> None:
         """Add a GeoJSON layer to the map."""
         source_id = f"{layer_id}_source"
@@ -97,7 +156,7 @@ class MapLibreMap(MapWidget):
         if paint:
             layer_config["paint"] = paint
 
-        self.add_layer(layer_id, layer_config)
+        self.add_layer(layer_id, layer_config, before_id)
 
     def add_marker(self, lat: float, lng: float, popup: Optional[str] = None) -> None:
         """Add a marker to the map."""
@@ -108,19 +167,27 @@ class MapLibreMap(MapWidget):
         """Fit the map to given bounds."""
         self.call_js_method("fitBounds", bounds, {"padding": padding})
 
-    def add_raster_layer(
+    def add_tile_layer(
         self,
         layer_id: str,
         source_url: str,
+        attribution: Optional[str] = None,
+        opacity: Optional[float] = 1.0,
+        visible: Optional[bool] = True,
+        minzoom: Optional[int] = None,
+        maxzoom: Optional[int] = None,
         paint: Optional[Dict[str, Any]] = None,
         layout: Optional[Dict[str, Any]] = None,
+        before_id: Optional[str] = None,
+        **kwargs,
     ) -> None:
         """Add a raster layer to the map."""
         source_id = f"{layer_id}_source"
 
         # Add raster source
         self.add_source(
-            source_id, {"type": "raster", "tiles": [source_url], "tileSize": 256}
+            source_id,
+            {"type": "raster", "tiles": [source_url], "tileSize": 256, **kwargs},
         )
 
         # Add raster layer
@@ -131,7 +198,7 @@ class MapLibreMap(MapWidget):
         if layout:
             layer_config["layout"] = layout
 
-        self.add_layer(layer_id, layer_config)
+        self.add_layer(layer_id, layer_config, before_id)
 
     def add_vector_layer(
         self,
@@ -141,6 +208,7 @@ class MapLibreMap(MapWidget):
         layer_type: str = "fill",
         paint: Optional[Dict[str, Any]] = None,
         layout: Optional[Dict[str, Any]] = None,
+        before_id: Optional[str] = None,
     ) -> None:
         """Add a vector tile layer to the map."""
         source_id = f"{layer_id}_source"
@@ -161,7 +229,7 @@ class MapLibreMap(MapWidget):
         if layout:
             layer_config["layout"] = layout
 
-        self.add_layer(layer_id, layer_config)
+        self.add_layer(layer_id, layer_config, before_id)
 
     def add_image_layer(
         self,
@@ -169,6 +237,7 @@ class MapLibreMap(MapWidget):
         image_url: str,
         coordinates: List[List[float]],
         paint: Optional[Dict[str, Any]] = None,
+        before_id: Optional[str] = None,
     ) -> None:
         """Add an image layer to the map."""
         source_id = f"{layer_id}_source"
@@ -184,7 +253,43 @@ class MapLibreMap(MapWidget):
         if paint:
             layer_config["paint"] = paint
 
-        self.add_layer(layer_id, layer_config)
+        self.add_layer(layer_id, layer_config, before_id)
+
+    def add_basemap(
+        self, basemap: str, layer_id: str = None, before_id: Optional[str] = None
+    ) -> None:
+        """Add a basemap to the map using xyzservices providers.
+
+        Args:
+            basemap: Name of the basemap from xyzservices (e.g., "Esri.WorldImagery")
+            layer_id: ID for the basemap layer (default: "basemap")
+            before_id: ID of the layer to insert this layer before (optional)
+        """
+        from .basemaps import available_basemaps
+
+        if basemap not in available_basemaps:
+            available_names = list(available_basemaps.keys())
+            raise ValueError(
+                f"Basemap '{basemap}' not found. Available basemaps: {available_names}"
+            )
+
+        basemap_config = available_basemaps[basemap]
+
+        # Convert xyzservices URL template to tile URL
+        tile_url = basemap_config.build_url()
+
+        # Get attribution if available
+        attribution = basemap_config.get("attribution", "")
+        if layer_id is None:
+            layer_id = basemap
+
+        # Add as raster layer
+        self.add_tile_layer(
+            layer_id=layer_id,
+            source_url=tile_url,
+            paint={"raster-opacity": 1.0},
+            before_id=before_id,
+        )
 
     def _generate_html_template(
         self, map_state: Dict[str, Any], title: str, **kwargs

@@ -318,7 +318,7 @@ class TestEnhancedMapFeatures(unittest.TestCase):
 
     def test_add_raster_layer(self):
         """Test adding a raster layer."""
-        self.map.add_raster_layer(
+        self.map.add_tile_layer(
             layer_id="raster_test",
             source_url="https://example.com/tiles/{z}/{x}/{y}.png",
         )
