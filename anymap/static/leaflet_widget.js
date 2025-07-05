@@ -55,8 +55,7 @@ function render({ model, el }) {
             const map = L.map(widgetId, {
                 center: model.get("center"),
                 zoom: model.get("zoom"),
-                zoomControl: true,
-                attributionControl: true
+                ...model.get("map_options")
             });
 
             // Store references for cleanup and updates
