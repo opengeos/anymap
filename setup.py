@@ -5,6 +5,7 @@ import platform
 
 is_windows = platform.system() == "Windows"
 
+
 class build_py(_build_py):
     def run(self):
         potree_repo = "https://github.com/potree/potree.git"
@@ -14,7 +15,9 @@ class build_py(_build_py):
 
         if not os.path.exists(potree_src):
             print(f"Cloning Potree into {potree_src}...")
-            subprocess.check_call(["git", "clone", "--depth", "1", potree_repo, potree_src])
+            subprocess.check_call(
+                ["git", "clone", "--depth", "1", potree_repo, potree_src]
+            )
 
         print("Installing npm dependencies...")
         subprocess.check_call(["npm", "install"], cwd=potree_src, shell=is_windows)
@@ -29,6 +32,7 @@ class build_py(_build_py):
 
         # Proceed with normal build
         super().run()
+
 
 setup(
     cmdclass={
