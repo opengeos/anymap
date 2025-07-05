@@ -1220,6 +1220,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.add_control" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_control()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.add_geojson_layer" class="md-nav__link">
     <span class="md-ellipsis">
       add_geojson_layer()
@@ -1328,6 +1337,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.remove_control" class="md-nav__link">
+    <span class="md-ellipsis">
+      remove_control()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.remove_from_sidebar" class="md-nav__link">
     <span class="md-ellipsis">
       remove_from_sidebar()
@@ -1376,6 +1394,15 @@
   <a href="#anymap.maplibre.MapLibreMap.set_pitch" class="md-nav__link">
     <span class="md-ellipsis">
       set_pitch()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.set_projection" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_projection()
     </span>
   </a>
   
@@ -1814,6 +1841,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.add_control" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_control()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.add_geojson_layer" class="md-nav__link">
     <span class="md-ellipsis">
       add_geojson_layer()
@@ -1922,6 +1958,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.remove_control" class="md-nav__link">
+    <span class="md-ellipsis">
+      remove_control()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.remove_from_sidebar" class="md-nav__link">
     <span class="md-ellipsis">
       remove_from_sidebar()
@@ -1970,6 +2015,15 @@
   <a href="#anymap.maplibre.MapLibreMap.set_pitch" class="md-nav__link">
     <span class="md-ellipsis">
       set_pitch()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.set_projection" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_projection()
     </span>
   </a>
   
@@ -5023,6 +5077,13 @@ data sources, custom styling, and interactive features.</p>
         <span class="n">height</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;600px&quot;</span><span class="p">,</span>
         <span class="n">bearing</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
         <span class="n">pitch</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">controls</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;navigation&quot;</span><span class="p">:</span> <span class="s2">&quot;top-right&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;fullscreen&quot;</span><span class="p">:</span> <span class="s2">&quot;top-right&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;scale&quot;</span><span class="p">:</span> <span class="s2">&quot;bottom-left&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;globe&quot;</span><span class="p">:</span> <span class="s2">&quot;top-right&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="n">projection</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;mercator&quot;</span><span class="p">,</span>
         <span class="n">add_sidebar</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">sidebar_visible</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">sidebar_width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">360</span><span class="p">,</span>
@@ -5057,6 +5118,11 @@ data sources, custom styling, and interactive features.</p>
             <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
         <span class="p">)</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">controls</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">control</span><span class="p">,</span> <span class="n">position</span> <span class="ow">in</span> <span class="n">controls</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_control</span><span class="p">(</span><span class="n">control</span><span class="p">,</span> <span class="n">position</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">controls</span><span class="p">[</span><span class="n">control</span><span class="p">]</span> <span class="o">=</span> <span class="n">position</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">layer_dict</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">layer_dict</span><span class="p">[</span><span class="s2">&quot;background&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;layer&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -5074,6 +5140,21 @@ data sources, custom styling, and interactive features.</p>
         <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_style_layers</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">style_dict</span><span class="p">[</span><span class="n">layer</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">layer</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">source_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="n">projection</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;globe&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_projection</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="s2">&quot;interpolate&quot;</span><span class="p">,</span>
+                        <span class="p">[</span><span class="s2">&quot;linear&quot;</span><span class="p">],</span>
+                        <span class="p">[</span><span class="s2">&quot;zoom&quot;</span><span class="p">],</span>
+                        <span class="mi">10</span><span class="p">,</span>
+                        <span class="s2">&quot;vertical-perspective&quot;</span><span class="p">,</span>
+                        <span class="mi">12</span><span class="p">,</span>
+                        <span class="s2">&quot;mercator&quot;</span><span class="p">,</span>
+                    <span class="p">]</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">sidebar_args</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">sidebar_args</span> <span class="o">=</span> <span class="p">{}</span>
@@ -5444,6 +5525,16 @@ data sources, custom styling, and interactive features.</p>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_paint_property</span><span class="p">(</span><span class="n">layer_id</span><span class="p">,</span> <span class="s2">&quot;icon-opacity&quot;</span><span class="p">,</span> <span class="n">opacity</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_paint_property</span><span class="p">(</span><span class="n">layer_id</span><span class="p">,</span> <span class="s2">&quot;text-opacity&quot;</span><span class="p">,</span> <span class="n">opacity</span><span class="p">)</span>
 
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_projection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">projection</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the map projection.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            projection: Projection configuration dictionary.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Store projection in persistent state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_projection</span> <span class="o">=</span> <span class="n">projection</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;setProjection&quot;</span><span class="p">,</span> <span class="n">projection</span><span class="p">)</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">get_layer_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the type of a layer.</span>
 
@@ -5710,6 +5801,54 @@ data sources, custom styling, and interactive features.</p>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">layer_id</span><span class="p">,</span> <span class="n">layer_config</span><span class="p">,</span> <span class="n">before_id</span><span class="p">)</span>
 
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_control</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">control_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">position</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;top-right&quot;</span><span class="p">,</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a control to the map.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            control_type: Type of control (&#39;navigation&#39;, &#39;scale&#39;, &#39;fullscreen&#39;, &#39;geolocate&#39;, &#39;attribution&#39;, &#39;globe&#39;)</span>
+<span class="sd">            position: Position on map (&#39;top-left&#39;, &#39;top-right&#39;, &#39;bottom-left&#39;, &#39;bottom-right&#39;)</span>
+<span class="sd">            options: Additional options for the control</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">control_options</span> <span class="o">=</span> <span class="n">options</span> <span class="ow">or</span> <span class="p">{}</span>
+        <span class="n">control_options</span><span class="p">[</span><span class="s2">&quot;position&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">position</span>
+
+        <span class="c1"># Store control in persistent state</span>
+        <span class="n">control_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">control_type</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">position</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">current_controls</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_controls</span><span class="p">)</span>
+        <span class="n">current_controls</span><span class="p">[</span><span class="n">control_key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">control_type</span><span class="p">,</span>
+            <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
+            <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="n">control_options</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_controls</span> <span class="o">=</span> <span class="n">current_controls</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addControl&quot;</span><span class="p">,</span> <span class="n">control_type</span><span class="p">,</span> <span class="n">control_options</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_control</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">control_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">position</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;top-right&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove a control from the map.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            control_type: Type of control to remove (&#39;navigation&#39;, &#39;scale&#39;, &#39;fullscreen&#39;, &#39;geolocate&#39;, &#39;attribution&#39;, &#39;globe&#39;)</span>
+<span class="sd">            position: Position where the control was added (&#39;top-left&#39;, &#39;top-right&#39;, &#39;bottom-left&#39;, &#39;bottom-right&#39;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Remove control from persistent state</span>
+        <span class="n">control_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">control_type</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">position</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">current_controls</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_controls</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">control_key</span> <span class="ow">in</span> <span class="n">current_controls</span><span class="p">:</span>
+            <span class="k">del</span> <span class="n">current_controls</span><span class="p">[</span><span class="n">control_key</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_controls</span> <span class="o">=</span> <span class="n">current_controls</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;removeControl&quot;</span><span class="p">,</span> <span class="n">control_type</span><span class="p">,</span> <span class="n">position</span><span class="p">)</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">add_basemap</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">basemap</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -5923,7 +6062,7 @@ data sources, custom styling, and interactive features.</p>
 
 
 <h3 id="anymap.maplibre.MapLibreMap.__init__" class="doc doc-heading">
-<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;dark-matter&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="s1">&#39;100%&#39;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s1">&#39;600px&#39;</span><span class="p">,</span> <span class="n">bearing</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">pitch</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">add_sidebar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sidebar_visible</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sidebar_width</span><span class="o">=</span><span class="mi">360</span><span class="p">,</span> <span class="n">sidebar_args</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layer_manager_expanded</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;dark-matter&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="s1">&#39;100%&#39;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s1">&#39;600px&#39;</span><span class="p">,</span> <span class="n">bearing</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">pitch</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">controls</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;navigation&#39;</span><span class="p">:</span> <span class="s1">&#39;top-right&#39;</span><span class="p">,</span> <span class="s1">&#39;fullscreen&#39;</span><span class="p">:</span> <span class="s1">&#39;top-right&#39;</span><span class="p">,</span> <span class="s1">&#39;scale&#39;</span><span class="p">:</span> <span class="s1">&#39;bottom-left&#39;</span><span class="p">,</span> <span class="s1">&#39;globe&#39;</span><span class="p">:</span> <span class="s1">&#39;top-right&#39;</span><span class="p">},</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;mercator&#39;</span><span class="p">,</span> <span class="n">add_sidebar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sidebar_visible</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sidebar_width</span><span class="o">=</span><span class="mi">360</span><span class="p">,</span> <span class="n">sidebar_args</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layer_manager_expanded</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-special"><code>special</code></small>
@@ -6007,6 +6146,13 @@ data sources, custom styling, and interactive features.</p>
     <span class="n">height</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;600px&quot;</span><span class="p">,</span>
     <span class="n">bearing</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="n">pitch</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">controls</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;navigation&quot;</span><span class="p">:</span> <span class="s2">&quot;top-right&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;fullscreen&quot;</span><span class="p">:</span> <span class="s2">&quot;top-right&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;scale&quot;</span><span class="p">:</span> <span class="s2">&quot;bottom-left&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;globe&quot;</span><span class="p">:</span> <span class="s2">&quot;top-right&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">projection</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;mercator&quot;</span><span class="p">,</span>
     <span class="n">add_sidebar</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">sidebar_visible</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">sidebar_width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">360</span><span class="p">,</span>
@@ -6041,6 +6187,11 @@ data sources, custom styling, and interactive features.</p>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">)</span>
 
+    <span class="bp">self</span><span class="o">.</span><span class="n">controls</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">control</span><span class="p">,</span> <span class="n">position</span> <span class="ow">in</span> <span class="n">controls</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_control</span><span class="p">(</span><span class="n">control</span><span class="p">,</span> <span class="n">position</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">controls</span><span class="p">[</span><span class="n">control</span><span class="p">]</span> <span class="o">=</span> <span class="n">position</span>
+
     <span class="bp">self</span><span class="o">.</span><span class="n">layer_dict</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">layer_dict</span><span class="p">[</span><span class="s2">&quot;background&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;layer&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -6058,6 +6209,21 @@ data sources, custom styling, and interactive features.</p>
     <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_style_layers</span><span class="p">():</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">style_dict</span><span class="p">[</span><span class="n">layer</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">layer</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">source_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">if</span> <span class="n">projection</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;globe&quot;</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_projection</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="s2">&quot;interpolate&quot;</span><span class="p">,</span>
+                    <span class="p">[</span><span class="s2">&quot;linear&quot;</span><span class="p">],</span>
+                    <span class="p">[</span><span class="s2">&quot;zoom&quot;</span><span class="p">],</span>
+                    <span class="mi">10</span><span class="p">,</span>
+                    <span class="s2">&quot;vertical-perspective&quot;</span><span class="p">,</span>
+                    <span class="mi">12</span><span class="p">,</span>
+                    <span class="s2">&quot;mercator&quot;</span><span class="p">,</span>
+                <span class="p">]</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">sidebar_args</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">sidebar_args</span> <span class="o">=</span> <span class="p">{}</span>
@@ -6190,6 +6356,88 @@ data sources, custom styling, and interactive features.</p>
         <span class="n">paint</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;raster-opacity&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
         <span class="n">before_id</span><span class="o">=</span><span class="n">before_id</span><span class="p">,</span>
     <span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="anymap.maplibre.MapLibreMap.add_control" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">add_control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">control_type</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s1">&#39;top-right&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+
+<a href="#anymap.maplibre.MapLibreMap.add_control" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Add a control to the map.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>control_type</code></td>
+        <td><code>str</code></td>
+        <td><p>Type of control ('navigation', 'scale', 'fullscreen', 'geolocate', 'attribution', 'globe')</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>position</code></td>
+        <td><code>str</code></td>
+        <td><p>Position on map ('top-left', 'top-right', 'bottom-left', 'bottom-right')</p></td>
+        <td><code>&#39;top-right&#39;</code></td>
+      </tr>
+      <tr>
+        <td><code>options</code></td>
+        <td><code>Optional[Dict[str, Any]]</code></td>
+        <td><p>Additional options for the control</p></td>
+        <td><code>None</code></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>anymap/maplibre.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_control</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">control_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">position</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;top-right&quot;</span><span class="p">,</span>
+    <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a control to the map.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        control_type: Type of control (&#39;navigation&#39;, &#39;scale&#39;, &#39;fullscreen&#39;, &#39;geolocate&#39;, &#39;attribution&#39;, &#39;globe&#39;)</span>
+<span class="sd">        position: Position on map (&#39;top-left&#39;, &#39;top-right&#39;, &#39;bottom-left&#39;, &#39;bottom-right&#39;)</span>
+<span class="sd">        options: Additional options for the control</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">control_options</span> <span class="o">=</span> <span class="n">options</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">control_options</span><span class="p">[</span><span class="s2">&quot;position&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">position</span>
+
+    <span class="c1"># Store control in persistent state</span>
+    <span class="n">control_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">control_type</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">position</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">current_controls</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_controls</span><span class="p">)</span>
+    <span class="n">current_controls</span><span class="p">[</span><span class="n">control_key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">control_type</span><span class="p">,</span>
+        <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
+        <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="n">control_options</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_controls</span> <span class="o">=</span> <span class="n">current_controls</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addControl&quot;</span><span class="p">,</span> <span class="n">control_type</span><span class="p">,</span> <span class="n">control_options</span><span class="p">)</span>
 </code></pre></div>
         </details>
     </div>
@@ -7328,6 +7576,74 @@ alongside a sidebar. The sidebar can be customized with visibility, width, and a
 
 
 
+<h3 id="anymap.maplibre.MapLibreMap.remove_control" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">remove_control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">control_type</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s1">&#39;top-right&#39;</span><span class="p">)</span></code>
+
+
+<a href="#anymap.maplibre.MapLibreMap.remove_control" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Remove a control from the map.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>control_type</code></td>
+        <td><code>str</code></td>
+        <td><p>Type of control to remove ('navigation', 'scale', 'fullscreen', 'geolocate', 'attribution', 'globe')</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>position</code></td>
+        <td><code>str</code></td>
+        <td><p>Position where the control was added ('top-left', 'top-right', 'bottom-left', 'bottom-right')</p></td>
+        <td><code>&#39;top-right&#39;</code></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>anymap/maplibre.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">remove_control</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">control_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">position</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;top-right&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove a control from the map.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        control_type: Type of control to remove (&#39;navigation&#39;, &#39;scale&#39;, &#39;fullscreen&#39;, &#39;geolocate&#39;, &#39;attribution&#39;, &#39;globe&#39;)</span>
+<span class="sd">        position: Position where the control was added (&#39;top-left&#39;, &#39;top-right&#39;, &#39;bottom-left&#39;, &#39;bottom-right&#39;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Remove control from persistent state</span>
+    <span class="n">control_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">control_type</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">position</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">current_controls</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_controls</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">control_key</span> <span class="ow">in</span> <span class="n">current_controls</span><span class="p">:</span>
+        <span class="k">del</span> <span class="n">current_controls</span><span class="p">[</span><span class="n">control_key</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_controls</span> <span class="o">=</span> <span class="n">current_controls</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;removeControl&quot;</span><span class="p">,</span> <span class="n">control_type</span><span class="p">,</span> <span class="n">position</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
 <h3 id="anymap.maplibre.MapLibreMap.remove_from_sidebar" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">remove_from_sidebar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">widget</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
@@ -7691,6 +8007,58 @@ alongside a sidebar. The sidebar can be customized with visibility, width, and a
 <span class="sd">        pitch: Map tilt in degrees (0-60).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">pitch</span> <span class="o">=</span> <span class="n">pitch</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="anymap.maplibre.MapLibreMap.set_projection" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">set_projection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">projection</span><span class="p">)</span></code>
+
+
+<a href="#anymap.maplibre.MapLibreMap.set_projection" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Set the map projection.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>projection</code></td>
+        <td><code>Dict[str, Any]</code></td>
+        <td><p>Projection configuration dictionary.</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>anymap/maplibre.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">set_projection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">projection</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set the map projection.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        projection: Projection configuration dictionary.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Store projection in persistent state</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_projection</span> <span class="o">=</span> <span class="n">projection</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;setProjection&quot;</span><span class="p">,</span> <span class="n">projection</span><span class="p">)</span>
 </code></pre></div>
         </details>
     </div>
