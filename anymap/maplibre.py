@@ -1,11 +1,15 @@
 """MapLibre GL JS implementation of the map widget."""
 
 import pathlib
+import requests
 import traitlets
 from typing import Dict, List, Any, Optional, Union
 import json
 
 from .base import MapWidget
+from .utils import (
+    construct_maplibre_style,
+)
 
 
 # Load MapLibre-specific js and css
@@ -20,9 +24,10 @@ class MapLibreMap(MapWidget):
     """MapLibre GL JS implementation of the map widget."""
 
     # MapLibre-specific traits
-    style = traitlets.Unicode("https://demotiles.maplibre.org/style.json").tag(
-        sync=True
-    )
+    style = traitlets.Union(
+        [traitlets.Unicode(), traitlets.Dict()],
+        default_value="dark-matter",
+    ).tag(sync=True)
     bearing = traitlets.Float(0.0).tag(sync=True)
     pitch = traitlets.Float(0.0).tag(sync=True)
     antialias = traitlets.Bool(True).tag(sync=True)
@@ -33,9 +38,9 @@ class MapLibreMap(MapWidget):
 
     def __init__(
         self,
-        center: List[float] = [0.0, 0.0],
-        zoom: float = 2.0,
-        style: str = "https://demotiles.maplibre.org/style.json",
+        center: List[float] = [0.0, 20],
+        zoom: float = 1.0,
+        style: str = "dark-matter",
         width: str = "100%",
         height: str = "600px",
         bearing: float = 0.0,
@@ -53,6 +58,10 @@ class MapLibreMap(MapWidget):
             bearing: Map bearing (rotation) in degrees
             pitch: Map pitch (tilt) in degrees
         """
+
+        if isinstance(style, str):
+            style = construct_maplibre_style(style)
+
         super().__init__(
             center=center,
             zoom=zoom,
