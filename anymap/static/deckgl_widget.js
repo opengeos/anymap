@@ -125,7 +125,7 @@ function render({ model, el }) {
       // Initialize DeckGL
       const deckgl = new deck.DeckGL({
         container: container,
-        mapStyle: model.get("map_style"),
+        mapStyle: model.get("style"),
         initialViewState: initialViewState,
         controller: controllerOptions,
         layers: parseDeckGLLayers(model.get("deckgl_layers") || []),
@@ -203,8 +203,8 @@ function render({ model, el }) {
         deckgl.setProps({ initialViewState: viewState });
       });
 
-      model.on("change:map_style", () => {
-        deckgl.setProps({ mapStyle: model.get("map_style") });
+      model.on("change:style", () => {
+        deckgl.setProps({ mapStyle: model.get("style") });
       });
 
       model.on("change:bearing", () => {

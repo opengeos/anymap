@@ -170,8 +170,8 @@ class MapWidget(anywidget.AnyWidget):
         }
 
         # Add class-specific attributes
-        if hasattr(self, "map_style"):
-            map_state["map_style"] = self.map_style
+        if hasattr(self, "style"):
+            map_state["style"] = self.style
         if hasattr(self, "bearing"):
             map_state["bearing"] = self.bearing
         if hasattr(self, "pitch"):

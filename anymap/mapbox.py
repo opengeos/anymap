@@ -19,7 +19,7 @@ class MapboxMap(MapWidget):
     """Mapbox GL JS implementation of the map widget."""
 
     # Mapbox-specific traits
-    map_style = traitlets.Unicode("mapbox://styles/mapbox/streets-v12").tag(sync=True)
+    style = traitlets.Unicode("mapbox://styles/mapbox/streets-v12").tag(sync=True)
     bearing = traitlets.Float(0.0).tag(sync=True)
     pitch = traitlets.Float(0.0).tag(sync=True)
     antialias = traitlets.Bool(True).tag(sync=True)
@@ -33,7 +33,7 @@ class MapboxMap(MapWidget):
         self,
         center: List[float] = [0.0, 0.0],
         zoom: float = 2.0,
-        map_style: str = "mapbox://styles/mapbox/streets-v12",
+        style: str = "mapbox://styles/mapbox/streets-v12",
         width: str = "100%",
         height: str = "600px",
         bearing: float = 0.0,
@@ -46,7 +46,7 @@ class MapboxMap(MapWidget):
         Args:
             center: Map center as [latitude, longitude]
             zoom: Initial zoom level
-            map_style: Mapbox style URL or style object
+            style: Mapbox style URL or style object
             width: Widget width
             height: Widget height
             bearing: Map bearing (rotation) in degrees
@@ -64,7 +64,7 @@ class MapboxMap(MapWidget):
             zoom=zoom,
             width=width,
             height=height,
-            map_style=map_style,
+            style=style,
             bearing=bearing,
             pitch=pitch,
             access_token=access_token,
@@ -99,7 +99,7 @@ class MapboxMap(MapWidget):
     def set_style(self, style: Union[str, Dict[str, Any]]) -> None:
         """Set the map style."""
         if isinstance(style, str):
-            self.map_style = style
+            self.style = style
         else:
             self.call_js_method("setStyle", style)
 
@@ -342,7 +342,7 @@ class MapboxMap(MapWidget):
         // Initialize Mapbox map
         const map = new mapboxgl.Map({{
             container: 'map',
-            style: mapState.map_style || 'mapbox://styles/mapbox/streets-v12',
+            style: mapState.style || 'mapbox://styles/mapbox/streets-v12',
             center: [mapState.center[1], mapState.center[0]], // Convert [lat, lng] to [lng, lat]
             zoom: mapState.zoom || 2,
             bearing: mapState.bearing || 0,

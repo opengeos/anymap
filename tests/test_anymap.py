@@ -117,14 +117,14 @@ class TestMapLibreMap(unittest.TestCase):
         self.map = MapLibreMap(
             center=[37.7749, -122.4194],
             zoom=12,
-            map_style="https://example.com/style.json",
+            style="https://example.com/style.json",
         )
 
     def test_initialization(self):
         """Test MapLibre map initialization."""
         self.assertEqual(self.map.center, [37.7749, -122.4194])
         self.assertEqual(self.map.zoom, 12)
-        self.assertEqual(self.map.map_style, "https://example.com/style.json")
+        self.assertEqual(self.map.style, "https://example.com/style.json")
         self.assertEqual(self.map.bearing, 0.0)
         self.assertEqual(self.map.pitch, 0.0)
         self.assertTrue(self.map.antialias)
@@ -133,7 +133,7 @@ class TestMapLibreMap(unittest.TestCase):
         """Test setting map style."""
         # Test with string style
         self.map.set_style("https://new-style.com/style.json")
-        self.assertEqual(self.map.map_style, "https://new-style.com/style.json")
+        self.assertEqual(self.map.style, "https://new-style.com/style.json")
 
         # Test with object style
         style_obj = {"version": 8, "sources": {}}
@@ -418,14 +418,14 @@ class TestMapboxMap(unittest.TestCase):
         self.map = MapboxMap(
             center=[37.7749, -122.4194],
             zoom=12,
-            map_style="mapbox://styles/mapbox/streets-v12",
+            style="mapbox://styles/mapbox/streets-v12",
         )
 
     def test_initialization(self):
         """Test Mapbox map initialization."""
         self.assertEqual(self.map.center, [37.7749, -122.4194])
         self.assertEqual(self.map.zoom, 12)
-        self.assertEqual(self.map.map_style, "mapbox://styles/mapbox/streets-v12")
+        self.assertEqual(self.map.style, "mapbox://styles/mapbox/streets-v12")
         self.assertEqual(self.map.bearing, 0.0)
         self.assertEqual(self.map.pitch, 0.0)
         self.assertTrue(self.map.antialias)
@@ -488,7 +488,7 @@ class TestMapboxMap(unittest.TestCase):
         """Test Mapbox style handling."""
         # Test setting standard Mapbox style
         self.map.set_style("mapbox://styles/mapbox/satellite-v9")
-        self.assertEqual(self.map.map_style, "mapbox://styles/mapbox/satellite-v9")
+        self.assertEqual(self.map.style, "mapbox://styles/mapbox/satellite-v9")
 
         # Test setting custom style object
         custom_style = {"version": 8, "sources": {}, "layers": []}
@@ -526,7 +526,7 @@ class TestMapboxMapboxInteraction(unittest.TestCase):
         # Verify they have different configurations
         self.assertNotEqual(maplibre_map.center, mapbox_map.center)
         self.assertNotEqual(maplibre_map.zoom, mapbox_map.zoom)
-        self.assertNotEqual(maplibre_map.map_style, mapbox_map.map_style)
+        self.assertNotEqual(maplibre_map.style, mapbox_map.style)
 
         # Add different layers to each
         maplibre_map.add_geojson_layer(

@@ -36,7 +36,7 @@ class DeckGLMap(MapLibreMap):
         self,
         center: List[float] = [0.0, 0.0],
         zoom: float = 2.0,
-        map_style: str = "https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json",
+        style: str = "https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json",
         width: str = "100%",
         height: str = "600px",
         bearing: float = 0.0,
@@ -49,7 +49,7 @@ class DeckGLMap(MapLibreMap):
         Args:
             center: Map center as [latitude, longitude]
             zoom: Initial zoom level
-            map_style: MapLibre style URL or style object
+            style: MapLibre style URL or style object
             width: Widget width
             height: Widget height
             bearing: Map bearing (rotation) in degrees
@@ -59,7 +59,7 @@ class DeckGLMap(MapLibreMap):
         super().__init__(
             center=center,
             zoom=zoom,
-            map_style=map_style,
+            style=style,
             width=width,
             height=height,
             bearing=bearing,
@@ -225,8 +225,8 @@ class DeckGLMap(MapLibreMap):
         }
 
         # Add class-specific attributes
-        if hasattr(self, "map_style"):
-            map_state["map_style"] = self.map_style
+        if hasattr(self, "style"):
+            map_state["style"] = self.style
         if hasattr(self, "bearing"):
             map_state["bearing"] = self.bearing
         if hasattr(self, "pitch"):
@@ -368,7 +368,7 @@ class DeckGLMap(MapLibreMap):
         // Initialize DeckGL with MapLibre
         const deckgl = new deck.DeckGL({{
             container: 'map',
-            mapStyle: mapState.map_style || 'https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json',
+            mapStyle: mapState.style || 'https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json',
             initialViewState: {{
                 latitude: mapState.center[0],
                 longitude: mapState.center[1],
