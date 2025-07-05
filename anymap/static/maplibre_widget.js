@@ -32,7 +32,7 @@ function render({ model, el }) {
   // Initialize MapLibre map
   const map = new maplibregl.Map({
     container: container,
-    style: model.get("map_style"),
+    style: model.get("style"),
     center: model.get("center").slice().reverse(), // [lng, lat] for MapLibre
     zoom: model.get("zoom"),
     bearing: model.get("bearing"),
@@ -157,8 +157,8 @@ function render({ model, el }) {
     map.setZoom(model.get("zoom"));
   });
 
-  model.on("change:map_style", () => {
-    map.setStyle(model.get("map_style"));
+  model.on("change:style", () => {
+    map.setStyle(model.get("style"));
   });
 
   model.on("change:bearing", () => {

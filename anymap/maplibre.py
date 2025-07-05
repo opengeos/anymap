@@ -19,7 +19,7 @@ class MapLibreMap(MapWidget):
     """MapLibre GL JS implementation of the map widget."""
 
     # MapLibre-specific traits
-    map_style = traitlets.Unicode("https://demotiles.maplibre.org/style.json").tag(
+    style = traitlets.Unicode("https://demotiles.maplibre.org/style.json").tag(
         sync=True
     )
     bearing = traitlets.Float(0.0).tag(sync=True)
@@ -34,7 +34,7 @@ class MapLibreMap(MapWidget):
         self,
         center: List[float] = [0.0, 0.0],
         zoom: float = 2.0,
-        map_style: str = "https://demotiles.maplibre.org/style.json",
+        style: str = "https://demotiles.maplibre.org/style.json",
         width: str = "100%",
         height: str = "600px",
         bearing: float = 0.0,
@@ -46,7 +46,7 @@ class MapLibreMap(MapWidget):
         Args:
             center: Map center as [latitude, longitude]
             zoom: Initial zoom level
-            map_style: MapLibre style URL or style object
+            style: MapLibre style URL or style object
             width: Widget width
             height: Widget height
             bearing: Map bearing (rotation) in degrees
@@ -57,7 +57,7 @@ class MapLibreMap(MapWidget):
             zoom=zoom,
             width=width,
             height=height,
-            map_style=map_style,
+            style=style,
             bearing=bearing,
             pitch=pitch,
             **kwargs,
@@ -66,7 +66,7 @@ class MapLibreMap(MapWidget):
     def set_style(self, style: Union[str, Dict[str, Any]]) -> None:
         """Set the map style."""
         if isinstance(style, str):
-            self.map_style = style
+            self.style = style
         else:
             self.call_js_method("setStyle", style)
 
@@ -229,7 +229,7 @@ class MapLibreMap(MapWidget):
         // Initialize MapLibre map
         const map = new maplibregl.Map({{
             container: 'map',
-            style: mapState.map_style || 'https://demotiles.maplibre.org/style.json',
+            style: mapState.style || 'https://demotiles.maplibre.org/style.json',
             center: [mapState.center[1], mapState.center[0]], // Convert [lat, lng] to [lng, lat]
             zoom: mapState.zoom || 2,
             bearing: mapState.bearing || 0,
