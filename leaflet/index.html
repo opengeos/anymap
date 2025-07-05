@@ -1318,6 +1318,7 @@ LeafletMap            (<a class="autorefs autorefs-internal" title="anymap.base.
     <span class="c1"># Leaflet-specific traits</span>
     <span class="n">tile_layer</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Unicode</span><span class="p">(</span><span class="s2">&quot;OpenStreetMap&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">attribution</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Unicode</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">map_options</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Dict</span><span class="p">(</span><span class="n">default_value</span><span class="o">=</span><span class="p">{})</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># Define the JavaScript module path</span>
     <span class="n">_esm</span> <span class="o">=</span> <span class="n">_esm_leaflet</span>
@@ -1340,6 +1341,7 @@ LeafletMap            (<a class="autorefs autorefs-internal" title="anymap.base.
 <span class="sd">            tile_layer: Tile layer provider name or URL template</span>
 <span class="sd">            width: Widget width</span>
 <span class="sd">            height: Widget height</span>
+<span class="sd">            map_options: Leaflet Map Options (see https://leafletjs.com/reference.html#map-option)</span>
 <span class="sd">            **kwargs: Additional widget arguments</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
@@ -1698,6 +1700,7 @@ LeafletMap            (<a class="autorefs autorefs-internal" title="anymap.base.
 
 
 
+
   <div class="doc doc-object doc-method">
 
 
@@ -1757,6 +1760,12 @@ LeafletMap            (<a class="autorefs autorefs-internal" title="anymap.base.
         <td><code>&#39;600px&#39;</code></td>
       </tr>
       <tr>
+        <td><code>map_options</code></td>
+        <td></td>
+        <td><p>Leaflet Map Options (see https://leafletjs.com/reference.html#map-option)</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
         <td><code>**kwargs</code></td>
         <td></td>
         <td><p>Additional widget arguments</p></td>
@@ -1783,6 +1792,7 @@ LeafletMap            (<a class="autorefs autorefs-internal" title="anymap.base.
 <span class="sd">        tile_layer: Tile layer provider name or URL template</span>
 <span class="sd">        width: Widget width</span>
 <span class="sd">        height: Widget height</span>
+<span class="sd">        map_options: Leaflet Map Options (see https://leafletjs.com/reference.html#map-option)</span>
 <span class="sd">        **kwargs: Additional widget arguments</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
