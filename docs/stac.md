@@ -1,0 +1,3 @@
+# stac module
+
+::: anymap.stac

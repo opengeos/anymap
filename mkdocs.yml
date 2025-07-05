@@ -101,4 +101,5 @@ nav:
           - maplibre module: maplibre.md
           - openlayers module: openlayers.md
           - potree module: potree.md
+          - stac module: stac.md
           - utils module: utils.md
