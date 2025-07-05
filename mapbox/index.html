@@ -1442,7 +1442,7 @@ MapboxMap            (<a class="autorefs autorefs-internal" title="anymap.base.M
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Mapbox GL JS implementation of the map widget.&quot;&quot;&quot;</span>
 
     <span class="c1"># Mapbox-specific traits</span>
-    <span class="n">map_style</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Unicode</span><span class="p">(</span><span class="s2">&quot;mapbox://styles/mapbox/streets-v12&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">style</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Unicode</span><span class="p">(</span><span class="s2">&quot;mapbox://styles/mapbox/streets-v12&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">bearing</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Float</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">pitch</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Float</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">antialias</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1456,7 +1456,7 @@ MapboxMap            (<a class="autorefs autorefs-internal" title="anymap.base.M
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">center</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
         <span class="n">zoom</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">,</span>
-        <span class="n">map_style</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;mapbox://styles/mapbox/streets-v12&quot;</span><span class="p">,</span>
+        <span class="n">style</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;mapbox://styles/mapbox/streets-v12&quot;</span><span class="p">,</span>
         <span class="n">width</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;100%&quot;</span><span class="p">,</span>
         <span class="n">height</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;600px&quot;</span><span class="p">,</span>
         <span class="n">bearing</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
@@ -1469,7 +1469,7 @@ MapboxMap            (<a class="autorefs autorefs-internal" title="anymap.base.M
 <span class="sd">        Args:</span>
 <span class="sd">            center: Map center as [latitude, longitude]</span>
 <span class="sd">            zoom: Initial zoom level</span>
-<span class="sd">            map_style: Mapbox style URL or style object</span>
+<span class="sd">            style: Mapbox style URL or style object</span>
 <span class="sd">            width: Widget width</span>
 <span class="sd">            height: Widget height</span>
 <span class="sd">            bearing: Map bearing (rotation) in degrees</span>
@@ -1487,7 +1487,7 @@ MapboxMap            (<a class="autorefs autorefs-internal" title="anymap.base.M
             <span class="n">zoom</span><span class="o">=</span><span class="n">zoom</span><span class="p">,</span>
             <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
             <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
-            <span class="n">map_style</span><span class="o">=</span><span class="n">map_style</span><span class="p">,</span>
+            <span class="n">style</span><span class="o">=</span><span class="n">style</span><span class="p">,</span>
             <span class="n">bearing</span><span class="o">=</span><span class="n">bearing</span><span class="p">,</span>
             <span class="n">pitch</span><span class="o">=</span><span class="n">pitch</span><span class="p">,</span>
             <span class="n">access_token</span><span class="o">=</span><span class="n">access_token</span><span class="p">,</span>
@@ -1522,7 +1522,7 @@ MapboxMap            (<a class="autorefs autorefs-internal" title="anymap.base.M
     <span class="k">def</span><span class="w"> </span><span class="nf">set_style</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">style</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the map style.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">map_style</span> <span class="o">=</span> <span class="n">style</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">style</span> <span class="o">=</span> <span class="n">style</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;setStyle&quot;</span><span class="p">,</span> <span class="n">style</span><span class="p">)</span>
 
@@ -1765,7 +1765,7 @@ MapboxMap            (<a class="autorefs autorefs-internal" title="anymap.base.M
 <span class="s2">        // Initialize Mapbox map</span>
 <span class="s2">        const map = new mapboxgl.Map(</span><span class="se">{{</span>
 <span class="s2">            container: &#39;map&#39;,</span>
-<span class="s2">            style: mapState.map_style || &#39;mapbox://styles/mapbox/streets-v12&#39;,</span>
+<span class="s2">            style: mapState.style || &#39;mapbox://styles/mapbox/streets-v12&#39;,</span>
 <span class="s2">            center: [mapState.center[1], mapState.center[0]], // Convert [lat, lng] to [lng, lat]</span>
 <span class="s2">            zoom: mapState.zoom || 2,</span>
 <span class="s2">            bearing: mapState.bearing || 0,</span>
@@ -1844,7 +1844,7 @@ MapboxMap            (<a class="autorefs autorefs-internal" title="anymap.base.M
 
 
 <h3 id="anymap.mapbox.MapboxMap.__init__" class="doc doc-heading">
-<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">map_style</span><span class="o">=</span><span class="s1">&#39;mapbox://styles/mapbox/streets-v12&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="s1">&#39;100%&#39;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s1">&#39;600px&#39;</span><span class="p">,</span> <span class="n">bearing</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">pitch</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">access_token</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;mapbox://styles/mapbox/streets-v12&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="s1">&#39;100%&#39;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s1">&#39;600px&#39;</span><span class="p">,</span> <span class="n">bearing</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">pitch</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">access_token</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-special"><code>special</code></small>
@@ -1880,7 +1880,7 @@ MapboxMap            (<a class="autorefs autorefs-internal" title="anymap.base.M
         <td><code>2.0</code></td>
       </tr>
       <tr>
-        <td><code>map_style</code></td>
+        <td><code>style</code></td>
         <td><code>str</code></td>
         <td><p>Mapbox style URL or style object</p></td>
         <td><code>&#39;mapbox://styles/mapbox/streets-v12&#39;</code></td>
@@ -1925,7 +1925,7 @@ MapboxMap            (<a class="autorefs autorefs-internal" title="anymap.base.M
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">center</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
     <span class="n">zoom</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">,</span>
-    <span class="n">map_style</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;mapbox://styles/mapbox/streets-v12&quot;</span><span class="p">,</span>
+    <span class="n">style</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;mapbox://styles/mapbox/streets-v12&quot;</span><span class="p">,</span>
     <span class="n">width</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;100%&quot;</span><span class="p">,</span>
     <span class="n">height</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;600px&quot;</span><span class="p">,</span>
     <span class="n">bearing</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
@@ -1938,7 +1938,7 @@ MapboxMap            (<a class="autorefs autorefs-internal" title="anymap.base.M
 <span class="sd">    Args:</span>
 <span class="sd">        center: Map center as [latitude, longitude]</span>
 <span class="sd">        zoom: Initial zoom level</span>
-<span class="sd">        map_style: Mapbox style URL or style object</span>
+<span class="sd">        style: Mapbox style URL or style object</span>
 <span class="sd">        width: Widget width</span>
 <span class="sd">        height: Widget height</span>
 <span class="sd">        bearing: Map bearing (rotation) in degrees</span>
@@ -1956,7 +1956,7 @@ MapboxMap            (<a class="autorefs autorefs-internal" title="anymap.base.M
         <span class="n">zoom</span><span class="o">=</span><span class="n">zoom</span><span class="p">,</span>
         <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
         <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
-        <span class="n">map_style</span><span class="o">=</span><span class="n">map_style</span><span class="p">,</span>
+        <span class="n">style</span><span class="o">=</span><span class="n">style</span><span class="p">,</span>
         <span class="n">bearing</span><span class="o">=</span><span class="n">bearing</span><span class="p">,</span>
         <span class="n">pitch</span><span class="o">=</span><span class="n">pitch</span><span class="p">,</span>
         <span class="n">access_token</span><span class="o">=</span><span class="n">access_token</span><span class="p">,</span>
@@ -2495,7 +2495,7 @@ MapboxMap            (<a class="autorefs autorefs-internal" title="anymap.base.M
           <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">set_style</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">style</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Set the map style.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">map_style</span> <span class="o">=</span> <span class="n">style</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">style</span> <span class="o">=</span> <span class="n">style</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;setStyle&quot;</span><span class="p">,</span> <span class="n">style</span><span class="p">)</span>
 </code></pre></div>

@@ -1327,7 +1327,7 @@ DeckGLMap            (<a class="autorefs autorefs-internal" title="anymap.maplib
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">center</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
         <span class="n">zoom</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">,</span>
-        <span class="n">map_style</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json&quot;</span><span class="p">,</span>
+        <span class="n">style</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json&quot;</span><span class="p">,</span>
         <span class="n">width</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;100%&quot;</span><span class="p">,</span>
         <span class="n">height</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;600px&quot;</span><span class="p">,</span>
         <span class="n">bearing</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
@@ -1340,7 +1340,7 @@ DeckGLMap            (<a class="autorefs autorefs-internal" title="anymap.maplib
 <span class="sd">        Args:</span>
 <span class="sd">            center: Map center as [latitude, longitude]</span>
 <span class="sd">            zoom: Initial zoom level</span>
-<span class="sd">            map_style: MapLibre style URL or style object</span>
+<span class="sd">            style: MapLibre style URL or style object</span>
 <span class="sd">            width: Widget width</span>
 <span class="sd">            height: Widget height</span>
 <span class="sd">            bearing: Map bearing (rotation) in degrees</span>
@@ -1350,7 +1350,7 @@ DeckGLMap            (<a class="autorefs autorefs-internal" title="anymap.maplib
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">center</span><span class="o">=</span><span class="n">center</span><span class="p">,</span>
             <span class="n">zoom</span><span class="o">=</span><span class="n">zoom</span><span class="p">,</span>
-            <span class="n">map_style</span><span class="o">=</span><span class="n">map_style</span><span class="p">,</span>
+            <span class="n">style</span><span class="o">=</span><span class="n">style</span><span class="p">,</span>
             <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
             <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
             <span class="n">bearing</span><span class="o">=</span><span class="n">bearing</span><span class="p">,</span>
@@ -1516,8 +1516,8 @@ DeckGLMap            (<a class="autorefs autorefs-internal" title="anymap.maplib
         <span class="p">}</span>
 
         <span class="c1"># Add class-specific attributes</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;map_style&quot;</span><span class="p">):</span>
-            <span class="n">map_state</span><span class="p">[</span><span class="s2">&quot;map_style&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_style</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;style&quot;</span><span class="p">):</span>
+            <span class="n">map_state</span><span class="p">[</span><span class="s2">&quot;style&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">style</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;bearing&quot;</span><span class="p">):</span>
             <span class="n">map_state</span><span class="p">[</span><span class="s2">&quot;bearing&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bearing</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;pitch&quot;</span><span class="p">):</span>
@@ -1659,7 +1659,7 @@ DeckGLMap            (<a class="autorefs autorefs-internal" title="anymap.maplib
 <span class="s2">        // Initialize DeckGL with MapLibre</span>
 <span class="s2">        const deckgl = new deck.DeckGL(</span><span class="se">{{</span>
 <span class="s2">            container: &#39;map&#39;,</span>
-<span class="s2">            mapStyle: mapState.map_style || &#39;https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json&#39;,</span>
+<span class="s2">            mapStyle: mapState.style || &#39;https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json&#39;,</span>
 <span class="s2">            initialViewState: </span><span class="se">{{</span>
 <span class="s2">                latitude: mapState.center[0],</span>
 <span class="s2">                longitude: mapState.center[1],</span>
@@ -1715,7 +1715,7 @@ DeckGLMap            (<a class="autorefs autorefs-internal" title="anymap.maplib
 
 
 <h3 id="anymap.deckgl.DeckGLMap.__init__" class="doc doc-heading">
-<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">map_style</span><span class="o">=</span><span class="s1">&#39;https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="s1">&#39;100%&#39;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s1">&#39;600px&#39;</span><span class="p">,</span> <span class="n">bearing</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">pitch</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">controller_options</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="s1">&#39;100%&#39;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s1">&#39;600px&#39;</span><span class="p">,</span> <span class="n">bearing</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">pitch</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">controller_options</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-special"><code>special</code></small>
@@ -1751,7 +1751,7 @@ DeckGLMap            (<a class="autorefs autorefs-internal" title="anymap.maplib
         <td><code>2.0</code></td>
       </tr>
       <tr>
-        <td><code>map_style</code></td>
+        <td><code>style</code></td>
         <td><code>str</code></td>
         <td><p>MapLibre style URL or style object</p></td>
         <td><code>&#39;https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json&#39;</code></td>
@@ -1794,7 +1794,7 @@ DeckGLMap            (<a class="autorefs autorefs-internal" title="anymap.maplib
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">center</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
     <span class="n">zoom</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">,</span>
-    <span class="n">map_style</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json&quot;</span><span class="p">,</span>
+    <span class="n">style</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json&quot;</span><span class="p">,</span>
     <span class="n">width</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;100%&quot;</span><span class="p">,</span>
     <span class="n">height</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;600px&quot;</span><span class="p">,</span>
     <span class="n">bearing</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
@@ -1807,7 +1807,7 @@ DeckGLMap            (<a class="autorefs autorefs-internal" title="anymap.maplib
 <span class="sd">    Args:</span>
 <span class="sd">        center: Map center as [latitude, longitude]</span>
 <span class="sd">        zoom: Initial zoom level</span>
-<span class="sd">        map_style: MapLibre style URL or style object</span>
+<span class="sd">        style: MapLibre style URL or style object</span>
 <span class="sd">        width: Widget width</span>
 <span class="sd">        height: Widget height</span>
 <span class="sd">        bearing: Map bearing (rotation) in degrees</span>
@@ -1817,7 +1817,7 @@ DeckGLMap            (<a class="autorefs autorefs-internal" title="anymap.maplib
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
         <span class="n">center</span><span class="o">=</span><span class="n">center</span><span class="p">,</span>
         <span class="n">zoom</span><span class="o">=</span><span class="n">zoom</span><span class="p">,</span>
-        <span class="n">map_style</span><span class="o">=</span><span class="n">map_style</span><span class="p">,</span>
+        <span class="n">style</span><span class="o">=</span><span class="n">style</span><span class="p">,</span>
         <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
         <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
         <span class="n">bearing</span><span class="o">=</span><span class="n">bearing</span><span class="p">,</span>
@@ -2369,8 +2369,8 @@ DeckGLMap            (<a class="autorefs autorefs-internal" title="anymap.maplib
     <span class="p">}</span>
 
     <span class="c1"># Add class-specific attributes</span>
-    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;map_style&quot;</span><span class="p">):</span>
-        <span class="n">map_state</span><span class="p">[</span><span class="s2">&quot;map_style&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_style</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;style&quot;</span><span class="p">):</span>
+        <span class="n">map_state</span><span class="p">[</span><span class="s2">&quot;style&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">style</span>
     <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;bearing&quot;</span><span class="p">):</span>
         <span class="n">map_state</span><span class="p">[</span><span class="s2">&quot;bearing&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bearing</span>
     <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;pitch&quot;</span><span class="p">):</span>
