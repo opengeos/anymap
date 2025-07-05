@@ -867,6 +867,49 @@ class MapLibreMap(MapWidget):
 
         self.call_js_method("removeControl", control_type, position)
 
+    def add_cog_layer(
+        self,
+        layer_id: str,
+        cog_url: str,
+        opacity: Optional[float] = 1.0,
+        visible: Optional[bool] = True,
+        paint: Optional[Dict[str, Any]] = None,
+        before_id: Optional[str] = None,
+    ) -> None:
+        """Add a Cloud Optimized GeoTIFF (COG) layer to the map.
+
+        Args:
+            layer_id: Unique identifier for the COG layer.
+            cog_url: URL to the COG file.
+            opacity: Layer opacity between 0.0 and 1.0.
+            visible: Whether the layer should be visible initially.
+            paint: Optional paint properties for the layer.
+            before_id: Optional layer ID to insert this layer before.
+        """
+        source_id = f"{layer_id}_source"
+
+        # Add COG source using cog:// protocol
+        cog_source_url = f"cog://{cog_url}"
+
+        self.add_source(
+            source_id,
+            {
+                "type": "raster",
+                "url": cog_source_url,
+                "tileSize": 256,
+            },
+        )
+
+        # Add raster layer
+        layer_config = {"id": layer_id, "type": "raster", "source": source_id}
+
+        if paint:
+            layer_config["paint"] = paint
+
+        self.add_layer(
+            layer_id, layer_config, before_id, opacity=opacity, visible=visible
+        )
+
     def add_basemap(
         self,
         basemap: str,
@@ -957,7 +1000,11 @@ class MapLibreMap(MapWidget):
     <h1>{title}</h1>
     <div id="map"></div>
 
+    <script src="https://unpkg.com/@geomatico/maplibre-cog-protocol@0.4.0/dist/index.js"></script>
     <script>
+        // Register COG protocol
+        maplibregl.addProtocol("cog", MaplibreCOGProtocol.cogProtocol);
+
         // Map state from Python
         const mapState = {map_state_json};
 
@@ -995,11 +1042,42 @@ class MapLibreMap(MapWidget):
             }});
         }});
 
-        // Add navigation controls
-        map.addControl(new maplibregl.NavigationControl());
+        // Add controls from map state
+        const controls = mapState._controls || {{}};
+        Object.entries(controls).forEach(([controlKey, controlConfig]) => {{
+            try {{
+                const {{ type: controlType, position, options: controlOptions }} = controlConfig;
+                let control;
 
-        // Add scale control
-        map.addControl(new maplibregl.ScaleControl());
+                switch (controlType) {{
+                    case 'navigation':
+                        control = new maplibregl.NavigationControl(controlOptions || {{}});
+                        break;
+                    case 'scale':
+                        control = new maplibregl.ScaleControl(controlOptions || {{}});
+                        break;
+                    case 'fullscreen':
+                        control = new maplibregl.FullscreenControl(controlOptions || {{}});
+                        break;
+                    case 'geolocate':
+                        control = new maplibregl.GeolocateControl(controlOptions || {{}});
+                        break;
+                    case 'attribution':
+                        control = new maplibregl.AttributionControl(controlOptions || {{}});
+                        break;
+                    case 'globe':
+                        control = new maplibregl.GlobeControl(controlOptions || {{}});
+                        break;
+                    default:
+                        console.warn(`Unknown control type during restore: ${{controlType}}`);
+                        return;
+                }}
+
+                map.addControl(control, position);
+            }} catch (error) {{
+                console.warn(`Failed to add control ${{controlKey}}:`, error);
+            }}
+        }});
 
         // Log map events for debugging
         map.on('click', function(e) {{

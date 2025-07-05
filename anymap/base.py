@@ -263,6 +263,7 @@ class MapWidget(anywidget.AnyWidget):
             "style": self.style,
             "_layers": dict(self._layers),
             "_sources": dict(self._sources),
+            "_controls": dict(self._controls),
         }
 
         # Add class-specific attributes
