@@ -1426,6 +1426,9 @@
     <div class="doc doc-contents first">
 
       <p>Base class for interactive map widgets using anywidget.</p>
+<p>This module provides the core MapWidget class that serves as the foundation for
+all mapping backends in the anymap library. It handles JavaScript communication,
+state management, and provides common mapping functionality.</p>
 
 
 
@@ -1453,11 +1456,65 @@ MapWidget            (<span title="anywidget.widget.AnyWidget">AnyWidget</span>)
     <div class="doc doc-contents ">
 
       <p>Base class for interactive map widgets using anywidget.</p>
+<p>This class provides the core functionality for creating interactive maps
+using different JavaScript mapping libraries. It handles communication
+between Python and JavaScript, manages map state, and provides common
+mapping operations.</p>
 
+<p><strong>Attributes:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>center</code></td>
+        <td></td>
+        <td><p>Map center coordinates as [latitude, longitude].</p></td>
+      </tr>
+      <tr>
+        <td><code>zoom</code></td>
+        <td></td>
+        <td><p>Map zoom level.</p></td>
+      </tr>
+      <tr>
+        <td><code>width</code></td>
+        <td></td>
+        <td><p>Map container width as CSS string.</p></td>
+      </tr>
+      <tr>
+        <td><code>height</code></td>
+        <td></td>
+        <td><p>Map container height as CSS string.</p></td>
+      </tr>
+      <tr>
+        <td><code>style</code></td>
+        <td></td>
+        <td><p>Map style configuration.</p></td>
+      </tr>
+  </tbody>
+</table>
         <details class="quote">
           <summary>Source code in <code>anymap/base.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">MapWidget</span><span class="p">(</span><span class="n">anywidget</span><span class="o">.</span><span class="n">AnyWidget</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for interactive map widgets using anywidget.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for interactive map widgets using anywidget.</span>
+
+<span class="sd">    This class provides the core functionality for creating interactive maps</span>
+<span class="sd">    using different JavaScript mapping libraries. It handles communication</span>
+<span class="sd">    between Python and JavaScript, manages map state, and provides common</span>
+<span class="sd">    mapping operations.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        center: Map center coordinates as [latitude, longitude].</span>
+<span class="sd">        zoom: Map zoom level.</span>
+<span class="sd">        width: Map container width as CSS string.</span>
+<span class="sd">        height: Map container height as CSS string.</span>
+<span class="sd">        style: Map style configuration.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Widget traits for communication with JavaScript</span>
     <span class="n">center</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">List</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1474,14 +1531,24 @@ MapWidget            (<span title="anywidget.widget.AnyWidget">AnyWidget</span>)
     <span class="n">_layers</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Dict</span><span class="p">({})</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">_sources</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Dict</span><span class="p">({})</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the map widget.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the map widget.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            **kwargs: Additional keyword arguments passed to parent class.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_event_handlers</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_js_method_counter</span> <span class="o">=</span> <span class="mi">0</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">call_js_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Call a JavaScript method on the map instance.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">call_js_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Call a JavaScript method on the map instance.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            method_name: Name of the JavaScript method to call.</span>
+<span class="sd">            *args: Positional arguments to pass to the method.</span>
+<span class="sd">            **kwargs: Keyword arguments to pass to the method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">call_data</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_js_method_counter</span><span class="p">,</span>
             <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="n">method_name</span><span class="p">,</span>
@@ -1495,15 +1562,27 @@ MapWidget            (<span title="anywidget.widget.AnyWidget">AnyWidget</span>)
         <span class="n">current_calls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">call_data</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_js_calls</span> <span class="o">=</span> <span class="n">current_calls</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">on_map_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">callback</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register a callback for map events.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_map_event</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">event_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span> <span class="kc">None</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register a callback for map events.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            event_type: Type of event to listen for (e.g., &#39;click&#39;, &#39;zoom&#39;).</span>
+<span class="sd">            callback: Function to call when the event occurs. Should accept</span>
+<span class="sd">                     a dictionary containing event data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">event_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_event_handlers</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_event_handlers</span><span class="p">[</span><span class="n">event_type</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_event_handlers</span><span class="p">[</span><span class="n">event_type</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
 
     <span class="nd">@traitlets</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="s2">&quot;_js_events&quot;</span><span class="p">)</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_handle_js_events</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">change</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Handle events from JavaScript.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_handle_js_events</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">change</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Handle events from JavaScript.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            change: Dictionary containing the change information from traitlets.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">events</span> <span class="o">=</span> <span class="n">change</span><span class="p">[</span><span class="s2">&quot;new&quot;</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
             <span class="n">event_type</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span>
@@ -1512,22 +1591,46 @@ MapWidget            (<span title="anywidget.widget.AnyWidget">AnyWidget</span>)
                     <span class="n">handler</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">set_center</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lat</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lng</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the map center.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the map center coordinates.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            lat: Latitude coordinate.</span>
+<span class="sd">            lng: Longitude coordinate.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="p">[</span><span class="n">lat</span><span class="p">,</span> <span class="n">lng</span><span class="p">]</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">set_zoom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zoom</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the map zoom level.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the map zoom level.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            zoom: Zoom level (typically 0-20, where higher values show more detail).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">zoom</span> <span class="o">=</span> <span class="n">zoom</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">fly_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lat</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lng</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">zoom</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fly to a specific location.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Animate the map to fly to a specific location.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            lat: Target latitude coordinate.</span>
+<span class="sd">            lng: Target longitude coordinate.</span>
+<span class="sd">            zoom: Optional target zoom level. If None, keeps current zoom.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;center&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">lat</span><span class="p">,</span> <span class="n">lng</span><span class="p">]}</span>
         <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">options</span><span class="p">[</span><span class="s2">&quot;zoom&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">zoom</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;flyTo&quot;</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">add_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">layer_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a layer to the map.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_layer</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">layer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">layer_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a layer to the map.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            layer_id: Unique identifier for the layer.</span>
+<span class="sd">            layer_config: Dictionary containing layer configuration.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Store layer in local state for persistence</span>
         <span class="n">current_layers</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_layers</span><span class="p">)</span>
         <span class="n">current_layers</span><span class="p">[</span><span class="n">layer_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">layer_config</span>
@@ -1536,7 +1639,11 @@ MapWidget            (<span title="anywidget.widget.AnyWidget">AnyWidget</span>)
         <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addLayer&quot;</span><span class="p">,</span> <span class="n">layer_config</span><span class="p">,</span> <span class="n">layer_id</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">remove_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove a layer from the map.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove a layer from the map.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            layer_id: Unique identifier of the layer to remove.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Remove from local state</span>
         <span class="n">current_layers</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_layers</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">layer_id</span> <span class="ow">in</span> <span class="n">current_layers</span><span class="p">:</span>
@@ -1546,7 +1653,12 @@ MapWidget            (<span title="anywidget.widget.AnyWidget">AnyWidget</span>)
         <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;removeLayer&quot;</span><span class="p">,</span> <span class="n">layer_id</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">add_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">source_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a data source to the map.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a data source to the map.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            source_id: Unique identifier for the data source.</span>
+<span class="sd">            source_config: Dictionary containing source configuration.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Store source in local state for persistence</span>
         <span class="n">current_sources</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sources</span><span class="p">)</span>
         <span class="n">current_sources</span><span class="p">[</span><span class="n">source_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">source_config</span>
@@ -1555,7 +1667,11 @@ MapWidget            (<span title="anywidget.widget.AnyWidget">AnyWidget</span>)
         <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addSource&quot;</span><span class="p">,</span> <span class="n">source_id</span><span class="p">,</span> <span class="n">source_config</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">remove_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove a data source from the map.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove a data source from the map.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            source_id: Unique identifier of the source to remove.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Remove from local state</span>
         <span class="n">current_sources</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sources</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">source_id</span> <span class="ow">in</span> <span class="n">current_sources</span><span class="p">:</span>
@@ -1565,27 +1681,44 @@ MapWidget            (<span title="anywidget.widget.AnyWidget">AnyWidget</span>)
         <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;removeSource&quot;</span><span class="p">,</span> <span class="n">source_id</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_layers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get all layers currently on the map.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get all layers currently on the map.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dictionary mapping layer IDs to their configurations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_layers</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_sources</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get all sources currently on the map.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get all sources currently on the map.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dictionary mapping source IDs to their configurations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sources</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">clear_layers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Clear all layers from the map.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Clear all layers from the map.</span>
+
+<span class="sd">        Removes all layers that have been added to the map.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">layer_ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_layers</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
         <span class="k">for</span> <span class="n">layer_id</span> <span class="ow">in</span> <span class="n">layer_ids</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">remove_layer</span><span class="p">(</span><span class="n">layer_id</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">clear_sources</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Clear all sources from the map.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Clear all sources from the map.</span>
+
+<span class="sd">        Removes all data sources that have been added to the map.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">source_ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sources</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
         <span class="k">for</span> <span class="n">source_id</span> <span class="ow">in</span> <span class="n">source_ids</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">remove_source</span><span class="p">(</span><span class="n">source_id</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">clear_all</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Clear all layers and sources from the map.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Clear all layers and sources from the map.</span>
+
+<span class="sd">        Removes all layers and data sources from the map.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clear_layers</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clear_sources</span><span class="p">()</span>
 
@@ -1595,19 +1728,19 @@ MapWidget            (<span title="anywidget.widget.AnyWidget">AnyWidget</span>)
         <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Anymap Export&quot;</span><span class="p">,</span>
         <span class="n">width</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;100%&quot;</span><span class="p">,</span>
         <span class="n">height</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;600px&quot;</span><span class="p">,</span>
-        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Export the map to a standalone HTML file.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            filename: Optional filename to save the HTML. If None, returns HTML string.</span>
-<span class="sd">            title: Title for the HTML page</span>
-<span class="sd">            width: Width of the map container</span>
-<span class="sd">            height: Height of the map container</span>
-<span class="sd">            **kwargs: Additional arguments passed to the HTML template</span>
+<span class="sd">            title: Title for the HTML page.</span>
+<span class="sd">            width: Width of the map container as CSS string.</span>
+<span class="sd">            height: Height of the map container as CSS string.</span>
+<span class="sd">            **kwargs: Additional arguments passed to the HTML template.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            HTML string content</span>
+<span class="sd">            HTML string content of the exported map.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Get the current map state</span>
         <span class="n">map_state</span> <span class="o">=</span> <span class="p">{</span>
@@ -1643,11 +1776,22 @@ MapWidget            (<span title="anywidget.widget.AnyWidget">AnyWidget</span>)
         <span class="k">return</span> <span class="n">html_content</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_generate_html_template</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">map_state</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">map_state</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate the HTML template with map state.</span>
 
 <span class="sd">        This method should be overridden by subclasses to provide library-specific templates.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            map_state: Dictionary containing the current map state.</span>
+<span class="sd">            title: Title for the HTML page.</span>
+<span class="sd">            **kwargs: Additional arguments for template generation.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            HTML string content.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            NotImplementedError: This method must be implemented by subclasses.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Subclasses must implement _generate_html_template&quot;</span><span class="p">)</span>
 </code></pre></div>
@@ -1687,10 +1831,33 @@ MapWidget            (<span title="anywidget.widget.AnyWidget">AnyWidget</span>)
 
       <p>Initialize the map widget.</p>
 
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>**kwargs</code></td>
+        <td><code>Any</code></td>
+        <td><p>Additional keyword arguments passed to parent class.</p></td>
+        <td><code>{}</code></td>
+      </tr>
+  </tbody>
+</table>
         <details class="quote">
           <summary>Source code in <code>anymap/base.py</code></summary>
-          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize the map widget.&quot;&quot;&quot;</span>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize the map widget.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        **kwargs: Additional keyword arguments passed to parent class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_event_handlers</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_js_method_counter</span> <span class="o">=</span> <span class="mi">0</span>
@@ -1716,10 +1883,44 @@ MapWidget            (<span title="anywidget.widget.AnyWidget">AnyWidget</span>)
 
       <p>Add a layer to the map.</p>
 
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>layer_id</code></td>
+        <td><code>str</code></td>
+        <td><p>Unique identifier for the layer.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>layer_config</code></td>
+        <td><code>Dict[str, Any]</code></td>
+        <td><p>Dictionary containing layer configuration.</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
         <details class="quote">
           <summary>Source code in <code>anymap/base.py</code></summary>
-          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">layer_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a layer to the map.&quot;&quot;&quot;</span>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_layer</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">layer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">layer_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a layer to the map.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        layer_id: Unique identifier for the layer.</span>
+<span class="sd">        layer_config: Dictionary containing layer configuration.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Store layer in local state for persistence</span>
     <span class="n">current_layers</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_layers</span><span class="p">)</span>
     <span class="n">current_layers</span><span class="p">[</span><span class="n">layer_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">layer_config</span>
@@ -1748,10 +1949,40 @@ MapWidget            (<span title="anywidget.widget.AnyWidget">AnyWidget</span>)
 
       <p>Add a data source to the map.</p>
 
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>source_id</code></td>
+        <td><code>str</code></td>
+        <td><p>Unique identifier for the data source.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>source_config</code></td>
+        <td><code>Dict[str, Any]</code></td>
+        <td><p>Dictionary containing source configuration.</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
         <details class="quote">
           <summary>Source code in <code>anymap/base.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">source_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a data source to the map.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a data source to the map.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        source_id: Unique identifier for the data source.</span>
+<span class="sd">        source_config: Dictionary containing source configuration.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Store source in local state for persistence</span>
     <span class="n">current_sources</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sources</span><span class="p">)</span>
     <span class="n">current_sources</span><span class="p">[</span><span class="n">source_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">source_config</span>
@@ -1780,10 +2011,47 @@ MapWidget            (<span title="anywidget.widget.AnyWidget">AnyWidget</span>)
 
       <p>Call a JavaScript method on the map instance.</p>
 
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>method_name</code></td>
+        <td><code>str</code></td>
+        <td><p>Name of the JavaScript method to call.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>*args</code></td>
+        <td><code>Any</code></td>
+        <td><p>Positional arguments to pass to the method.</p></td>
+        <td><code>()</code></td>
+      </tr>
+      <tr>
+        <td><code>**kwargs</code></td>
+        <td><code>Any</code></td>
+        <td><p>Keyword arguments to pass to the method.</p></td>
+        <td><code>{}</code></td>
+      </tr>
+  </tbody>
+</table>
         <details class="quote">
           <summary>Source code in <code>anymap/base.py</code></summary>
-          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">call_js_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Call a JavaScript method on the map instance.&quot;&quot;&quot;</span>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">call_js_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Call a JavaScript method on the map instance.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        method_name: Name of the JavaScript method to call.</span>
+<span class="sd">        *args: Positional arguments to pass to the method.</span>
+<span class="sd">        **kwargs: Keyword arguments to pass to the method.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">call_data</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_js_method_counter</span><span class="p">,</span>
         <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="n">method_name</span><span class="p">,</span>
@@ -1817,11 +2085,15 @@ MapWidget            (<span title="anywidget.widget.AnyWidget">AnyWidget</span>)
     <div class="doc doc-contents ">
 
       <p>Clear all layers and sources from the map.</p>
+<p>Removes all layers and data sources from the map.</p>
 
         <details class="quote">
           <summary>Source code in <code>anymap/base.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">clear_all</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Clear all layers and sources from the map.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Clear all layers and sources from the map.</span>
+
+<span class="sd">    Removes all layers and data sources from the map.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">clear_layers</span><span class="p">()</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">clear_sources</span><span class="p">()</span>
 </code></pre></div>
@@ -1845,11 +2117,15 @@ MapWidget            (<span title="anywidget.widget.AnyWidget">AnyWidget</span>)
     <div class="doc doc-contents ">
 
       <p>Clear all layers from the map.</p>
+<p>Removes all layers that have been added to the map.</p>
 
         <details class="quote">
           <summary>Source code in <code>anymap/base.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">clear_layers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Clear all layers from the map.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Clear all layers from the map.</span>
+
+<span class="sd">    Removes all layers that have been added to the map.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">layer_ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_layers</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
     <span class="k">for</span> <span class="n">layer_id</span> <span class="ow">in</span> <span class="n">layer_ids</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">remove_layer</span><span class="p">(</span><span class="n">layer_id</span><span class="p">)</span>
@@ -1874,11 +2150,15 @@ MapWidget            (<span title="anywidget.widget.AnyWidget">AnyWidget</span>)
     <div class="doc doc-contents ">
 
       <p>Clear all sources from the map.</p>
+<p>Removes all data sources that have been added to the map.</p>
 
         <details class="quote">
           <summary>Source code in <code>anymap/base.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">clear_sources</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Clear all sources from the map.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Clear all sources from the map.</span>
+
+<span class="sd">    Removes all data sources that have been added to the map.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">source_ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sources</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
     <span class="k">for</span> <span class="n">source_id</span> <span class="ow">in</span> <span class="n">source_ids</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">remove_source</span><span class="p">(</span><span class="n">source_id</span><span class="p">)</span>
@@ -1902,12 +2182,49 @@ MapWidget            (<span title="anywidget.widget.AnyWidget">AnyWidget</span>)
 
     <div class="doc doc-contents ">
 
-      <p>Fly to a specific location.</p>
+      <p>Animate the map to fly to a specific location.</p>
 
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>lat</code></td>
+        <td><code>float</code></td>
+        <td><p>Target latitude coordinate.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>lng</code></td>
+        <td><code>float</code></td>
+        <td><p>Target longitude coordinate.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>zoom</code></td>
+        <td><code>Optional[float]</code></td>
+        <td><p>Optional target zoom level. If None, keeps current zoom.</p></td>
+        <td><code>None</code></td>
+      </tr>
+  </tbody>
+</table>
         <details class="quote">
           <summary>Source code in <code>anymap/base.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">fly_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lat</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lng</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">zoom</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fly to a specific location.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Animate the map to fly to a specific location.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        lat: Target latitude coordinate.</span>
+<span class="sd">        lng: Target longitude coordinate.</span>
+<span class="sd">        zoom: Optional target zoom level. If None, keeps current zoom.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;center&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">lat</span><span class="p">,</span> <span class="n">lng</span><span class="p">]}</span>
     <span class="k">if</span> <span class="n">zoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">options</span><span class="p">[</span><span class="s2">&quot;zoom&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">zoom</span>
@@ -1934,10 +2251,29 @@ MapWidget            (<span title="anywidget.widget.AnyWidget">AnyWidget</span>)
 
       <p>Get all layers currently on the map.</p>
 
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>Dict[str, Any]</code></td>
+      <td><p>Dictionary mapping layer IDs to their configurations.</p></td>
+    </tr>
+  </tbody>
+</table>
         <details class="quote">
           <summary>Source code in <code>anymap/base.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_layers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get all layers currently on the map.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get all layers currently on the map.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Dictionary mapping layer IDs to their configurations.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_layers</span><span class="p">)</span>
 </code></pre></div>
         </details>
@@ -1961,10 +2297,29 @@ MapWidget            (<span title="anywidget.widget.AnyWidget">AnyWidget</span>)
 
       <p>Get all sources currently on the map.</p>
 
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>Dict[str, Any]</code></td>
+      <td><p>Dictionary mapping source IDs to their configurations.</p></td>
+    </tr>
+  </tbody>
+</table>
         <details class="quote">
           <summary>Source code in <code>anymap/base.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_sources</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get all sources currently on the map.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get all sources currently on the map.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Dictionary mapping source IDs to their configurations.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sources</span><span class="p">)</span>
 </code></pre></div>
         </details>
@@ -1988,10 +2343,44 @@ MapWidget            (<span title="anywidget.widget.AnyWidget">AnyWidget</span>)
 
       <p>Register a callback for map events.</p>
 
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>event_type</code></td>
+        <td><code>str</code></td>
+        <td><p>Type of event to listen for (e.g., 'click', 'zoom').</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>callback</code></td>
+        <td><code>Callable[[Dict[str, Any]], NoneType]</code></td>
+        <td><p>Function to call when the event occurs. Should accept
+     a dictionary containing event data.</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
         <details class="quote">
           <summary>Source code in <code>anymap/base.py</code></summary>
-          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">on_map_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">callback</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Register a callback for map events.&quot;&quot;&quot;</span>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">on_map_event</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span> <span class="n">event_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span> <span class="kc">None</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Register a callback for map events.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        event_type: Type of event to listen for (e.g., &#39;click&#39;, &#39;zoom&#39;).</span>
+<span class="sd">        callback: Function to call when the event occurs. Should accept</span>
+<span class="sd">                 a dictionary containing event data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">event_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_event_handlers</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_event_handlers</span><span class="p">[</span><span class="n">event_type</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_event_handlers</span><span class="p">[</span><span class="n">event_type</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
@@ -2017,10 +2406,33 @@ MapWidget            (<span title="anywidget.widget.AnyWidget">AnyWidget</span>)
 
       <p>Remove a layer from the map.</p>
 
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>layer_id</code></td>
+        <td><code>str</code></td>
+        <td><p>Unique identifier of the layer to remove.</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
         <details class="quote">
           <summary>Source code in <code>anymap/base.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">remove_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove a layer from the map.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove a layer from the map.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        layer_id: Unique identifier of the layer to remove.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Remove from local state</span>
     <span class="n">current_layers</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_layers</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">layer_id</span> <span class="ow">in</span> <span class="n">current_layers</span><span class="p">:</span>
@@ -2050,10 +2462,33 @@ MapWidget            (<span title="anywidget.widget.AnyWidget">AnyWidget</span>)
 
       <p>Remove a data source from the map.</p>
 
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>source_id</code></td>
+        <td><code>str</code></td>
+        <td><p>Unique identifier of the source to remove.</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
         <details class="quote">
           <summary>Source code in <code>anymap/base.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">remove_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove a data source from the map.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove a data source from the map.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        source_id: Unique identifier of the source to remove.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Remove from local state</span>
     <span class="n">current_sources</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sources</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">source_id</span> <span class="ow">in</span> <span class="n">current_sources</span><span class="p">:</span>
@@ -2081,12 +2516,42 @@ MapWidget            (<span title="anywidget.widget.AnyWidget">AnyWidget</span>)
 
     <div class="doc doc-contents ">
 
-      <p>Set the map center.</p>
+      <p>Set the map center coordinates.</p>
 
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>lat</code></td>
+        <td><code>float</code></td>
+        <td><p>Latitude coordinate.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>lng</code></td>
+        <td><code>float</code></td>
+        <td><p>Longitude coordinate.</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
         <details class="quote">
           <summary>Source code in <code>anymap/base.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">set_center</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lat</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lng</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set the map center.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set the map center coordinates.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        lat: Latitude coordinate.</span>
+<span class="sd">        lng: Longitude coordinate.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="p">[</span><span class="n">lat</span><span class="p">,</span> <span class="n">lng</span><span class="p">]</span>
 </code></pre></div>
         </details>
@@ -2110,10 +2575,33 @@ MapWidget            (<span title="anywidget.widget.AnyWidget">AnyWidget</span>)
 
       <p>Set the map zoom level.</p>
 
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>zoom</code></td>
+        <td><code>float</code></td>
+        <td><p>Zoom level (typically 0-20, where higher values show more detail).</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
         <details class="quote">
           <summary>Source code in <code>anymap/base.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">set_zoom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zoom</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set the map zoom level.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set the map zoom level.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        zoom: Zoom level (typically 0-20, where higher values show more detail).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">zoom</span> <span class="o">=</span> <span class="n">zoom</span>
 </code></pre></div>
         </details>
@@ -2157,25 +2645,25 @@ MapWidget            (<span title="anywidget.widget.AnyWidget">AnyWidget</span>)
       <tr>
         <td><code>title</code></td>
         <td><code>str</code></td>
-        <td><p>Title for the HTML page</p></td>
+        <td><p>Title for the HTML page.</p></td>
         <td><code>&#39;Anymap Export&#39;</code></td>
       </tr>
       <tr>
         <td><code>width</code></td>
         <td><code>str</code></td>
-        <td><p>Width of the map container</p></td>
+        <td><p>Width of the map container as CSS string.</p></td>
         <td><code>&#39;100%&#39;</code></td>
       </tr>
       <tr>
         <td><code>height</code></td>
         <td><code>str</code></td>
-        <td><p>Height of the map container</p></td>
+        <td><p>Height of the map container as CSS string.</p></td>
         <td><code>&#39;600px&#39;</code></td>
       </tr>
       <tr>
         <td><code>**kwargs</code></td>
-        <td></td>
-        <td><p>Additional arguments passed to the HTML template</p></td>
+        <td><code>Any</code></td>
+        <td><p>Additional arguments passed to the HTML template.</p></td>
         <td><code>{}</code></td>
       </tr>
   </tbody>
@@ -2191,7 +2679,7 @@ MapWidget            (<span title="anywidget.widget.AnyWidget">AnyWidget</span>)
   <tbody>
     <tr>
       <td><code>str</code></td>
-      <td><p>HTML string content</p></td>
+      <td><p>HTML string content of the exported map.</p></td>
     </tr>
   </tbody>
 </table>
@@ -2203,19 +2691,19 @@ MapWidget            (<span title="anywidget.widget.AnyWidget">AnyWidget</span>)
     <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Anymap Export&quot;</span><span class="p">,</span>
     <span class="n">width</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;100%&quot;</span><span class="p">,</span>
     <span class="n">height</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;600px&quot;</span><span class="p">,</span>
-    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Export the map to a standalone HTML file.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        filename: Optional filename to save the HTML. If None, returns HTML string.</span>
-<span class="sd">        title: Title for the HTML page</span>
-<span class="sd">        width: Width of the map container</span>
-<span class="sd">        height: Height of the map container</span>
-<span class="sd">        **kwargs: Additional arguments passed to the HTML template</span>
+<span class="sd">        title: Title for the HTML page.</span>
+<span class="sd">        width: Width of the map container as CSS string.</span>
+<span class="sd">        height: Height of the map container as CSS string.</span>
+<span class="sd">        **kwargs: Additional arguments passed to the HTML template.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        HTML string content</span>
+<span class="sd">        HTML string content of the exported map.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Get the current map state</span>
     <span class="n">map_state</span> <span class="o">=</span> <span class="p">{</span>
