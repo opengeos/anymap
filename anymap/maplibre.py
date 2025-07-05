@@ -95,6 +95,13 @@ class MapLibreMap(MapWidget):
         height: str = "600px",
         bearing: float = 0.0,
         pitch: float = 0.0,
+        controls: Dict[str, str] = {
+            "navigation": "top-right",
+            "fullscreen": "top-right",
+            "scale": "bottom-left",
+            "globe": "top-right",
+        },
+        projection: str = "mercator",
         add_sidebar: bool = True,
         sidebar_visible: bool = False,
         sidebar_width: int = 360,
@@ -129,6 +136,11 @@ class MapLibreMap(MapWidget):
             **kwargs,
         )
 
+        self.controls = {}
+        for control, position in controls.items():
+            self.add_control(control, position)
+            self.controls[control] = position
+
         self.layer_dict = {}
         self.layer_dict["background"] = {
             "layer": {
@@ -146,6 +158,21 @@ class MapLibreMap(MapWidget):
         for layer in self.get_style_layers():
             self.style_dict[layer["id"]] = layer
         self.source_dict = {}
+
+        if projection.lower() == "globe":
+            self.set_projection(
+                {
+                    "type": [
+                        "interpolate",
+                        ["linear"],
+                        ["zoom"],
+                        10,
+                        "vertical-perspective",
+                        12,
+                        "mercator",
+                    ]
+                }
+            )
 
         if sidebar_args is None:
             sidebar_args = {}
@@ -516,6 +543,16 @@ class MapLibreMap(MapWidget):
             self.set_paint_property(layer_id, "icon-opacity", opacity)
             self.set_paint_property(layer_id, "text-opacity", opacity)
 
+    def set_projection(self, projection: Dict[str, Any]) -> None:
+        """Set the map projection.
+
+        Args:
+            projection: Projection configuration dictionary.
+        """
+        # Store projection in persistent state
+        self._projection = projection
+        self.call_js_method("setProjection", projection)
+
     def get_layer_type(self, layer_id: str) -> Optional[str]:
         """Get the type of a layer.
 
@@ -781,6 +818,54 @@ class MapLibreMap(MapWidget):
             layer_config["paint"] = paint
 
         self.add_layer(layer_id, layer_config, before_id)
+
+    def add_control(
+        self,
+        control_type: str,
+        position: str = "top-right",
+        options: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        """Add a control to the map.
+
+        Args:
+            control_type: Type of control ('navigation', 'scale', 'fullscreen', 'geolocate', 'attribution', 'globe')
+            position: Position on map ('top-left', 'top-right', 'bottom-left', 'bottom-right')
+            options: Additional options for the control
+        """
+        control_options = options or {}
+        control_options["position"] = position
+
+        # Store control in persistent state
+        control_key = f"{control_type}_{position}"
+        current_controls = dict(self._controls)
+        current_controls[control_key] = {
+            "type": control_type,
+            "position": position,
+            "options": control_options,
+        }
+        self._controls = current_controls
+
+        self.call_js_method("addControl", control_type, control_options)
+
+    def remove_control(
+        self,
+        control_type: str,
+        position: str = "top-right",
+    ) -> None:
+        """Remove a control from the map.
+
+        Args:
+            control_type: Type of control to remove ('navigation', 'scale', 'fullscreen', 'geolocate', 'attribution', 'globe')
+            position: Position where the control was added ('top-left', 'top-right', 'bottom-left', 'bottom-right')
+        """
+        # Remove control from persistent state
+        control_key = f"{control_type}_{position}"
+        current_controls = dict(self._controls)
+        if control_key in current_controls:
+            del current_controls[control_key]
+            self._controls = current_controls
+
+        self.call_js_method("removeControl", control_type, position)
 
     def add_basemap(
         self,

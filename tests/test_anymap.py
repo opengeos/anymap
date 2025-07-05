@@ -115,9 +115,7 @@ class TestMapLibreMap(unittest.TestCase):
     def setUp(self):
         """Set up test fixtures."""
         self.map = MapLibreMap(
-            center=[37.7749, -122.4194],
-            zoom=12,
-            style="dark-matter",
+            center=[37.7749, -122.4194], zoom=12, style="dark-matter", controls={}
         )
 
     def test_initialization(self):
