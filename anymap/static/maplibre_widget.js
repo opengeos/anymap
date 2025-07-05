@@ -43,12 +43,15 @@ function render({ model, el }) {
   // Store map instance for cleanup
   el._map = map;
   el._markers = [];
+  el._controls = new Map(); // Track added controls by type and position
   el._widgetId = widgetId;
 
-  // Restore layers and sources from model state
+  // Restore layers, sources, controls, and projection from model state
   const restoreMapState = () => {
     const layers = model.get("_layers") || {};
     const sources = model.get("_sources") || {};
+    const controls = model.get("_controls") || {};
+    const projection = model.get("_projection") || {};
 
     // Add sources first
     Object.entries(sources).forEach(([sourceId, sourceConfig]) => {
@@ -71,6 +74,54 @@ function render({ model, el }) {
         }
       }
     });
+
+    // Finally add controls
+    Object.entries(controls).forEach(([controlKey, controlConfig]) => {
+      if (!el._controls.has(controlKey)) {
+        try {
+          const { type: controlType, position, options: controlOptions } = controlConfig;
+          let control;
+
+          switch (controlType) {
+            case 'navigation':
+              control = new maplibregl.NavigationControl(controlOptions || {});
+              break;
+            case 'scale':
+              control = new maplibregl.ScaleControl(controlOptions || {});
+              break;
+            case 'fullscreen':
+              control = new maplibregl.FullscreenControl(controlOptions || {});
+              break;
+            case 'geolocate':
+              control = new maplibregl.GeolocateControl(controlOptions || {});
+              break;
+            case 'attribution':
+              control = new maplibregl.AttributionControl(controlOptions || {});
+              break;
+            case 'globe':
+              control = new maplibregl.GlobeControl(controlOptions || {});
+              break;
+            default:
+              console.warn(`Unknown control type during restore: ${controlType}`);
+              return;
+          }
+
+          map.addControl(control, position);
+          el._controls.set(controlKey, control);
+        } catch (error) {
+          console.warn(`Failed to restore control ${controlKey}:`, error);
+        }
+      }
+    });
+
+    // Finally set projection if it exists
+    if (Object.keys(projection).length > 0) {
+      try {
+        map.setProjection(projection);
+      } catch (error) {
+        console.warn('Failed to restore projection:', error);
+      }
+    }
   };
 
   // Setup resize observer to handle container size changes
@@ -269,6 +320,68 @@ function render({ model, el }) {
           map.fitBounds(mapBounds, options || {});
           break;
 
+        case 'addControl':
+          const [controlType, controlOptions] = args;
+          const position = controlOptions?.position || 'top-right';
+          const controlKey = `${controlType}_${position}`;
+
+          // Check if this control is already added
+          if (el._controls.has(controlKey)) {
+            console.warn(`Control ${controlType} at position ${position} already exists`);
+            return;
+          }
+
+          let control;
+          switch (controlType) {
+            case 'navigation':
+              control = new maplibregl.NavigationControl(controlOptions || {});
+              break;
+            case 'scale':
+              control = new maplibregl.ScaleControl(controlOptions || {});
+              break;
+            case 'fullscreen':
+              control = new maplibregl.FullscreenControl(controlOptions || {});
+              break;
+            case 'geolocate':
+              control = new maplibregl.GeolocateControl(controlOptions || {});
+              break;
+            case 'attribution':
+              control = new maplibregl.AttributionControl(controlOptions || {});
+              break;
+            case 'globe':
+              control = new maplibregl.GlobeControl(controlOptions || {});
+              break;
+            default:
+              console.warn(`Unknown control type: ${controlType}`);
+              return;
+          }
+
+          map.addControl(control, position);
+          el._controls.set(controlKey, control);
+          break;
+
+        case 'removeControl':
+          const [removeControlType, removePosition] = args;
+          const removeControlKey = `${removeControlType}_${removePosition}`;
+
+          if (el._controls.has(removeControlKey)) {
+            const controlToRemove = el._controls.get(removeControlKey);
+            map.removeControl(controlToRemove);
+            el._controls.delete(removeControlKey);
+          } else {
+            console.warn(`Control ${removeControlType} at position ${removePosition} not found`);
+          }
+          break;
+
+        case 'setProjection':
+          const [projectionConfig] = args;
+          try {
+            map.setProjection(projectionConfig);
+          } catch (error) {
+            console.warn('Failed to set projection:', error);
+          }
+          break;
+
         default:
           // Try to call the method directly on the map object
           if (typeof map[method] === 'function') {
@@ -291,6 +404,9 @@ function render({ model, el }) {
     if (el._markers) {
       el._markers.forEach(marker => marker.remove());
       el._markers = [];
+    }
+    if (el._controls) {
+      el._controls.clear();
     }
     if (el._map) {
       el._map.remove();

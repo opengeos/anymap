@@ -40,6 +40,8 @@ class MapWidget(anywidget.AnyWidget):
     # Internal state
     _layers = traitlets.Dict({}).tag(sync=True)
     _sources = traitlets.Dict({}).tag(sync=True)
+    _controls = traitlets.Dict({}).tag(sync=True)
+    _projection = traitlets.Dict({}).tag(sync=True)
 
     def __init__(self, **kwargs: Any) -> None:
         """Initialize the map widget.
