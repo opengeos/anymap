@@ -1,4 +1,6 @@
 anywidget>=0.9.0
+geopandas
+ipyvuetify
 ipywidgets>=8.0.0
 numpy
 requests
