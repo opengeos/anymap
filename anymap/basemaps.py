@@ -1,18 +1,53 @@
+"""Basemap utilities for anymap library.
+
+This module provides utilities for working with basemaps from xyzservices,
+a registry of XYZ tile services. It includes functions to get available
+basemaps and filter them based on various criteria.
+
+Functions:
+    get_xyz_dict: Get a dictionary of available XYZ tile services.
+
+Variables:
+    available_basemaps: Dictionary of available basemap providers.
+
+Example:
+    Using available basemaps:
+
+    >>> from anymap.basemaps import available_basemaps
+    >>> list(available_basemaps.keys())[:5]
+    ['CartoDB.DarkMatter', 'CartoDB.Positron', 'Esri.WorldImagery', ...]
+"""
+
 import collections
 import xyzservices
+from typing import Dict, Any
 
 
-def get_xyz_dict(free_only=True, france=False):
-    """Returns a dictionary of xyz services.
+def get_xyz_dict(free_only: bool = True, france: bool = False) -> Dict[str, Any]:
+    """Returns a dictionary of XYZ tile services.
+
+    Retrieves XYZ tile services from the xyzservices library with optional
+    filtering to include only free services and/or exclude France-specific
+    services.
 
     Args:
-        free_only (bool, optional): Whether to return only free xyz tile
-            services that do not require an access token. Defaults to True.
-        france (bool, optional): Whether to include Geoportail France basemaps.
-            Defaults to False.
+        free_only: Whether to return only free XYZ tile services that do not
+                  require an access token. Defaults to True.
+        france: Whether to include Geoportail France basemaps. These are
+               often restricted to France and may not work globally.
+               Defaults to False.
 
     Returns:
-        dict: A dictionary of xyz services.
+        Dictionary mapping basemap names to their TileProvider configurations.
+        Each configuration includes properties like URL template, attribution,
+        and other metadata.
+
+    Example:
+        >>> basemaps = get_xyz_dict(free_only=True, france=False)
+        >>> 'OpenStreetMap.Mapnik' in basemaps
+        True
+        >>> len(basemaps) > 100
+        True
     """
     xyz_bunch = xyzservices.providers
 
@@ -35,4 +70,18 @@ def get_xyz_dict(free_only=True, france=False):
     return xyz_dict
 
 
-available_basemaps = get_xyz_dict()
+available_basemaps: Dict[str, Any] = get_xyz_dict()
+"""Dictionary of available basemap providers.
+
+This variable contains all available basemap providers from xyzservices,
+filtered to include only free services and exclude France-specific services
+by default. Each key is a basemap name (e.g., 'OpenStreetMap.Mapnik') and
+each value is a TileProvider configuration object.
+
+Example:
+    >>> from anymap.basemaps import available_basemaps
+    >>> basemap = available_basemaps['OpenStreetMap.Mapnik']
+    >>> url = basemap.build_url()
+    >>> print(url)
+    https://tile.openstreetmap.org/{z}/{x}/{y}.png
+"""

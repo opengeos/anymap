@@ -1,4 +1,28 @@
-"""The utils module contains common functions and classes used by the other modules."""
+"""Utility functions for anymap library.
+
+This module contains common utility functions used across the anymap library,
+including functions for constructing map style URLs, handling API keys,
+and working with different mapping service providers.
+
+Functions:
+    get_env_var: Retrieve environment variables or user data keys.
+    construct_carto_style: Construct URL for Carto style.
+    construct_amazon_style: Construct URL for Amazon Map style.
+    construct_maptiler_style: Construct URL for MapTiler style.
+    maptiler_3d_style: Generate 3D terrain style configuration.
+    construct_maplibre_style: Construct MapLibre style configuration.
+
+Example:
+    Getting an environment variable:
+
+    >>> from anymap.utils import get_env_var
+    >>> api_key = get_env_var("MAPTILER_KEY")
+
+    Constructing a style URL:
+
+    >>> from anymap.utils import construct_maplibre_style
+    >>> style = construct_maplibre_style("dark-matter")
+"""
 
 import json
 import os

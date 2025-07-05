@@ -1,4 +1,28 @@
-"""Mapbox GL JS implementation of the map widget."""
+"""Mapbox GL JS implementation of the map widget.
+
+This module provides the MapboxMap class which implements an interactive map
+widget using the Mapbox GL JS library. Mapbox GL JS provides fast vector map
+rendering with WebGL and requires an access token for Mapbox services.
+
+Classes:
+    MapboxMap: Main map widget class for Mapbox GL JS.
+
+Note:
+    Mapbox services require an access token. You can get a free token at
+    https://account.mapbox.com/access-tokens/
+
+Example:
+    Basic usage of MapboxMap:
+
+    >>> from anymap.mapbox import MapboxMap
+    >>> m = MapboxMap(
+    ...     center=[40.7, -74.0],
+    ...     zoom=10,
+    ...     access_token="your_mapbox_token"
+    ... )
+    >>> m.add_basemap("OpenStreetMap.Mapnik")
+    >>> m
+"""
 
 import pathlib
 import traitlets
