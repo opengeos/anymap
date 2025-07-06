@@ -366,8 +366,8 @@ class LayerControl {
 
   isUserAddedLayer(layerId) {
     // Check if this layer is in our layerStates (meaning it was added by user via Python)
-    // Background style layers are NOT in layerStates except for the special "background" entry
-    return this.layerStates[layerId] && layerId !== 'background';
+    // Background style layers are NOT in layerStates except for the special "Background" entry
+    return this.layerStates[layerId] && layerId !== 'Background';
   }
 
   addLayerItem(layerId, state) {
@@ -381,18 +381,18 @@ class LayerControl {
     checkbox.className = 'layer-control-checkbox';
     checkbox.checked = state.visible;
     checkbox.addEventListener('change', () => {
-      if (layerId === 'background') {
+      if (layerId === 'Background') {
         this.toggleBackgroundVisibility(checkbox.checked);
       } else {
         this.toggleLayerVisibility(layerId, checkbox.checked);
       }
     });
 
-    // Layer name - use friendly name for background
+    // Layer name - use friendly name for Background
     const name = document.createElement('span');
     name.className = 'layer-control-name';
-    name.textContent = layerId === 'background' ? 'Background' : (state.name || layerId);
-    name.title = layerId === 'background' ? 'Background' : (state.name || layerId);
+    name.textContent = layerId === 'Background' ? 'Background' : (state.name || layerId);
+    name.title = layerId === 'Background' ? 'Background' : (state.name || layerId);
 
     // Opacity slider
     const opacity = document.createElement('input');
@@ -404,7 +404,7 @@ class LayerControl {
     opacity.value = state.opacity;
     opacity.title = `Opacity: ${Math.round(state.opacity * 100)}%`;
     opacity.addEventListener('input', () => {
-      if (layerId === 'background') {
+      if (layerId === 'Background') {
         this.changeBackgroundOpacity(parseFloat(opacity.value));
       } else {
         this.changeLayerOpacity(layerId, parseFloat(opacity.value));
@@ -421,11 +421,11 @@ class LayerControl {
 
   toggleBackgroundVisibility(visible) {
     // Update local state
-    if (this.layerStates['background']) {
-      this.layerStates['background'].visible = visible;
+    if (this.layerStates['Background']) {
+      this.layerStates['Background'].visible = visible;
     }
 
-    // Apply to all style layers (background layers)
+    // Apply to all style layers (Background layers)
     const styleLayers = this.map.getStyle().layers || [];
     styleLayers.forEach(layer => {
       // Skip user-added layers (they have different sources)
@@ -437,7 +437,7 @@ class LayerControl {
     // Sync back to Python
     this.model.set('_js_events', [...this.model.get('_js_events'), {
       type: 'layer_visibility_changed',
-      layerId: 'background',
+      layerId: 'Background',
       visible: visible
     }]);
     this.model.save_changes();
@@ -445,11 +445,11 @@ class LayerControl {
 
   changeBackgroundOpacity(opacity) {
     // Update local state
-    if (this.layerStates['background']) {
-      this.layerStates['background'].opacity = opacity;
+    if (this.layerStates['Background']) {
+      this.layerStates['Background'].opacity = opacity;
     }
 
-    // Apply to all style layers (background layers)
+    // Apply to all style layers (Background layers)
     const styleLayers = this.map.getStyle().layers || [];
     styleLayers.forEach(styleLayer => {
       // Skip user-added layers
@@ -494,7 +494,7 @@ class LayerControl {
     // Sync back to Python
     this.model.set('_js_events', [...this.model.get('_js_events'), {
       type: 'layer_opacity_changed',
-      layerId: 'background',
+      layerId: 'Background',
       opacity: opacity
     }]);
     this.model.save_changes();

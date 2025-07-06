@@ -146,9 +146,9 @@ class MapLibreMap(MapWidget):
             self.controls[control] = position
 
         self.layer_dict = {}
-        self.layer_dict["background"] = {
+        self.layer_dict["Background"] = {
             "layer": {
-                "id": "background",
+                "id": "Background",
                 "type": "background",
             },
             "opacity": 1.0,
@@ -504,7 +504,7 @@ class MapLibreMap(MapWidget):
         else:
             visibility = "none"
 
-        if layer_id == "background":
+        if layer_id == "Background":
             for layer in self.get_style_layers():
                 self.set_layout_property(layer["id"], "visibility", visibility)
         else:
@@ -522,7 +522,7 @@ class MapLibreMap(MapWidget):
         """
         layer_type = self.get_layer_type(layer_id)
 
-        if layer_id == "background":
+        if layer_id == "Background":
             for layer in self.get_style_layers():
                 layer_type = layer.get("type")
                 if layer_type != "symbol":
@@ -914,16 +914,16 @@ class MapLibreMap(MapWidget):
         layer_states = {}
         target_layers = layers if layers is not None else list(self.layer_dict.keys())
 
-        # Always include background layer for controlling map style layers
-        if layers is None or "background" in layers:
-            layer_states["background"] = {
+        # Always include Background layer for controlling map style layers
+        if layers is None or "Background" in layers:
+            layer_states["Background"] = {
                 "visible": True,
                 "opacity": 1.0,
                 "name": "Background",
             }
 
         for layer_id in target_layers:
-            if layer_id in self.layer_dict and layer_id != "background":
+            if layer_id in self.layer_dict and layer_id != "Background":
                 layer_info = self.layer_dict[layer_id]
                 layer_states[layer_id] = {
                     "visible": layer_info.get("visible", True),
@@ -962,16 +962,16 @@ class MapLibreMap(MapWidget):
                     else list(self.layer_dict.keys())
                 )
 
-                # Always include background layer for controlling map style layers
-                if layers_filter is None or "background" in layers_filter:
-                    layer_states["background"] = {
+                # Always include Background layer for controlling map style layers
+                if layers_filter is None or "Background" in layers_filter:
+                    layer_states["Background"] = {
                         "visible": True,
                         "opacity": 1.0,
                         "name": "Background",
                     }
 
                 for layer_id in target_layers:
-                    if layer_id in self.layer_dict and layer_id != "background":
+                    if layer_id in self.layer_dict and layer_id != "Background":
                         layer_info = self.layer_dict[layer_id]
                         layer_states[layer_id] = {
                             "visible": layer_info.get("visible", True),
@@ -2002,7 +2002,7 @@ class LayerManagerWidget(v.ExpansionPanels):
         padding = "0px 5px 0px 5px"
 
         for name, info in list(self.m.layer_dict.items()):
-            # if name == "background":
+            # if name == "Background":
             #     continue
 
             visible = info.get("visible", True)
@@ -2040,7 +2040,7 @@ class LayerManagerWidget(v.ExpansionPanels):
                 self.set_layer_opacity(layer_name, change["new"])
 
             def on_remove_clicked(btn, layer_name=name, row_ref=None):
-                if layer_name == "background":
+                if layer_name == "Background":
                     for layer in self.m.get_style_layers():
                         self.m.add_call("removeLayer", layer["id"])
                 else:
