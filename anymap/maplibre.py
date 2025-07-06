@@ -81,6 +81,7 @@ class MapLibreMap(MapWidget):
     bearing = traitlets.Float(0.0).tag(sync=True)
     pitch = traitlets.Float(0.0).tag(sync=True)
     antialias = traitlets.Bool(True).tag(sync=True)
+    _draw_data = traitlets.Dict().tag(sync=True)
 
     # Define the JavaScript module path
     _esm = _esm_maplibre
@@ -1033,6 +1034,120 @@ class MapLibreMap(MapWidget):
             before_id=before_id,
         )
 
+    def add_draw_control(
+        self,
+        position: str = "top-left",
+        controls: Optional[Dict[str, bool]] = None,
+        default_mode: str = "simple_select",
+        keybindings: bool = True,
+        touch_enabled: bool = True,
+        **kwargs: Any,
+    ) -> None:
+        """Add a draw control to the map for drawing and editing geometries.
+
+        Args:
+            position: Position on map ('top-left', 'top-right', 'bottom-left', 'bottom-right')
+            controls: Dictionary specifying which drawing tools to show.
+                     Defaults to {'point': True, 'line_string': True, 'polygon': True, 'trash': True}
+            default_mode: Initial interaction mode ('simple_select', 'direct_select', 'draw_point', etc.)
+            keybindings: Whether to enable keyboard shortcuts
+            touch_enabled: Whether to enable touch interactions
+            **kwargs: Additional options to pass to MapboxDraw constructor
+        """
+        if controls is None:
+            controls = {
+                "point": True,
+                "line_string": True,
+                "polygon": True,
+                "trash": True,
+            }
+
+        draw_options = {
+            "displayControlsDefault": False,
+            "controls": controls,
+            "defaultMode": default_mode,
+            "keybindings": keybindings,
+            "touchEnabled": touch_enabled,
+            "position": position,
+            **kwargs,
+        }
+
+        # Store draw control configuration
+        current_controls = dict(self._controls)
+        draw_key = f"draw_{position}"
+        current_controls[draw_key] = {
+            "type": "draw",
+            "position": position,
+            "options": draw_options,
+        }
+        self._controls = current_controls
+
+        self.call_js_method("addDrawControl", draw_options)
+
+    def load_draw_data(self, geojson_data: Union[Dict[str, Any], str]) -> None:
+        """Load GeoJSON data into the draw control.
+
+        Args:
+            geojson_data: GeoJSON data as dictionary or JSON string
+        """
+        if isinstance(geojson_data, str):
+            geojson_data = json.loads(geojson_data)
+
+        # Update the trait immediately to ensure consistency
+        self._draw_data = geojson_data
+
+        # Send to JavaScript
+        self.call_js_method("loadDrawData", geojson_data)
+
+    def get_draw_data(self) -> Dict[str, Any]:
+        """Get all drawn features as GeoJSON.
+
+        Returns:
+            Dict containing GeoJSON FeatureCollection with drawn features
+        """
+        # Try to get current data first
+        if self._draw_data:
+            return self._draw_data
+
+        # If no data in trait, call JavaScript to get fresh data
+        self.call_js_method("getDrawData")
+        # Give JavaScript time to execute and sync data
+        import time
+
+        time.sleep(0.2)
+
+        # Return the synced data or empty FeatureCollection if nothing
+        return (
+            self._draw_data
+            if self._draw_data
+            else {"type": "FeatureCollection", "features": []}
+        )
+
+    def clear_draw_data(self) -> None:
+        """Clear all drawn features from the draw control."""
+        # Clear the trait data immediately
+        self._draw_data = {"type": "FeatureCollection", "features": []}
+
+        # Clear in JavaScript
+        self.call_js_method("clearDrawData")
+
+    def delete_draw_features(self, feature_ids: List[str]) -> None:
+        """Delete specific features from the draw control.
+
+        Args:
+            feature_ids: List of feature IDs to delete
+        """
+        self.call_js_method("deleteDrawFeatures", feature_ids)
+
+    def set_draw_mode(self, mode: str) -> None:
+        """Set the draw control mode.
+
+        Args:
+            mode: Draw mode ('simple_select', 'direct_select', 'draw_point',
+                 'draw_line_string', 'draw_polygon', 'static')
+        """
+        self.call_js_method("setDrawMode", mode)
+
     def _generate_html_template(
         self, map_state: Dict[str, Any], title: str, **kwargs: Any
     ) -> str:
@@ -1069,6 +1184,39 @@ class MapLibreMap(MapWidget):
             height: {map_state['height']};
             border: 1px solid #ccc;
         }}
+
+        /* Force default cursor for all map interactions */
+        .maplibregl-canvas {{
+            cursor: default !important;
+        }}
+
+        .maplibregl-map {{
+            cursor: default !important;
+        }}
+
+        .maplibregl-ctrl-group button {{
+            cursor: default !important;
+        }}
+
+        .maplibregl-ctrl button {{
+            cursor: default !important;
+        }}
+
+        .maplibregl-ctrl-draw {{
+            cursor: default !important;
+        }}
+
+        .maplibregl-ctrl-draw button {{
+            cursor: default !important;
+        }}
+
+        .maplibregl-popup-anchor {{
+            cursor: default !important;
+        }}
+
+        .maplibregl-marker {{
+            cursor: default !important;
+        }}
         h1 {{
             margin-top: 0;
             color: #333;
@@ -1081,6 +1229,8 @@ class MapLibreMap(MapWidget):
 
     <script src="https://unpkg.com/@geomatico/maplibre-cog-protocol@0.4.0/dist/index.js"></script>
     <script src="https://unpkg.com/pmtiles@3.2.0/dist/pmtiles.js"></script>
+    <script src="https://www.unpkg.com/@mapbox/mapbox-gl-draw@1.5.0/dist/mapbox-gl-draw.js"></script>
+    <link rel="stylesheet" href="https://www.unpkg.com/@mapbox/mapbox-gl-draw@1.5.0/dist/mapbox-gl-draw.css">
     <script>
         // Register COG protocol
         maplibregl.addProtocol("cog", MaplibreCOGProtocol.cogProtocol);
@@ -1088,6 +1238,203 @@ class MapLibreMap(MapWidget):
         // Register PMTiles protocol
         const pmtilesProtocol = new pmtiles.Protocol();
         maplibregl.addProtocol("pmtiles", pmtilesProtocol.tile);
+
+        // Configure MapboxDraw for MapLibre compatibility
+        if (typeof MapboxDraw !== 'undefined') {{
+            MapboxDraw.constants.classes.CANVAS = 'maplibregl-canvas';
+            MapboxDraw.constants.classes.CONTROL_BASE = 'maplibregl-ctrl';
+            MapboxDraw.constants.classes.CONTROL_PREFIX = 'maplibregl-ctrl-';
+            MapboxDraw.constants.classes.CONTROL_GROUP = 'maplibregl-ctrl-group';
+            MapboxDraw.constants.classes.ATTRIBUTION = 'maplibregl-ctrl-attrib';
+
+            // Create custom styles for MapLibre compatibility
+            window.MapLibreDrawStyles = [
+                // Point styles
+                {{
+                    "id": "gl-draw-point-point-stroke-inactive",
+                    "type": "circle",
+                    "filter": ["all", ["==", "active", "false"], ["==", "$type", "Point"], ["==", "meta", "feature"], ["!=", "mode", "static"]],
+                    "paint": {{
+                        "circle-radius": 5,
+                        "circle-opacity": 1,
+                        "circle-color": "#000"
+                    }}
+                }},
+                {{
+                    "id": "gl-draw-point-inactive",
+                    "type": "circle",
+                    "filter": ["all", ["==", "active", "false"], ["==", "$type", "Point"], ["==", "meta", "feature"], ["!=", "mode", "static"]],
+                    "paint": {{
+                        "circle-radius": 3,
+                        "circle-color": "#3bb2d0"
+                    }}
+                }},
+                {{
+                    "id": "gl-draw-point-stroke-active",
+                    "type": "circle",
+                    "filter": ["all", ["==", "active", "true"], ["!=", "meta", "midpoint"], ["==", "$type", "Point"]],
+                    "paint": {{
+                        "circle-radius": 7,
+                        "circle-color": "#000"
+                    }}
+                }},
+                {{
+                    "id": "gl-draw-point-active",
+                    "type": "circle",
+                    "filter": ["all", ["==", "active", "true"], ["!=", "meta", "midpoint"], ["==", "$type", "Point"]],
+                    "paint": {{
+                        "circle-radius": 5,
+                        "circle-color": "#fbb03b"
+                    }}
+                }},
+                // Line styles - fixed for MapLibre
+                {{
+                    "id": "gl-draw-line-inactive",
+                    "type": "line",
+                    "filter": ["all", ["==", "active", "false"], ["==", "$type", "LineString"], ["!=", "mode", "static"]],
+                    "layout": {{
+                        "line-cap": "round",
+                        "line-join": "round"
+                    }},
+                    "paint": {{
+                        "line-color": "#3bb2d0",
+                        "line-width": 2
+                    }}
+                }},
+                {{
+                    "id": "gl-draw-line-active",
+                    "type": "line",
+                    "filter": ["all", ["==", "active", "true"], ["==", "$type", "LineString"]],
+                    "layout": {{
+                        "line-cap": "round",
+                        "line-join": "round"
+                    }},
+                    "paint": {{
+                        "line-color": "#fbb03b",
+                        "line-width": 2,
+                        "line-dasharray": ["literal", [0.2, 2]]
+                    }}
+                }},
+                // Polygon fill
+                {{
+                    "id": "gl-draw-polygon-fill-inactive",
+                    "type": "fill",
+                    "filter": ["all", ["==", "active", "false"], ["==", "$type", "Polygon"], ["!=", "mode", "static"]],
+                    "paint": {{
+                        "fill-color": "#3bb2d0",
+                        "fill-outline-color": "#3bb2d0",
+                        "fill-opacity": 0.1
+                    }}
+                }},
+                {{
+                    "id": "gl-draw-polygon-fill-active",
+                    "type": "fill",
+                    "filter": ["all", ["==", "active", "true"], ["==", "$type", "Polygon"]],
+                    "paint": {{
+                        "fill-color": "#fbb03b",
+                        "fill-outline-color": "#fbb03b",
+                        "fill-opacity": 0.1
+                    }}
+                }},
+                // Polygon stroke
+                {{
+                    "id": "gl-draw-polygon-stroke-inactive",
+                    "type": "line",
+                    "filter": ["all", ["==", "active", "false"], ["==", "$type", "Polygon"], ["!=", "mode", "static"]],
+                    "layout": {{
+                        "line-cap": "round",
+                        "line-join": "round"
+                    }},
+                    "paint": {{
+                        "line-color": "#3bb2d0",
+                        "line-width": 2
+                    }}
+                }},
+                {{
+                    "id": "gl-draw-polygon-stroke-active",
+                    "type": "line",
+                    "filter": ["all", ["==", "active", "true"], ["==", "$type", "Polygon"]],
+                    "layout": {{
+                        "line-cap": "round",
+                        "line-join": "round"
+                    }},
+                    "paint": {{
+                        "line-color": "#fbb03b",
+                        "line-width": 2,
+                        "line-dasharray": ["literal", [0.2, 2]]
+                    }}
+                }},
+                // Vertices (corner points) for editing
+                {{
+                    "id": "gl-draw-polygon-and-line-vertex-stroke-inactive",
+                    "type": "circle",
+                    "filter": ["all", ["==", "meta", "vertex"], ["==", "$type", "Point"], ["!=", "mode", "static"]],
+                    "paint": {{
+                        "circle-radius": 5,
+                        "circle-color": "#fff"
+                    }}
+                }},
+                {{
+                    "id": "gl-draw-polygon-and-line-vertex-inactive",
+                    "type": "circle",
+                    "filter": ["all", ["==", "meta", "vertex"], ["==", "$type", "Point"], ["!=", "mode", "static"]],
+                    "paint": {{
+                        "circle-radius": 3,
+                        "circle-color": "#fbb03b"
+                    }}
+                }},
+                // Midpoint
+                {{
+                    "id": "gl-draw-polygon-midpoint",
+                    "type": "circle",
+                    "filter": ["all", ["==", "$type", "Point"], ["==", "meta", "midpoint"]],
+                    "paint": {{
+                        "circle-radius": 3,
+                        "circle-color": "#fbb03b"
+                    }}
+                }},
+                // Active line vertex styles
+                {{
+                    "id": "gl-draw-line-vertex-stroke-active",
+                    "type": "circle",
+                    "filter": ["all", ["==", "$type", "Point"], ["==", "meta", "vertex"], ["!=", "meta", "midpoint"]],
+                    "paint": {{
+                        "circle-radius": 7,
+                        "circle-color": "#fff"
+                    }}
+                }},
+                {{
+                    "id": "gl-draw-line-vertex-active",
+                    "type": "circle",
+                    "filter": ["all", ["==", "$type", "Point"], ["==", "meta", "vertex"], ["!=", "meta", "midpoint"]],
+                    "paint": {{
+                        "circle-radius": 5,
+                        "circle-color": "#fbb03b"
+                    }}
+                }},
+                // Polygon vertex styles for direct select mode
+                {{
+                    "id": "gl-draw-polygon-vertex-stroke-active",
+                    "type": "circle",
+                    "filter": ["all", ["==", "$type", "Point"], ["==", "meta", "vertex"], ["!=", "meta", "midpoint"]],
+                    "paint": {{
+                        "circle-radius": 7,
+                        "circle-color": "#fff"
+                    }}
+                }},
+                {{
+                    "id": "gl-draw-polygon-vertex-active",
+                    "type": "circle",
+                    "filter": ["all", ["==", "$type", "Point"], ["==", "meta", "vertex"], ["!=", "meta", "midpoint"]],
+                    "paint": {{
+                        "circle-radius": 5,
+                        "circle-color": "#fbb03b"
+                    }}
+                }}
+            ];
+
+            console.log('MapboxDraw configured for MapLibre compatibility with custom styles');
+        }}
 
         // Map state from Python
         const mapState = {map_state_json};
@@ -1101,6 +1448,12 @@ class MapLibreMap(MapWidget):
             bearing: mapState.bearing || 0,
             pitch: mapState.pitch || 0,
             antialias: mapState.antialias !== undefined ? mapState.antialias : true
+        }});
+
+        // Force default cursor for all map interactions
+        map.on('load', function() {{
+            const canvas = map.getCanvas();
+            canvas.style.cursor = 'default';
         }});
 
         // Restore layers and sources after map loads
@@ -1151,6 +1504,50 @@ class MapLibreMap(MapWidget):
                         break;
                     case 'globe':
                         control = new maplibregl.GlobeControl(controlOptions || {{}});
+                        break;
+                    case 'draw':
+                        // Handle draw control restoration
+                        if (typeof MapboxDraw !== 'undefined') {{
+                            // Use custom styles for MapLibre compatibility
+                            const drawOptions = {{
+                                ...controlOptions,
+                                styles: window.MapLibreDrawStyles || undefined
+                            }};
+                            control = new MapboxDraw(drawOptions);
+
+                            // Store reference for data loading
+                            window.drawControl = control;
+
+                            // Set up draw event handlers
+                            map.on('draw.create', function(e) {{
+                                console.log('Draw created:', e.features);
+                            }});
+                            map.on('draw.update', function(e) {{
+                                console.log('Draw updated:', e.features);
+                            }});
+                            map.on('draw.delete', function(e) {{
+                                console.log('Draw deleted:', e.features);
+                            }});
+                            map.on('draw.selectionchange', function(e) {{
+                                console.log('Draw selection changed:', e.features);
+                            }});
+
+                            console.log('Draw control restored successfully with custom styles');
+
+                            // Load saved draw data if it exists
+                            const savedDrawData = mapState._draw_data;
+                            if (savedDrawData && savedDrawData.features && savedDrawData.features.length > 0) {{
+                                try {{
+                                    control.set(savedDrawData);
+                                    console.log('Saved draw data loaded successfully:', savedDrawData);
+                                }} catch (error) {{
+                                    console.error('Failed to load saved draw data:', error);
+                                }}
+                            }}
+                        }} else {{
+                            console.warn('MapboxDraw not available during restore');
+                            return;
+                        }}
                         break;
                     default:
                         console.warn(`Unknown control type during restore: ${{controlType}}`);

@@ -56,6 +56,26 @@ function render({ model, el }) {
         });
       }
 
+      // Load MapboxDraw
+      if (!window.MapboxDraw) {
+        const drawScript = document.createElement('script');
+        drawScript.src = 'https://www.unpkg.com/@mapbox/mapbox-gl-draw@1.5.0/dist/mapbox-gl-draw.js';
+
+        await new Promise((resolve, reject) => {
+          drawScript.onload = resolve;
+          drawScript.onerror = reject;
+          document.head.appendChild(drawScript);
+        });
+
+        // Load CSS for MapboxDraw
+        if (!document.querySelector('link[href*="mapbox-gl-draw.css"]')) {
+          const drawCSS = document.createElement('link');
+          drawCSS.rel = 'stylesheet';
+          drawCSS.href = 'https://www.unpkg.com/@mapbox/mapbox-gl-draw@1.5.0/dist/mapbox-gl-draw.css';
+          document.head.appendChild(drawCSS);
+        }
+      }
+
       // Register the COG protocol
       if (window.MaplibreCOGProtocol && window.MaplibreCOGProtocol.cogProtocol) {
         maplibregl.addProtocol("cog", window.MaplibreCOGProtocol.cogProtocol);
@@ -71,6 +91,205 @@ function render({ model, el }) {
         console.log("PMTiles protocol registered successfully");
       } else {
         console.warn("PMTiles not available");
+      }
+
+      // Configure MapboxDraw for MapLibre compatibility
+      if (window.MapboxDraw) {
+        window.MapboxDraw.constants.classes.CANVAS = 'maplibregl-canvas';
+        window.MapboxDraw.constants.classes.CONTROL_BASE = 'maplibregl-ctrl';
+        window.MapboxDraw.constants.classes.CONTROL_PREFIX = 'maplibregl-ctrl-';
+        window.MapboxDraw.constants.classes.CONTROL_GROUP = 'maplibregl-ctrl-group';
+        window.MapboxDraw.constants.classes.ATTRIBUTION = 'maplibregl-ctrl-attrib';
+
+        // Create custom styles for MapLibre compatibility
+        window.MapLibreDrawStyles = [
+          // Point styles
+          {
+            "id": "gl-draw-point-point-stroke-inactive",
+            "type": "circle",
+            "filter": ["all", ["==", "active", "false"], ["==", "$type", "Point"], ["==", "meta", "feature"], ["!=", "mode", "static"]],
+            "paint": {
+              "circle-radius": 5,
+              "circle-opacity": 1,
+              "circle-color": "#000"
+            }
+          },
+          {
+            "id": "gl-draw-point-inactive",
+            "type": "circle",
+            "filter": ["all", ["==", "active", "false"], ["==", "$type", "Point"], ["==", "meta", "feature"], ["!=", "mode", "static"]],
+            "paint": {
+              "circle-radius": 3,
+              "circle-color": "#3bb2d0"
+            }
+          },
+          {
+            "id": "gl-draw-point-stroke-active",
+            "type": "circle",
+            "filter": ["all", ["==", "active", "true"], ["!=", "meta", "midpoint"], ["==", "$type", "Point"]],
+            "paint": {
+              "circle-radius": 7,
+              "circle-color": "#000"
+            }
+          },
+          {
+            "id": "gl-draw-point-active",
+            "type": "circle",
+            "filter": ["all", ["==", "active", "true"], ["!=", "meta", "midpoint"], ["==", "$type", "Point"]],
+            "paint": {
+              "circle-radius": 5,
+              "circle-color": "#fbb03b"
+            }
+          },
+          // Line styles - fixed for MapLibre
+          {
+            "id": "gl-draw-line-inactive",
+            "type": "line",
+            "filter": ["all", ["==", "active", "false"], ["==", "$type", "LineString"], ["!=", "mode", "static"]],
+            "layout": {
+              "line-cap": "round",
+              "line-join": "round"
+            },
+            "paint": {
+              "line-color": "#3bb2d0",
+              "line-width": 2
+            }
+          },
+          {
+            "id": "gl-draw-line-active",
+            "type": "line",
+            "filter": ["all", ["==", "active", "true"], ["==", "$type", "LineString"]],
+            "layout": {
+              "line-cap": "round",
+              "line-join": "round"
+            },
+            "paint": {
+              "line-color": "#fbb03b",
+              "line-width": 2,
+              "line-dasharray": ["literal", [0.2, 2]]
+            }
+          },
+          // Polygon fill
+          {
+            "id": "gl-draw-polygon-fill-inactive",
+            "type": "fill",
+            "filter": ["all", ["==", "active", "false"], ["==", "$type", "Polygon"], ["!=", "mode", "static"]],
+            "paint": {
+              "fill-color": "#3bb2d0",
+              "fill-outline-color": "#3bb2d0",
+              "fill-opacity": 0.1
+            }
+          },
+          {
+            "id": "gl-draw-polygon-fill-active",
+            "type": "fill",
+            "filter": ["all", ["==", "active", "true"], ["==", "$type", "Polygon"]],
+            "paint": {
+              "fill-color": "#fbb03b",
+              "fill-outline-color": "#fbb03b",
+              "fill-opacity": 0.1
+            }
+          },
+          // Polygon stroke
+          {
+            "id": "gl-draw-polygon-stroke-inactive",
+            "type": "line",
+            "filter": ["all", ["==", "active", "false"], ["==", "$type", "Polygon"], ["!=", "mode", "static"]],
+            "layout": {
+              "line-cap": "round",
+              "line-join": "round"
+            },
+            "paint": {
+              "line-color": "#3bb2d0",
+              "line-width": 2
+            }
+          },
+          {
+            "id": "gl-draw-polygon-stroke-active",
+            "type": "line",
+            "filter": ["all", ["==", "active", "true"], ["==", "$type", "Polygon"]],
+            "layout": {
+              "line-cap": "round",
+              "line-join": "round"
+            },
+            "paint": {
+              "line-color": "#fbb03b",
+              "line-width": 2,
+              "line-dasharray": ["literal", [0.2, 2]]
+            }
+          },
+          // Vertices (corner points) for editing
+          {
+            "id": "gl-draw-polygon-and-line-vertex-stroke-inactive",
+            "type": "circle",
+            "filter": ["all", ["==", "meta", "vertex"], ["==", "$type", "Point"], ["!=", "mode", "static"]],
+            "paint": {
+              "circle-radius": 5,
+              "circle-color": "#fff"
+            }
+          },
+          {
+            "id": "gl-draw-polygon-and-line-vertex-inactive",
+            "type": "circle",
+            "filter": ["all", ["==", "meta", "vertex"], ["==", "$type", "Point"], ["!=", "mode", "static"]],
+            "paint": {
+              "circle-radius": 3,
+              "circle-color": "#fbb03b"
+            }
+          },
+          // Midpoint
+          {
+            "id": "gl-draw-polygon-midpoint",
+            "type": "circle",
+            "filter": ["all", ["==", "$type", "Point"], ["==", "meta", "midpoint"]],
+            "paint": {
+              "circle-radius": 3,
+              "circle-color": "#fbb03b"
+            }
+          },
+          // Active line vertex styles
+          {
+            "id": "gl-draw-line-vertex-stroke-active",
+            "type": "circle",
+            "filter": ["all", ["==", "$type", "Point"], ["==", "meta", "vertex"], ["!=", "meta", "midpoint"]],
+            "paint": {
+              "circle-radius": 7,
+              "circle-color": "#fff"
+            }
+          },
+          {
+            "id": "gl-draw-line-vertex-active",
+            "type": "circle",
+            "filter": ["all", ["==", "$type", "Point"], ["==", "meta", "vertex"], ["!=", "meta", "midpoint"]],
+            "paint": {
+              "circle-radius": 5,
+              "circle-color": "#fbb03b"
+            }
+          },
+          // Polygon vertex styles for direct select mode
+          {
+            "id": "gl-draw-polygon-vertex-stroke-active",
+            "type": "circle",
+            "filter": ["all", ["==", "$type", "Point"], ["==", "meta", "vertex"], ["!=", "meta", "midpoint"]],
+            "paint": {
+              "circle-radius": 7,
+              "circle-color": "#fff"
+            }
+          },
+          {
+            "id": "gl-draw-polygon-vertex-active",
+            "type": "circle",
+            "filter": ["all", ["==", "$type", "Point"], ["==", "meta", "vertex"], ["!=", "meta", "midpoint"]],
+            "paint": {
+              "circle-radius": 5,
+              "circle-color": "#fbb03b"
+            }
+          }
+        ];
+
+        console.log("MapboxDraw configured for MapLibre compatibility with custom styles");
+      } else {
+        console.warn("MapboxDraw not available");
       }
     } catch (error) {
       console.warn("Failed to load protocols:", error);
@@ -90,10 +309,17 @@ function render({ model, el }) {
       antialias: model.get("antialias")
     });
 
+    // Force default cursor for all map interactions
+    map.on('load', () => {
+      const canvas = map.getCanvas();
+      canvas.style.cursor = 'default';
+    });
+
     // Store map instance for cleanup
     el._map = map;
     el._markers = [];
     el._controls = new Map(); // Track added controls by type and position
+    el._drawControl = null; // Track draw control instance
     el._widgetId = widgetId;
 
     // Restore layers, sources, controls, and projection from model state
@@ -151,6 +377,45 @@ function render({ model, el }) {
               case 'globe':
                 control = new maplibregl.GlobeControl(controlOptions || {});
                 break;
+              case 'draw':
+                // Handle draw control restoration
+                if (window.MapboxDraw && !el._drawControl) {
+                  // Use custom styles for MapLibre compatibility
+                  const drawOptions = {
+                    ...controlOptions,
+                    styles: window.MapLibreDrawStyles || undefined
+                  };
+                  el._drawControl = new window.MapboxDraw(drawOptions);
+                  map.addControl(el._drawControl, position);
+
+                  // Set up draw event handlers with data sync
+                  map.on('draw.create', (e) => {
+                    const allData = el._drawControl.getAll();
+                    model.set('_draw_data', allData);
+                    model.save_changes();
+                    sendEvent('draw.create', { features: e.features, allData: allData });
+                  });
+                  map.on('draw.update', (e) => {
+                    const allData = el._drawControl.getAll();
+                    model.set('_draw_data', allData);
+                    model.save_changes();
+                    sendEvent('draw.update', { features: e.features, allData: allData });
+                  });
+                  map.on('draw.delete', (e) => {
+                    const allData = el._drawControl.getAll();
+                    model.set('_draw_data', allData);
+                    model.save_changes();
+                    sendEvent('draw.delete', { features: e.features, allData: allData });
+                  });
+                  map.on('draw.selectionchange', (e) => {
+                    sendEvent('draw.selectionchange', { features: e.features });
+                  });
+
+                  console.log('Draw control restored successfully with custom styles');
+                } else {
+                  console.warn('MapboxDraw not available or already added during restore');
+                }
+                return;
               default:
                 console.warn(`Unknown control type during restore: ${controlType}`);
                 return;
@@ -170,6 +435,17 @@ function render({ model, el }) {
           map.setProjection(projection);
         } catch (error) {
           console.warn('Failed to restore projection:', error);
+        }
+      }
+
+      // Load existing draw data if present
+      const drawData = model.get("_draw_data");
+      if (el._drawControl && drawData && drawData.features && drawData.features.length > 0) {
+        try {
+          el._drawControl.set(drawData);
+          console.log('Initial draw data loaded on widget initialization:', drawData);
+        } catch (error) {
+          console.error('Failed to load initial draw data:', error);
         }
       }
     };
@@ -268,6 +544,27 @@ function render({ model, el }) {
 
     model.on("change:pitch", () => {
       map.setPitch(model.get("pitch"));
+    });
+
+    // Listen for draw data changes from Python
+    model.on("change:_draw_data", () => {
+      const drawData = model.get("_draw_data");
+      if (el._drawControl && drawData) {
+        try {
+          // Clear existing data first
+          el._drawControl.deleteAll();
+
+          // Load new data if it has features
+          if (drawData.features && drawData.features.length > 0) {
+            el._drawControl.set(drawData);
+            console.log('Draw data updated from Python:', drawData);
+          } else {
+            console.log('Draw data cleared from Python');
+          }
+        } catch (error) {
+          console.error('Failed to update draw data from Python:', error);
+        }
+      }
     });
 
     // Handle JavaScript method calls from Python
@@ -432,6 +729,147 @@ function render({ model, el }) {
             }
             break;
 
+          case 'addDrawControl':
+            const [drawOptions] = args;
+            try {
+              if (window.MapboxDraw && !el._drawControl) {
+                // Use custom styles for MapLibre compatibility
+                const finalDrawOptions = {
+                  ...drawOptions,
+                  styles: window.MapLibreDrawStyles || undefined
+                };
+                el._drawControl = new window.MapboxDraw(finalDrawOptions);
+                map.addControl(el._drawControl, drawOptions.position || 'top-left');
+
+                // Set up draw event handlers with data sync
+                map.on('draw.create', (e) => {
+                  const allData = el._drawControl.getAll();
+                  model.set('_draw_data', allData);
+                  model.save_changes();
+                  sendEvent('draw.create', { features: e.features, allData: allData });
+                });
+                map.on('draw.update', (e) => {
+                  const allData = el._drawControl.getAll();
+                  model.set('_draw_data', allData);
+                  model.save_changes();
+                  sendEvent('draw.update', { features: e.features, allData: allData });
+                });
+                map.on('draw.delete', (e) => {
+                  const allData = el._drawControl.getAll();
+                  model.set('_draw_data', allData);
+                  model.save_changes();
+                  sendEvent('draw.delete', { features: e.features, allData: allData });
+                });
+                map.on('draw.selectionchange', (e) => {
+                  sendEvent('draw.selectionchange', { features: e.features });
+                });
+
+                console.log('Draw control added successfully with custom styles');
+              } else {
+                console.warn('MapboxDraw not available or already added');
+              }
+            } catch (error) {
+              console.error('Failed to add draw control:', error);
+            }
+            break;
+
+          case 'loadDrawData':
+            const [geojsonData] = args;
+            try {
+              if (el._drawControl) {
+                // Clear existing data first
+                el._drawControl.deleteAll();
+                // Add new data
+                el._drawControl.set(geojsonData);
+
+                // Immediately sync the loaded data back to Python
+                const loadedData = el._drawControl.getAll();
+                model.set('_draw_data', loadedData);
+                model.save_changes();
+
+                console.log('Draw data loaded and synced successfully', loadedData);
+
+                // Send event to notify successful loading
+                sendEvent('draw_data_loaded', { data: loadedData });
+              } else {
+                console.warn('Draw control not initialized');
+              }
+            } catch (error) {
+              console.error('Failed to load draw data:', error);
+            }
+            break;
+
+          case 'getDrawData':
+            try {
+              if (el._drawControl) {
+                const drawData = el._drawControl.getAll();
+                model.set('_draw_data', drawData);
+                model.save_changes();
+                console.log('Draw data retrieved successfully', drawData);
+                // Also send as event for immediate response
+                sendEvent('draw_data_retrieved', { data: drawData });
+              } else {
+                console.warn('Draw control not initialized');
+                // Send empty data if control not initialized
+                model.set('_draw_data', { type: 'FeatureCollection', features: [] });
+                model.save_changes();
+              }
+            } catch (error) {
+              console.error('Failed to get draw data:', error);
+              // Send empty data on error
+              model.set('_draw_data', { type: 'FeatureCollection', features: [] });
+              model.save_changes();
+            }
+            break;
+
+          case 'clearDrawData':
+            try {
+              if (el._drawControl) {
+                el._drawControl.deleteAll();
+
+                // Sync the cleared state back to Python
+                const emptyData = { type: 'FeatureCollection', features: [] };
+                model.set('_draw_data', emptyData);
+                model.save_changes();
+
+                console.log('Draw data cleared successfully');
+                sendEvent('draw_data_cleared', { data: emptyData });
+              } else {
+                console.warn('Draw control not initialized');
+              }
+            } catch (error) {
+              console.error('Failed to clear draw data:', error);
+            }
+            break;
+
+          case 'deleteDrawFeatures':
+            const [featureIds] = args;
+            try {
+              if (el._drawControl) {
+                el._drawControl.delete(featureIds);
+                console.log('Draw features deleted successfully');
+              } else {
+                console.warn('Draw control not initialized');
+              }
+            } catch (error) {
+              console.error('Failed to delete draw features:', error);
+            }
+            break;
+
+          case 'setDrawMode':
+            const [mode] = args;
+            try {
+              if (el._drawControl) {
+                el._drawControl.changeMode(mode);
+                console.log(`Draw mode changed to: ${mode}`);
+              } else {
+                console.warn('Draw control not initialized');
+              }
+            } catch (error) {
+              console.error('Failed to set draw mode:', error);
+            }
+            break;
+
           default:
             // Try to call the method directly on the map object
             if (typeof map[method] === 'function') {
@@ -457,6 +895,9 @@ function render({ model, el }) {
       }
       if (el._controls) {
         el._controls.clear();
+      }
+      if (el._drawControl) {
+        el._drawControl = null;
       }
       if (el._map) {
         el._map.remove();
