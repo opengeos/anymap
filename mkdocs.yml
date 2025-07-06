@@ -91,6 +91,7 @@ nav:
           - examples/potree_example.ipynb
           - examples/pmtiles_example.ipynb
           - examples/draw_control_example.ipynb
+          - examples/layer_control_example.ipynb
     - API Reference:
           - anymap module: anymap.md
           - base module: base.md

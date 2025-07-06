@@ -84,6 +84,7 @@ class MapLibreMap(MapWidget):
     _draw_data = traitlets.Dict().tag(sync=True)
     _terra_draw_data = traitlets.Dict().tag(sync=True)
     _terra_draw_enabled = traitlets.Bool(False).tag(sync=True)
+    _layer_dict = traitlets.Dict().tag(sync=True)
 
     # Define the JavaScript module path
     _esm = _esm_maplibre
@@ -155,6 +156,9 @@ class MapLibreMap(MapWidget):
             "type": "background",
             "color": None,
         }
+
+        # Initialize the _layer_dict trait with the layer_dict content
+        self._layer_dict = dict(self.layer_dict)
 
         self._style = style
         self.style_dict = {}
@@ -507,6 +511,7 @@ class MapLibreMap(MapWidget):
             self.set_layout_property(layer_id, "visibility", visibility)
         if layer_id in self.layer_dict:
             self.layer_dict[layer_id]["visible"] = visible
+            self._update_layer_controls()
 
     def set_opacity(self, layer_id: str, opacity: float) -> None:
         """Set the opacity of a layer.
@@ -533,6 +538,7 @@ class MapLibreMap(MapWidget):
             layer_type = self.layer_dict[layer_id]["layer"]["type"]
             prop_name = f"{layer_type}-opacity"
             self.layer_dict[layer_id]["opacity"] = opacity
+            self._update_layer_controls()
         elif layer_id in self.style_dict:
             layer = self.style_dict[layer_id]
             layer_type = layer.get("type")
@@ -648,8 +654,14 @@ class MapLibreMap(MapWidget):
             # "color": color,
         }
 
+        # Update the _layer_dict trait to trigger JavaScript sync
+        self._layer_dict = dict(self.layer_dict)
+
         if self.layer_manager is not None:
             self.layer_manager.refresh()
+
+        # Update layer controls if they exist
+        self._update_layer_controls()
 
     def add_geojson_layer(
         self,
@@ -869,6 +881,135 @@ class MapLibreMap(MapWidget):
             self._controls = current_controls
 
         self.call_js_method("removeControl", control_type, position)
+
+    def add_layer_control(
+        self,
+        position: str = "top-right",
+        collapsed: bool = True,
+        layers: Optional[List[str]] = None,
+        options: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        """Add a collapsible layer control panel to the map.
+
+        The layer control is a collapsible panel that allows users to toggle
+        visibility and adjust opacity of map layers. It displays as an icon
+        similar to other controls, and expands when clicked.
+
+        Args:
+            position: Position on map ('top-left', 'top-right', 'bottom-left', 'bottom-right')
+            collapsed: Whether the control starts collapsed
+            layers: List of layer IDs to include. If None, includes all layers
+            options: Additional options for the control
+        """
+        control_options = options or {}
+        control_options.update(
+            {
+                "position": position,
+                "collapsed": collapsed,
+                "layers": layers,
+            }
+        )
+
+        # Get current layer states for initialization
+        layer_states = {}
+        target_layers = layers if layers is not None else list(self.layer_dict.keys())
+
+        # Always include background layer for controlling map style layers
+        if layers is None or "background" in layers:
+            layer_states["background"] = {
+                "visible": True,
+                "opacity": 1.0,
+                "name": "Background",
+            }
+
+        for layer_id in target_layers:
+            if layer_id in self.layer_dict and layer_id != "background":
+                layer_info = self.layer_dict[layer_id]
+                layer_states[layer_id] = {
+                    "visible": layer_info.get("visible", True),
+                    "opacity": layer_info.get("opacity", 1.0),
+                    "name": layer_id,  # Use layer_id as display name by default
+                }
+
+        control_options["layerStates"] = layer_states
+
+        # Store control in persistent state
+        control_key = f"layer_control_{position}"
+        current_controls = dict(self._controls)
+        current_controls[control_key] = {
+            "type": "layer_control",
+            "position": position,
+            "options": control_options,
+        }
+        self._controls = current_controls
+
+        self.call_js_method("addControl", "layer_control", control_options)
+
+    def _update_layer_controls(self) -> None:
+        """Update all existing layer controls with the current layer state."""
+        # Find all layer controls in the _controls dictionary
+        for control_key, control_config in self._controls.items():
+            if control_config.get("type") == "layer_control":
+                # Update the layerStates in the control options
+                control_options = control_config.get("options", {})
+                layers_filter = control_options.get("layers")
+
+                # Get current layer states for this control
+                layer_states = {}
+                target_layers = (
+                    layers_filter
+                    if layers_filter is not None
+                    else list(self.layer_dict.keys())
+                )
+
+                # Always include background layer for controlling map style layers
+                if layers_filter is None or "background" in layers_filter:
+                    layer_states["background"] = {
+                        "visible": True,
+                        "opacity": 1.0,
+                        "name": "Background",
+                    }
+
+                for layer_id in target_layers:
+                    if layer_id in self.layer_dict and layer_id != "background":
+                        layer_info = self.layer_dict[layer_id]
+                        layer_states[layer_id] = {
+                            "visible": layer_info.get("visible", True),
+                            "opacity": layer_info.get("opacity", 1.0),
+                            "name": layer_id,
+                        }
+
+                # Update the control options with new layer states
+                control_options["layerStates"] = layer_states
+
+                # Update the control configuration
+                control_config["options"] = control_options
+
+        # Trigger the JavaScript layer control to check for new layers
+        # by updating the _layer_dict trait that the JS listens to
+        self._layer_dict = dict(self.layer_dict)
+
+    def remove_layer(self, layer_id: str) -> None:
+        """Remove a layer from the map.
+
+        Args:
+            layer_id: Unique identifier for the layer to remove.
+        """
+        # Remove from JavaScript map
+        self.call_js_method("removeLayer", layer_id)
+
+        # Remove from local state
+        if layer_id in self._layers:
+            current_layers = dict(self._layers)
+            del current_layers[layer_id]
+            self._layers = current_layers
+
+        # Remove from layer_dict
+        if layer_id in self.layer_dict:
+            del self.layer_dict[layer_id]
+
+        # Update layer controls if they exist
+        self._update_layer_controls()
 
     def add_cog_layer(
         self,

@@ -1,5 +1,510 @@
 import maplibregl from "https://cdn.skypack.dev/maplibre-gl@5.5.0";
 
+// Layer Control class
+class LayerControl {
+  constructor(options, map, model) {
+    this.options = options;
+    this.map = map;
+    this.model = model;
+    this.collapsed = options.collapsed !== false;
+    this.layerStates = options.layerStates || {};
+    this.targetLayers = options.layers || Object.keys(this.layerStates);
+
+    // Create control container
+    this.container = document.createElement('div');
+    this.container.className = 'maplibregl-ctrl maplibregl-ctrl-group maplibregl-ctrl-layer-control';
+
+    // Create toggle button
+    this.button = document.createElement('button');
+    this.button.type = 'button';
+    this.button.title = 'Layer Control';
+    this.button.setAttribute('aria-label', 'Layer Control');
+
+    // Create icon
+    const icon = document.createElement('span');
+    icon.className = 'layer-control-icon';
+    this.button.appendChild(icon);
+
+    // Create panel
+    this.panel = document.createElement('div');
+    this.panel.className = 'layer-control-panel';
+    if (!this.collapsed) {
+      this.panel.classList.add('expanded');
+    }
+
+    // Add header
+    const header = document.createElement('div');
+    header.className = 'layer-control-panel-header';
+    header.textContent = 'Layers';
+    this.panel.appendChild(header);
+
+    // Build layer items
+    this.buildLayerItems();
+
+    // Add event listeners
+    this.button.addEventListener('click', () => this.toggle());
+
+    // Assemble control
+    this.container.appendChild(this.button);
+    this.container.appendChild(this.panel);
+
+    // Click outside to close
+    document.addEventListener('click', (e) => {
+      if (!this.container.contains(e.target)) {
+        this.collapse();
+      }
+    });
+
+    // Listen for external layer changes
+    this.setupLayerChangeListeners();
+
+    // Listen for model changes to detect new layers
+    this.setupModelChangeListeners();
+  }
+
+
+  buildLayerItems() {
+    // Clear existing items first (in case of rebuild)
+    const existingItems = this.panel.querySelectorAll('.layer-control-item');
+    existingItems.forEach(item => item.remove());
+
+    // Add items for all layers in our state
+    Object.entries(this.layerStates).forEach(([layerId, state]) => {
+      if (this.targetLayers.includes(layerId)) {
+        this.addLayerItem(layerId, state);
+      }
+    });
+  }
+
+  toggle() {
+    if (this.collapsed) {
+      this.expand();
+    } else {
+      this.collapse();
+    }
+  }
+
+  expand() {
+    this.collapsed = false;
+    this.panel.classList.add('expanded');
+  }
+
+  collapse() {
+    this.collapsed = true;
+    this.panel.classList.remove('expanded');
+  }
+
+  toggleLayerVisibility(layerId, visible) {
+    // Update local state
+    if (this.layerStates[layerId]) {
+      this.layerStates[layerId].visible = visible;
+    }
+
+    // Call map's visibility method
+    this.map.setLayoutProperty(layerId, 'visibility', visible ? 'visible' : 'none');
+
+    // Sync back to Python
+    this.model.set('_js_events', [...this.model.get('_js_events'), {
+      type: 'layer_visibility_changed',
+      layerId: layerId,
+      visible: visible
+    }]);
+    this.model.save_changes();
+  }
+
+  changeLayerOpacity(layerId, opacity) {
+    // Update local state
+    if (this.layerStates[layerId]) {
+      this.layerStates[layerId].opacity = opacity;
+    }
+
+    // Apply opacity to map layer
+    const layer = this.map.getLayer(layerId);
+    if (layer) {
+      const layerType = layer.type;
+      let opacityProperty;
+
+      switch (layerType) {
+        case 'fill':
+          opacityProperty = 'fill-opacity';
+          break;
+        case 'line':
+          opacityProperty = 'line-opacity';
+          break;
+        case 'circle':
+          opacityProperty = 'circle-opacity';
+          break;
+        case 'symbol':
+          this.map.setPaintProperty(layerId, 'icon-opacity', opacity);
+          this.map.setPaintProperty(layerId, 'text-opacity', opacity);
+          return;
+        case 'raster':
+          opacityProperty = 'raster-opacity';
+          break;
+        case 'background':
+          opacityProperty = 'background-opacity';
+          break;
+        default:
+          opacityProperty = `${layerType}-opacity`;
+      }
+
+      this.map.setPaintProperty(layerId, opacityProperty, opacity);
+    }
+
+    // Sync back to Python
+    this.model.set('_js_events', [...this.model.get('_js_events'), {
+      type: 'layer_opacity_changed',
+      layerId: layerId,
+      opacity: opacity
+    }]);
+    this.model.save_changes();
+  }
+
+  onAdd(map) {
+    return this.container;
+  }
+
+  setupLayerChangeListeners() {
+    // Listen for map layer property changes to sync UI
+    this.map.on('styledata', () => {
+      // Update UI when map style changes (with a small delay to ensure changes are applied)
+      setTimeout(() => {
+        this.updateLayerStatesFromMap();
+        this.checkForNewLayers();
+      }, 100);
+    });
+
+    // Also listen for data changes which can trigger updates
+    this.map.on('data', (e) => {
+      if (e.sourceDataType === 'content') {
+        setTimeout(() => {
+          this.updateLayerStatesFromMap();
+          this.checkForNewLayers();
+        }, 100);
+      }
+    });
+
+    // Listen for source add events (indicates new layers may be added)
+    this.map.on('sourcedata', (e) => {
+      if (e.sourceDataType === 'metadata') {
+        setTimeout(() => {
+          this.checkForNewLayers();
+        }, 150);
+      }
+    });
+  }
+
+  setupModelChangeListeners() {
+    // Listen for changes to the layer_dict in the Python model
+    this.model.on('change:_layer_dict', () => {
+      setTimeout(() => {
+        this.checkForNewLayers();
+      }, 100);
+    });
+
+    // Listen for layer additions/removals
+    this.model.on('change:_layers', () => {
+      setTimeout(() => {
+        this.checkForNewLayers();
+      }, 100);
+    });
+  }
+
+  updateLayerStatesFromMap() {
+    // Update local state and UI based on current map layer states
+    Object.keys(this.layerStates).forEach(layerId => {
+      const layer = this.map.getLayer(layerId);
+      if (layer) {
+        // Check visibility
+        const visibility = this.map.getLayoutProperty(layerId, 'visibility');
+        const isVisible = visibility !== 'none';
+
+        // Check opacity
+        const layerType = layer.type;
+        let opacity = 1.0;
+
+        switch (layerType) {
+          case 'fill':
+            opacity = this.map.getPaintProperty(layerId, 'fill-opacity') || 1.0;
+            break;
+          case 'line':
+            opacity = this.map.getPaintProperty(layerId, 'line-opacity') || 1.0;
+            break;
+          case 'circle':
+            opacity = this.map.getPaintProperty(layerId, 'circle-opacity') || 1.0;
+            break;
+          case 'symbol':
+            opacity = this.map.getPaintProperty(layerId, 'icon-opacity') || 1.0;
+            break;
+          case 'raster':
+            opacity = this.map.getPaintProperty(layerId, 'raster-opacity') || 1.0;
+            break;
+          case 'background':
+            opacity = this.map.getPaintProperty(layerId, 'background-opacity') || 1.0;
+            break;
+        }
+
+        // Update local state
+        if (this.layerStates[layerId]) {
+          this.layerStates[layerId].visible = isVisible;
+          this.layerStates[layerId].opacity = opacity;
+        }
+
+        // Update UI elements
+        this.updateUIForLayer(layerId, isVisible, opacity);
+      }
+    });
+  }
+
+  updateUIForLayer(layerId, visible, opacity) {
+    // Find the UI elements for this layer
+    const layerItems = this.panel.querySelectorAll('.layer-control-item');
+
+    layerItems.forEach(item => {
+      const checkbox = item.querySelector('.layer-control-checkbox');
+      const opacitySlider = item.querySelector('.layer-control-opacity');
+      const nameSpan = item.querySelector('.layer-control-name');
+
+      if (nameSpan && nameSpan.textContent === layerId) {
+        // Update checkbox
+        if (checkbox) {
+          checkbox.checked = visible;
+        }
+
+        // Update opacity slider
+        if (opacitySlider) {
+          opacitySlider.value = opacity;
+          opacitySlider.title = `Opacity: ${Math.round(opacity * 100)}%`;
+        }
+      }
+    });
+  }
+
+  checkForNewLayers() {
+    // Check for new user-added layers by monitoring the model's layer_dict
+    const currentLayers = this.model.get('_layers') || {};
+    const currentLayerDict = this.model.get('_layer_dict') || {};
+
+    // Check for new layers in the layer_dict that aren't in our layerStates
+    Object.keys(currentLayerDict).forEach(layerId => {
+      // Skip if we already have this layer in our control
+      if (this.layerStates[layerId]) {
+        return;
+      }
+
+      // Skip if this layer is filtered out
+      if (this.options.layers && !this.options.layers.includes(layerId)) {
+        return;
+      }
+
+      // Get layer info from layer_dict
+      const layerInfo = currentLayerDict[layerId];
+      if (layerInfo) {
+        // Add to our layer states
+        this.layerStates[layerId] = {
+          visible: layerInfo.visible !== false,
+          opacity: layerInfo.opacity || 1.0,
+          name: layerId
+        };
+
+        // Add to target layers if not filtering
+        if (!this.options.layers) {
+          this.targetLayers.push(layerId);
+        }
+
+        // Add UI element for this layer
+        this.addLayerItem(layerId, this.layerStates[layerId]);
+      }
+    });
+  }
+
+  addNewLayer(layerId, layerConfig) {
+    // Get current layer properties
+    const visibility = this.map.getLayoutProperty(layerId, 'visibility');
+    const isVisible = visibility !== 'none';
+
+    // Get opacity based on layer type
+    const layerType = layerConfig.type;
+    let opacity = 1.0;
+
+    switch (layerType) {
+      case 'fill':
+        opacity = this.map.getPaintProperty(layerId, 'fill-opacity') || 1.0;
+        break;
+      case 'line':
+        opacity = this.map.getPaintProperty(layerId, 'line-opacity') || 1.0;
+        break;
+      case 'circle':
+        opacity = this.map.getPaintProperty(layerId, 'circle-opacity') || 1.0;
+        break;
+      case 'symbol':
+        opacity = this.map.getPaintProperty(layerId, 'icon-opacity') || 1.0;
+        break;
+      case 'raster':
+        opacity = this.map.getPaintProperty(layerId, 'raster-opacity') || 1.0;
+        break;
+      case 'background':
+        opacity = this.map.getPaintProperty(layerId, 'background-opacity') || 1.0;
+        break;
+    }
+
+    // Add to our layer states
+    this.layerStates[layerId] = {
+      visible: isVisible,
+      opacity: opacity,
+      name: layerId
+    };
+
+    // Update target layers if not filtering
+    if (!this.options.layers) {
+      this.targetLayers.push(layerId);
+    }
+
+    // Create and add the UI element for this layer
+    this.addLayerItem(layerId, this.layerStates[layerId]);
+  }
+
+  isUserAddedLayer(layerId) {
+    // Check if this layer is in our layerStates (meaning it was added by user via Python)
+    // Background style layers are NOT in layerStates except for the special "background" entry
+    return this.layerStates[layerId] && layerId !== 'background';
+  }
+
+  addLayerItem(layerId, state) {
+    const item = document.createElement('div');
+    item.className = 'layer-control-item';
+    item.setAttribute('data-layer-id', layerId);
+
+    // Checkbox for visibility
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.className = 'layer-control-checkbox';
+    checkbox.checked = state.visible;
+    checkbox.addEventListener('change', () => {
+      if (layerId === 'background') {
+        this.toggleBackgroundVisibility(checkbox.checked);
+      } else {
+        this.toggleLayerVisibility(layerId, checkbox.checked);
+      }
+    });
+
+    // Layer name - use friendly name for background
+    const name = document.createElement('span');
+    name.className = 'layer-control-name';
+    name.textContent = layerId === 'background' ? 'Background' : (state.name || layerId);
+    name.title = layerId === 'background' ? 'Background' : (state.name || layerId);
+
+    // Opacity slider
+    const opacity = document.createElement('input');
+    opacity.type = 'range';
+    opacity.className = 'layer-control-opacity';
+    opacity.min = '0';
+    opacity.max = '1';
+    opacity.step = '0.01';
+    opacity.value = state.opacity;
+    opacity.title = `Opacity: ${Math.round(state.opacity * 100)}%`;
+    opacity.addEventListener('input', () => {
+      if (layerId === 'background') {
+        this.changeBackgroundOpacity(parseFloat(opacity.value));
+      } else {
+        this.changeLayerOpacity(layerId, parseFloat(opacity.value));
+      }
+      opacity.title = `Opacity: ${Math.round(opacity.value * 100)}%`;
+    });
+
+    item.appendChild(checkbox);
+    item.appendChild(name);
+    item.appendChild(opacity);
+
+    this.panel.appendChild(item);
+  }
+
+  toggleBackgroundVisibility(visible) {
+    // Update local state
+    if (this.layerStates['background']) {
+      this.layerStates['background'].visible = visible;
+    }
+
+    // Apply to all style layers (background layers)
+    const styleLayers = this.map.getStyle().layers || [];
+    styleLayers.forEach(layer => {
+      // Skip user-added layers (they have different sources)
+      if (!this.isUserAddedLayer(layer.id)) {
+        this.map.setLayoutProperty(layer.id, 'visibility', visible ? 'visible' : 'none');
+      }
+    });
+
+    // Sync back to Python
+    this.model.set('_js_events', [...this.model.get('_js_events'), {
+      type: 'layer_visibility_changed',
+      layerId: 'background',
+      visible: visible
+    }]);
+    this.model.save_changes();
+  }
+
+  changeBackgroundOpacity(opacity) {
+    // Update local state
+    if (this.layerStates['background']) {
+      this.layerStates['background'].opacity = opacity;
+    }
+
+    // Apply to all style layers (background layers)
+    const styleLayers = this.map.getStyle().layers || [];
+    styleLayers.forEach(styleLayer => {
+      // Skip user-added layers
+      if (!this.isUserAddedLayer(styleLayer.id)) {
+        const layer = this.map.getLayer(styleLayer.id);
+        if (layer) {
+          const layerType = layer.type;
+          let opacityProperty;
+
+          switch (layerType) {
+            case 'fill':
+              opacityProperty = 'fill-opacity';
+              break;
+            case 'line':
+              opacityProperty = 'line-opacity';
+              break;
+            case 'circle':
+              opacityProperty = 'circle-opacity';
+              break;
+            case 'symbol':
+              this.map.setPaintProperty(styleLayer.id, 'icon-opacity', opacity);
+              this.map.setPaintProperty(styleLayer.id, 'text-opacity', opacity);
+              return;
+            case 'raster':
+              opacityProperty = 'raster-opacity';
+              break;
+            case 'background':
+              opacityProperty = 'background-opacity';
+              break;
+            default:
+              opacityProperty = `${layerType}-opacity`;
+          }
+
+          // Apply opacity if the property exists for this layer type
+          if (opacityProperty) {
+            this.map.setPaintProperty(styleLayer.id, opacityProperty, opacity);
+          }
+        }
+      }
+    });
+
+    // Sync back to Python
+    this.model.set('_js_events', [...this.model.get('_js_events'), {
+      type: 'layer_opacity_changed',
+      layerId: 'background',
+      opacity: opacity
+    }]);
+    this.model.save_changes();
+  }
+
+  onRemove() {
+    this.container.parentNode.removeChild(this.container);
+  }
+}
+
 function render({ model, el }) {
   // Create unique ID for this widget instance
   const widgetId = `anymap-${Math.random().toString(36).substr(2, 9)}`;
@@ -437,6 +942,10 @@ function render({ model, el }) {
                   console.warn('MapboxDraw not available or already added during restore');
                 }
                 return;
+              case 'layer_control':
+                // Handle layer control restoration
+                control = new LayerControl(controlOptions || {}, map, model);
+                break;
               case 'terra_draw':
                 // Handle Terra Draw control restoration
                 if (window.MaplibreTerradrawControl && !el._terraDrawControl) {
@@ -756,6 +1265,9 @@ function render({ model, el }) {
                 break;
               case 'globe':
                 control = new maplibregl.GlobeControl(controlOptions || {});
+                break;
+              case 'layer_control':
+                control = new LayerControl(controlOptions || {}, map, model);
                 break;
               default:
                 console.warn(`Unknown control type: ${controlType}`);
