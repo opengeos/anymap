@@ -102,6 +102,7 @@ nav:
           - leaflet module: leaflet.md
           - mapbox module: mapbox.md
           - maplibre module: maplibre.md
+          - maplibre_widgets module: maplibre_widgets.md
           - openlayers module: openlayers.md
           - potree module: potree.md
           - stac module: stac.md
