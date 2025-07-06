@@ -684,6 +684,29 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/draw_control_example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Draw control example
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1813,6 +1836,8 @@ mapping operations.</p>
             <span class="n">map_state</span><span class="p">[</span><span class="s2">&quot;antialias&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">antialias</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;access_token&quot;</span><span class="p">):</span>
             <span class="n">map_state</span><span class="p">[</span><span class="s2">&quot;access_token&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_draw_data&quot;</span><span class="p">):</span>
+            <span class="n">map_state</span><span class="p">[</span><span class="s2">&quot;_draw_data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_draw_data</span><span class="p">)</span>
 
         <span class="c1"># Generate HTML content</span>
         <span class="n">html_content</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_html_template</span><span class="p">(</span><span class="n">map_state</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -2777,6 +2802,8 @@ mapping operations.</p>
         <span class="n">map_state</span><span class="p">[</span><span class="s2">&quot;antialias&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">antialias</span>
     <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;access_token&quot;</span><span class="p">):</span>
         <span class="n">map_state</span><span class="p">[</span><span class="s2">&quot;access_token&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_draw_data&quot;</span><span class="p">):</span>
+        <span class="n">map_state</span><span class="p">[</span><span class="s2">&quot;_draw_data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_draw_data</span><span class="p">)</span>
 
     <span class="c1"># Generate HTML content</span>
     <span class="n">html_content</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_html_template</span><span class="p">(</span><span class="n">map_state</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
