@@ -104,6 +104,7 @@ class MapLibreMap(MapWidget):
             "fullscreen": "top-right",
             "scale": "bottom-left",
             "globe": "top-right",
+            "layers": "top-right",
         },
         projection: str = "mercator",
         add_sidebar: bool = True,
@@ -140,11 +141,6 @@ class MapLibreMap(MapWidget):
             **kwargs,
         )
 
-        self.controls = {}
-        for control, position in controls.items():
-            self.add_control(control, position)
-            self.controls[control] = position
-
         self.layer_dict = {}
         self.layer_dict["Background"] = {
             "layer": {
@@ -180,6 +176,14 @@ class MapLibreMap(MapWidget):
                     ]
                 }
             )
+
+        self.controls = {}
+        for control, position in controls.items():
+            if control == "layers":
+                self.add_layer_control(position)
+            else:
+                self.add_control(control, position)
+                self.controls[control] = position
 
         if sidebar_args is None:
             sidebar_args = {}
