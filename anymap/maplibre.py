@@ -970,6 +970,55 @@ class MapLibreMap(MapWidget):
 
         self.call_js_method("addControl", "layer_control", control_options)
 
+    def add_geocoder_control(
+        self,
+        position: str = "top-left",
+        api_config: Optional[Dict[str, Any]] = None,
+        options: Optional[Dict[str, Any]] = None,
+        collapsed: bool = True,
+    ) -> None:
+        """Add a geocoder control to the map for searching locations.
+
+        The geocoder control allows users to search for locations using a geocoding service.
+        By default, it uses the Nominatim (OpenStreetMap) geocoding API.
+
+        Args:
+            position: Position on map ('top-left', 'top-right', 'bottom-left', 'bottom-right')
+            api_config: Configuration for the geocoding API. If None, uses default Nominatim config
+            options: Additional options for the geocoder control
+            collapsed: If True, shows only search icon initially. Click to expand input box.
+        """
+        if api_config is None:
+            # Default configuration using Nominatim API
+            api_config = {
+                "forwardGeocode": True,
+                "reverseGeocode": False,
+                "placeholder": "Search for places...",
+                "limit": 5,
+                "api_url": "https://nominatim.openstreetmap.org/search",
+            }
+
+        control_options = options or {}
+        control_options.update(
+            {
+                "position": position,
+                "api_config": api_config,
+                "collapsed": collapsed,
+            }
+        )
+
+        # Store control in persistent state
+        control_key = f"geocoder_{position}"
+        current_controls = dict(self._controls)
+        current_controls[control_key] = {
+            "type": "geocoder",
+            "position": position,
+            "options": control_options,
+        }
+        self._controls = current_controls
+
+        self.call_js_method("addControl", "geocoder", control_options)
+
     def _update_layer_controls(self) -> None:
         """Update all existing layer controls with the current layer state."""
         # Find all layer controls in the _controls dictionary
