@@ -216,6 +216,9 @@
     <!-- Terra Draw libraries -->
     <script src="https://cdn.jsdelivr.net/npm/@watergis/maplibre-gl-terradraw@1.0.1/dist/maplibre-gl-terradraw.umd.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@watergis/maplibre-gl-terradraw@1.0.1/dist/maplibre-gl-terradraw.css">
+    <!-- MapLibre GL Geocoder -->
+    <script src="https://unpkg.com/@maplibre/maplibre-gl-geocoder@1.5.0/dist/maplibre-gl-geocoder.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/@maplibre/maplibre-gl-geocoder@1.5.0/dist/maplibre-gl-geocoder.css">
     <script>
         // Register COG protocol
         maplibregl.addProtocol("cog", MaplibreCOGProtocol.cogProtocol);
@@ -827,6 +830,64 @@
                     case 'layer_control':
                         // Handle layer control restoration
                         control = new LayerControl(controlOptions || {{}}, map);
+                        break;
+                    case 'geocoder':
+                        // Handle geocoder control restoration
+                        if (typeof MaplibreGeocoder !== 'undefined') {{
+                            const apiConfig = controlOptions.api_config || {{}};
+
+                            // Create geocoder API implementation
+                            const geocoderApi = {{
+                                forwardGeocode: async (config) => {{
+                                    const features = [];
+                                    try {{
+                                        const request = `${{apiConfig.api_url || 'https://nominatim.openstreetmap.org/search'}}?q=${{config.query}}&format=geojson&polygon_geojson=1&addressdetails=1&limit=${{apiConfig.limit || 5}}`;
+                                        const response = await fetch(request);
+                                        const geojson = await response.json();
+
+                                        for (const feature of geojson.features) {{
+                                            const center = [
+                                                feature.bbox[0] + (feature.bbox[2] - feature.bbox[0]) / 2,
+                                                feature.bbox[1] + (feature.bbox[3] - feature.bbox[1]) / 2,
+                                            ];
+                                            const point = {{
+                                                type: "Feature",
+                                                geometry: {{
+                                                    type: "Point",
+                                                    coordinates: center,
+                                                }},
+                                                place_name: feature.properties.display_name,
+                                                properties: feature.properties,
+                                                text: feature.properties.display_name,
+                                                place_type: ["place"],
+                                                center,
+                                            }};
+                                            features.push(point);
+                                        }}
+                                    }} catch (e) {{
+                                        console.error(`Failed to forwardGeocode with error: ${{e}}`);
+                                    }}
+
+                                    return {{ features }};
+                                }},
+                            }};
+
+                            // Create geocoder control
+                            const geocoderOptions = {{
+                                maplibregl: maplibregl,
+                                placeholder: apiConfig.placeholder || 'Search for places...',
+                                collapsed: controlOptions.collapsed !== false,
+                                ...controlOptions
+                            }};
+                            delete geocoderOptions.api_config; // Remove from options passed to geocoder
+                            delete geocoderOptions.position; // Remove position from geocoder options
+
+                            control = new MaplibreGeocoder(geocoderApi, geocoderOptions);
+                            console.log('Geocoder control restored successfully');
+                        }} else {{
+                            console.warn('MaplibreGeocoder not available during restore');
+                            return;
+                        }}
                         break;
                     default:
                         console.warn(`Unknown control type during restore: ${{controlType}}`);

@@ -601,6 +601,26 @@ function render({ model, el }) {
         }
       }
 
+      // Load MapLibre GL Geocoder
+      if (!window.MaplibreGeocoder) {
+        const geocoderScript = document.createElement('script');
+        geocoderScript.src = 'https://unpkg.com/@maplibre/maplibre-gl-geocoder@1.5.0/dist/maplibre-gl-geocoder.min.js';
+
+        await new Promise((resolve, reject) => {
+          geocoderScript.onload = resolve;
+          geocoderScript.onerror = reject;
+          document.head.appendChild(geocoderScript);
+        });
+
+        // Load CSS for MapLibre GL Geocoder
+        if (!document.querySelector('link[href*="maplibre-gl-geocoder.css"]')) {
+          const geocoderCSS = document.createElement('link');
+          geocoderCSS.rel = 'stylesheet';
+          geocoderCSS.href = 'https://unpkg.com/@maplibre/maplibre-gl-geocoder@1.5.0/dist/maplibre-gl-geocoder.css';
+          document.head.appendChild(geocoderCSS);
+        }
+      }
+
       // Register the COG protocol
       if (window.MaplibreCOGProtocol && window.MaplibreCOGProtocol.cogProtocol) {
         maplibregl.addProtocol("cog", window.MaplibreCOGProtocol.cogProtocol);
@@ -946,6 +966,64 @@ function render({ model, el }) {
                 // Handle layer control restoration
                 control = new LayerControl(controlOptions || {}, map, model);
                 break;
+              case 'geocoder':
+                // Handle geocoder control restoration
+                if (window.MaplibreGeocoder) {
+                  const apiConfig = controlOptions.api_config || {};
+
+                  // Create geocoder API implementation
+                  const geocoderApi = {
+                    forwardGeocode: async (config) => {
+                      const features = [];
+                      try {
+                        const request = `${apiConfig.api_url || 'https://nominatim.openstreetmap.org/search'}?q=${config.query}&format=geojson&polygon_geojson=1&addressdetails=1&limit=${apiConfig.limit || 5}`;
+                        const response = await fetch(request);
+                        const geojson = await response.json();
+
+                        for (const feature of geojson.features) {
+                          const center = [
+                            feature.bbox[0] + (feature.bbox[2] - feature.bbox[0]) / 2,
+                            feature.bbox[1] + (feature.bbox[3] - feature.bbox[1]) / 2,
+                          ];
+                          const point = {
+                            type: "Feature",
+                            geometry: {
+                              type: "Point",
+                              coordinates: center,
+                            },
+                            place_name: feature.properties.display_name,
+                            properties: feature.properties,
+                            text: feature.properties.display_name,
+                            place_type: ["place"],
+                            center,
+                          };
+                          features.push(point);
+                        }
+                      } catch (e) {
+                        console.error(`Failed to forwardGeocode with error: ${e}`);
+                      }
+
+                      return { features };
+                    },
+                  };
+
+                  // Create geocoder control
+                  const geocoderOptions = {
+                    maplibregl: maplibregl,
+                    placeholder: apiConfig.placeholder || 'Search for places...',
+                    collapsed: controlOptions.collapsed !== false,
+                    ...controlOptions
+                  };
+                  delete geocoderOptions.api_config; // Remove from options passed to geocoder
+                  delete geocoderOptions.position; // Remove position from geocoder options
+
+                  control = new window.MaplibreGeocoder(geocoderApi, geocoderOptions);
+                  console.log('Geocoder control restored successfully');
+                } else {
+                  console.warn('MaplibreGeocoder not available during restore');
+                  return;
+                }
+                break;
               case 'terra_draw':
                 // Handle Terra Draw control restoration
                 if (window.MaplibreTerradrawControl && !el._terraDrawControl) {
@@ -1267,6 +1345,63 @@ function render({ model, el }) {
                 break;
               case 'layer_control':
                 control = new LayerControl(controlOptions || {}, map, model);
+                break;
+              case 'geocoder':
+                if (window.MaplibreGeocoder) {
+                  const apiConfig = controlOptions.api_config || {};
+
+                  // Create geocoder API implementation
+                  const geocoderApi = {
+                    forwardGeocode: async (config) => {
+                      const features = [];
+                      try {
+                        const request = `${apiConfig.api_url || 'https://nominatim.openstreetmap.org/search'}?q=${config.query}&format=geojson&polygon_geojson=1&addressdetails=1&limit=${apiConfig.limit || 5}`;
+                        const response = await fetch(request);
+                        const geojson = await response.json();
+
+                        for (const feature of geojson.features) {
+                          const center = [
+                            feature.bbox[0] + (feature.bbox[2] - feature.bbox[0]) / 2,
+                            feature.bbox[1] + (feature.bbox[3] - feature.bbox[1]) / 2,
+                          ];
+                          const point = {
+                            type: "Feature",
+                            geometry: {
+                              type: "Point",
+                              coordinates: center,
+                            },
+                            place_name: feature.properties.display_name,
+                            properties: feature.properties,
+                            text: feature.properties.display_name,
+                            place_type: ["place"],
+                            center,
+                          };
+                          features.push(point);
+                        }
+                      } catch (e) {
+                        console.error(`Failed to forwardGeocode with error: ${e}`);
+                      }
+
+                      return { features };
+                    },
+                  };
+
+                  // Create geocoder control
+                  const geocoderOptions = {
+                    maplibregl: maplibregl,
+                    placeholder: apiConfig.placeholder || 'Search for places...',
+                    collapsed: controlOptions.collapsed !== false,
+                    ...controlOptions
+                  };
+                  delete geocoderOptions.api_config; // Remove from options passed to geocoder
+                  delete geocoderOptions.position; // Remove position from geocoder options
+
+                  control = new window.MaplibreGeocoder(geocoderApi, geocoderOptions);
+                  console.log('Geocoder control added successfully');
+                } else {
+                  console.warn('MaplibreGeocoder not available');
+                  return;
+                }
                 break;
               default:
                 console.warn(`Unknown control type: ${controlType}`);
