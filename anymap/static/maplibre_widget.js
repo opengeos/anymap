@@ -29,18 +29,30 @@ function render({ model, el }) {
   el.innerHTML = "";
   el.appendChild(container);
 
-  // Load and register COG protocol dynamically
-  const loadCOGProtocol = async () => {
+  // Load and register protocols dynamically
+  const loadProtocols = async () => {
     try {
+      // Load COG protocol
       if (!window.MaplibreCOGProtocol) {
-        // Create script element to load the COG protocol
-        const script = document.createElement('script');
-        script.src = 'https://unpkg.com/@geomatico/maplibre-cog-protocol@0.4.0/dist/index.js';
+        const cogScript = document.createElement('script');
+        cogScript.src = 'https://unpkg.com/@geomatico/maplibre-cog-protocol@0.4.0/dist/index.js';
 
         await new Promise((resolve, reject) => {
-          script.onload = resolve;
-          script.onerror = reject;
-          document.head.appendChild(script);
+          cogScript.onload = resolve;
+          cogScript.onerror = reject;
+          document.head.appendChild(cogScript);
+        });
+      }
+
+      // Load PMTiles protocol
+      if (!window.pmtiles) {
+        const pmtilesScript = document.createElement('script');
+        pmtilesScript.src = 'https://unpkg.com/pmtiles@3.2.0/dist/pmtiles.js';
+
+        await new Promise((resolve, reject) => {
+          pmtilesScript.onload = resolve;
+          pmtilesScript.onerror = reject;
+          document.head.appendChild(pmtilesScript);
         });
       }
 
@@ -51,14 +63,23 @@ function render({ model, el }) {
       } else {
         console.warn("MaplibreCOGProtocol not available");
       }
+
+      // Register the PMTiles protocol
+      if (window.pmtiles) {
+        const pmtilesProtocol = new window.pmtiles.Protocol();
+        maplibregl.addProtocol("pmtiles", pmtilesProtocol.tile);
+        console.log("PMTiles protocol registered successfully");
+      } else {
+        console.warn("PMTiles not available");
+      }
     } catch (error) {
-      console.warn("Failed to load COG protocol:", error);
+      console.warn("Failed to load protocols:", error);
     }
   };
 
-  // Load COG protocol before initializing map
-  loadCOGProtocol().then(() => {
-    // Initialize MapLibre map after COG protocol is loaded
+  // Load protocols before initializing map
+  loadProtocols().then(() => {
+    // Initialize MapLibre map after protocols are loaded
     const map = new maplibregl.Map({
       container: container,
       style: model.get("style"),
@@ -443,7 +464,7 @@ function render({ model, el }) {
       }
     };
 
-  }); // End of loadCOGProtocol().then()
+  }); // End of loadProtocols().then()
 }
 
 export default { render };

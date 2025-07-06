@@ -89,6 +89,7 @@ nav:
           - examples/deckgl_example.ipynb
           - examples/keplergl_example.ipynb
           - examples/potree_example.ipynb
+          - examples/pmtiles_example.ipynb
     - API Reference:
           - anymap module: anymap.md
           - base module: base.md
