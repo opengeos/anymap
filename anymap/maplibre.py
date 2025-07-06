@@ -92,7 +92,7 @@ class MapLibreMap(MapWidget):
 
     def __init__(
         self,
-        center: List[float] = [20, 0.0],
+        center: List[float] = [0, 20],
         zoom: float = 1.0,
         style: Union[str, Dict[str, Any]] = "dark-matter",
         width: str = "100%",
@@ -117,13 +117,26 @@ class MapLibreMap(MapWidget):
         """Initialize MapLibre map widget.
 
         Args:
-            center: Map center coordinates as [longitude, latitude].
-            zoom: Initial zoom level (typically 0-20).
+            center: Map center coordinates as [longitude, latitude]. Default is [0, 20].
+            zoom: Initial zoom level (typically 0-20). Default is 1.0.
             style: MapLibre style URL string or style object dictionary.
             width: Widget width as CSS string (e.g., "100%", "800px").
             height: Widget height as CSS string (e.g., "600px", "50vh").
             bearing: Map bearing (rotation) in degrees (0-360).
             pitch: Map pitch (tilt) in degrees (0-60).
+            controls: Dictionary of control names and their positions. Default is {
+                "navigation": "top-right",
+                "fullscreen": "top-right",
+                "scale": "bottom-left",
+                "globe": "top-right",
+                "layers": "top-right",
+            }.
+            projection: Map projection type. Can be "mercator" or "globe". Default is "mercator".
+            add_sidebar: Whether to add a sidebar to the map. Default is False.
+            sidebar_visible: Whether the sidebar is visible. Default is False.
+            sidebar_width: Width of the sidebar in pixels. Default is 360.
+            sidebar_args: Additional keyword arguments for the sidebar. Default is None.
+            layer_manager_expanded: Whether the layer manager is expanded. Default is True.
             **kwargs: Additional keyword arguments passed to parent class.
         """
 
