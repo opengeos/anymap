@@ -5,3 +5,28 @@ include requirements.txt
 recursive-exclude * __pycache__
 recursive-exclude * *.py[co]
 
+# Exclude development and build files
+exclude .editorconfig
+exclude .gitignore
+exclude .pre-commit-config.yaml
+exclude Dockerfile
+exclude mkdocs.yml
+exclude requirements_docs.txt
+exclude layer_control_styled_test.html
+exclude *.egg-info
+exclude CLAUDE.md
+exclude GEMINI.md
+
+# Exclude directories not needed for distribution
+recursive-exclude .github *
+recursive-exclude .git *
+recursive-exclude .claude *
+recursive-exclude .pytest_cache *
+recursive-exclude .ipynb_checkpoints *
+recursive-exclude docs *
+recursive-exclude private *
+recursive-exclude tasks *
+recursive-exclude tests *
+recursive-exclude dist *
+recursive-exclude anymap.egg-info *
+
