@@ -910,6 +910,85 @@ class MapLibreMap(MapWidget):
             layer_id, layer_config, before_id, opacity=opacity, visible=visible
         )
 
+    def add_pmtiles(
+        self,
+        pmtiles_url: str,
+        layer_id: Optional[str] = None,
+        layers: Optional[List[Dict[str, Any]]] = None,
+        opacity: Optional[float] = 1.0,
+        visible: Optional[bool] = True,
+        before_id: Optional[str] = None,
+    ) -> None:
+        """Add PMTiles vector tiles to the map.
+
+        Args:
+            pmtiles_url: URL to the PMTiles file.
+            layer_id: Optional unique identifier for the layer. If None, uses filename.
+            layers: Optional list of layer configurations for rendering. If None, creates default layers.
+            opacity: Layer opacity between 0.0 and 1.0.
+            visible: Whether the layer should be visible initially.
+            before_id: Optional layer ID to insert this layer before.
+        """
+        if layer_id is None:
+            layer_id = pmtiles_url.split("/")[-1].replace(".pmtiles", "")
+
+        source_id = f"{layer_id}_source"
+
+        # Add PMTiles source using pmtiles:// protocol
+        pmtiles_source_url = f"pmtiles://{pmtiles_url}"
+
+        self.add_source(
+            source_id,
+            {
+                "type": "vector",
+                "url": pmtiles_source_url,
+                "attribution": "PMTiles",
+            },
+        )
+
+        # Add default layers if none provided
+        if layers is None:
+            layers = [
+                {
+                    "id": f"{layer_id}_landuse",
+                    "source": source_id,
+                    "source-layer": "landuse",
+                    "type": "fill",
+                    "paint": {"fill-color": "steelblue", "fill-opacity": 0.5},
+                },
+                {
+                    "id": f"{layer_id}_roads",
+                    "source": source_id,
+                    "source-layer": "roads",
+                    "type": "line",
+                    "paint": {"line-color": "black", "line-width": 1},
+                },
+                {
+                    "id": f"{layer_id}_buildings",
+                    "source": source_id,
+                    "source-layer": "buildings",
+                    "type": "fill",
+                    "paint": {"fill-color": "gray", "fill-opacity": 0.7},
+                },
+                {
+                    "id": f"{layer_id}_water",
+                    "source": source_id,
+                    "source-layer": "water",
+                    "type": "fill",
+                    "paint": {"fill-color": "lightblue", "fill-opacity": 0.8},
+                },
+            ]
+
+        # Add all layers
+        for layer_config in layers:
+            self.add_layer(
+                layer_config["id"],
+                layer_config,
+                before_id,
+                opacity=opacity,
+                visible=visible,
+            )
+
     def add_basemap(
         self,
         basemap: str,
@@ -1001,9 +1080,14 @@ class MapLibreMap(MapWidget):
     <div id="map"></div>
 
     <script src="https://unpkg.com/@geomatico/maplibre-cog-protocol@0.4.0/dist/index.js"></script>
+    <script src="https://unpkg.com/pmtiles@3.2.0/dist/pmtiles.js"></script>
     <script>
         // Register COG protocol
         maplibregl.addProtocol("cog", MaplibreCOGProtocol.cogProtocol);
+
+        // Register PMTiles protocol
+        const pmtilesProtocol = new pmtiles.Protocol();
+        maplibregl.addProtocol("pmtiles", pmtilesProtocol.tile);
 
         // Map state from Python
         const mapState = {map_state_json};
