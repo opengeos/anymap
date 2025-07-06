@@ -1262,9 +1262,45 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.current_bounds" class="md-nav__link">
+    <span class="md-ellipsis">
+      current_bounds
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.current_center" class="md-nav__link">
+    <span class="md-ellipsis">
+      current_center
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.current_zoom" class="md-nav__link">
+    <span class="md-ellipsis">
+      current_zoom
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.sidebar_widgets" class="md-nav__link">
     <span class="md-ellipsis">
       sidebar_widgets
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.viewstate" class="md-nav__link">
+    <span class="md-ellipsis">
+      viewstate
     </span>
   </a>
   
@@ -1550,6 +1586,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.set_center" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_center()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.set_draw_mode" class="md-nav__link">
     <span class="md-ellipsis">
       set_draw_mode()
@@ -1634,6 +1679,15 @@
   <a href="#anymap.maplibre.MapLibreMap.set_visibility" class="md-nav__link">
     <span class="md-ellipsis">
       set_visibility()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.set_zoom" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_zoom()
     </span>
   </a>
   
@@ -2032,9 +2086,45 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.current_bounds" class="md-nav__link">
+    <span class="md-ellipsis">
+      current_bounds
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.current_center" class="md-nav__link">
+    <span class="md-ellipsis">
+      current_center
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.current_zoom" class="md-nav__link">
+    <span class="md-ellipsis">
+      current_zoom
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.sidebar_widgets" class="md-nav__link">
     <span class="md-ellipsis">
       sidebar_widgets
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.viewstate" class="md-nav__link">
+    <span class="md-ellipsis">
+      viewstate
     </span>
   </a>
   
@@ -2320,6 +2410,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.set_center" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_center()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.set_draw_mode" class="md-nav__link">
     <span class="md-ellipsis">
       set_draw_mode()
@@ -2410,6 +2509,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.set_zoom" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_zoom()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.show" class="md-nav__link">
     <span class="md-ellipsis">
       show()
@@ -2465,7 +2573,7 @@ of Mapbox GL JS, providing fast vector map rendering with WebGL.</p>
 <p><strong>Examples:</strong></p>
     <p>Basic usage of MapLibreMap:</p>
     <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">anymap.maplibre</span><span class="w"> </span><span class="kn">import</span> <span class="n">MapLibreMap</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">m</span> <span class="o">=</span> <span class="n">MapLibreMap</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mf">40.7</span><span class="p">,</span> <span class="o">-</span><span class="mf">74.0</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">m</span> <span class="o">=</span> <span class="n">MapLibreMap</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">74.0</span><span class="p">,</span> <span class="mf">40.7</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">m</span><span class="o">.</span><span class="n">add_basemap</span><span class="p">(</span><span class="s2">&quot;OpenStreetMap.Mapnik&quot;</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">m</span>
 </code></pre></div>
@@ -5418,7 +5526,7 @@ data sources, custom styling, and interactive features.</p>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">center</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span>
+        <span class="n">center</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span>
         <span class="n">zoom</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
         <span class="n">style</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="s2">&quot;dark-matter&quot;</span><span class="p">,</span>
         <span class="n">width</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;100%&quot;</span><span class="p">,</span>
@@ -5433,7 +5541,7 @@ data sources, custom styling, and interactive features.</p>
             <span class="s2">&quot;layers&quot;</span><span class="p">:</span> <span class="s2">&quot;top-right&quot;</span><span class="p">,</span>
         <span class="p">},</span>
         <span class="n">projection</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;mercator&quot;</span><span class="p">,</span>
-        <span class="n">add_sidebar</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">add_sidebar</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">sidebar_visible</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">sidebar_width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">360</span><span class="p">,</span>
         <span class="n">sidebar_args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -5443,13 +5551,26 @@ data sources, custom styling, and interactive features.</p>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize MapLibre map widget.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            center: Map center coordinates as [latitude, longitude].</span>
-<span class="sd">            zoom: Initial zoom level (typically 0-20).</span>
+<span class="sd">            center: Map center coordinates as [longitude, latitude]. Default is [0, 20].</span>
+<span class="sd">            zoom: Initial zoom level (typically 0-20). Default is 1.0.</span>
 <span class="sd">            style: MapLibre style URL string or style object dictionary.</span>
 <span class="sd">            width: Widget width as CSS string (e.g., &quot;100%&quot;, &quot;800px&quot;).</span>
 <span class="sd">            height: Widget height as CSS string (e.g., &quot;600px&quot;, &quot;50vh&quot;).</span>
 <span class="sd">            bearing: Map bearing (rotation) in degrees (0-360).</span>
 <span class="sd">            pitch: Map pitch (tilt) in degrees (0-60).</span>
+<span class="sd">            controls: Dictionary of control names and their positions. Default is {</span>
+<span class="sd">                &quot;navigation&quot;: &quot;top-right&quot;,</span>
+<span class="sd">                &quot;fullscreen&quot;: &quot;top-right&quot;,</span>
+<span class="sd">                &quot;scale&quot;: &quot;bottom-left&quot;,</span>
+<span class="sd">                &quot;globe&quot;: &quot;top-right&quot;,</span>
+<span class="sd">                &quot;layers&quot;: &quot;top-right&quot;,</span>
+<span class="sd">            }.</span>
+<span class="sd">            projection: Map projection type. Can be &quot;mercator&quot; or &quot;globe&quot;. Default is &quot;mercator&quot;.</span>
+<span class="sd">            add_sidebar: Whether to add a sidebar to the map. Default is False.</span>
+<span class="sd">            sidebar_visible: Whether the sidebar is visible. Default is False.</span>
+<span class="sd">            sidebar_width: Width of the sidebar in pixels. Default is 360.</span>
+<span class="sd">            sidebar_args: Additional keyword arguments for the sidebar. Default is None.</span>
+<span class="sd">            layer_manager_expanded: Whether the layer manager is expanded. Default is True.</span>
 <span class="sd">            **kwargs: Additional keyword arguments passed to parent class.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -5481,6 +5602,16 @@ data sources, custom styling, and interactive features.</p>
 
         <span class="c1"># Initialize the _layer_dict trait with the layer_dict content</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_layer_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_dict</span><span class="p">)</span>
+
+        <span class="c1"># Initialize current state attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_center</span> <span class="o">=</span> <span class="n">center</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_zoom</span> <span class="o">=</span> <span class="n">zoom</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_bearing</span> <span class="o">=</span> <span class="n">bearing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_pitch</span> <span class="o">=</span> <span class="n">pitch</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_bounds</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Will be set after map loads</span>
+
+        <span class="c1"># Register event handler to update current state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">on_map_event</span><span class="p">(</span><span class="s2">&quot;moveend&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_current_state</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_style</span> <span class="o">=</span> <span class="n">style</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">style_dict</span> <span class="o">=</span> <span class="p">{}</span>
@@ -6023,12 +6154,12 @@ data sources, custom styling, and interactive features.</p>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">layer_id</span><span class="p">,</span> <span class="n">layer_config</span><span class="p">,</span> <span class="n">before_id</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">add_marker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lat</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lng</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">popup</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_marker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lng</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lat</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">popup</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a marker to the map.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            lat: Latitude coordinate for the marker.</span>
 <span class="sd">            lng: Longitude coordinate for the marker.</span>
+<span class="sd">            lat: Latitude coordinate for the marker.</span>
 <span class="sd">            popup: Optional popup text to display when marker is clicked.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">marker_data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;coordinates&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">lng</span><span class="p">,</span> <span class="n">lat</span><span class="p">],</span> <span class="s2">&quot;popup&quot;</span><span class="p">:</span> <span class="n">popup</span><span class="p">}</span>
@@ -7187,6 +7318,64 @@ data sources, custom styling, and interactive features.</p>
 <span class="s2">&lt;/html&gt;&quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="n">html_template</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_update_current_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update current state attributes from moveend event.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;center&quot;</span> <span class="ow">in</span> <span class="n">event</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_center</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;center&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s2">&quot;zoom&quot;</span> <span class="ow">in</span> <span class="n">event</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_zoom</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;zoom&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s2">&quot;bearing&quot;</span> <span class="ow">in</span> <span class="n">event</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_bearing</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;bearing&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s2">&quot;pitch&quot;</span> <span class="ow">in</span> <span class="n">event</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_pitch</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;pitch&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s2">&quot;bounds&quot;</span> <span class="ow">in</span> <span class="n">event</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_bounds</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;bounds&quot;</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_center</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lng</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lat</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the map center coordinates.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            lng: Longitude coordinate.</span>
+<span class="sd">            lat: Latitude coordinate.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="p">[</span><span class="n">lng</span><span class="p">,</span> <span class="n">lat</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_center</span> <span class="o">=</span> <span class="p">[</span><span class="n">lng</span><span class="p">,</span> <span class="n">lat</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_zoom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zoom</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the map zoom level.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            zoom: Zoom level (typically 0-20).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zoom</span> <span class="o">=</span> <span class="n">zoom</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_zoom</span> <span class="o">=</span> <span class="n">zoom</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">current_center</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the current map center coordinates as [longitude, latitude].&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_center</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">current_zoom</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the current map zoom level.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_zoom</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">current_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the current map bounds as [[lng, lat], [lng, lat]] (southwest, northeast).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_bounds</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">viewstate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the current map viewstate including center, zoom, bearing, pitch, and bounds.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;center&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_center</span><span class="p">,</span>
+            <span class="s2">&quot;zoom&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_zoom</span><span class="p">,</span>
+            <span class="s2">&quot;bearing&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_bearing</span><span class="p">,</span>
+            <span class="s2">&quot;pitch&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_pitch</span><span class="p">,</span>
+            <span class="s2">&quot;bounds&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_bounds</span><span class="p">,</span>
+        <span class="p">}</span>
 </code></pre></div>
         </details>
 
@@ -7198,6 +7387,75 @@ data sources, custom styling, and interactive features.</p>
 
 
 
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="anymap.maplibre.MapLibreMap.current_bounds" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">current_bounds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-property"><code>property</code></small>
+      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
+  </span>
+
+<a href="#anymap.maplibre.MapLibreMap.current_bounds" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Get the current map bounds as [[lng, lat], [lng, lat]] (southwest, northeast).</p>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="anymap.maplibre.MapLibreMap.current_center" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">current_center</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-property"><code>property</code></small>
+      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
+  </span>
+
+<a href="#anymap.maplibre.MapLibreMap.current_center" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Get the current map center coordinates as [longitude, latitude].</p>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="anymap.maplibre.MapLibreMap.current_zoom" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">current_zoom</span><span class="p">:</span> <span class="nb">float</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-property"><code>property</code></small>
+      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
+  </span>
+
+<a href="#anymap.maplibre.MapLibreMap.current_zoom" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Get the current map zoom level.</p>
+    </div>
+
+  </div>
 
 
 
@@ -7241,6 +7499,29 @@ data sources, custom styling, and interactive features.</p>
 
 
 
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="anymap.maplibre.MapLibreMap.viewstate" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">viewstate</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-property"><code>property</code></small>
+      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
+  </span>
+
+<a href="#anymap.maplibre.MapLibreMap.viewstate" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Get the current map viewstate including center, zoom, bearing, pitch, and bounds.</p>
+    </div>
+
+  </div>
+
+
+
 
 
 
@@ -7249,7 +7530,7 @@ data sources, custom styling, and interactive features.</p>
 
 
 <h3 id="anymap.maplibre.MapLibreMap.__init__" class="doc doc-heading">
-<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;dark-matter&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="s1">&#39;100%&#39;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s1">&#39;600px&#39;</span><span class="p">,</span> <span class="n">bearing</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">pitch</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">controls</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;navigation&#39;</span><span class="p">:</span> <span class="s1">&#39;top-right&#39;</span><span class="p">,</span> <span class="s1">&#39;fullscreen&#39;</span><span class="p">:</span> <span class="s1">&#39;top-right&#39;</span><span class="p">,</span> <span class="s1">&#39;scale&#39;</span><span class="p">:</span> <span class="s1">&#39;bottom-left&#39;</span><span class="p">,</span> <span class="s1">&#39;globe&#39;</span><span class="p">:</span> <span class="s1">&#39;top-right&#39;</span><span class="p">,</span> <span class="s1">&#39;layers&#39;</span><span class="p">:</span> <span class="s1">&#39;top-right&#39;</span><span class="p">},</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;mercator&#39;</span><span class="p">,</span> <span class="n">add_sidebar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sidebar_visible</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sidebar_width</span><span class="o">=</span><span class="mi">360</span><span class="p">,</span> <span class="n">sidebar_args</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layer_manager_expanded</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;dark-matter&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="s1">&#39;100%&#39;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s1">&#39;600px&#39;</span><span class="p">,</span> <span class="n">bearing</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">pitch</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">controls</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;navigation&#39;</span><span class="p">:</span> <span class="s1">&#39;top-right&#39;</span><span class="p">,</span> <span class="s1">&#39;fullscreen&#39;</span><span class="p">:</span> <span class="s1">&#39;top-right&#39;</span><span class="p">,</span> <span class="s1">&#39;scale&#39;</span><span class="p">:</span> <span class="s1">&#39;bottom-left&#39;</span><span class="p">,</span> <span class="s1">&#39;globe&#39;</span><span class="p">:</span> <span class="s1">&#39;top-right&#39;</span><span class="p">,</span> <span class="s1">&#39;layers&#39;</span><span class="p">:</span> <span class="s1">&#39;top-right&#39;</span><span class="p">},</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;mercator&#39;</span><span class="p">,</span> <span class="n">add_sidebar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sidebar_visible</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sidebar_width</span><span class="o">=</span><span class="mi">360</span><span class="p">,</span> <span class="n">sidebar_args</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layer_manager_expanded</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-special"><code>special</code></small>
@@ -7275,13 +7556,13 @@ data sources, custom styling, and interactive features.</p>
       <tr>
         <td><code>center</code></td>
         <td><code>List[float]</code></td>
-        <td><p>Map center coordinates as [latitude, longitude].</p></td>
-        <td><code>[0.0, 20]</code></td>
+        <td><p>Map center coordinates as [longitude, latitude]. Default is [0, 20].</p></td>
+        <td><code>[0, 20]</code></td>
       </tr>
       <tr>
         <td><code>zoom</code></td>
         <td><code>float</code></td>
-        <td><p>Initial zoom level (typically 0-20).</p></td>
+        <td><p>Initial zoom level (typically 0-20). Default is 1.0.</p></td>
         <td><code>1.0</code></td>
       </tr>
       <tr>
@@ -7315,6 +7596,53 @@ data sources, custom styling, and interactive features.</p>
         <td><code>0.0</code></td>
       </tr>
       <tr>
+        <td><code>controls</code></td>
+        <td><code>Dict[str, str]</code></td>
+        <td><p>Dictionary of control names and their positions. Default is {
+"navigation": "top-right",
+"fullscreen": "top-right",
+"scale": "bottom-left",
+"globe": "top-right",
+"layers": "top-right",</p></td>
+        <td><code>{&#39;navigation&#39;: &#39;top-right&#39;, &#39;fullscreen&#39;: &#39;top-right&#39;, &#39;scale&#39;: &#39;bottom-left&#39;, &#39;globe&#39;: &#39;top-right&#39;, &#39;layers&#39;: &#39;top-right&#39;}</code></td>
+      </tr>
+      <tr>
+        <td><code>projection</code></td>
+        <td><code>str</code></td>
+        <td><p>Map projection type. Can be "mercator" or "globe". Default is "mercator".</p></td>
+        <td><code>&#39;mercator&#39;</code></td>
+      </tr>
+      <tr>
+        <td><code>add_sidebar</code></td>
+        <td><code>bool</code></td>
+        <td><p>Whether to add a sidebar to the map. Default is False.</p></td>
+        <td><code>False</code></td>
+      </tr>
+      <tr>
+        <td><code>sidebar_visible</code></td>
+        <td><code>bool</code></td>
+        <td><p>Whether the sidebar is visible. Default is False.</p></td>
+        <td><code>False</code></td>
+      </tr>
+      <tr>
+        <td><code>sidebar_width</code></td>
+        <td><code>int</code></td>
+        <td><p>Width of the sidebar in pixels. Default is 360.</p></td>
+        <td><code>360</code></td>
+      </tr>
+      <tr>
+        <td><code>sidebar_args</code></td>
+        <td><code>Optional[Dict]</code></td>
+        <td><p>Additional keyword arguments for the sidebar. Default is None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>layer_manager_expanded</code></td>
+        <td><code>bool</code></td>
+        <td><p>Whether the layer manager is expanded. Default is True.</p></td>
+        <td><code>True</code></td>
+      </tr>
+      <tr>
         <td><code>**kwargs</code></td>
         <td><code>Any</code></td>
         <td><p>Additional keyword arguments passed to parent class.</p></td>
@@ -7326,7 +7654,7 @@ data sources, custom styling, and interactive features.</p>
           <summary>Source code in <code>anymap/maplibre.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
-    <span class="n">center</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span>
+    <span class="n">center</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span>
     <span class="n">zoom</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
     <span class="n">style</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="s2">&quot;dark-matter&quot;</span><span class="p">,</span>
     <span class="n">width</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;100%&quot;</span><span class="p">,</span>
@@ -7341,7 +7669,7 @@ data sources, custom styling, and interactive features.</p>
         <span class="s2">&quot;layers&quot;</span><span class="p">:</span> <span class="s2">&quot;top-right&quot;</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="n">projection</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;mercator&quot;</span><span class="p">,</span>
-    <span class="n">add_sidebar</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">add_sidebar</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">sidebar_visible</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">sidebar_width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">360</span><span class="p">,</span>
     <span class="n">sidebar_args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -7351,13 +7679,26 @@ data sources, custom styling, and interactive features.</p>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize MapLibre map widget.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        center: Map center coordinates as [latitude, longitude].</span>
-<span class="sd">        zoom: Initial zoom level (typically 0-20).</span>
+<span class="sd">        center: Map center coordinates as [longitude, latitude]. Default is [0, 20].</span>
+<span class="sd">        zoom: Initial zoom level (typically 0-20). Default is 1.0.</span>
 <span class="sd">        style: MapLibre style URL string or style object dictionary.</span>
 <span class="sd">        width: Widget width as CSS string (e.g., &quot;100%&quot;, &quot;800px&quot;).</span>
 <span class="sd">        height: Widget height as CSS string (e.g., &quot;600px&quot;, &quot;50vh&quot;).</span>
 <span class="sd">        bearing: Map bearing (rotation) in degrees (0-360).</span>
 <span class="sd">        pitch: Map pitch (tilt) in degrees (0-60).</span>
+<span class="sd">        controls: Dictionary of control names and their positions. Default is {</span>
+<span class="sd">            &quot;navigation&quot;: &quot;top-right&quot;,</span>
+<span class="sd">            &quot;fullscreen&quot;: &quot;top-right&quot;,</span>
+<span class="sd">            &quot;scale&quot;: &quot;bottom-left&quot;,</span>
+<span class="sd">            &quot;globe&quot;: &quot;top-right&quot;,</span>
+<span class="sd">            &quot;layers&quot;: &quot;top-right&quot;,</span>
+<span class="sd">        }.</span>
+<span class="sd">        projection: Map projection type. Can be &quot;mercator&quot; or &quot;globe&quot;. Default is &quot;mercator&quot;.</span>
+<span class="sd">        add_sidebar: Whether to add a sidebar to the map. Default is False.</span>
+<span class="sd">        sidebar_visible: Whether the sidebar is visible. Default is False.</span>
+<span class="sd">        sidebar_width: Width of the sidebar in pixels. Default is 360.</span>
+<span class="sd">        sidebar_args: Additional keyword arguments for the sidebar. Default is None.</span>
+<span class="sd">        layer_manager_expanded: Whether the layer manager is expanded. Default is True.</span>
 <span class="sd">        **kwargs: Additional keyword arguments passed to parent class.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -7389,6 +7730,16 @@ data sources, custom styling, and interactive features.</p>
 
     <span class="c1"># Initialize the _layer_dict trait with the layer_dict content</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_layer_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_dict</span><span class="p">)</span>
+
+    <span class="c1"># Initialize current state attributes</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_current_center</span> <span class="o">=</span> <span class="n">center</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_current_zoom</span> <span class="o">=</span> <span class="n">zoom</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_current_bearing</span> <span class="o">=</span> <span class="n">bearing</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_current_pitch</span> <span class="o">=</span> <span class="n">pitch</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_current_bounds</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Will be set after map loads</span>
+
+    <span class="c1"># Register event handler to update current state</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">on_map_event</span><span class="p">(</span><span class="s2">&quot;moveend&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_current_state</span><span class="p">)</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">_style</span> <span class="o">=</span> <span class="n">style</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">style_dict</span> <span class="o">=</span> <span class="p">{}</span>
@@ -8309,7 +8660,7 @@ similar to other controls, and expands when clicked.</p>
 
 
 <h3 id="anymap.maplibre.MapLibreMap.add_marker" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">add_marker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lng</span><span class="p">,</span> <span class="n">popup</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">add_marker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lng</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">popup</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
 
 <a href="#anymap.maplibre.MapLibreMap.add_marker" class="headerlink" title="Permanent link">&para;</a></h3>
@@ -8330,15 +8681,15 @@ similar to other controls, and expands when clicked.</p>
   </thead>
   <tbody>
       <tr>
-        <td><code>lat</code></td>
-        <td><code>float</code></td>
-        <td><p>Latitude coordinate for the marker.</p></td>
-        <td><em>required</em></td>
-      </tr>
-      <tr>
         <td><code>lng</code></td>
         <td><code>float</code></td>
         <td><p>Longitude coordinate for the marker.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>lat</code></td>
+        <td><code>float</code></td>
+        <td><p>Latitude coordinate for the marker.</p></td>
         <td><em>required</em></td>
       </tr>
       <tr>
@@ -8351,12 +8702,12 @@ similar to other controls, and expands when clicked.</p>
 </table>
         <details class="quote">
           <summary>Source code in <code>anymap/maplibre.py</code></summary>
-          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_marker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lat</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lng</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">popup</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_marker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lng</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lat</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">popup</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a marker to the map.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        lat: Latitude coordinate for the marker.</span>
 <span class="sd">        lng: Longitude coordinate for the marker.</span>
+<span class="sd">        lat: Latitude coordinate for the marker.</span>
 <span class="sd">        popup: Optional popup text to display when marker is clicked.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">marker_data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;coordinates&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">lng</span><span class="p">,</span> <span class="n">lat</span><span class="p">],</span> <span class="s2">&quot;popup&quot;</span><span class="p">:</span> <span class="n">popup</span><span class="p">}</span>
@@ -10007,6 +10358,64 @@ alongside a sidebar. The sidebar can be customized with visibility, width, and a
 
 
 
+<h3 id="anymap.maplibre.MapLibreMap.set_center" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">set_center</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lng</span><span class="p">,</span> <span class="n">lat</span><span class="p">)</span></code>
+
+
+<a href="#anymap.maplibre.MapLibreMap.set_center" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Set the map center coordinates.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>lng</code></td>
+        <td><code>float</code></td>
+        <td><p>Longitude coordinate.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>lat</code></td>
+        <td><code>float</code></td>
+        <td><p>Latitude coordinate.</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>anymap/maplibre.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">set_center</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lng</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lat</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set the map center coordinates.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        lng: Longitude coordinate.</span>
+<span class="sd">        lat: Latitude coordinate.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="p">[</span><span class="n">lng</span><span class="p">,</span> <span class="n">lat</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_current_center</span> <span class="o">=</span> <span class="p">[</span><span class="n">lng</span><span class="p">,</span> <span class="n">lat</span><span class="p">]</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
 <h3 id="anymap.maplibre.MapLibreMap.set_draw_mode" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">set_draw_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span></code>
 
@@ -10601,6 +11010,57 @@ alongside a sidebar. The sidebar can be customized with visibility, width, and a
     <span class="k">if</span> <span class="n">layer_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_dict</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">layer_dict</span><span class="p">[</span><span class="n">layer_id</span><span class="p">][</span><span class="s2">&quot;visible&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">visible</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_update_layer_controls</span><span class="p">()</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="anymap.maplibre.MapLibreMap.set_zoom" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">set_zoom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zoom</span><span class="p">)</span></code>
+
+
+<a href="#anymap.maplibre.MapLibreMap.set_zoom" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Set the map zoom level.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>zoom</code></td>
+        <td><code>float</code></td>
+        <td><p>Zoom level (typically 0-20).</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>anymap/maplibre.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">set_zoom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zoom</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set the map zoom level.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        zoom: Zoom level (typically 0-20).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">zoom</span> <span class="o">=</span> <span class="n">zoom</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_current_zoom</span> <span class="o">=</span> <span class="n">zoom</span>
 </code></pre></div>
         </details>
     </div>

@@ -1566,7 +1566,7 @@ mapping operations.</p>
       <tr>
         <td><code>center</code></td>
         <td></td>
-        <td><p>Map center coordinates as [latitude, longitude].</p></td>
+        <td><p>Map center coordinates as [longitude, latitude].</p></td>
       </tr>
       <tr>
         <td><code>zoom</code></td>
@@ -1601,7 +1601,7 @@ mapping operations.</p>
 <span class="sd">    mapping operations.</span>
 
 <span class="sd">    Attributes:</span>
-<span class="sd">        center: Map center coordinates as [latitude, longitude].</span>
+<span class="sd">        center: Map center coordinates as [longitude, latitude].</span>
 <span class="sd">        zoom: Map zoom level.</span>
 <span class="sd">        width: Map container width as CSS string.</span>
 <span class="sd">        height: Map container height as CSS string.</span>
@@ -1684,14 +1684,14 @@ mapping operations.</p>
                 <span class="k">for</span> <span class="n">handler</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_event_handlers</span><span class="p">[</span><span class="n">event_type</span><span class="p">]:</span>
                     <span class="n">handler</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_center</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lat</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lng</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_center</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lng</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lat</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the map center coordinates.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            lat: Latitude coordinate.</span>
 <span class="sd">            lng: Longitude coordinate.</span>
+<span class="sd">            lat: Latitude coordinate.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="p">[</span><span class="n">lat</span><span class="p">,</span> <span class="n">lng</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="p">[</span><span class="n">lng</span><span class="p">,</span> <span class="n">lat</span><span class="p">]</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">set_zoom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zoom</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the map zoom level.</span>
@@ -2606,7 +2606,7 @@ mapping operations.</p>
 
 
 <h3 id="anymap.base.MapWidget.set_center" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">set_center</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lng</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">set_center</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lng</span><span class="p">,</span> <span class="n">lat</span><span class="p">)</span></code>
 
 
 <a href="#anymap.base.MapWidget.set_center" class="headerlink" title="Permanent link">&para;</a></h3>
@@ -2627,29 +2627,29 @@ mapping operations.</p>
   </thead>
   <tbody>
       <tr>
-        <td><code>lat</code></td>
-        <td><code>float</code></td>
-        <td><p>Latitude coordinate.</p></td>
-        <td><em>required</em></td>
-      </tr>
-      <tr>
         <td><code>lng</code></td>
         <td><code>float</code></td>
         <td><p>Longitude coordinate.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>lat</code></td>
+        <td><code>float</code></td>
+        <td><p>Latitude coordinate.</p></td>
         <td><em>required</em></td>
       </tr>
   </tbody>
 </table>
         <details class="quote">
           <summary>Source code in <code>anymap/base.py</code></summary>
-          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">set_center</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lat</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lng</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">set_center</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lng</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lat</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Set the map center coordinates.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        lat: Latitude coordinate.</span>
 <span class="sd">        lng: Longitude coordinate.</span>
+<span class="sd">        lat: Latitude coordinate.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="p">[</span><span class="n">lat</span><span class="p">,</span> <span class="n">lng</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="p">[</span><span class="n">lng</span><span class="p">,</span> <span class="n">lat</span><span class="p">]</span>
 </code></pre></div>
         </details>
     </div>
