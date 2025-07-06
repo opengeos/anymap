@@ -277,6 +277,8 @@ class MapWidget(anywidget.AnyWidget):
             map_state["antialias"] = self.antialias
         if hasattr(self, "access_token"):
             map_state["access_token"] = self.access_token
+        if hasattr(self, "_draw_data"):
+            map_state["_draw_data"] = dict(self._draw_data)
 
         # Generate HTML content
         html_content = self._generate_html_template(map_state, title, **kwargs)

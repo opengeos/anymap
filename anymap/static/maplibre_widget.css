@@ -29,6 +29,39 @@
 .maplibregl-canvas {
   width: 100% !important;
   height: 100% !important;
+  cursor: default !important;
+}
+
+/* Ensure default cursor for all map interactions */
+.maplibregl-map {
+  cursor: default !important;
+}
+
+/* Override any pointer cursors in MapLibre controls */
+.maplibregl-ctrl-group button {
+  cursor: default !important;
+}
+
+.maplibregl-ctrl button {
+  cursor: default !important;
+}
+
+/* Override draw control cursors */
+.maplibregl-ctrl-draw {
+  cursor: default !important;
+}
+
+.maplibregl-ctrl-draw button {
+  cursor: default !important;
+}
+
+/* Override any interactive element cursors */
+.maplibregl-popup-anchor {
+  cursor: default !important;
+}
+
+.maplibregl-marker {
+  cursor: default !important;
 }
 
 /* Custom control styles */
@@ -56,7 +89,7 @@
   border-radius: 50%;
   border: 2px solid #ffffff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  cursor: pointer;
+  cursor: default;
 }
 
 /* Loading spinner */
