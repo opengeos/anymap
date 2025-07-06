@@ -82,6 +82,8 @@ class MapLibreMap(MapWidget):
     pitch = traitlets.Float(0.0).tag(sync=True)
     antialias = traitlets.Bool(True).tag(sync=True)
     _draw_data = traitlets.Dict().tag(sync=True)
+    _terra_draw_data = traitlets.Dict().tag(sync=True)
+    _terra_draw_enabled = traitlets.Bool(False).tag(sync=True)
 
     # Define the JavaScript module path
     _esm = _esm_maplibre
@@ -1148,6 +1150,112 @@ class MapLibreMap(MapWidget):
         """
         self.call_js_method("setDrawMode", mode)
 
+    def add_terra_draw(
+        self,
+        position: str = "top-left",
+        modes: Optional[List[str]] = None,
+        open: bool = True,
+        **kwargs: Any,
+    ) -> None:
+        """Add a Terra Draw control to the map for drawing and editing geometries.
+
+        Args:
+            position: Position on map ('top-left', 'top-right', 'bottom-left', 'bottom-right')
+            modes: List of drawing modes to enable. Available modes:
+                  ['render', 'point', 'linestring', 'polygon', 'rectangle', 'circle',
+                   'freehand', 'angled-rectangle', 'sensor', 'sector', 'select',
+                   'delete-selection', 'delete', 'download']
+                  Defaults to all modes except 'render'
+            open: Whether the draw control panel should be open by default
+            **kwargs: Additional options to pass to Terra Draw constructor
+        """
+        if modes is None:
+            modes = [
+                # 'render',  # Commented out to always show drawing tool
+                "point",
+                "linestring",
+                "polygon",
+                "rectangle",
+                "circle",
+                "freehand",
+                "angled-rectangle",
+                "sensor",
+                "sector",
+                "select",
+                "delete-selection",
+                "delete",
+                "download",
+            ]
+
+        terra_draw_options = {
+            "modes": modes,
+            "open": open,
+            "position": position,
+            **kwargs,
+        }
+
+        # Mark that Terra Draw is enabled
+        self._terra_draw_enabled = True
+
+        # Store Terra Draw control configuration
+        current_controls = dict(self._controls)
+        terra_draw_key = f"terra_draw_{position}"
+        current_controls[terra_draw_key] = {
+            "type": "terra_draw",
+            "position": position,
+            "options": terra_draw_options,
+        }
+        self._controls = current_controls
+
+        self.call_js_method("addTerraDrawControl", terra_draw_options)
+
+    def get_terra_draw_data(self) -> Dict[str, Any]:
+        """Get all Terra Draw features as GeoJSON.
+
+        Returns:
+            Dict containing GeoJSON FeatureCollection with drawn features
+        """
+        # Try to get current data first
+        if self._terra_draw_data:
+            return self._terra_draw_data
+
+        # If no data in trait, call JavaScript to get fresh data
+        self.call_js_method("getTerraDrawData")
+        # Give JavaScript time to execute and sync data
+        import time
+
+        time.sleep(0.2)
+
+        # Return the synced data or empty FeatureCollection if nothing
+        return (
+            self._terra_draw_data
+            if self._terra_draw_data
+            else {"type": "FeatureCollection", "features": []}
+        )
+
+    def clear_terra_draw_data(self) -> None:
+        """Clear all Terra Draw features from the draw control."""
+        # Clear the trait data immediately
+        self._terra_draw_data = {"type": "FeatureCollection", "features": []}
+
+        # Clear in JavaScript
+        self.call_js_method("clearTerraDrawData")
+
+    def load_terra_draw_data(self, geojson_data: Union[Dict[str, Any], str]) -> None:
+        """Load GeoJSON data into the Terra Draw control.
+
+        Args:
+            geojson_data: GeoJSON data as dictionary or JSON string
+        """
+        if isinstance(geojson_data, str):
+            geojson_data = json.loads(geojson_data)
+
+        # Update the trait immediately to ensure consistency
+        self._terra_draw_data = geojson_data
+
+        # Send to JavaScript
+        self.call_js_method("loadTerraDrawData", geojson_data)
+
     def _generate_html_template(
         self, map_state: Dict[str, Any], title: str, **kwargs: Any
     ) -> str:
@@ -1231,6 +1339,9 @@ class MapLibreMap(MapWidget):
     <script src="https://unpkg.com/pmtiles@3.2.0/dist/pmtiles.js"></script>
     <script src="https://www.unpkg.com/@mapbox/mapbox-gl-draw@1.5.0/dist/mapbox-gl-draw.js"></script>
     <link rel="stylesheet" href="https://www.unpkg.com/@mapbox/mapbox-gl-draw@1.5.0/dist/mapbox-gl-draw.css">
+    <!-- Terra Draw libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@watergis/maplibre-gl-terradraw@1.0.1/dist/maplibre-gl-terradraw.umd.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@watergis/maplibre-gl-terradraw@1.0.1/dist/maplibre-gl-terradraw.css">
     <script>
         // Register COG protocol
         maplibregl.addProtocol("cog", MaplibreCOGProtocol.cogProtocol);
@@ -1546,6 +1657,34 @@ class MapLibreMap(MapWidget):
                             }}
                         }} else {{
                             console.warn('MapboxDraw not available during restore');
+                            return;
+                        }}
+                        break;
+                    case 'terra_draw':
+                        // Handle Terra Draw control restoration
+                        if (typeof MaplibreTerradrawControl !== 'undefined') {{
+                            const terraDrawOptions = {{
+                                ...controlOptions
+                            }};
+                            control = new MaplibreTerradrawControl.MaplibreTerradrawControl(terraDrawOptions);
+
+                            // Store reference for data operations
+                            window.terraDrawControl = control;
+
+                            console.log('Terra Draw control restored successfully');
+
+                            // Load saved Terra Draw data if it exists
+                            const savedTerraDrawData = mapState._terra_draw_data;
+                            if (savedTerraDrawData && savedTerraDrawData.features && savedTerraDrawData.features.length > 0) {{
+                                try {{
+                                    // Terra Draw data loading would need to be implemented based on the library's API
+                                    console.log('Saved Terra Draw data found:', savedTerraDrawData);
+                                }} catch (error) {{
+                                    console.error('Failed to load saved Terra Draw data:', error);
+                                }}
+                            }}
+                        }} else {{
+                            console.warn('MaplibreTerradrawControl not available during restore');
                             return;
                         }}
                         break;
@@ -2361,7 +2500,7 @@ class Container(v.Container):
         Returns:
             Any: A default map object.
         """
-        return Map(center=[20, 0], zoom=2)
+        return MapLibreMap(center=[20, 0], zoom=2)
 
     def toggle_sidebar(self, *args: Any, **kwargs: Any) -> None:
         """

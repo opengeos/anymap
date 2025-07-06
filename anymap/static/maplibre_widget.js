@@ -76,6 +76,26 @@ function render({ model, el }) {
         }
       }
 
+      // Load Terra Draw
+      if (!window.MaplibreTerradrawControl) {
+        const terraDrawScript = document.createElement('script');
+        terraDrawScript.src = 'https://cdn.jsdelivr.net/npm/@watergis/maplibre-gl-terradraw@1.0.1/dist/maplibre-gl-terradraw.umd.js';
+
+        await new Promise((resolve, reject) => {
+          terraDrawScript.onload = resolve;
+          terraDrawScript.onerror = reject;
+          document.head.appendChild(terraDrawScript);
+        });
+
+        // Load CSS for Terra Draw
+        if (!document.querySelector('link[href*="maplibre-gl-terradraw.css"]')) {
+          const terraDrawCSS = document.createElement('link');
+          terraDrawCSS.rel = 'stylesheet';
+          terraDrawCSS.href = 'https://cdn.jsdelivr.net/npm/@watergis/maplibre-gl-terradraw@1.0.1/dist/maplibre-gl-terradraw.css';
+          document.head.appendChild(terraDrawCSS);
+        }
+      }
+
       // Register the COG protocol
       if (window.MaplibreCOGProtocol && window.MaplibreCOGProtocol.cogProtocol) {
         maplibregl.addProtocol("cog", window.MaplibreCOGProtocol.cogProtocol);
@@ -320,6 +340,7 @@ function render({ model, el }) {
     el._markers = [];
     el._controls = new Map(); // Track added controls by type and position
     el._drawControl = null; // Track draw control instance
+    el._terraDrawControl = null; // Track Terra Draw control instance
     el._widgetId = widgetId;
 
     // Restore layers, sources, controls, and projection from model state
@@ -414,6 +435,31 @@ function render({ model, el }) {
                   console.log('Draw control restored successfully with custom styles');
                 } else {
                   console.warn('MapboxDraw not available or already added during restore');
+                }
+                return;
+              case 'terra_draw':
+                // Handle Terra Draw control restoration
+                if (window.MaplibreTerradrawControl && !el._terraDrawControl) {
+                  const terraDrawOptions = {
+                    ...controlOptions
+                  };
+                  el._terraDrawControl = new window.MaplibreTerradrawControl.MaplibreTerradrawControl(terraDrawOptions);
+                  map.addControl(el._terraDrawControl, position);
+
+                  console.log('Terra Draw control restored successfully');
+
+                  // Load saved Terra Draw data if it exists
+                  const savedTerraDrawData = model.get("_terra_draw_data");
+                  if (savedTerraDrawData && savedTerraDrawData.features && savedTerraDrawData.features.length > 0) {
+                    try {
+                      // Terra Draw data loading would need to be implemented based on the library's API
+                      console.log('Saved Terra Draw data found:', savedTerraDrawData);
+                    } catch (error) {
+                      console.error('Failed to load saved Terra Draw data:', error);
+                    }
+                  }
+                } else {
+                  console.warn('MaplibreTerradrawControl not available or already added during restore');
                 }
                 return;
               default:
@@ -563,6 +609,19 @@ function render({ model, el }) {
           }
         } catch (error) {
           console.error('Failed to update draw data from Python:', error);
+        }
+      }
+    });
+
+    // Listen for Terra Draw data changes from Python
+    model.on("change:_terra_draw_data", () => {
+      const terraDrawData = model.get("_terra_draw_data");
+      if (el._terraDrawControl && terraDrawData) {
+        try {
+          // Terra Draw data handling would need to be implemented based on the library's API
+          console.log('Terra Draw data updated from Python:', terraDrawData);
+        } catch (error) {
+          console.error('Failed to update Terra Draw data from Python:', error);
         }
       }
     });
@@ -870,6 +929,231 @@ function render({ model, el }) {
             }
             break;
 
+          case 'addTerraDrawControl':
+            const [terraDrawOptions] = args;
+            try {
+              if (window.MaplibreTerradrawControl && !el._terraDrawControl) {
+                el._terraDrawControl = new window.MaplibreTerradrawControl.MaplibreTerradrawControl(terraDrawOptions);
+                map.addControl(el._terraDrawControl, terraDrawOptions.position || 'top-left');
+
+                // Set up Terra Draw event handlers to sync data changes
+                const terraDrawInstance = el._terraDrawControl.getTerraDrawInstance();
+                if (terraDrawInstance) {
+                  // Listen for Terra Draw events and sync data
+                  terraDrawInstance.on('finish', () => {
+                    try {
+                      const currentData = terraDrawInstance.getSnapshot();
+                      model.set('_terra_draw_data', currentData);
+                      model.save_changes();
+                      console.log('Terra Draw data auto-synced after finish event');
+                    } catch (error) {
+                      console.error('Failed to sync Terra Draw data after finish event:', error);
+                    }
+                  });
+
+                  terraDrawInstance.on('change', () => {
+                    try {
+                      const currentData = terraDrawInstance.getSnapshot();
+                      model.set('_terra_draw_data', currentData);
+                      model.save_changes();
+                      console.log('Terra Draw data auto-synced after change event');
+                    } catch (error) {
+                      console.error('Failed to sync Terra Draw data after change event:', error);
+                    }
+                  });
+                }
+
+                console.log('Terra Draw control added successfully');
+              } else {
+                console.warn('MaplibreTerradrawControl not available or already added');
+              }
+            } catch (error) {
+              console.error('Failed to add Terra Draw control:', error);
+            }
+            break;
+
+          case 'loadTerraDrawData':
+            const [terraGeojsonData] = args;
+            try {
+              if (el._terraDrawControl) {
+                // Get the Terra Draw instance from the control
+                const terraDrawInstance = el._terraDrawControl.getTerraDrawInstance();
+                if (terraDrawInstance) {
+                  // Try different possible method names for loading data
+                  let loaded = false;
+
+                  // Try addFeatures() first (most common)
+                  if (typeof terraDrawInstance.addFeatures === 'function' && terraGeojsonData.features) {
+                    terraDrawInstance.addFeatures(terraGeojsonData.features);
+                    loaded = true;
+                    console.log('Terra Draw data loaded via addFeatures():', terraGeojsonData);
+                  }
+                  // Try setFeatures() as alternative
+                  else if (typeof terraDrawInstance.setFeatures === 'function' && terraGeojsonData.features) {
+                    terraDrawInstance.setFeatures(terraGeojsonData.features);
+                    loaded = true;
+                    console.log('Terra Draw data loaded via setFeatures():', terraGeojsonData);
+                  }
+                  // Try loadFeatures() as alternative
+                  else if (typeof terraDrawInstance.loadFeatures === 'function' && terraGeojsonData.features) {
+                    terraDrawInstance.loadFeatures(terraGeojsonData.features);
+                    loaded = true;
+                    console.log('Terra Draw data loaded via loadFeatures():', terraGeojsonData);
+                  }
+                  // Try setGeoJSON() as alternative
+                  else if (typeof terraDrawInstance.setGeoJSON === 'function') {
+                    terraDrawInstance.setGeoJSON(terraGeojsonData);
+                    loaded = true;
+                    console.log('Terra Draw data loaded via setGeoJSON():', terraGeojsonData);
+                  }
+                  // Try to access store/data property directly
+                  else if (terraDrawInstance.store && typeof terraDrawInstance.store.addFeatures === 'function' && terraGeojsonData.features) {
+                    terraDrawInstance.store.addFeatures(terraGeojsonData.features);
+                    loaded = true;
+                    console.log('Terra Draw data loaded via store.addFeatures():', terraGeojsonData);
+                  }
+
+                  if (loaded) {
+                    // Sync the loaded data back to Python
+                    model.set('_terra_draw_data', terraGeojsonData);
+                    model.save_changes();
+                    sendEvent('terra_draw_data_loaded', { data: terraGeojsonData });
+                  } else {
+                    console.warn('No load method found on Terra Draw instance');
+                  }
+                } else {
+                  console.warn('Could not get Terra Draw instance');
+                }
+              } else {
+                console.warn('Terra Draw control not initialized');
+              }
+            } catch (error) {
+              console.error('Failed to load Terra Draw data:', error);
+            }
+            break;
+
+          case 'getTerraDrawData':
+            try {
+              if (el._terraDrawControl) {
+                // Get the Terra Draw instance from the control
+                const terraDrawInstance = el._terraDrawControl.getTerraDrawInstance();
+                if (terraDrawInstance) {
+                  // Try different possible method names for getting data
+                  let terraDrawData = { type: 'FeatureCollection', features: [] };
+
+                  // Try getSnapshot() first
+                  if (typeof terraDrawInstance.getSnapshot === 'function') {
+                    terraDrawData = terraDrawInstance.getSnapshot();
+                    console.log('Terra Draw data retrieved via getSnapshot():', terraDrawData);
+                  }
+                  // Try getFeatures() as alternative
+                  else if (typeof terraDrawInstance.getFeatures === 'function') {
+                    const features = terraDrawInstance.getFeatures();
+                    terraDrawData = { type: 'FeatureCollection', features: features };
+                    console.log('Terra Draw data retrieved via getFeatures():', terraDrawData);
+                  }
+                  // Try getAllFeatures() as alternative
+                  else if (typeof terraDrawInstance.getAllFeatures === 'function') {
+                    const features = terraDrawInstance.getAllFeatures();
+                    terraDrawData = { type: 'FeatureCollection', features: features };
+                    console.log('Terra Draw data retrieved via getAllFeatures():', terraDrawData);
+                  }
+                  // Try getGeoJSON() as alternative
+                  else if (typeof terraDrawInstance.getGeoJSON === 'function') {
+                    terraDrawData = terraDrawInstance.getGeoJSON();
+                    console.log('Terra Draw data retrieved via getGeoJSON():', terraDrawData);
+                  }
+                  // Try to access store/data property directly
+                  else if (terraDrawInstance.store && typeof terraDrawInstance.store.getFeatures === 'function') {
+                    const features = terraDrawInstance.store.getFeatures();
+                    terraDrawData = { type: 'FeatureCollection', features: features };
+                    console.log('Terra Draw data retrieved via store.getFeatures():', terraDrawData);
+                  }
+                  // Debug: log available methods
+                  else {
+                    console.log('Available Terra Draw instance methods:', Object.getOwnPropertyNames(terraDrawInstance));
+                    console.log('Terra Draw instance proto:', Object.getOwnPropertyNames(Object.getPrototypeOf(terraDrawInstance)));
+                  }
+
+                  model.set('_terra_draw_data', terraDrawData);
+                  model.save_changes();
+                  sendEvent('terra_draw_data_retrieved', { data: terraDrawData });
+                } else {
+                  console.warn('Could not get Terra Draw instance');
+                  model.set('_terra_draw_data', { type: 'FeatureCollection', features: [] });
+                  model.save_changes();
+                }
+              } else {
+                console.warn('Terra Draw control not initialized');
+                model.set('_terra_draw_data', { type: 'FeatureCollection', features: [] });
+                model.save_changes();
+              }
+            } catch (error) {
+              console.error('Failed to get Terra Draw data:', error);
+              model.set('_terra_draw_data', { type: 'FeatureCollection', features: [] });
+              model.save_changes();
+            }
+            break;
+
+          case 'clearTerraDrawData':
+            try {
+              if (el._terraDrawControl) {
+                // Get the Terra Draw instance from the control
+                const terraDrawInstance = el._terraDrawControl.getTerraDrawInstance();
+                if (terraDrawInstance) {
+                  // Try different possible method names for clearing data
+                  let cleared = false;
+
+                  // Try clear() first
+                  if (typeof terraDrawInstance.clear === 'function') {
+                    terraDrawInstance.clear();
+                    cleared = true;
+                    console.log('Terra Draw data cleared via clear()');
+                  }
+                  // Try clearAll() as alternative
+                  else if (typeof terraDrawInstance.clearAll === 'function') {
+                    terraDrawInstance.clearAll();
+                    cleared = true;
+                    console.log('Terra Draw data cleared via clearAll()');
+                  }
+                  // Try deleteAll() as alternative
+                  else if (typeof terraDrawInstance.deleteAll === 'function') {
+                    terraDrawInstance.deleteAll();
+                    cleared = true;
+                    console.log('Terra Draw data cleared via deleteAll()');
+                  }
+                  // Try removeAll() as alternative
+                  else if (typeof terraDrawInstance.removeAll === 'function') {
+                    terraDrawInstance.removeAll();
+                    cleared = true;
+                    console.log('Terra Draw data cleared via removeAll()');
+                  }
+                  // Try to access store/data property directly
+                  else if (terraDrawInstance.store && typeof terraDrawInstance.store.clear === 'function') {
+                    terraDrawInstance.store.clear();
+                    cleared = true;
+                    console.log('Terra Draw data cleared via store.clear()');
+                  }
+
+                  if (cleared) {
+                    const emptyData = { type: 'FeatureCollection', features: [] };
+                    model.set('_terra_draw_data', emptyData);
+                    model.save_changes();
+                    sendEvent('terra_draw_data_cleared', { data: emptyData });
+                  } else {
+                    console.warn('No clear method found on Terra Draw instance');
+                  }
+                } else {
+                  console.warn('Could not get Terra Draw instance');
+                }
+              } else {
+                console.warn('Terra Draw control not initialized');
+              }
+            } catch (error) {
+              console.error('Failed to clear Terra Draw data:', error);
+            }
+            break;
+
           default:
             // Try to call the method directly on the map object
             if (typeof map[method] === 'function') {
@@ -898,6 +1182,9 @@ function render({ model, el }) {
       }
       if (el._drawControl) {
         el._drawControl = null;
+      }
+      if (el._terraDrawControl) {
+        el._terraDrawControl = null;
       }
       if (el._map) {
         el._map.remove();
