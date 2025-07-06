@@ -19,7 +19,7 @@ class MapWidget(anywidget.AnyWidget):
     mapping operations.
 
     Attributes:
-        center: Map center coordinates as [latitude, longitude].
+        center: Map center coordinates as [longitude, latitude].
         zoom: Map zoom level.
         width: Map container width as CSS string.
         height: Map container height as CSS string.
@@ -102,14 +102,14 @@ class MapWidget(anywidget.AnyWidget):
                 for handler in self._event_handlers[event_type]:
                     handler(event)
 
-    def set_center(self, lat: float, lng: float) -> None:
+    def set_center(self, lng: float, lat: float) -> None:
         """Set the map center coordinates.
 
         Args:
-            lat: Latitude coordinate.
             lng: Longitude coordinate.
+            lat: Latitude coordinate.
         """
-        self.center = [lat, lng]
+        self.center = [lng, lat]
 
     def set_zoom(self, zoom: float) -> None:
         """Set the map zoom level.

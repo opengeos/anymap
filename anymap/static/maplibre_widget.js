@@ -827,7 +827,7 @@ function render({ model, el }) {
     const map = new maplibregl.Map({
       container: container,
       style: model.get("style"),
-      center: model.get("center").slice().reverse(), // [lng, lat] for MapLibre
+      center: model.get("center"), // [lng, lat] format
       zoom: model.get("zoom"),
       bearing: model.get("bearing"),
       pitch: model.get("pitch"),
@@ -1065,11 +1065,13 @@ function render({ model, el }) {
 
     map.on('moveend', () => {
       const center = map.getCenter();
+      const bounds = map.getBounds();
       sendEvent('moveend', {
-        center: [center.lat, center.lng],
+        center: [center.lng, center.lat],
         zoom: map.getZoom(),
         bearing: map.getBearing(),
-        pitch: map.getPitch()
+        pitch: map.getPitch(),
+        bounds: [[bounds.getWest(), bounds.getSouth()], [bounds.getEast(), bounds.getNorth()]]
       });
     });
 
@@ -1082,7 +1084,7 @@ function render({ model, el }) {
     // Listen for trait changes from Python
     model.on("change:center", () => {
       const center = model.get("center");
-      map.setCenter([center[1], center[0]]); // Convert [lat, lng] to [lng, lat]
+      map.setCenter(center); // [lng, lat] format
     });
 
     model.on("change:zoom", () => {
@@ -1154,9 +1156,7 @@ function render({ model, el }) {
         switch (method) {
           case 'flyTo':
             const flyToOptions = args[0] || {};
-            if (flyToOptions.center) {
-              flyToOptions.center = [flyToOptions.center[1], flyToOptions.center[0]]; // [lat,lng] to [lng,lat]
-            }
+            // flyToOptions.center is already in [lng, lat] format
             map.flyTo(flyToOptions);
             break;
 
@@ -1230,9 +1230,8 @@ function render({ model, el }) {
 
           case 'fitBounds':
             const [bounds, options] = args;
-            // Convert [[lat,lng], [lat,lng]] to [[lng,lat], [lng,lat]]
-            const mapBounds = bounds.map(bound => [bound[1], bound[0]]);
-            map.fitBounds(mapBounds, options || {});
+            // bounds are already in [[lng,lat], [lng,lat]] format
+            map.fitBounds(bounds, options || {});
             break;
 
           case 'addControl':

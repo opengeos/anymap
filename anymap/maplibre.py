@@ -11,7 +11,7 @@ Example:
     Basic usage of MapLibreMap:
 
     >>> from anymap.maplibre import MapLibreMap
-    >>> m = MapLibreMap(center=[40.7, -74.0], zoom=10)
+    >>> m = MapLibreMap(center=[-74.0, 40.7], zoom=10)
     >>> m.add_basemap("OpenStreetMap.Mapnik")
     >>> m
 """
@@ -92,7 +92,7 @@ class MapLibreMap(MapWidget):
 
     def __init__(
         self,
-        center: List[float] = [0.0, 20],
+        center: List[float] = [0, 20],
         zoom: float = 1.0,
         style: Union[str, Dict[str, Any]] = "dark-matter",
         width: str = "100%",
@@ -107,7 +107,7 @@ class MapLibreMap(MapWidget):
             "layers": "top-right",
         },
         projection: str = "mercator",
-        add_sidebar: bool = True,
+        add_sidebar: bool = False,
         sidebar_visible: bool = False,
         sidebar_width: int = 360,
         sidebar_args: Optional[Dict] = None,
@@ -117,13 +117,26 @@ class MapLibreMap(MapWidget):
         """Initialize MapLibre map widget.
 
         Args:
-            center: Map center coordinates as [latitude, longitude].
-            zoom: Initial zoom level (typically 0-20).
+            center: Map center coordinates as [longitude, latitude]. Default is [0, 20].
+            zoom: Initial zoom level (typically 0-20). Default is 1.0.
             style: MapLibre style URL string or style object dictionary.
             width: Widget width as CSS string (e.g., "100%", "800px").
             height: Widget height as CSS string (e.g., "600px", "50vh").
             bearing: Map bearing (rotation) in degrees (0-360).
             pitch: Map pitch (tilt) in degrees (0-60).
+            controls: Dictionary of control names and their positions. Default is {
+                "navigation": "top-right",
+                "fullscreen": "top-right",
+                "scale": "bottom-left",
+                "globe": "top-right",
+                "layers": "top-right",
+            }.
+            projection: Map projection type. Can be "mercator" or "globe". Default is "mercator".
+            add_sidebar: Whether to add a sidebar to the map. Default is False.
+            sidebar_visible: Whether the sidebar is visible. Default is False.
+            sidebar_width: Width of the sidebar in pixels. Default is 360.
+            sidebar_args: Additional keyword arguments for the sidebar. Default is None.
+            layer_manager_expanded: Whether the layer manager is expanded. Default is True.
             **kwargs: Additional keyword arguments passed to parent class.
         """
 
@@ -155,6 +168,16 @@ class MapLibreMap(MapWidget):
 
         # Initialize the _layer_dict trait with the layer_dict content
         self._layer_dict = dict(self.layer_dict)
+
+        # Initialize current state attributes
+        self._current_center = center
+        self._current_zoom = zoom
+        self._current_bearing = bearing
+        self._current_pitch = pitch
+        self._current_bounds = None  # Will be set after map loads
+
+        # Register event handler to update current state
+        self.on_map_event("moveend", self._update_current_state)
 
         self._style = style
         self.style_dict = {}
@@ -697,12 +720,12 @@ class MapLibreMap(MapWidget):
 
         self.add_layer(layer_id, layer_config, before_id)
 
-    def add_marker(self, lat: float, lng: float, popup: Optional[str] = None) -> None:
+    def add_marker(self, lng: float, lat: float, popup: Optional[str] = None) -> None:
         """Add a marker to the map.
 
         Args:
-            lat: Latitude coordinate for the marker.
             lng: Longitude coordinate for the marker.
+            lat: Latitude coordinate for the marker.
             popup: Optional popup text to display when marker is clicked.
         """
         marker_data = {"coordinates": [lng, lat], "popup": popup}
@@ -1861,6 +1884,64 @@ class MapLibreMap(MapWidget):
 </html>"""
 
         return html_template
+
+    def _update_current_state(self, event: Dict[str, Any]) -> None:
+        """Update current state attributes from moveend event."""
+        if "center" in event:
+            self._current_center = event["center"]
+        if "zoom" in event:
+            self._current_zoom = event["zoom"]
+        if "bearing" in event:
+            self._current_bearing = event["bearing"]
+        if "pitch" in event:
+            self._current_pitch = event["pitch"]
+        if "bounds" in event:
+            self._current_bounds = event["bounds"]
+
+    def set_center(self, lng: float, lat: float) -> None:
+        """Set the map center coordinates.
+
+        Args:
+            lng: Longitude coordinate.
+            lat: Latitude coordinate.
+        """
+        self.center = [lng, lat]
+        self._current_center = [lng, lat]
+
+    def set_zoom(self, zoom: float) -> None:
+        """Set the map zoom level.
+
+        Args:
+            zoom: Zoom level (typically 0-20).
+        """
+        self.zoom = zoom
+        self._current_zoom = zoom
+
+    @property
+    def current_center(self) -> List[float]:
+        """Get the current map center coordinates as [longitude, latitude]."""
+        return self._current_center
+
+    @property
+    def current_zoom(self) -> float:
+        """Get the current map zoom level."""
+        return self._current_zoom
+
+    @property
+    def current_bounds(self) -> Optional[List[List[float]]]:
+        """Get the current map bounds as [[lng, lat], [lng, lat]] (southwest, northeast)."""
+        return self._current_bounds
+
+    @property
+    def viewstate(self) -> Dict[str, Any]:
+        """Get the current map viewstate including center, zoom, bearing, pitch, and bounds."""
+        return {
+            "center": self._current_center,
+            "zoom": self._current_zoom,
+            "bearing": self._current_bearing,
+            "pitch": self._current_pitch,
+            "bounds": self._current_bounds,
+        }
 
 
 class LayerManagerWidget(v.ExpansionPanels):
