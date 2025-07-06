@@ -661,6 +661,29 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/pmtiles_example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Pmtiles example
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1268,6 +1291,15 @@
   <a href="#anymap.maplibre.MapLibreMap.add_marker" class="md-nav__link">
     <span class="md-ellipsis">
       add_marker()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.add_pmtiles" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_pmtiles()
     </span>
   </a>
   
@@ -1921,6 +1953,15 @@
   <a href="#anymap.maplibre.MapLibreMap.add_marker" class="md-nav__link">
     <span class="md-ellipsis">
       add_marker()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.add_pmtiles" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_pmtiles()
     </span>
   </a>
   
@@ -5933,6 +5974,85 @@ data sources, custom styling, and interactive features.</p>
             <span class="n">layer_id</span><span class="p">,</span> <span class="n">layer_config</span><span class="p">,</span> <span class="n">before_id</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="n">opacity</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="n">visible</span>
         <span class="p">)</span>
 
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_pmtiles</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">pmtiles_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">layer_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">layers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">opacity</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">visible</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">before_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add PMTiles vector tiles to the map.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            pmtiles_url: URL to the PMTiles file.</span>
+<span class="sd">            layer_id: Optional unique identifier for the layer. If None, uses filename.</span>
+<span class="sd">            layers: Optional list of layer configurations for rendering. If None, creates default layers.</span>
+<span class="sd">            opacity: Layer opacity between 0.0 and 1.0.</span>
+<span class="sd">            visible: Whether the layer should be visible initially.</span>
+<span class="sd">            before_id: Optional layer ID to insert this layer before.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">layer_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">layer_id</span> <span class="o">=</span> <span class="n">pmtiles_url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.pmtiles&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+        <span class="n">source_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">layer_id</span><span class="si">}</span><span class="s2">_source&quot;</span>
+
+        <span class="c1"># Add PMTiles source using pmtiles:// protocol</span>
+        <span class="n">pmtiles_source_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;pmtiles://</span><span class="si">{</span><span class="n">pmtiles_url</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_source</span><span class="p">(</span>
+            <span class="n">source_id</span><span class="p">,</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;vector&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">pmtiles_source_url</span><span class="p">,</span>
+                <span class="s2">&quot;attribution&quot;</span><span class="p">:</span> <span class="s2">&quot;PMTiles&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Add default layers if none provided</span>
+        <span class="k">if</span> <span class="n">layers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">layers</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">layer_id</span><span class="si">}</span><span class="s2">_landuse&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">source_id</span><span class="p">,</span>
+                    <span class="s2">&quot;source-layer&quot;</span><span class="p">:</span> <span class="s2">&quot;landuse&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;fill&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;paint&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;fill-color&quot;</span><span class="p">:</span> <span class="s2">&quot;steelblue&quot;</span><span class="p">,</span> <span class="s2">&quot;fill-opacity&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">},</span>
+                <span class="p">},</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">layer_id</span><span class="si">}</span><span class="s2">_roads&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">source_id</span><span class="p">,</span>
+                    <span class="s2">&quot;source-layer&quot;</span><span class="p">:</span> <span class="s2">&quot;roads&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;line&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;paint&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;line-color&quot;</span><span class="p">:</span> <span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="s2">&quot;line-width&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+                <span class="p">},</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">layer_id</span><span class="si">}</span><span class="s2">_buildings&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">source_id</span><span class="p">,</span>
+                    <span class="s2">&quot;source-layer&quot;</span><span class="p">:</span> <span class="s2">&quot;buildings&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;fill&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;paint&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;fill-color&quot;</span><span class="p">:</span> <span class="s2">&quot;gray&quot;</span><span class="p">,</span> <span class="s2">&quot;fill-opacity&quot;</span><span class="p">:</span> <span class="mf">0.7</span><span class="p">},</span>
+                <span class="p">},</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">layer_id</span><span class="si">}</span><span class="s2">_water&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">source_id</span><span class="p">,</span>
+                    <span class="s2">&quot;source-layer&quot;</span><span class="p">:</span> <span class="s2">&quot;water&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;fill&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;paint&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;fill-color&quot;</span><span class="p">:</span> <span class="s2">&quot;lightblue&quot;</span><span class="p">,</span> <span class="s2">&quot;fill-opacity&quot;</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">},</span>
+                <span class="p">},</span>
+            <span class="p">]</span>
+
+        <span class="c1"># Add all layers</span>
+        <span class="k">for</span> <span class="n">layer_config</span> <span class="ow">in</span> <span class="n">layers</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span>
+                <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span>
+                <span class="n">layer_config</span><span class="p">,</span>
+                <span class="n">before_id</span><span class="p">,</span>
+                <span class="n">opacity</span><span class="o">=</span><span class="n">opacity</span><span class="p">,</span>
+                <span class="n">visible</span><span class="o">=</span><span class="n">visible</span><span class="p">,</span>
+            <span class="p">)</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">add_basemap</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">basemap</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -6024,9 +6144,14 @@ data sources, custom styling, and interactive features.</p>
 <span class="s2">    &lt;div id=&quot;map&quot;&gt;&lt;/div&gt;</span>
 
 <span class="s2">    &lt;script src=&quot;https://unpkg.com/@geomatico/maplibre-cog-protocol@0.4.0/dist/index.js&quot;&gt;&lt;/script&gt;</span>
+<span class="s2">    &lt;script src=&quot;https://unpkg.com/pmtiles@3.2.0/dist/pmtiles.js&quot;&gt;&lt;/script&gt;</span>
 <span class="s2">    &lt;script&gt;</span>
 <span class="s2">        // Register COG protocol</span>
 <span class="s2">        maplibregl.addProtocol(&quot;cog&quot;, MaplibreCOGProtocol.cogProtocol);</span>
+
+<span class="s2">        // Register PMTiles protocol</span>
+<span class="s2">        const pmtilesProtocol = new pmtiles.Protocol();</span>
+<span class="s2">        maplibregl.addProtocol(&quot;pmtiles&quot;, pmtilesProtocol.tile);</span>
 
 <span class="s2">        // Map state from Python</span>
 <span class="s2">        const mapState = </span><span class="si">{</span><span class="n">map_state_json</span><span class="si">}</span><span class="s2">;</span>
@@ -7031,6 +7156,157 @@ data sources, custom styling, and interactive features.</p>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">marker_data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;coordinates&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">lng</span><span class="p">,</span> <span class="n">lat</span><span class="p">],</span> <span class="s2">&quot;popup&quot;</span><span class="p">:</span> <span class="n">popup</span><span class="p">}</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addMarker&quot;</span><span class="p">,</span> <span class="n">marker_data</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="anymap.maplibre.MapLibreMap.add_pmtiles" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">add_pmtiles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pmtiles_url</span><span class="p">,</span> <span class="n">layer_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">before_id</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+
+<a href="#anymap.maplibre.MapLibreMap.add_pmtiles" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Add PMTiles vector tiles to the map.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>pmtiles_url</code></td>
+        <td><code>str</code></td>
+        <td><p>URL to the PMTiles file.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>layer_id</code></td>
+        <td><code>Optional[str]</code></td>
+        <td><p>Optional unique identifier for the layer. If None, uses filename.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>layers</code></td>
+        <td><code>Optional[List[Dict[str, Any]]]</code></td>
+        <td><p>Optional list of layer configurations for rendering. If None, creates default layers.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>opacity</code></td>
+        <td><code>Optional[float]</code></td>
+        <td><p>Layer opacity between 0.0 and 1.0.</p></td>
+        <td><code>1.0</code></td>
+      </tr>
+      <tr>
+        <td><code>visible</code></td>
+        <td><code>Optional[bool]</code></td>
+        <td><p>Whether the layer should be visible initially.</p></td>
+        <td><code>True</code></td>
+      </tr>
+      <tr>
+        <td><code>before_id</code></td>
+        <td><code>Optional[str]</code></td>
+        <td><p>Optional layer ID to insert this layer before.</p></td>
+        <td><code>None</code></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>anymap/maplibre.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_pmtiles</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">pmtiles_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">layer_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">layers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">opacity</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">visible</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">before_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add PMTiles vector tiles to the map.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        pmtiles_url: URL to the PMTiles file.</span>
+<span class="sd">        layer_id: Optional unique identifier for the layer. If None, uses filename.</span>
+<span class="sd">        layers: Optional list of layer configurations for rendering. If None, creates default layers.</span>
+<span class="sd">        opacity: Layer opacity between 0.0 and 1.0.</span>
+<span class="sd">        visible: Whether the layer should be visible initially.</span>
+<span class="sd">        before_id: Optional layer ID to insert this layer before.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">layer_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">layer_id</span> <span class="o">=</span> <span class="n">pmtiles_url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.pmtiles&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+    <span class="n">source_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">layer_id</span><span class="si">}</span><span class="s2">_source&quot;</span>
+
+    <span class="c1"># Add PMTiles source using pmtiles:// protocol</span>
+    <span class="n">pmtiles_source_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;pmtiles://</span><span class="si">{</span><span class="n">pmtiles_url</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_source</span><span class="p">(</span>
+        <span class="n">source_id</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;vector&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">pmtiles_source_url</span><span class="p">,</span>
+            <span class="s2">&quot;attribution&quot;</span><span class="p">:</span> <span class="s2">&quot;PMTiles&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Add default layers if none provided</span>
+    <span class="k">if</span> <span class="n">layers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">layers</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">layer_id</span><span class="si">}</span><span class="s2">_landuse&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">source_id</span><span class="p">,</span>
+                <span class="s2">&quot;source-layer&quot;</span><span class="p">:</span> <span class="s2">&quot;landuse&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;fill&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;paint&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;fill-color&quot;</span><span class="p">:</span> <span class="s2">&quot;steelblue&quot;</span><span class="p">,</span> <span class="s2">&quot;fill-opacity&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">},</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">layer_id</span><span class="si">}</span><span class="s2">_roads&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">source_id</span><span class="p">,</span>
+                <span class="s2">&quot;source-layer&quot;</span><span class="p">:</span> <span class="s2">&quot;roads&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;line&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;paint&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;line-color&quot;</span><span class="p">:</span> <span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="s2">&quot;line-width&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">layer_id</span><span class="si">}</span><span class="s2">_buildings&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">source_id</span><span class="p">,</span>
+                <span class="s2">&quot;source-layer&quot;</span><span class="p">:</span> <span class="s2">&quot;buildings&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;fill&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;paint&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;fill-color&quot;</span><span class="p">:</span> <span class="s2">&quot;gray&quot;</span><span class="p">,</span> <span class="s2">&quot;fill-opacity&quot;</span><span class="p">:</span> <span class="mf">0.7</span><span class="p">},</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">layer_id</span><span class="si">}</span><span class="s2">_water&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">source_id</span><span class="p">,</span>
+                <span class="s2">&quot;source-layer&quot;</span><span class="p">:</span> <span class="s2">&quot;water&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;fill&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;paint&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;fill-color&quot;</span><span class="p">:</span> <span class="s2">&quot;lightblue&quot;</span><span class="p">,</span> <span class="s2">&quot;fill-opacity&quot;</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">},</span>
+            <span class="p">},</span>
+        <span class="p">]</span>
+
+    <span class="c1"># Add all layers</span>
+    <span class="k">for</span> <span class="n">layer_config</span> <span class="ow">in</span> <span class="n">layers</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span>
+            <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span>
+            <span class="n">layer_config</span><span class="p">,</span>
+            <span class="n">before_id</span><span class="p">,</span>
+            <span class="n">opacity</span><span class="o">=</span><span class="n">opacity</span><span class="p">,</span>
+            <span class="n">visible</span><span class="o">=</span><span class="n">visible</span><span class="p">,</span>
+        <span class="p">)</span>
 </code></pre></div>
         </details>
     </div>
