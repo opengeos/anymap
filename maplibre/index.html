@@ -1338,6 +1338,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.add_terra_draw" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_terra_draw()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.add_tile_layer" class="md-nav__link">
     <span class="md-ellipsis">
       add_tile_layer()
@@ -1368,6 +1377,15 @@
   <a href="#anymap.maplibre.MapLibreMap.clear_draw_data" class="md-nav__link">
     <span class="md-ellipsis">
       clear_draw_data()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.clear_terra_draw_data" class="md-nav__link">
+    <span class="md-ellipsis">
+      clear_terra_draw_data()
     </span>
   </a>
   
@@ -1437,9 +1455,27 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.get_terra_draw_data" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_terra_draw_data()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.load_draw_data" class="md-nav__link">
     <span class="md-ellipsis">
       load_draw_data()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.load_terra_draw_data" class="md-nav__link">
+    <span class="md-ellipsis">
+      load_terra_draw_data()
     </span>
   </a>
   
@@ -2054,6 +2090,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.add_terra_draw" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_terra_draw()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.add_tile_layer" class="md-nav__link">
     <span class="md-ellipsis">
       add_tile_layer()
@@ -2084,6 +2129,15 @@
   <a href="#anymap.maplibre.MapLibreMap.clear_draw_data" class="md-nav__link">
     <span class="md-ellipsis">
       clear_draw_data()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.clear_terra_draw_data" class="md-nav__link">
+    <span class="md-ellipsis">
+      clear_terra_draw_data()
     </span>
   </a>
   
@@ -2153,9 +2207,27 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.get_terra_draw_data" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_terra_draw_data()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.load_draw_data" class="md-nav__link">
     <span class="md-ellipsis">
       load_draw_data()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.load_terra_draw_data" class="md-nav__link">
+    <span class="md-ellipsis">
+      load_terra_draw_data()
     </span>
   </a>
   
@@ -2550,7 +2622,7 @@ The sidebar can be toggled on or off and can display additional content.</p>
 <span class="sd">        Returns:</span>
 <span class="sd">            Any: A default map object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">Map</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">MapLibreMap</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">toggle_sidebar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -3071,7 +3143,7 @@ The sidebar can be toggled on or off and can display additional content.</p>
 <span class="sd">    Returns:</span>
 <span class="sd">        Any: A default map object.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">Map</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">MapLibreMap</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 </code></pre></div>
         </details>
     </div>
@@ -5277,6 +5349,8 @@ data sources, custom styling, and interactive features.</p>
     <span class="n">pitch</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Float</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">antialias</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">_draw_data</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Dict</span><span class="p">()</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">_terra_draw_data</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Dict</span><span class="p">()</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">_terra_draw_enabled</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># Define the JavaScript module path</span>
     <span class="n">_esm</span> <span class="o">=</span> <span class="n">_esm_maplibre</span>
@@ -6343,6 +6417,112 @@ data sources, custom styling, and interactive features.</p>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;setDrawMode&quot;</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
 
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_terra_draw</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">position</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;top-left&quot;</span><span class="p">,</span>
+        <span class="n">modes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="nb">open</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a Terra Draw control to the map for drawing and editing geometries.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            position: Position on map (&#39;top-left&#39;, &#39;top-right&#39;, &#39;bottom-left&#39;, &#39;bottom-right&#39;)</span>
+<span class="sd">            modes: List of drawing modes to enable. Available modes:</span>
+<span class="sd">                  [&#39;render&#39;, &#39;point&#39;, &#39;linestring&#39;, &#39;polygon&#39;, &#39;rectangle&#39;, &#39;circle&#39;,</span>
+<span class="sd">                   &#39;freehand&#39;, &#39;angled-rectangle&#39;, &#39;sensor&#39;, &#39;sector&#39;, &#39;select&#39;,</span>
+<span class="sd">                   &#39;delete-selection&#39;, &#39;delete&#39;, &#39;download&#39;]</span>
+<span class="sd">                  Defaults to all modes except &#39;render&#39;</span>
+<span class="sd">            open: Whether the draw control panel should be open by default</span>
+<span class="sd">            **kwargs: Additional options to pass to Terra Draw constructor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">modes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">modes</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="c1"># &#39;render&#39;,  # Commented out to always show drawing tool</span>
+                <span class="s2">&quot;point&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;linestring&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;polygon&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;rectangle&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;circle&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;freehand&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;angled-rectangle&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;sensor&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;sector&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;select&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;delete-selection&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;delete&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;download&quot;</span><span class="p">,</span>
+            <span class="p">]</span>
+
+        <span class="n">terra_draw_options</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;modes&quot;</span><span class="p">:</span> <span class="n">modes</span><span class="p">,</span>
+            <span class="s2">&quot;open&quot;</span><span class="p">:</span> <span class="nb">open</span><span class="p">,</span>
+            <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="c1"># Mark that Terra Draw is enabled</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_terra_draw_enabled</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1"># Store Terra Draw control configuration</span>
+        <span class="n">current_controls</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_controls</span><span class="p">)</span>
+        <span class="n">terra_draw_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;terra_draw_</span><span class="si">{</span><span class="n">position</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">current_controls</span><span class="p">[</span><span class="n">terra_draw_key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;terra_draw&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
+            <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="n">terra_draw_options</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_controls</span> <span class="o">=</span> <span class="n">current_controls</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addTerraDrawControl&quot;</span><span class="p">,</span> <span class="n">terra_draw_options</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_terra_draw_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get all Terra Draw features as GeoJSON.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict containing GeoJSON FeatureCollection with drawn features</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Try to get current data first</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_terra_draw_data</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_terra_draw_data</span>
+
+        <span class="c1"># If no data in trait, call JavaScript to get fresh data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;getTerraDrawData&quot;</span><span class="p">)</span>
+        <span class="c1"># Give JavaScript time to execute and sync data</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)</span>
+
+        <span class="c1"># Return the synced data or empty FeatureCollection if nothing</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_terra_draw_data</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_terra_draw_data</span>
+            <span class="k">else</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;FeatureCollection&quot;</span><span class="p">,</span> <span class="s2">&quot;features&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">clear_terra_draw_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Clear all Terra Draw features from the draw control.&quot;&quot;&quot;</span>
+        <span class="c1"># Clear the trait data immediately</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_terra_draw_data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;FeatureCollection&quot;</span><span class="p">,</span> <span class="s2">&quot;features&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+
+        <span class="c1"># Clear in JavaScript</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;clearTerraDrawData&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_terra_draw_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geojson_data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load GeoJSON data into the Terra Draw control.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            geojson_data: GeoJSON data as dictionary or JSON string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">geojson_data</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">geojson_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">geojson_data</span><span class="p">)</span>
+
+        <span class="c1"># Update the trait immediately to ensure consistency</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_terra_draw_data</span> <span class="o">=</span> <span class="n">geojson_data</span>
+
+        <span class="c1"># Send to JavaScript</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;loadTerraDrawData&quot;</span><span class="p">,</span> <span class="n">geojson_data</span><span class="p">)</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">_generate_html_template</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">map_state</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -6426,6 +6606,9 @@ data sources, custom styling, and interactive features.</p>
 <span class="s2">    &lt;script src=&quot;https://unpkg.com/pmtiles@3.2.0/dist/pmtiles.js&quot;&gt;&lt;/script&gt;</span>
 <span class="s2">    &lt;script src=&quot;https://www.unpkg.com/@mapbox/mapbox-gl-draw@1.5.0/dist/mapbox-gl-draw.js&quot;&gt;&lt;/script&gt;</span>
 <span class="s2">    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://www.unpkg.com/@mapbox/mapbox-gl-draw@1.5.0/dist/mapbox-gl-draw.css&quot;&gt;</span>
+<span class="s2">    &lt;!-- Terra Draw libraries --&gt;</span>
+<span class="s2">    &lt;script src=&quot;https://cdn.jsdelivr.net/npm/@watergis/maplibre-gl-terradraw@1.0.1/dist/maplibre-gl-terradraw.umd.js&quot;&gt;&lt;/script&gt;</span>
+<span class="s2">    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/@watergis/maplibre-gl-terradraw@1.0.1/dist/maplibre-gl-terradraw.css&quot;&gt;</span>
 <span class="s2">    &lt;script&gt;</span>
 <span class="s2">        // Register COG protocol</span>
 <span class="s2">        maplibregl.addProtocol(&quot;cog&quot;, MaplibreCOGProtocol.cogProtocol);</span>
@@ -6741,6 +6924,34 @@ data sources, custom styling, and interactive features.</p>
 <span class="s2">                            </span><span class="se">}}</span>
 <span class="s2">                        </span><span class="se">}}</span><span class="s2"> else </span><span class="se">{{</span>
 <span class="s2">                            console.warn(&#39;MapboxDraw not available during restore&#39;);</span>
+<span class="s2">                            return;</span>
+<span class="s2">                        </span><span class="se">}}</span>
+<span class="s2">                        break;</span>
+<span class="s2">                    case &#39;terra_draw&#39;:</span>
+<span class="s2">                        // Handle Terra Draw control restoration</span>
+<span class="s2">                        if (typeof MaplibreTerradrawControl !== &#39;undefined&#39;) </span><span class="se">{{</span>
+<span class="s2">                            const terraDrawOptions = </span><span class="se">{{</span>
+<span class="s2">                                ...controlOptions</span>
+<span class="s2">                            </span><span class="se">}}</span><span class="s2">;</span>
+<span class="s2">                            control = new MaplibreTerradrawControl.MaplibreTerradrawControl(terraDrawOptions);</span>
+
+<span class="s2">                            // Store reference for data operations</span>
+<span class="s2">                            window.terraDrawControl = control;</span>
+
+<span class="s2">                            console.log(&#39;Terra Draw control restored successfully&#39;);</span>
+
+<span class="s2">                            // Load saved Terra Draw data if it exists</span>
+<span class="s2">                            const savedTerraDrawData = mapState._terra_draw_data;</span>
+<span class="s2">                            if (savedTerraDrawData &amp;&amp; savedTerraDrawData.features &amp;&amp; savedTerraDrawData.features.length &gt; 0) </span><span class="se">{{</span>
+<span class="s2">                                try </span><span class="se">{{</span>
+<span class="s2">                                    // Terra Draw data loading would need to be implemented based on the library&#39;s API</span>
+<span class="s2">                                    console.log(&#39;Saved Terra Draw data found:&#39;, savedTerraDrawData);</span>
+<span class="s2">                                </span><span class="se">}}</span><span class="s2"> catch (error) </span><span class="se">{{</span>
+<span class="s2">                                    console.error(&#39;Failed to load saved Terra Draw data:&#39;, error);</span>
+<span class="s2">                                </span><span class="se">}}</span>
+<span class="s2">                            </span><span class="se">}}</span>
+<span class="s2">                        </span><span class="se">}}</span><span class="s2"> else </span><span class="se">{{</span>
+<span class="s2">                            console.warn(&#39;MaplibreTerradrawControl not available during restore&#39;);</span>
 <span class="s2">                            return;</span>
 <span class="s2">                        </span><span class="se">}}</span>
 <span class="s2">                        break;</span>
@@ -7970,6 +8181,129 @@ data sources, custom styling, and interactive features.</p>
 
 
 
+<h3 id="anymap.maplibre.MapLibreMap.add_terra_draw" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">add_terra_draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s1">&#39;top-left&#39;</span><span class="p">,</span> <span class="n">modes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">open</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+
+<a href="#anymap.maplibre.MapLibreMap.add_terra_draw" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Add a Terra Draw control to the map for drawing and editing geometries.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>position</code></td>
+        <td><code>str</code></td>
+        <td><p>Position on map ('top-left', 'top-right', 'bottom-left', 'bottom-right')</p></td>
+        <td><code>&#39;top-left&#39;</code></td>
+      </tr>
+      <tr>
+        <td><code>modes</code></td>
+        <td><code>Optional[List[str]]</code></td>
+        <td><p>List of drawing modes to enable. Available modes:
+  ['render', 'point', 'linestring', 'polygon', 'rectangle', 'circle',
+   'freehand', 'angled-rectangle', 'sensor', 'sector', 'select',
+   'delete-selection', 'delete', 'download']
+  Defaults to all modes except 'render'</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>open</code></td>
+        <td><code>bool</code></td>
+        <td><p>Whether the draw control panel should be open by default</p></td>
+        <td><code>True</code></td>
+      </tr>
+      <tr>
+        <td><code>**kwargs</code></td>
+        <td><code>Any</code></td>
+        <td><p>Additional options to pass to Terra Draw constructor</p></td>
+        <td><code>{}</code></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>anymap/maplibre.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_terra_draw</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">position</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;top-left&quot;</span><span class="p">,</span>
+    <span class="n">modes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="nb">open</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a Terra Draw control to the map for drawing and editing geometries.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        position: Position on map (&#39;top-left&#39;, &#39;top-right&#39;, &#39;bottom-left&#39;, &#39;bottom-right&#39;)</span>
+<span class="sd">        modes: List of drawing modes to enable. Available modes:</span>
+<span class="sd">              [&#39;render&#39;, &#39;point&#39;, &#39;linestring&#39;, &#39;polygon&#39;, &#39;rectangle&#39;, &#39;circle&#39;,</span>
+<span class="sd">               &#39;freehand&#39;, &#39;angled-rectangle&#39;, &#39;sensor&#39;, &#39;sector&#39;, &#39;select&#39;,</span>
+<span class="sd">               &#39;delete-selection&#39;, &#39;delete&#39;, &#39;download&#39;]</span>
+<span class="sd">              Defaults to all modes except &#39;render&#39;</span>
+<span class="sd">        open: Whether the draw control panel should be open by default</span>
+<span class="sd">        **kwargs: Additional options to pass to Terra Draw constructor</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">modes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">modes</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="c1"># &#39;render&#39;,  # Commented out to always show drawing tool</span>
+            <span class="s2">&quot;point&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;linestring&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;polygon&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;rectangle&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;circle&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;freehand&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;angled-rectangle&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;sensor&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;sector&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;select&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;delete-selection&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;delete&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;download&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+
+    <span class="n">terra_draw_options</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;modes&quot;</span><span class="p">:</span> <span class="n">modes</span><span class="p">,</span>
+        <span class="s2">&quot;open&quot;</span><span class="p">:</span> <span class="nb">open</span><span class="p">,</span>
+        <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Mark that Terra Draw is enabled</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_terra_draw_enabled</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="c1"># Store Terra Draw control configuration</span>
+    <span class="n">current_controls</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_controls</span><span class="p">)</span>
+    <span class="n">terra_draw_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;terra_draw_</span><span class="si">{</span><span class="n">position</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">current_controls</span><span class="p">[</span><span class="n">terra_draw_key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;terra_draw&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
+        <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="n">terra_draw_options</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_controls</span> <span class="o">=</span> <span class="n">current_controls</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addTerraDrawControl&quot;</span><span class="p">,</span> <span class="n">terra_draw_options</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
 <h3 id="anymap.maplibre.MapLibreMap.add_tile_layer" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">add_tile_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer_id</span><span class="p">,</span> <span class="n">source_url</span><span class="p">,</span> <span class="n">attribution</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">minzoom</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">maxzoom</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">paint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">before_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
@@ -8381,6 +8715,37 @@ data sources, custom styling, and interactive features.</p>
 
     <span class="c1"># Clear in JavaScript</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;clearDrawData&quot;</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="anymap.maplibre.MapLibreMap.clear_terra_draw_data" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">clear_terra_draw_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+
+<a href="#anymap.maplibre.MapLibreMap.clear_terra_draw_data" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Clear all Terra Draw features from the draw control.</p>
+
+        <details class="quote">
+          <summary>Source code in <code>anymap/maplibre.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">clear_terra_draw_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Clear all Terra Draw features from the draw control.&quot;&quot;&quot;</span>
+    <span class="c1"># Clear the trait data immediately</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_terra_draw_data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;FeatureCollection&quot;</span><span class="p">,</span> <span class="s2">&quot;features&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+
+    <span class="c1"># Clear in JavaScript</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;clearTerraDrawData&quot;</span><span class="p">)</span>
 </code></pre></div>
         </details>
     </div>
@@ -8880,6 +9245,68 @@ alongside a sidebar. The sidebar can be customized with visibility, width, and a
 
 
 
+<h3 id="anymap.maplibre.MapLibreMap.get_terra_draw_data" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_terra_draw_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+
+<a href="#anymap.maplibre.MapLibreMap.get_terra_draw_data" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Get all Terra Draw features as GeoJSON.</p>
+
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>Dict[str, Any]</code></td>
+      <td><p>Dict containing GeoJSON FeatureCollection with drawn features</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>anymap/maplibre.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_terra_draw_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get all Terra Draw features as GeoJSON.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Dict containing GeoJSON FeatureCollection with drawn features</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Try to get current data first</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_terra_draw_data</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_terra_draw_data</span>
+
+    <span class="c1"># If no data in trait, call JavaScript to get fresh data</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;getTerraDrawData&quot;</span><span class="p">)</span>
+    <span class="c1"># Give JavaScript time to execute and sync data</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)</span>
+
+    <span class="c1"># Return the synced data or empty FeatureCollection if nothing</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_terra_draw_data</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_terra_draw_data</span>
+        <span class="k">else</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;FeatureCollection&quot;</span><span class="p">,</span> <span class="s2">&quot;features&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+    <span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
 <h3 id="anymap.maplibre.MapLibreMap.load_draw_data" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">load_draw_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geojson_data</span><span class="p">)</span></code>
 
@@ -8925,6 +9352,63 @@ alongside a sidebar. The sidebar can be customized with visibility, width, and a
 
     <span class="c1"># Send to JavaScript</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;loadDrawData&quot;</span><span class="p">,</span> <span class="n">geojson_data</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="anymap.maplibre.MapLibreMap.load_terra_draw_data" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">load_terra_draw_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geojson_data</span><span class="p">)</span></code>
+
+
+<a href="#anymap.maplibre.MapLibreMap.load_terra_draw_data" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Load GeoJSON data into the Terra Draw control.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>geojson_data</code></td>
+        <td><code>Union[Dict[str, Any], str]</code></td>
+        <td><p>GeoJSON data as dictionary or JSON string</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>anymap/maplibre.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">load_terra_draw_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geojson_data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load GeoJSON data into the Terra Draw control.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        geojson_data: GeoJSON data as dictionary or JSON string</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">geojson_data</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">geojson_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">geojson_data</span><span class="p">)</span>
+
+    <span class="c1"># Update the trait immediately to ensure consistency</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_terra_draw_data</span> <span class="o">=</span> <span class="n">geojson_data</span>
+
+    <span class="c1"># Send to JavaScript</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;loadTerraDrawData&quot;</span><span class="p">,</span> <span class="n">geojson_data</span><span class="p">)</span>
 </code></pre></div>
         </details>
     </div>
