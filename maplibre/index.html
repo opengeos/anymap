@@ -730,6 +730,29 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/geocoder_example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Geocoder example
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1121,6 +1144,15 @@
   <a href="#anymap.maplibre.MapLibreMap.add_draw_control" class="md-nav__link">
     <span class="md-ellipsis">
       add_draw_control()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.add_geocoder_control" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_geocoder_control()
     </span>
   </a>
   
@@ -1743,6 +1775,15 @@
   <a href="#anymap.maplibre.MapLibreMap.add_draw_control" class="md-nav__link">
     <span class="md-ellipsis">
       add_draw_control()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.add_geocoder_control" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_geocoder_control()
     </span>
   </a>
   
@@ -3148,6 +3189,55 @@ data sources, custom styling, and interactive features.</p>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addControl&quot;</span><span class="p">,</span> <span class="s2">&quot;layer_control&quot;</span><span class="p">,</span> <span class="n">control_options</span><span class="p">)</span>
 
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_geocoder_control</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">position</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;top-left&quot;</span><span class="p">,</span>
+        <span class="n">api_config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">collapsed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a geocoder control to the map for searching locations.</span>
+
+<span class="sd">        The geocoder control allows users to search for locations using a geocoding service.</span>
+<span class="sd">        By default, it uses the Nominatim (OpenStreetMap) geocoding API.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            position: Position on map (&#39;top-left&#39;, &#39;top-right&#39;, &#39;bottom-left&#39;, &#39;bottom-right&#39;)</span>
+<span class="sd">            api_config: Configuration for the geocoding API. If None, uses default Nominatim config</span>
+<span class="sd">            options: Additional options for the geocoder control</span>
+<span class="sd">            collapsed: If True, shows only search icon initially. Click to expand input box.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">api_config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Default configuration using Nominatim API</span>
+            <span class="n">api_config</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;forwardGeocode&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;reverseGeocode&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;placeholder&quot;</span><span class="p">:</span> <span class="s2">&quot;Search for places...&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;limit&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+                <span class="s2">&quot;api_url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://nominatim.openstreetmap.org/search&quot;</span><span class="p">,</span>
+            <span class="p">}</span>
+
+        <span class="n">control_options</span> <span class="o">=</span> <span class="n">options</span> <span class="ow">or</span> <span class="p">{}</span>
+        <span class="n">control_options</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
+                <span class="s2">&quot;api_config&quot;</span><span class="p">:</span> <span class="n">api_config</span><span class="p">,</span>
+                <span class="s2">&quot;collapsed&quot;</span><span class="p">:</span> <span class="n">collapsed</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Store control in persistent state</span>
+        <span class="n">control_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;geocoder_</span><span class="si">{</span><span class="n">position</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">current_controls</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_controls</span><span class="p">)</span>
+        <span class="n">current_controls</span><span class="p">[</span><span class="n">control_key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;geocoder&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
+            <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="n">control_options</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_controls</span> <span class="o">=</span> <span class="n">current_controls</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addControl&quot;</span><span class="p">,</span> <span class="s2">&quot;geocoder&quot;</span><span class="p">,</span> <span class="n">control_options</span><span class="p">)</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">_update_layer_controls</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Update all existing layer controls with the current layer state.&quot;&quot;&quot;</span>
         <span class="c1"># Find all layer controls in the _controls dictionary</span>
@@ -4539,6 +4629,117 @@ data sources, custom styling, and interactive features.</p>
     <span class="bp">self</span><span class="o">.</span><span class="n">_controls</span> <span class="o">=</span> <span class="n">current_controls</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addDrawControl&quot;</span><span class="p">,</span> <span class="n">draw_options</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="anymap.maplibre.MapLibreMap.add_geocoder_control" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">add_geocoder_control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s1">&#39;top-left&#39;</span><span class="p">,</span> <span class="n">api_config</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">collapsed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code>
+
+
+<a href="#anymap.maplibre.MapLibreMap.add_geocoder_control" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Add a geocoder control to the map for searching locations.</p>
+<p>The geocoder control allows users to search for locations using a geocoding service.
+By default, it uses the Nominatim (OpenStreetMap) geocoding API.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>position</code></td>
+        <td><code>str</code></td>
+        <td><p>Position on map ('top-left', 'top-right', 'bottom-left', 'bottom-right')</p></td>
+        <td><code>&#39;top-left&#39;</code></td>
+      </tr>
+      <tr>
+        <td><code>api_config</code></td>
+        <td><code>Optional[Dict[str, Any]]</code></td>
+        <td><p>Configuration for the geocoding API. If None, uses default Nominatim config</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>options</code></td>
+        <td><code>Optional[Dict[str, Any]]</code></td>
+        <td><p>Additional options for the geocoder control</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>collapsed</code></td>
+        <td><code>bool</code></td>
+        <td><p>If True, shows only search icon initially. Click to expand input box.</p></td>
+        <td><code>True</code></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>anymap/maplibre.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_geocoder_control</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">position</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;top-left&quot;</span><span class="p">,</span>
+    <span class="n">api_config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">collapsed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a geocoder control to the map for searching locations.</span>
+
+<span class="sd">    The geocoder control allows users to search for locations using a geocoding service.</span>
+<span class="sd">    By default, it uses the Nominatim (OpenStreetMap) geocoding API.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        position: Position on map (&#39;top-left&#39;, &#39;top-right&#39;, &#39;bottom-left&#39;, &#39;bottom-right&#39;)</span>
+<span class="sd">        api_config: Configuration for the geocoding API. If None, uses default Nominatim config</span>
+<span class="sd">        options: Additional options for the geocoder control</span>
+<span class="sd">        collapsed: If True, shows only search icon initially. Click to expand input box.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">api_config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Default configuration using Nominatim API</span>
+        <span class="n">api_config</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;forwardGeocode&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;reverseGeocode&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;placeholder&quot;</span><span class="p">:</span> <span class="s2">&quot;Search for places...&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;limit&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+            <span class="s2">&quot;api_url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://nominatim.openstreetmap.org/search&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+
+    <span class="n">control_options</span> <span class="o">=</span> <span class="n">options</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">control_options</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
+            <span class="s2">&quot;api_config&quot;</span><span class="p">:</span> <span class="n">api_config</span><span class="p">,</span>
+            <span class="s2">&quot;collapsed&quot;</span><span class="p">:</span> <span class="n">collapsed</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Store control in persistent state</span>
+    <span class="n">control_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;geocoder_</span><span class="si">{</span><span class="n">position</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">current_controls</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_controls</span><span class="p">)</span>
+    <span class="n">current_controls</span><span class="p">[</span><span class="n">control_key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;geocoder&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
+        <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="n">control_options</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_controls</span> <span class="o">=</span> <span class="n">current_controls</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addControl&quot;</span><span class="p">,</span> <span class="s2">&quot;geocoder&quot;</span><span class="p">,</span> <span class="n">control_options</span><span class="p">)</span>
 </code></pre></div>
         </details>
     </div>
