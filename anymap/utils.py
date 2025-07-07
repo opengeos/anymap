@@ -66,7 +66,11 @@ def get_env_var(name: Optional[str] = None, key: Optional[str] = None) -> Option
 
 def construct_carto_style(style: str) -> str:
     """
-    Constructs a URL for a Carto style with an optional API key."""
+    Constructs a URL for a Carto style with an optional API key.
+    The URL looks like this:
+    https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json
+    https://basemaps.cartocdn.com/gl/positron-gl-style/style.json
+    """
 
     return f"https://basemaps.cartocdn.com/gl/{style.lower()}-gl-style/style.json"
 
