@@ -28,7 +28,7 @@ import traitlets
 from IPython.display import display
 
 from .base import MapWidget
-from .utils import construct_maplibre_style
+from .utils import construct_maplibre_style, get_env_var
 from .maplibre_widgets import Container, LayerManagerWidget
 
 # Load MapLibre-specific js and css
@@ -1053,6 +1053,53 @@ class MapLibreMap(MapWidget):
         self._controls = current_controls
 
         self.call_js_method("addControl", "geocoder", control_options)
+
+    def add_google_streetview(
+        self,
+        position: str = "top-left",
+        api_key: Optional[str] = None,
+        options: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        """Add a Google Street View control to the map.
+
+        This method adds a Google Street View control that allows users to view
+        street-level imagery at clicked locations on the map.
+
+        Args:
+            position: Position on map ('top-left', 'top-right', 'bottom-left', 'bottom-right')
+            api_key: Google Maps API key. If None, retrieves from GOOGLE_MAPS_API_KEY environment variable
+            options: Additional options for the Street View control
+
+        Raises:
+            ValueError: If no API key is provided and none can be found in environment variables
+        """
+        if api_key is None:
+            api_key = get_env_var("GOOGLE_MAPS_API_KEY")
+            if api_key is None:
+                raise ValueError(
+                    "Google Maps API key is required. Please provide it as a parameter "
+                    "or set the GOOGLE_MAPS_API_KEY environment variable."
+                )
+
+        control_options = options or {}
+        control_options.update(
+            {
+                "position": position,
+                "api_key": api_key,
+            }
+        )
+
+        # Store control in persistent state
+        control_key = f"google_streetview_{position}"
+        current_controls = dict(self._controls)
+        current_controls[control_key] = {
+            "type": "google_streetview",
+            "position": position,
+            "options": control_options,
+        }
+        self._controls = current_controls
+
+        self.call_js_method("addControl", "google_streetview", control_options)
 
     def _update_layer_controls(self) -> None:
         """Update all existing layer controls with the current layer state."""

@@ -621,6 +621,26 @@ function render({ model, el }) {
         }
       }
 
+      // Load Google Street View Plugin
+      if (!window.MaplibreGoogleStreetView) {
+        const streetViewScript = document.createElement('script');
+        streetViewScript.src = 'https://cdn.jsdelivr.net/npm/@rezw4n/maplibre-google-streetview@latest/dist/maplibre-google-streetview.js';
+
+        await new Promise((resolve, reject) => {
+          streetViewScript.onload = resolve;
+          streetViewScript.onerror = reject;
+          document.head.appendChild(streetViewScript);
+        });
+
+        // Load CSS for Google Street View Plugin
+        if (!document.querySelector('link[href*="maplibre-google-streetview.css"]')) {
+          const streetViewCSS = document.createElement('link');
+          streetViewCSS.rel = 'stylesheet';
+          streetViewCSS.href = 'https://cdn.jsdelivr.net/npm/@rezw4n/maplibre-google-streetview@latest/dist/maplibre-google-streetview.css';
+          document.head.appendChild(streetViewCSS);
+        }
+      }
+
       // Register the COG protocol
       if (window.MaplibreCOGProtocol && window.MaplibreCOGProtocol.cogProtocol) {
         maplibregl.addProtocol("cog", window.MaplibreCOGProtocol.cogProtocol);
@@ -866,6 +886,9 @@ function render({ model, el }) {
     el._controls = new Map(); // Track added controls by type and position
     el._drawControl = null; // Track draw control instance
     el._terraDrawControl = null; // Track Terra Draw control instance
+    el._streetViewPlugins = new Map(); // Track Street View plugin instances
+    el._streetViewObservers = new Map(); // Track Street View mutation observers
+    el._streetViewHandlers = new Map(); // Track Street View event handlers
     el._widgetId = widgetId;
 
     // Restore layers, sources, controls, and projection from model state
@@ -1048,6 +1071,201 @@ function render({ model, el }) {
                 } else {
                   console.warn('MaplibreTerradrawControl not available or already added during restore');
                 }
+                return;
+              case 'google_streetview':
+                // Handle Google Street View plugin restoration
+                if (window.MaplibreGoogleStreetView) {
+                  const apiKey = controlOptions.api_key;
+                  if (apiKey) {
+                    try {
+                      const streetViewOptions = {
+                        map: map,
+                        apiKey: apiKey,
+                        iframeOptions: {
+                          allow: 'accelerometer; gyroscope; geolocation'
+                        }
+                      };
+
+                      // Create the Street View plugin instance (not a control)
+                      const streetViewPlugin = new window.MaplibreGoogleStreetView(streetViewOptions);
+
+                      // Store the plugin instance for later management
+                      if (!el._streetViewPlugins) {
+                        el._streetViewPlugins = new Map();
+                      }
+                      el._streetViewPlugins.set(controlKey, streetViewPlugin);
+
+                      // Force plugin elements to be contained within the map
+                      const repositionStreetViewElements = () => {
+                        try {
+                          const mapContainer = map.getContainer();
+
+                          // Find Street View elements using comprehensive selectors
+                          const streetViewElements = document.querySelectorAll(
+                            '[class*="streetview"], [class*="street-view"], [class*="pegman"], [class*="peg-man"], [class*="google-streetview"], [id*="streetview"], [id*="street-view"], [id*="pegman"]'
+                          );
+
+                          // Also check for any floating control-like elements
+                          const allElements = Array.from(document.querySelectorAll('*'));
+                          const floatingElements = allElements.filter(el => {
+                            if (mapContainer.contains(el)) return false;
+                            const style = window.getComputedStyle(el);
+                            return (
+                              (style.position === 'fixed' || style.position === 'absolute') &&
+                              parseInt(style.zIndex) > 999 &&
+                              el.offsetWidth > 0 && el.offsetHeight > 0 &&
+                              el.offsetWidth < 100 && el.offsetHeight < 100
+                            );
+                          });
+
+                          const allStreetViewElements = [...streetViewElements, ...floatingElements];
+
+                          allStreetViewElements.forEach(element => {
+                            if (!mapContainer.contains(element)) {
+                              console.log('Moving Street View element into map container:', element);
+                              element.style.position = 'absolute';
+                              element.style.zIndex = '1000';
+                              mapContainer.appendChild(element);
+
+                              const pos = controlOptions.position || 'top-left';
+                              if (pos.includes('top')) {
+                                element.style.top = '10px';
+                                element.style.bottom = 'auto';
+                              } else {
+                                element.style.bottom = '10px';
+                                element.style.top = 'auto';
+                              }
+                              if (pos.includes('left')) {
+                                element.style.left = '10px';
+                                element.style.right = 'auto';
+                              } else {
+                                element.style.right = '10px';
+                                element.style.left = 'auto';
+                              }
+                            }
+                          });
+                        } catch (error) {
+                          console.warn('Failed to reposition Street View elements:', error);
+                        }
+                      };
+
+                      setTimeout(repositionStreetViewElements, 100);
+                      setTimeout(repositionStreetViewElements, 500);
+                      setTimeout(repositionStreetViewElements, 1000);
+
+                      // Add iframe permission fix event listener
+                      const permissionHandler = function(event) {
+                        if (event.target && event.target.tagName === 'IFRAME' &&
+                            (event.target.id === 'street-view-iframe' ||
+                             (event.target.parentNode && event.target.parentNode.id === 'street-view'))) {
+                          event.target.setAttribute('allow', 'accelerometer; gyroscope; geolocation');
+                        }
+                      };
+
+                      // Store the handler so we can clean it up later
+                      if (!el._streetViewHandlers) {
+                        el._streetViewHandlers = new Map();
+                      }
+                      el._streetViewHandlers.set(controlKey, permissionHandler);
+
+                      // Use modern event listener instead of deprecated DOMNodeInserted
+                      const observer = new MutationObserver(function(mutations) {
+                        mutations.forEach(function(mutation) {
+                          mutation.addedNodes.forEach(function(node) {
+                            if (node.nodeType === 1) { // Element node
+                              // Handle iframe permissions
+                              if (node.tagName === 'IFRAME' &&
+                                  (node.id === 'street-view-iframe' ||
+                                   (node.parentNode && node.parentNode.id === 'street-view'))) {
+                                node.setAttribute('allow', 'accelerometer; gyroscope; geolocation');
+                              }
+
+                              // Handle Street View control positioning - check multiple patterns
+                              const isStreetViewElement = (
+                                (node.className && (
+                                  node.className.includes('streetview') ||
+                                  node.className.includes('street-view') ||
+                                  node.className.includes('google-streetview') ||
+                                  node.className.includes('pegman') ||
+                                  node.className.includes('peg-man')
+                                )) ||
+                                (node.id && (
+                                  node.id.includes('streetview') ||
+                                  node.id.includes('street-view') ||
+                                  node.id.includes('pegman')
+                                )) ||
+                                // Check if it's a floating control-like element
+                                (() => {
+                                  try {
+                                    const style = window.getComputedStyle(node);
+                                    return (
+                                      (style.position === 'fixed' || style.position === 'absolute') &&
+                                      parseInt(style.zIndex) > 999 &&
+                                      node.offsetWidth > 0 && node.offsetHeight > 0 &&
+                                      node.offsetWidth < 100 && node.offsetHeight < 100
+                                    );
+                                  } catch (e) {
+                                    return false;
+                                  }
+                                })()
+                              );
+
+                              if (isStreetViewElement) {
+                                const mapContainer = map.getContainer();
+                                if (!mapContainer.contains(node)) {
+                                  console.log('Auto-moving newly created Street View element:', node);
+                                  node.style.position = 'absolute';
+                                  node.style.zIndex = '1000';
+                                  mapContainer.appendChild(node);
+
+                                  // Position based on the requested position
+                                  const pos = controlOptions.position || 'top-left';
+                                  if (pos.includes('top')) {
+                                    node.style.top = '10px';
+                                    node.style.bottom = 'auto';
+                                  } else {
+                                    node.style.bottom = '10px';
+                                    node.style.top = 'auto';
+                                  }
+                                  if (pos.includes('left')) {
+                                    node.style.left = '10px';
+                                    node.style.right = 'auto';
+                                  } else {
+                                    node.style.right = '10px';
+                                    node.style.left = 'auto';
+                                  }
+                                }
+                              }
+                            }
+                          });
+                        });
+                      });
+
+                      observer.observe(document.body, {
+                        childList: true,
+                        subtree: true
+                      });
+
+                      // Store observer for cleanup
+                      if (!el._streetViewObservers) {
+                        el._streetViewObservers = new Map();
+                      }
+                      el._streetViewObservers.set(controlKey, observer);
+
+                      console.log('Google Street View plugin restored successfully');
+                    } catch (error) {
+                      console.error('Failed to initialize Google Street View plugin:', error);
+                      return;
+                    }
+                  } else {
+                    console.warn('Google Street View plugin requires API key');
+                    return;
+                  }
+                } else {
+                  console.warn('MaplibreGoogleStreetView not available during restore');
+                  return;
+                }
+                // Skip adding as regular control since it's a plugin
                 return;
               default:
                 console.warn(`Unknown control type during restore: ${controlType}`);
@@ -1414,6 +1632,187 @@ function render({ model, el }) {
                   return;
                 }
                 break;
+              case 'google_streetview':
+                if (window.MaplibreGoogleStreetView) {
+                  const apiKey = controlOptions.api_key;
+                  if (apiKey) {
+                    try {
+                      const streetViewOptions = {
+                        map: map,
+                        apiKey: apiKey,
+                        iframeOptions: {
+                          allow: 'accelerometer; gyroscope; geolocation'
+                        }
+                      };
+
+                      // Create the Street View plugin instance (not a control)
+                      const streetViewPlugin = new window.MaplibreGoogleStreetView(streetViewOptions);
+
+                      // Store the plugin instance for later management
+                      if (!el._streetViewPlugins) {
+                        el._streetViewPlugins = new Map();
+                      }
+                      el._streetViewPlugins.set(controlKey, streetViewPlugin);
+
+                      // Force plugin elements to be contained within the map
+                      const repositionStreetViewElements = () => {
+                        try {
+                          const mapContainer = map.getContainer();
+
+                          // Find Street View elements using comprehensive selectors
+                          const streetViewElements = document.querySelectorAll(
+                            '[class*="streetview"], [class*="street-view"], [class*="pegman"], [class*="peg-man"], [class*="google-streetview"], [id*="streetview"], [id*="street-view"], [id*="pegman"]'
+                          );
+
+                          // Also check for any floating control-like elements
+                          const allElements = Array.from(document.querySelectorAll('*'));
+                          const floatingElements = allElements.filter(el => {
+                            if (mapContainer.contains(el)) return false;
+                            const style = window.getComputedStyle(el);
+                            return (
+                              (style.position === 'fixed' || style.position === 'absolute') &&
+                              parseInt(style.zIndex) > 999 &&
+                              el.offsetWidth > 0 && el.offsetHeight > 0 &&
+                              el.offsetWidth < 100 && el.offsetHeight < 100
+                            );
+                          });
+
+                          const allStreetViewElements = [...streetViewElements, ...floatingElements];
+
+                          allStreetViewElements.forEach(element => {
+                            if (!mapContainer.contains(element)) {
+                              console.log('Moving Street View element into map container:', element);
+                              element.style.position = 'absolute';
+                              element.style.zIndex = '1000';
+                              mapContainer.appendChild(element);
+
+                              const pos = controlOptions.position || 'top-left';
+                              if (pos.includes('top')) {
+                                element.style.top = '10px';
+                                element.style.bottom = 'auto';
+                              } else {
+                                element.style.bottom = '10px';
+                                element.style.top = 'auto';
+                              }
+                              if (pos.includes('left')) {
+                                element.style.left = '10px';
+                                element.style.right = 'auto';
+                              } else {
+                                element.style.right = '10px';
+                                element.style.left = 'auto';
+                              }
+                            }
+                          });
+                        } catch (error) {
+                          console.warn('Failed to reposition Street View elements:', error);
+                        }
+                      };
+
+                      setTimeout(repositionStreetViewElements, 100);
+                      setTimeout(repositionStreetViewElements, 500);
+                      setTimeout(repositionStreetViewElements, 1000);
+
+                      // Add iframe permission fix using modern MutationObserver
+                      const observer = new MutationObserver(function(mutations) {
+                        mutations.forEach(function(mutation) {
+                          mutation.addedNodes.forEach(function(node) {
+                            if (node.nodeType === 1) { // Element node
+                              // Handle iframe permissions
+                              if (node.tagName === 'IFRAME' &&
+                                  (node.id === 'street-view-iframe' ||
+                                   (node.parentNode && node.parentNode.id === 'street-view'))) {
+                                node.setAttribute('allow', 'accelerometer; gyroscope; geolocation');
+                              }
+
+                              // Handle Street View control positioning - check multiple patterns
+                              const isStreetViewElement = (
+                                (node.className && (
+                                  node.className.includes('streetview') ||
+                                  node.className.includes('street-view') ||
+                                  node.className.includes('google-streetview') ||
+                                  node.className.includes('pegman') ||
+                                  node.className.includes('peg-man')
+                                )) ||
+                                (node.id && (
+                                  node.id.includes('streetview') ||
+                                  node.id.includes('street-view') ||
+                                  node.id.includes('pegman')
+                                )) ||
+                                // Check if it's a floating control-like element
+                                (() => {
+                                  try {
+                                    const style = window.getComputedStyle(node);
+                                    return (
+                                      (style.position === 'fixed' || style.position === 'absolute') &&
+                                      parseInt(style.zIndex) > 999 &&
+                                      node.offsetWidth > 0 && node.offsetHeight > 0 &&
+                                      node.offsetWidth < 100 && node.offsetHeight < 100
+                                    );
+                                  } catch (e) {
+                                    return false;
+                                  }
+                                })()
+                              );
+
+                              if (isStreetViewElement) {
+                                const mapContainer = map.getContainer();
+                                if (!mapContainer.contains(node)) {
+                                  console.log('Auto-moving newly created Street View element:', node);
+                                  node.style.position = 'absolute';
+                                  node.style.zIndex = '1000';
+                                  mapContainer.appendChild(node);
+
+                                  // Position based on the requested position
+                                  const pos = controlOptions.position || 'top-left';
+                                  if (pos.includes('top')) {
+                                    node.style.top = '10px';
+                                    node.style.bottom = 'auto';
+                                  } else {
+                                    node.style.bottom = '10px';
+                                    node.style.top = 'auto';
+                                  }
+                                  if (pos.includes('left')) {
+                                    node.style.left = '10px';
+                                    node.style.right = 'auto';
+                                  } else {
+                                    node.style.right = '10px';
+                                    node.style.left = 'auto';
+                                  }
+                                }
+                              }
+                            }
+                          });
+                        });
+                      });
+
+                      observer.observe(document.body, {
+                        childList: true,
+                        subtree: true
+                      });
+
+                      // Store observer for cleanup
+                      if (!el._streetViewObservers) {
+                        el._streetViewObservers = new Map();
+                      }
+                      el._streetViewObservers.set(controlKey, observer);
+
+                      console.log('Google Street View plugin added successfully');
+
+                      // Skip the normal control addition process since this is a plugin
+                      return;
+                    } catch (error) {
+                      console.error('Failed to initialize Google Street View plugin:', error);
+                      return;
+                    }
+                  } else {
+                    console.warn('Google Street View plugin requires API key');
+                    return;
+                  }
+                } else {
+                  console.warn('MaplibreGoogleStreetView not available');
+                  return;
+                }
+                break;
               default:
                 console.warn(`Unknown control type: ${controlType}`);
                 return;
@@ -1427,12 +1826,37 @@ function render({ model, el }) {
             const [removeControlType, removePosition] = args;
             const removeControlKey = `${removeControlType}_${removePosition}`;
 
-            if (el._controls.has(removeControlKey)) {
-              const controlToRemove = el._controls.get(removeControlKey);
-              map.removeControl(controlToRemove);
-              el._controls.delete(removeControlKey);
+            // Handle Street View plugin removal
+            if (removeControlType === 'google_streetview') {
+              if (el._streetViewPlugins && el._streetViewPlugins.has(removeControlKey)) {
+                // Clean up the plugin
+                el._streetViewPlugins.delete(removeControlKey);
+
+                // Clean up observers
+                if (el._streetViewObservers && el._streetViewObservers.has(removeControlKey)) {
+                  const observer = el._streetViewObservers.get(removeControlKey);
+                  observer.disconnect();
+                  el._streetViewObservers.delete(removeControlKey);
+                }
+
+                // Clean up handlers
+                if (el._streetViewHandlers && el._streetViewHandlers.has(removeControlKey)) {
+                  el._streetViewHandlers.delete(removeControlKey);
+                }
+
+                console.log(`Google Street View plugin ${removeControlKey} removed`);
+              } else {
+                console.warn(`Google Street View plugin ${removeControlKey} not found`);
+              }
             } else {
-              console.warn(`Control ${removeControlType} at position ${removePosition} not found`);
+              // Handle regular controls
+              if (el._controls.has(removeControlKey)) {
+                const controlToRemove = el._controls.get(removeControlKey);
+                map.removeControl(controlToRemove);
+                el._controls.delete(removeControlKey);
+              } else {
+                console.warn(`Control ${removeControlType} at position ${removePosition} not found`);
+              }
             }
             break;
 
@@ -1852,6 +2276,16 @@ function render({ model, el }) {
       }
       if (el._terraDrawControl) {
         el._terraDrawControl = null;
+      }
+      if (el._streetViewPlugins) {
+        el._streetViewPlugins.clear();
+      }
+      if (el._streetViewObservers) {
+        el._streetViewObservers.forEach(observer => observer.disconnect());
+        el._streetViewObservers.clear();
+      }
+      if (el._streetViewHandlers) {
+        el._streetViewHandlers.clear();
       }
       if (el._map) {
         el._map.remove();

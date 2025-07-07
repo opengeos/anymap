@@ -117,6 +117,36 @@
   100% { transform: rotate(360deg); }
 }
 
+/* Google Street View Plugin Styles */
+.google-streetview-control {
+  position: absolute !important;
+  z-index: 1000 !important;
+}
+
+/* Ensure Street View elements are contained within map */
+.anymap-container .google-streetview-control,
+.anymap-container [class*="streetview"],
+.anymap-container [class*="street-view"] {
+  position: absolute !important;
+  z-index: 1000 !important;
+}
+
+/* Force Street View button to stay within map bounds */
+.maplibregl-map .google-streetview-control,
+.maplibregl-map [class*="streetview"],
+.maplibregl-map [class*="street-view"] {
+  position: absolute !important;
+  z-index: 1000 !important;
+}
+
+/* Override any fixed positioning from the plugin */
+[class*="streetview-button"],
+[class*="street-view-button"],
+.google-streetview-btn {
+  position: absolute !important;
+  z-index: 1000 !important;
+}
+
 /* Layer control styles */
 .maplibregl-ctrl-layer-control {
   background: #fff;
