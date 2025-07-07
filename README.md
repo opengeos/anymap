@@ -45,7 +45,7 @@ from anymap import MapLibreMap
 
 # Create a basic map
 m = MapLibreMap(
-    center=[37.7749, -122.4194],  # San Francisco
+    center=[-122.4194, 37.7749],  # San Francisco
     zoom=12,
     height="600px"
 )
@@ -61,7 +61,7 @@ from anymap import MapLibreMap
 
 # Create a map with custom settings
 m = MapLibreMap(
-    center=[40.7128, -74.0060],  # New York City
+    center=[-74.0060, 40.7128],  # New York City
     zoom=13,
     height="500px",
     bearing=45,  # Map rotation
@@ -123,11 +123,11 @@ m.on_map_event('click', handle_click)
 
 ```python
 # Change map properties
-m.set_center(51.5074, -0.1278)  # London
+m.set_center(-0.1278, 51.5074)  # London
 m.set_zoom(14)
 
 # Animate to a location
-m.fly_to(48.8566, 2.3522, zoom=15)  # Paris
+m.fly_to(2.3522, 48.8566, zoom=15)  # Paris
 ```
 
 ## Multi-Cell Rendering

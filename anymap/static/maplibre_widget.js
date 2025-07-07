@@ -641,6 +641,26 @@ function render({ model, el }) {
         }
       }
 
+      // Load MapLibre GL Basemaps Control
+      if (!window.MaplibreGLBasemapsControl) {
+        const basemapsScript = document.createElement('script');
+        basemapsScript.src = 'https://unpkg.com/maplibre-gl-basemaps@0.1.3/lib/index.js';
+
+        await new Promise((resolve, reject) => {
+          basemapsScript.onload = resolve;
+          basemapsScript.onerror = reject;
+          document.head.appendChild(basemapsScript);
+        });
+
+        // Load CSS for MapLibre GL Basemaps Control
+        if (!document.querySelector('link[href*="basemaps.css"]')) {
+          const basemapsCSS = document.createElement('link');
+          basemapsCSS.rel = 'stylesheet';
+          basemapsCSS.href = 'https://unpkg.com/maplibre-gl-basemaps@0.1.3/lib/basemaps.css';
+          document.head.appendChild(basemapsCSS);
+        }
+      }
+
       // Register the COG protocol
       if (window.MaplibreCOGProtocol && window.MaplibreCOGProtocol.cogProtocol) {
         maplibregl.addProtocol("cog", window.MaplibreCOGProtocol.cogProtocol);
@@ -1267,6 +1287,24 @@ function render({ model, el }) {
                 }
                 // Skip adding as regular control since it's a plugin
                 return;
+              case 'basemap_control':
+                // Handle basemap control restoration
+                if (window.MaplibreGLBasemapsControl) {
+                  const basemapsOptions = {
+                    basemaps: controlOptions.basemaps || [],
+                    initialBasemap: controlOptions.initialBasemap,
+                    expandDirection: controlOptions.expandDirection || 'down',
+                    ...controlOptions
+                  };
+                  delete basemapsOptions.position; // Remove position from options passed to control
+
+                  control = new window.MaplibreGLBasemapsControl(basemapsOptions);
+                  console.log('Basemap control restored successfully');
+                } else {
+                  console.warn('MaplibreGLBasemapsControl not available during restore');
+                  return;
+                }
+                break;
               default:
                 console.warn(`Unknown control type during restore: ${controlType}`);
                 return;
@@ -1810,6 +1848,23 @@ function render({ model, el }) {
                   }
                 } else {
                   console.warn('MaplibreGoogleStreetView not available');
+                  return;
+                }
+                break;
+              case 'basemap_control':
+                if (window.MaplibreGLBasemapsControl) {
+                  const basemapsOptions = {
+                    basemaps: controlOptions.basemaps || [],
+                    initialBasemap: controlOptions.initialBasemap,
+                    expandDirection: controlOptions.expandDirection || 'down',
+                    ...controlOptions
+                  };
+                  delete basemapsOptions.position; // Remove position from options passed to control
+
+                  control = new window.MaplibreGLBasemapsControl(basemapsOptions);
+                  console.log('Basemap control added successfully');
+                } else {
+                  console.warn('MaplibreGLBasemapsControl not available');
                   return;
                 }
                 break;
