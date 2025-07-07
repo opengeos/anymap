@@ -1647,3 +1647,108 @@ class MapLibreMap(MapWidget):
             "pitch": self._current_pitch,
             "bounds": self._current_bounds,
         }
+
+    def add_basemap_control(
+        self,
+        position: str = "top-right",
+        basemaps: Optional[List[str]] = None,
+        labels: Optional[Dict[str, str]] = None,
+        initial_basemap: Optional[str] = None,
+        expand_direction: str = "down",
+        options: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        """Add a basemap control to the map for switching between different basemaps.
+
+        The basemap control allows users to switch between different basemap providers
+        using a dropdown or expandable control. It uses the maplibre-gl-basemaps library.
+
+        Args:
+            position: Position on map ('top-left', 'top-right', 'bottom-left', 'bottom-right')
+            basemaps: List of basemap names to include. If None, uses a default set.
+                     Available basemaps can be found in anymap.basemaps.available_basemaps
+            labels: Dictionary mapping basemap names to display labels. If None, uses basemap names.
+            initial_basemap: Name of the initial basemap to show. If None, uses the first basemap.
+            expand_direction: Direction to expand the control ('up', 'down', 'left', 'right')
+            options: Additional options for the basemap control
+
+        Example:
+            >>> m = MapLibreMap()
+            >>> m.add_basemap_control(
+            ...     position="top-right",
+            ...     basemaps=["OpenStreetMap.Mapnik", "Esri.WorldImagery", "CartoDB.DarkMatter"],
+            ...     labels={"OpenStreetMap.Mapnik": "OpenStreetMap", "Esri.WorldImagery": "Satellite"},
+            ...     initial_basemap="OpenStreetMap.Mapnik"
+            ... )
+        """
+        from .basemaps import available_basemaps
+
+        # Default basemaps if none provided
+        if basemaps is None:
+            basemaps = [
+                "OpenStreetMap.Mapnik",
+                "Esri.WorldImagery",
+                "CartoDB.DarkMatter",
+                "CartoDB.Positron",
+            ]
+
+        # Filter available basemaps to only include those that exist
+        valid_basemaps = [name for name in basemaps if name in available_basemaps]
+        if not valid_basemaps:
+            raise ValueError(
+                f"No valid basemaps found. Available basemaps: {list(available_basemaps.keys())}"
+            )
+
+        # Set initial basemap if not provided
+        if initial_basemap is None:
+            initial_basemap = valid_basemaps[0]
+        elif initial_basemap not in valid_basemaps:
+            raise ValueError(
+                f"Initial basemap '{initial_basemap}' not found in provided basemaps"
+            )
+
+        # Create basemap configurations for the control
+        basemap_configs = []
+        for basemap_name in valid_basemaps:
+            basemap_provider = available_basemaps[basemap_name]
+            tile_url = basemap_provider.build_url()
+            attribution = basemap_provider.get("attribution", "")
+
+            # Use custom label if provided, otherwise use basemap name
+            display_label = (
+                labels.get(basemap_name, basemap_name) if labels else basemap_name
+            )
+
+            basemap_config = {
+                "id": basemap_name,
+                "tiles": [tile_url],
+                "sourceExtraParams": {
+                    "tileSize": 256,
+                    "attribution": attribution,
+                    "minzoom": basemap_provider.get("min_zoom", 0),
+                    "maxzoom": basemap_provider.get("max_zoom", 22),
+                },
+                "label": display_label,
+            }
+            basemap_configs.append(basemap_config)
+
+        control_options = options or {}
+        control_options.update(
+            {
+                "position": position,
+                "basemaps": basemap_configs,
+                "initialBasemap": initial_basemap,
+                "expandDirection": expand_direction,
+            }
+        )
+
+        # Store control in persistent state
+        control_key = f"basemap_control_{position}"
+        current_controls = dict(self._controls)
+        current_controls[control_key] = {
+            "type": "basemap_control",
+            "position": position,
+            "options": control_options,
+        }
+        self._controls = current_controls
+
+        self.call_js_method("addControl", "basemap_control", control_options)
