@@ -753,6 +753,29 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/terrain_example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Terrain example
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1483,6 +1506,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.set_terrain" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_terrain()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.set_visibility" class="md-nav__link">
     <span class="md-ellipsis">
       set_visibility()
@@ -2108,6 +2140,15 @@
   <a href="#anymap.maplibre.MapLibreMap.set_style" class="md-nav__link">
     <span class="md-ellipsis">
       set_style()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.set_terrain" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_terrain()
     </span>
   </a>
   
@@ -2805,6 +2846,41 @@ data sources, custom styling, and interactive features.</p>
         <span class="c1"># Store projection in persistent state</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_projection</span> <span class="o">=</span> <span class="n">projection</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;setProjection&quot;</span><span class="p">,</span> <span class="n">projection</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_terrain</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">source</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;https://elevation-tiles-prod.s3.amazonaws.com/terrarium/</span><span class="si">{z}</span><span class="s2">/</span><span class="si">{x}</span><span class="s2">/</span><span class="si">{y}</span><span class="s2">.png&quot;</span><span class="p">,</span>
+        <span class="n">exaggeration</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">tile_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span>
+        <span class="n">encoding</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;terrarium&quot;</span><span class="p">,</span>
+        <span class="n">source_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;terrain-dem&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add terrain visualization to the map.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            source: URL template for terrain tiles. Defaults to AWS elevation tiles.</span>
+<span class="sd">            exaggeration: Terrain exaggeration factor. Defaults to 1.0.</span>
+<span class="sd">            tile_size: Tile size in pixels. Defaults to 256.</span>
+<span class="sd">            encoding: Encoding for the terrain tiles. Defaults to &quot;terrarium&quot;.</span>
+<span class="sd">            source_id: Unique identifier for the terrain source. Defaults to &quot;terrain-dem&quot;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Add terrain source</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_source</span><span class="p">(</span>
+            <span class="n">source_id</span><span class="p">,</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;raster-dem&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;tiles&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">source</span><span class="p">],</span>
+                <span class="s2">&quot;tileSize&quot;</span><span class="p">:</span> <span class="n">tile_size</span><span class="p">,</span>
+                <span class="s2">&quot;encoding&quot;</span><span class="p">:</span> <span class="n">encoding</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Set terrain on the map</span>
+        <span class="n">terrain_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">source_id</span><span class="p">,</span> <span class="s2">&quot;exaggeration&quot;</span><span class="p">:</span> <span class="n">exaggeration</span><span class="p">}</span>
+
+        <span class="c1"># Store terrain configuration in persistent state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_terrain</span> <span class="o">=</span> <span class="n">terrain_config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;setTerrain&quot;</span><span class="p">,</span> <span class="n">terrain_config</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_layer_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the type of a layer.</span>
@@ -7460,6 +7536,107 @@ alongside a sidebar. The sidebar can be customized with visibility, width, and a
         <span class="bp">self</span><span class="o">.</span><span class="n">style</span> <span class="o">=</span> <span class="n">style</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;setStyle&quot;</span><span class="p">,</span> <span class="n">style</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="anymap.maplibre.MapLibreMap.set_terrain" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">set_terrain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="s1">&#39;https://elevation-tiles-prod.s3.amazonaws.com/terrarium/</span><span class="si">{z}</span><span class="s1">/</span><span class="si">{x}</span><span class="s1">/</span><span class="si">{y}</span><span class="s1">.png&#39;</span><span class="p">,</span> <span class="n">exaggeration</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">tile_size</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;terrarium&#39;</span><span class="p">,</span> <span class="n">source_id</span><span class="o">=</span><span class="s1">&#39;terrain-dem&#39;</span><span class="p">)</span></code>
+
+
+<a href="#anymap.maplibre.MapLibreMap.set_terrain" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Add terrain visualization to the map.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>source</code></td>
+        <td><code>str</code></td>
+        <td><p>URL template for terrain tiles. Defaults to AWS elevation tiles.</p></td>
+        <td><code>&#39;https://elevation-tiles-prod.s3.amazonaws.com/terrarium/{z}/{x}/{y}.png&#39;</code></td>
+      </tr>
+      <tr>
+        <td><code>exaggeration</code></td>
+        <td><code>float</code></td>
+        <td><p>Terrain exaggeration factor. Defaults to 1.0.</p></td>
+        <td><code>1.0</code></td>
+      </tr>
+      <tr>
+        <td><code>tile_size</code></td>
+        <td><code>int</code></td>
+        <td><p>Tile size in pixels. Defaults to 256.</p></td>
+        <td><code>256</code></td>
+      </tr>
+      <tr>
+        <td><code>encoding</code></td>
+        <td><code>str</code></td>
+        <td><p>Encoding for the terrain tiles. Defaults to "terrarium".</p></td>
+        <td><code>&#39;terrarium&#39;</code></td>
+      </tr>
+      <tr>
+        <td><code>source_id</code></td>
+        <td><code>str</code></td>
+        <td><p>Unique identifier for the terrain source. Defaults to "terrain-dem".</p></td>
+        <td><code>&#39;terrain-dem&#39;</code></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>anymap/maplibre.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">set_terrain</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">source</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;https://elevation-tiles-prod.s3.amazonaws.com/terrarium/</span><span class="si">{z}</span><span class="s2">/</span><span class="si">{x}</span><span class="s2">/</span><span class="si">{y}</span><span class="s2">.png&quot;</span><span class="p">,</span>
+    <span class="n">exaggeration</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">tile_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span>
+    <span class="n">encoding</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;terrarium&quot;</span><span class="p">,</span>
+    <span class="n">source_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;terrain-dem&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add terrain visualization to the map.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        source: URL template for terrain tiles. Defaults to AWS elevation tiles.</span>
+<span class="sd">        exaggeration: Terrain exaggeration factor. Defaults to 1.0.</span>
+<span class="sd">        tile_size: Tile size in pixels. Defaults to 256.</span>
+<span class="sd">        encoding: Encoding for the terrain tiles. Defaults to &quot;terrarium&quot;.</span>
+<span class="sd">        source_id: Unique identifier for the terrain source. Defaults to &quot;terrain-dem&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Add terrain source</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_source</span><span class="p">(</span>
+        <span class="n">source_id</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;raster-dem&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;tiles&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">source</span><span class="p">],</span>
+            <span class="s2">&quot;tileSize&quot;</span><span class="p">:</span> <span class="n">tile_size</span><span class="p">,</span>
+            <span class="s2">&quot;encoding&quot;</span><span class="p">:</span> <span class="n">encoding</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Set terrain on the map</span>
+    <span class="n">terrain_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">source_id</span><span class="p">,</span> <span class="s2">&quot;exaggeration&quot;</span><span class="p">:</span> <span class="n">exaggeration</span><span class="p">}</span>
+
+    <span class="c1"># Store terrain configuration in persistent state</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_terrain</span> <span class="o">=</span> <span class="n">terrain_config</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;setTerrain&quot;</span><span class="p">,</span> <span class="n">terrain_config</span><span class="p">)</span>
 </code></pre></div>
         </details>
     </div>
