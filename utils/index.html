@@ -774,6 +774,29 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/streetview_example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Streetview example
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1534,13 +1557,20 @@ us-east-1, us-west-2, eu-central-1, eu-west-1, ap-northeast-1, ap-northeast-2, a
 
     <div class="doc doc-contents ">
 
-      <p>Constructs a URL for a Carto style with an optional API key.</p>
+      <p>Constructs a URL for a Carto style with an optional API key.
+The URL looks like this:
+https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json
+https://basemaps.cartocdn.com/gl/positron-gl-style/style.json</p>
 
         <details class="quote">
           <summary>Source code in <code>anymap/utils.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">construct_carto_style</span><span class="p">(</span><span class="n">style</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Constructs a URL for a Carto style with an optional API key.&quot;&quot;&quot;</span>
+<span class="sd">    Constructs a URL for a Carto style with an optional API key.</span>
+<span class="sd">    The URL looks like this:</span>
+<span class="sd">    https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json</span>
+<span class="sd">    https://basemaps.cartocdn.com/gl/positron-gl-style/style.json</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;https://basemaps.cartocdn.com/gl/</span><span class="si">{</span><span class="n">style</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2">-gl-style/style.json&quot;</span>
 </code></pre></div>
