@@ -1071,6 +1071,17 @@ function render({ model, el }) {
         }
       }
 
+      // Set terrain if it exists
+      const terrain = model.get("_terrain") || {};
+      if (Object.keys(terrain).length > 0) {
+        try {
+          map.setTerrain(terrain);
+          console.log('Terrain restored successfully:', terrain);
+        } catch (error) {
+          console.warn('Failed to restore terrain:', error);
+        }
+      }
+
       // Load existing draw data if present
       const drawData = model.get("_draw_data");
       if (el._drawControl && drawData && drawData.features && drawData.features.length > 0) {
@@ -1431,6 +1442,16 @@ function render({ model, el }) {
               map.setProjection(projectionConfig);
             } catch (error) {
               console.warn('Failed to set projection:', error);
+            }
+            break;
+
+          case 'setTerrain':
+            const [terrainConfig] = args;
+            try {
+              map.setTerrain(terrainConfig);
+              console.log('Terrain set successfully:', terrainConfig);
+            } catch (error) {
+              console.warn('Failed to set terrain:', error);
             }
             break;
 

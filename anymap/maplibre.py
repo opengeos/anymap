@@ -587,6 +587,41 @@ class MapLibreMap(MapWidget):
         self._projection = projection
         self.call_js_method("setProjection", projection)
 
+    def set_terrain(
+        self,
+        source: str = "https://elevation-tiles-prod.s3.amazonaws.com/terrarium/{z}/{x}/{y}.png",
+        exaggeration: float = 1.0,
+        tile_size: int = 256,
+        encoding: str = "terrarium",
+        source_id: str = "terrain-dem",
+    ) -> None:
+        """Add terrain visualization to the map.
+
+        Args:
+            source: URL template for terrain tiles. Defaults to AWS elevation tiles.
+            exaggeration: Terrain exaggeration factor. Defaults to 1.0.
+            tile_size: Tile size in pixels. Defaults to 256.
+            encoding: Encoding for the terrain tiles. Defaults to "terrarium".
+            source_id: Unique identifier for the terrain source. Defaults to "terrain-dem".
+        """
+        # Add terrain source
+        self.add_source(
+            source_id,
+            {
+                "type": "raster-dem",
+                "tiles": [source],
+                "tileSize": tile_size,
+                "encoding": encoding,
+            },
+        )
+
+        # Set terrain on the map
+        terrain_config = {"source": source_id, "exaggeration": exaggeration}
+
+        # Store terrain configuration in persistent state
+        self._terrain = terrain_config
+        self.call_js_method("setTerrain", terrain_config)
+
     def get_layer_type(self, layer_id: str) -> Optional[str]:
         """Get the type of a layer.
 

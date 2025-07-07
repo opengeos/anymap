@@ -93,6 +93,7 @@ nav:
           - examples/draw_control_example.ipynb
           - examples/layer_control_example.ipynb
           - examples/geocoder_example.ipynb
+          - examples/terrain_example.ipynb
     - API Reference:
           - anymap module: anymap.md
           - base module: base.md

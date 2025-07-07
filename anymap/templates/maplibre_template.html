@@ -727,6 +727,17 @@
                     console.warn(`Failed to add layer ${{layerId}}:`, error);
                 }}
             }});
+
+            // Set terrain if it exists
+            const terrain = mapState._terrain || {{}};
+            if (Object.keys(terrain).length > 0) {{
+                try {{
+                    map.setTerrain(terrain);
+                    console.log('Terrain restored successfully:', terrain);
+                }} catch (error) {{
+                    console.warn('Failed to restore terrain:', error);
+                }}
+            }}
         }});
 
         // Add controls from map state

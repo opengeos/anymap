@@ -42,6 +42,7 @@ class MapWidget(anywidget.AnyWidget):
     _sources = traitlets.Dict({}).tag(sync=True)
     _controls = traitlets.Dict({}).tag(sync=True)
     _projection = traitlets.Dict({}).tag(sync=True)
+    _terrain = traitlets.Dict({}).tag(sync=True)
 
     def __init__(self, **kwargs: Any) -> None:
         """Initialize the map widget.
@@ -264,6 +265,7 @@ class MapWidget(anywidget.AnyWidget):
             "_layers": dict(self._layers),
             "_sources": dict(self._sources),
             "_controls": dict(self._controls),
+            "_terrain": dict(self._terrain),
         }
 
         # Add class-specific attributes
