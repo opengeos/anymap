@@ -6,6 +6,7 @@ from typing import Dict, List, Any, Optional
 import psutil
 import os
 import warnings   
+from pathlib import Path
 
 from .base import MapWidget
 
@@ -15,6 +16,49 @@ with open(pathlib.Path(__file__).parent / "static" / "potree_widget.js", "r") as
 
 with open(pathlib.Path(__file__).parent / "static" / "potree_widget.css", "r") as f:
     _css_potree = f.read()
+
+def _download_potree(quiet=False):
+    import urllib.request
+    import zipfile
+    import tempfile
+    import shutil
+
+    url = "https://github.com/potree/potree/releases/download/1.8.2/Potree_1.8.2.zip"
+
+    # Create a temp file path manually (not locked on Windows)
+    fd, tmp_path = tempfile.mkstemp(suffix=".zip")
+    os.close(fd)  # Close the file descriptor immediately
+
+    try:
+        if not quiet:
+            print(f"⌛ Hang tight. This is the first time using PotreeMap and we need to retrieve the JS library.")
+            print(f"📥 Downloading {url}")
+        urllib.request.urlretrieve(url, tmp_path)
+
+        target_dir = Path.home() / ".potree1.8.2"
+        target_dir.mkdir(parents=True, exist_ok=True)
+        if not quiet:
+            print(f"📦 Extracting to {target_dir}")
+        with zipfile.ZipFile(tmp_path, 'r') as zip_ref:
+            zip_ref.extractall(target_dir)
+
+        inner_folder = target_dir / "Potree_1.8.2"
+        if not inner_folder.exists() or not inner_folder.is_dir():
+            raise FileNotFoundError(f"Expected folder '{inner_folder_name}' not found in ZIP.")
+
+        # Move contents up one level
+        for item in inner_folder.iterdir():
+            shutil.move(str(item), str(target_dir / item.name))
+
+        # Remove the now-empty folder
+        inner_folder.rmdir()
+
+    finally:
+        try:
+            os.remove(tmp_path)
+        except Exception as e:
+            print(f"⚠️ Warning: Could not delete temp file {tmp_path}: {e}")
+
 
 def _get_jupyter_root():
     current = psutil.Process()
@@ -33,6 +77,64 @@ def _get_jupyter_root():
             break
     return None
 
+def _create_symlink_or_copy(target, link_name, quiet=False):
+    target = Path(target).resolve()
+    link_name = Path(link_name)
+
+    # Clean up existing link if it exists
+    if link_name.exists() or link_name.is_symlink():
+        if link_name.is_dir() and not link_name.is_symlink():
+            shutil.rmtree(link_name)
+        else:
+            link_name.unlink()
+
+    # Attempt symbolic link
+    try:
+        link_name.symlink_to(target, target_is_directory=target.is_dir())
+        if not quiet:
+            print(f"✅ Symlink created: {link_name} → {target}")
+        return True
+    except OSError as e:
+        if not quiet:
+            print(f"⚠️ Failed to create symlink: {e}")
+
+    # Attempt junction (Windows only)
+    if sys.platform == "win32":
+        try:
+            subprocess.check_call(['cmd', '/c', 'mklink', '/J', str(link_name), str(target)])
+            if not quiet:
+                print(f"✅ Junction created: {link_name} → {target}")
+            return True
+        except subprocess.CalledProcessError as e:
+            if not quiet:
+                print(f"⚠️ Failed to create junction: {e}")
+
+    # Fallback to copy
+    try:
+        shutil.copytree(target, link_name)
+        if not quiet:
+            print(f"📁 Directory copied as fallback: {link_name}")
+        return True
+    except Exception as e:
+        if not quiet:
+            print(f"❌ Failed to copy directory: {e}")
+        raise RuntimeError("All methods of linking or copying failed.") from e
+
+
+
+
+def _get_potree_libs(jupyter_root, quiet=False):
+    # Try to get a soft link to potree libs in JUPYTER_ROOT
+    potree_link_dir = Path(jupyter_root) / "potreelibs"
+    if potree_link_dir.is_dir():
+        return True
+
+    potree_dir = Path.home() / ".potree1.8.2"
+    
+    if not potree_dir.is_dir():
+        _download_potree()
+
+    return _create_symlink_or_copy(potree_dir, potree_link_dir, quiet=quiet)
 
 
 class PotreeMap(MapWidget):
@@ -79,6 +181,7 @@ class PotreeMap(MapWidget):
         background_color: str = "#000000",
         edl_enabled: bool = True,
         show_grid: bool = False,
+        quiet:bool = False,
         **kwargs,
     ):
         """Initialize Potree map widget.
@@ -96,6 +199,7 @@ class PotreeMap(MapWidget):
             background_color: Background color of the viewer
             edl_enabled: Enable Eye Dome Lighting for better depth perception
             show_grid: Show coordinate grid
+            quiet: Don't print any information messages
         """
         self.JUPYTER_ROOT = _get_jupyter_root()
 
@@ -125,6 +229,10 @@ class PotreeMap(MapWidget):
             """
             super().__init__()
             return
+
+        got_potree_libs = _get_potree_libs(self.JUPYTER_ROOT, quiet=quiet)
+        if not got_potree_libs:
+            raise RuntimeError("Something went wrong -- could not get potree libs")
 
         super().__init__(
             width=width,
