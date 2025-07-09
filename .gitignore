@@ -31,8 +31,6 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-anymap/static/potree-src/
-anymap/static/potree
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
