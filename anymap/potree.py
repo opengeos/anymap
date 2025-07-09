@@ -3,6 +3,9 @@
 import pathlib
 import traitlets
 from typing import Dict, List, Any, Optional
+import psutil
+import os
+import warnings   
 
 from .base import MapWidget
 
@@ -12,6 +15,24 @@ with open(pathlib.Path(__file__).parent / "static" / "potree_widget.js", "r") as
 
 with open(pathlib.Path(__file__).parent / "static" / "potree_widget.css", "r") as f:
     _css_potree = f.read()
+
+def _get_jupyter_root():
+    current = psutil.Process()
+    while current:
+        try:
+            cmdline = current.cmdline()
+            if 'jupyter-lab' in ' '.join(cmdline):
+                # Check for --notebook-dir or --LabApp.root_dir if set
+                for i, part in enumerate(cmdline):
+                    if part in ['--notebook-dir', '--LabApp.root_dir'] and i + 1 < len(cmdline):
+                        return os.path.abspath(cmdline[i + 1])
+                # Otherwise, return the working directory of the jupyter-lab process
+                return current.cwd()
+            current = current.parent()
+        except Exception:
+            break
+    return None
+
 
 
 class PotreeMap(MapWidget):
@@ -76,6 +97,35 @@ class PotreeMap(MapWidget):
             edl_enabled: Enable Eye Dome Lighting for better depth perception
             show_grid: Show coordinate grid
         """
+        self.JUPYTER_ROOT = _get_jupyter_root()
+
+        if not self.JUPYTER_ROOT:     
+            warnings.warn("PotreeMap is currently only supported through a JupyterLab environment.")
+            self._css="""
+            .potree-warning {
+                font-family: sans-serif;
+                padding: 1rem;
+                background-color: #fff3cd;
+                color: #856404;
+                border: 1px solid #ffeeba;
+                border-radius: 8px;
+                margin: 1rem 0;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            }            
+            """
+            self._esm="""
+            function render({ model, el }) {
+                let div = document.createElement("div");
+                div.className = "potree-warning";
+                const msg = document.createTextNode("🚫 PotreeMap is not yet supported in your environment. Try running it in JupyterLab instead.");
+                div.appendChild(msg);
+                el.appendChild(div);
+            }
+            export default { render };
+            """
+            super().__init__()
+            return
+
         super().__init__(
             width=width,
             height=height,
