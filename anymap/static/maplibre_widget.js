@@ -1501,7 +1501,7 @@ function render({ model, el }) {
         switch (method) {
           case 'flyTo':
             const flyToOptions = args[0] || {};
-            // flyToOptions.center is already in [lng, lat] format
+            flyToOptions.center = [flyToOptions.center[1], flyToOptions.center[0]]; // [lat,lng] to [lng,lat]
             map.flyTo(flyToOptions);
             break;
 
