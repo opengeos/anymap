@@ -3,6 +3,7 @@ geopandas
 ipyvuetify
 ipywidgets>=8.0.0
 numpy
+psutil
 requests
 traitlets>=5.0.0
 xyzservices
