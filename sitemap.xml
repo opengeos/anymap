@@ -2,150 +2,150 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://anymap.dev/</loc>
-         <lastmod>2025-07-07</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://anymap.dev/anymap/</loc>
-         <lastmod>2025-07-07</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://anymap.dev/base/</loc>
-         <lastmod>2025-07-07</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://anymap.dev/cesium/</loc>
-         <lastmod>2025-07-07</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://anymap.dev/changelog/</loc>
-         <lastmod>2025-07-07</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://anymap.dev/compare/</loc>
-         <lastmod>2025-07-07</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://anymap.dev/contributing/</loc>
-         <lastmod>2025-07-07</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://anymap.dev/deckgl/</loc>
-         <lastmod>2025-07-07</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://anymap.dev/faq/</loc>
-         <lastmod>2025-07-07</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://anymap.dev/installation/</loc>
-         <lastmod>2025-07-07</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://anymap.dev/keplergl/</loc>
-         <lastmod>2025-07-07</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://anymap.dev/leaflet/</loc>
-         <lastmod>2025-07-07</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://anymap.dev/mapbox/</loc>
-         <lastmod>2025-07-07</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://anymap.dev/maplibre/</loc>
-         <lastmod>2025-07-07</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://anymap.dev/maplibre_widgets/</loc>
-         <lastmod>2025-07-07</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://anymap.dev/openlayers/</loc>
-         <lastmod>2025-07-07</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://anymap.dev/potree/</loc>
-         <lastmod>2025-07-07</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://anymap.dev/stac/</loc>
-         <lastmod>2025-07-07</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://anymap.dev/usage/</loc>
-         <lastmod>2025-07-07</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://anymap.dev/utils/</loc>
-         <lastmod>2025-07-07</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://anymap.dev/examples/basic_usage/</loc>
-         <lastmod>2025-07-07</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://anymap.dev/examples/cesium_example/</loc>
-         <lastmod>2025-07-07</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://anymap.dev/examples/deckgl_example/</loc>
-         <lastmod>2025-07-07</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://anymap.dev/examples/draw_control_example/</loc>
-         <lastmod>2025-07-07</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://anymap.dev/examples/geocoder_example/</loc>
-         <lastmod>2025-07-07</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://anymap.dev/examples/keplergl_example/</loc>
-         <lastmod>2025-07-07</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://anymap.dev/examples/layer_control_example/</loc>
-         <lastmod>2025-07-07</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://anymap.dev/examples/leaflet_example/</loc>
-         <lastmod>2025-07-07</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://anymap.dev/examples/map_comparison/</loc>
-         <lastmod>2025-07-07</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://anymap.dev/examples/mapbox_example/</loc>
-         <lastmod>2025-07-07</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://anymap.dev/examples/maplibre_example/</loc>
-         <lastmod>2025-07-07</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://anymap.dev/examples/openlayers_example/</loc>
-         <lastmod>2025-07-07</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://anymap.dev/examples/pmtiles_example/</loc>
-         <lastmod>2025-07-07</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://anymap.dev/examples/potree_example/</loc>
-         <lastmod>2025-07-07</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://anymap.dev/examples/streetview_example/</loc>
-         <lastmod>2025-07-07</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://anymap.dev/examples/terrain_example/</loc>
-         <lastmod>2025-07-07</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://anymap.dev/examples/to_html/</loc>
-         <lastmod>2025-07-07</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
 </urlset>
