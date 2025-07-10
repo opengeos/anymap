@@ -5,7 +5,7 @@ import traitlets
 from typing import Dict, List, Any, Optional
 import psutil
 import os
-import warnings   
+import warnings
 from pathlib import Path
 
 from .base import MapWidget
@@ -16,6 +16,7 @@ with open(pathlib.Path(__file__).parent / "static" / "potree_widget.js", "r") as
 
 with open(pathlib.Path(__file__).parent / "static" / "potree_widget.css", "r") as f:
     _css_potree = f.read()
+
 
 def _download_potree(quiet=False):
     import urllib.request
@@ -31,7 +32,9 @@ def _download_potree(quiet=False):
 
     try:
         if not quiet:
-            print(f"⌛ Hang tight. This is the first time using PotreeMap and we need to retrieve the JS library.")
+            print(
+                f"⌛ Hang tight. This is the first time using PotreeMap and we need to retrieve the JS library."
+            )
             print(f"📥 Downloading {url}")
         urllib.request.urlretrieve(url, tmp_path)
 
@@ -39,12 +42,14 @@ def _download_potree(quiet=False):
         target_dir.mkdir(parents=True, exist_ok=True)
         if not quiet:
             print(f"📦 Extracting to {target_dir}")
-        with zipfile.ZipFile(tmp_path, 'r') as zip_ref:
+        with zipfile.ZipFile(tmp_path, "r") as zip_ref:
             zip_ref.extractall(target_dir)
 
         inner_folder = target_dir / "Potree_1.8.2"
         if not inner_folder.exists() or not inner_folder.is_dir():
-            raise FileNotFoundError(f"Expected folder '{inner_folder_name}' not found in ZIP.")
+            raise FileNotFoundError(
+                f"Expected folder '{inner_folder_name}' not found in ZIP."
+            )
 
         # Move contents up one level
         for item in inner_folder.iterdir():
@@ -65,10 +70,12 @@ def _get_jupyter_root():
     while current:
         try:
             cmdline = current.cmdline()
-            if 'jupyter-lab' in ' '.join(cmdline):
+            if "jupyter-lab" in " ".join(cmdline):
                 # Check for --notebook-dir or --LabApp.root_dir if set
                 for i, part in enumerate(cmdline):
-                    if part in ['--notebook-dir', '--LabApp.root_dir'] and i + 1 < len(cmdline):
+                    if part in ["--notebook-dir", "--LabApp.root_dir"] and i + 1 < len(
+                        cmdline
+                    ):
                         return os.path.abspath(cmdline[i + 1])
                 # Otherwise, return the working directory of the jupyter-lab process
                 return current.cwd()
@@ -76,6 +83,7 @@ def _get_jupyter_root():
         except Exception:
             break
     return None
+
 
 def _create_symlink_or_copy(target, link_name, quiet=False):
     target = Path(target).resolve()
@@ -101,7 +109,9 @@ def _create_symlink_or_copy(target, link_name, quiet=False):
     # Attempt junction (Windows only)
     if sys.platform == "win32":
         try:
-            subprocess.check_call(['cmd', '/c', 'mklink', '/J', str(link_name), str(target)])
+            subprocess.check_call(
+                ["cmd", "/c", "mklink", "/J", str(link_name), str(target)]
+            )
             if not quiet:
                 print(f"✅ Junction created: {link_name} → {target}")
             return True
@@ -121,8 +131,6 @@ def _create_symlink_or_copy(target, link_name, quiet=False):
         raise RuntimeError("All methods of linking or copying failed.") from e
 
 
-
-
 def _get_potree_libs(jupyter_root, quiet=False):
     # Try to get a soft link to potree libs in JUPYTER_ROOT
     potree_link_dir = Path(jupyter_root) / "potreelibs"
@@ -130,7 +138,7 @@ def _get_potree_libs(jupyter_root, quiet=False):
         return True
 
     potree_dir = Path.home() / ".potree1.8.2"
-    
+
     if not potree_dir.is_dir():
         _download_potree()
 
@@ -141,6 +149,7 @@ class PotreeMap(MapWidget):
     """Potree point cloud viewer implementation of the map widget."""
 
     # Potree-specific traits
+    description = traitlets.Unicode("").tag(sync=True)
     point_cloud_url = traitlets.Unicode("").tag(sync=True)
     point_size = traitlets.Float(1.0).tag(sync=True)
     point_size_type = traitlets.Unicode("adaptive").tag(
@@ -167,6 +176,8 @@ class PotreeMap(MapWidget):
     _esm = _esm_potree
     _css = _css_potree
 
+    POTREE_LIBS_DIR = traitlets.Unicode(read_only=True).tag(sync=True)
+
     def __init__(
         self,
         point_cloud_url: str = "",
@@ -181,7 +192,7 @@ class PotreeMap(MapWidget):
         background_color: str = "#000000",
         edl_enabled: bool = True,
         show_grid: bool = False,
-        quiet:bool = False,
+        quiet: bool = False,
         **kwargs,
     ):
         """Initialize Potree map widget.
@@ -203,9 +214,11 @@ class PotreeMap(MapWidget):
         """
         self.JUPYTER_ROOT = _get_jupyter_root()
 
-        if not self.JUPYTER_ROOT:     
-            warnings.warn("PotreeMap is currently only supported through a JupyterLab environment.")
-            self._css="""
+        if not self.JUPYTER_ROOT:
+            warnings.warn(
+                "PotreeMap is currently only supported through a JupyterLab environment."
+            )
+            self._css = """
             .potree-warning {
                 font-family: sans-serif;
                 padding: 1rem;
@@ -215,9 +228,9 @@ class PotreeMap(MapWidget):
                 border-radius: 8px;
                 margin: 1rem 0;
                 box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            }            
+            }
             """
-            self._esm="""
+            self._esm = """
             function render({ model, el }) {
                 let div = document.createElement("div");
                 div.className = "potree-warning";
@@ -229,6 +242,8 @@ class PotreeMap(MapWidget):
             """
             super().__init__()
             return
+
+        self.set_trait("POTREE_LIBS_DIR", str("/files/potreelibs"))
 
         got_potree_libs = _get_potree_libs(self.JUPYTER_ROOT, quiet=quiet)
         if not got_potree_libs:
@@ -249,6 +264,10 @@ class PotreeMap(MapWidget):
             show_grid=show_grid,
             **kwargs,
         )
+
+    def set_description(self, description: str) -> None:
+        """Sets the description."""
+        self.description = description
 
     def load_point_cloud(
         self, point_cloud_url: str, point_cloud_name: Optional[str] = None
