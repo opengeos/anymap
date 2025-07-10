@@ -120,7 +120,9 @@ class MapWidget(anywidget.AnyWidget):
         """
         self.zoom = zoom
 
-    def fly_to(self, lat: float, lng: float, zoom: Optional[float] = None) -> None:
+    def fly_to(
+        self, lat: float, lng: float, zoom: Optional[float] = None, **kwargs
+    ) -> None:
         """Animate the map to fly to a specific location.
 
         Args:
@@ -128,7 +130,7 @@ class MapWidget(anywidget.AnyWidget):
             lng: Target longitude coordinate.
             zoom: Optional target zoom level. If None, keeps current zoom.
         """
-        options = {"center": [lat, lng]}
+        options = {"center": [lat, lng], **kwargs}
         if zoom is not None:
             options["zoom"] = zoom
         self.call_js_method("flyTo", options)
