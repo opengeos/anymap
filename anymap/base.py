@@ -19,7 +19,7 @@ class MapWidget(anywidget.AnyWidget):
     mapping operations.
 
     Attributes:
-        center: Map center coordinates as [latitude, longitude].
+        center: Map center coordinates as [longitude, latitude].
         zoom: Map zoom level.
         width: Map container width as CSS string.
         height: Map container height as CSS string.
@@ -42,6 +42,7 @@ class MapWidget(anywidget.AnyWidget):
     _sources = traitlets.Dict({}).tag(sync=True)
     _controls = traitlets.Dict({}).tag(sync=True)
     _projection = traitlets.Dict({}).tag(sync=True)
+    _terrain = traitlets.Dict({}).tag(sync=True)
 
     def __init__(self, **kwargs: Any) -> None:
         """Initialize the map widget.
@@ -102,14 +103,14 @@ class MapWidget(anywidget.AnyWidget):
                 for handler in self._event_handlers[event_type]:
                     handler(event)
 
-    def set_center(self, lat: float, lng: float) -> None:
+    def set_center(self, lng: float, lat: float) -> None:
         """Set the map center coordinates.
 
         Args:
-            lat: Latitude coordinate.
             lng: Longitude coordinate.
+            lat: Latitude coordinate.
         """
-        self.center = [lat, lng]
+        self.center = [lng, lat]
 
     def set_zoom(self, zoom: float) -> None:
         """Set the map zoom level.
@@ -119,7 +120,9 @@ class MapWidget(anywidget.AnyWidget):
         """
         self.zoom = zoom
 
-    def fly_to(self, lat: float, lng: float, zoom: Optional[float] = None) -> None:
+    def fly_to(
+        self, lat: float, lng: float, zoom: Optional[float] = None, **kwargs
+    ) -> None:
         """Animate the map to fly to a specific location.
 
         Args:
@@ -127,7 +130,7 @@ class MapWidget(anywidget.AnyWidget):
             lng: Target longitude coordinate.
             zoom: Optional target zoom level. If None, keeps current zoom.
         """
-        options = {"center": [lat, lng]}
+        options = {"center": [lat, lng], **kwargs}
         if zoom is not None:
             options["zoom"] = zoom
         self.call_js_method("flyTo", options)
@@ -263,6 +266,8 @@ class MapWidget(anywidget.AnyWidget):
             "style": self.style,
             "_layers": dict(self._layers),
             "_sources": dict(self._sources),
+            "_controls": dict(self._controls),
+            "_terrain": dict(self._terrain),
         }
 
         # Add class-specific attributes
@@ -276,6 +281,8 @@ class MapWidget(anywidget.AnyWidget):
             map_state["antialias"] = self.antialias
         if hasattr(self, "access_token"):
             map_state["access_token"] = self.access_token
+        if hasattr(self, "_draw_data"):
+            map_state["_draw_data"] = dict(self._draw_data)
 
         # Generate HTML content
         html_content = self._generate_html_template(map_state, title, **kwargs)

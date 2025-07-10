@@ -180,7 +180,7 @@ class TestMapLibreMap(unittest.TestCase):
 
     def test_add_marker(self):
         """Test adding a marker."""
-        self.map.add_marker(40.7128, -74.0060, popup="New York")
+        self.map.add_marker(-74.0060, 40.7128, popup="New York")
 
         calls = self.map._js_calls
         self.assertEqual(len(calls), 1)

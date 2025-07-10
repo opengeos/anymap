@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{title}</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script src="https://unpkg.com/maplibre-gl@5.6.1/dist/maplibre-gl.js"></script>
+        <link
+            href="https://unpkg.com/maplibre-gl@5.6.1/dist/maplibre-gl.css"
+            rel="stylesheet"
+        />
+        <style>
+            body {{
+                margin: 0;
+                padding: 20px;
+                font-family: Arial, sans-serif;
+            }}
+            #map {{
+                width: {width};
+                height: {height};
+                border: 1px solid #ccc;
+            }}
+
+            /* Force default cursor for all map interactions */
+            .maplibregl-canvas {{
+                cursor: default !important;
+            }}
+
+            .maplibregl-map {{
+                cursor: default !important;
+            }}
+
+            .maplibregl-ctrl-group button {{
+                cursor: default !important;
+            }}
+
+            .maplibregl-ctrl button {{
+                cursor: default !important;
+            }}
+
+            .maplibregl-ctrl-draw {{
+                cursor: default !important;
+            }}
+
+            .maplibregl-ctrl-draw button {{
+                cursor: default !important;
+            }}
+
+            .maplibregl-popup-anchor {{
+                cursor: default !important;
+            }}
+
+            .maplibregl-marker {{
+                cursor: default !important;
+            }}
+            h1 {{
+                margin-top: 0;
+                color: #333;
+            }}
+
+            /* Layer control styles to match notebook appearance */
+            .maplibregl-ctrl-layer-control {{
+                background: #fff;
+                border-radius: 4px;
+                box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            }}
+
+            .maplibregl-ctrl-layer-control button {{
+                background: none;
+                border: none;
+                padding: 0;
+                width: 29px;
+                height: 29px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: default !important;
+                outline: none;
+            }}
+
+            .maplibregl-ctrl-layer-control button:hover {{
+                background-color: rgba(0, 0, 0, 0.05);
+            }}
+
+            .maplibregl-ctrl-layer-control .layer-control-icon {{
+                width: 20px;
+                height: 20px;
+                background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7L12 12L22 7L12 2Z"/><path d="M2 17L12 22L22 17"/><path d="M2 12L12 17L22 12"/></svg>');
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position: center;
+            }}
+
+            .layer-control-panel {{
+                position: absolute;
+                top: 100%;
+                margin-top: 5px;
+                background: #fff;
+                border-radius: 4px;
+                box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+                min-width: 200px;
+                max-width: 280px;
+                max-height: 300px;
+                overflow-y: auto;
+                z-index: 1000;
+                padding: 8px;
+                font-size: 12px;
+                line-height: 1.4;
+                display: none;
+            }}
+
+            /* Panel positioning based on parent control position */
+            .maplibregl-ctrl-top-left .layer-control-panel,
+            .maplibregl-ctrl-bottom-left .layer-control-panel {{
+                left: 0;
+            }}
+
+            .maplibregl-ctrl-top-right .layer-control-panel,
+            .maplibregl-ctrl-bottom-right .layer-control-panel {{
+                right: 0;
+            }}
+
+            .layer-control-panel.expanded {{
+                display: block;
+            }}
+
+            .layer-control-item {{
+                display: flex;
+                align-items: center;
+                padding: 4px 0;
+                border-bottom: 1px solid #f0f0f0;
+            }}
+
+            .layer-control-item:last-child {{
+                border-bottom: none;
+            }}
+
+            .layer-control-checkbox {{
+                margin-right: 8px;
+                cursor: default !important;
+            }}
+
+            .layer-control-name {{
+                flex: 1;
+                margin-right: 8px;
+                font-weight: 500;
+                color: #333;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }}
+
+            .layer-control-opacity {{
+                width: 60px;
+                height: 16px;
+                margin: 0;
+                cursor: default !important;
+                background: linear-gradient(to right, #ddd 0%, #333 100%);
+                border-radius: 8px;
+                appearance: none;
+                outline: none;
+            }}
+
+            .layer-control-opacity::-webkit-slider-thumb {{
+                appearance: none;
+                width: 16px;
+                height: 16px;
+                background: #fff;
+                border: 2px solid #333;
+                border-radius: 50%;
+                cursor: default !important;
+            }}
+
+            .layer-control-opacity::-moz-range-thumb {{
+                width: 16px;
+                height: 16px;
+                background: #fff;
+                border: 2px solid #333;
+                border-radius: 50%;
+                cursor: default !important;
+            }}
+
+            .layer-control-panel-header {{
+                font-weight: 600;
+                color: #333;
+                padding: 4px 0 8px 0;
+                border-bottom: 1px solid #e0e0e0;
+                margin-bottom: 8px;
+            }}
+
+            .layer-control-panel::-webkit-scrollbar {{
+                width: 6px;
+            }}
+
+            .layer-control-panel::-webkit-scrollbar-track {{
+                background: #f1f1f1;
+                border-radius: 3px;
+            }}
+
+            .layer-control-panel::-webkit-scrollbar-thumb {{
+                background: #c1c1c1;
+                border-radius: 3px;
+            }}
+
+            .layer-control-panel::-webkit-scrollbar-thumb:hover {{
+                background: #a8a8a8;
+            }}
+        </style>
+    </head>
+    <body>
+        <h1>{title}</h1>
+        <div id="map"></div>
+
+        <script src="https://unpkg.com/@geomatico/maplibre-cog-protocol@0.4.0/dist/index.js"></script>
+        <script src="https://unpkg.com/pmtiles@3.2.0/dist/pmtiles.js"></script>
+        <script src="https://www.unpkg.com/@mapbox/mapbox-gl-draw@1.5.0/dist/mapbox-gl-draw.js"></script>
+        <link
+            rel="stylesheet"
+            href="https://www.unpkg.com/@mapbox/mapbox-gl-draw@1.5.0/dist/mapbox-gl-draw.css"
+        />
+        <!-- Terra Draw libraries -->
+        <script src="https://cdn.jsdelivr.net/npm/@watergis/maplibre-gl-terradraw@1.0.1/dist/maplibre-gl-terradraw.umd.js"></script>
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/@watergis/maplibre-gl-terradraw@1.0.1/dist/maplibre-gl-terradraw.css"
+        />
+        <!-- MapLibre GL Geocoder -->
+        <script src="https://unpkg.com/@maplibre/maplibre-gl-geocoder@1.5.0/dist/maplibre-gl-geocoder.min.js"></script>
+        <link
+            rel="stylesheet"
+            href="https://unpkg.com/@maplibre/maplibre-gl-geocoder@1.5.0/dist/maplibre-gl-geocoder.css"
+        />
+        <!-- MapLibre GL Basemaps Control -->
+        <script src="https://unpkg.com/maplibre-gl-basemaps@0.1.3/lib/index.js"></script>
+        <link
+            rel="stylesheet"
+            href="https://unpkg.com/maplibre-gl-basemaps@0.1.3/lib/basemaps.css"
+        />
+        <script>
+            // Register COG protocol
+            maplibregl.addProtocol("cog", MaplibreCOGProtocol.cogProtocol);
+
+            // Register PMTiles protocol
+            const pmtilesProtocol = new pmtiles.Protocol();
+            maplibregl.addProtocol("pmtiles", pmtilesProtocol.tile);
+
+            // Configure MapboxDraw for MapLibre compatibility
+            if (typeof MapboxDraw !== 'undefined') {{
+                MapboxDraw.constants.classes.CANVAS = 'maplibregl-canvas';
+                MapboxDraw.constants.classes.CONTROL_BASE = 'maplibregl-ctrl';
+                MapboxDraw.constants.classes.CONTROL_PREFIX = 'maplibregl-ctrl-';
+                MapboxDraw.constants.classes.CONTROL_GROUP = 'maplibregl-ctrl-group';
+                MapboxDraw.constants.classes.ATTRIBUTION = 'maplibregl-ctrl-attrib';
+
+                // Create custom styles for MapLibre compatibility
+                window.MapLibreDrawStyles = [
+                    // Point styles
+                    {{
+                        "id": "gl-draw-point-point-stroke-inactive",
+                        "type": "circle",
+                        "filter": ["all", ["==", "active", "false"], ["==", "$type", "Point"], ["==", "meta", "feature"], ["!=", "mode", "static"]],
+                        "paint": {{
+                            "circle-radius": 5,
+                            "circle-opacity": 1,
+                            "circle-color": "#000"
+                        }}
+                    }},
+                    {{
+                        "id": "gl-draw-point-inactive",
+                        "type": "circle",
+                        "filter": ["all", ["==", "active", "false"], ["==", "$type", "Point"], ["==", "meta", "feature"], ["!=", "mode", "static"]],
+                        "paint": {{
+                            "circle-radius": 3,
+                            "circle-color": "#3bb2d0"
+                        }}
+                    }},
+                    {{
+                        "id": "gl-draw-point-stroke-active",
+                        "type": "circle",
+                        "filter": ["all", ["==", "active", "true"], ["!=", "meta", "midpoint"], ["==", "$type", "Point"]],
+                        "paint": {{
+                            "circle-radius": 7,
+                            "circle-color": "#000"
+                        }}
+                    }},
+                    {{
+                        "id": "gl-draw-point-active",
+                        "type": "circle",
+                        "filter": ["all", ["==", "active", "true"], ["!=", "meta", "midpoint"], ["==", "$type", "Point"]],
+                        "paint": {{
+                            "circle-radius": 5,
+                            "circle-color": "#fbb03b"
+                        }}
+                    }},
+                    // Line styles - fixed for MapLibre
+                    {{
+                        "id": "gl-draw-line-inactive",
+                        "type": "line",
+                        "filter": ["all", ["==", "active", "false"], ["==", "$type", "LineString"], ["!=", "mode", "static"]],
+                        "layout": {{
+                            "line-cap": "round",
+                            "line-join": "round"
+                        }},
+                        "paint": {{
+                            "line-color": "#3bb2d0",
+                            "line-width": 2
+                        }}
+                    }},
+                    {{
+                        "id": "gl-draw-line-active",
+                        "type": "line",
+                        "filter": ["all", ["==", "active", "true"], ["==", "$type", "LineString"]],
+                        "layout": {{
+                            "line-cap": "round",
+                            "line-join": "round"
+                        }},
+                        "paint": {{
+                            "line-color": "#fbb03b",
+                            "line-width": 2,
+                            "line-dasharray": ["literal", [0.2, 2]]
+                        }}
+                    }},
+                    // Polygon fill
+                    {{
+                        "id": "gl-draw-polygon-fill-inactive",
+                        "type": "fill",
+                        "filter": ["all", ["==", "active", "false"], ["==", "$type", "Polygon"], ["!=", "mode", "static"]],
+                        "paint": {{
+                            "fill-color": "#3bb2d0",
+                            "fill-outline-color": "#3bb2d0",
+                            "fill-opacity": 0.1
+                        }}
+                    }},
+                    {{
+                        "id": "gl-draw-polygon-fill-active",
+                        "type": "fill",
+                        "filter": ["all", ["==", "active", "true"], ["==", "$type", "Polygon"]],
+                        "paint": {{
+                            "fill-color": "#fbb03b",
+                            "fill-outline-color": "#fbb03b",
+                            "fill-opacity": 0.1
+                        }}
+                    }},
+                    // Polygon stroke
+                    {{
+                        "id": "gl-draw-polygon-stroke-inactive",
+                        "type": "line",
+                        "filter": ["all", ["==", "active", "false"], ["==", "$type", "Polygon"], ["!=", "mode", "static"]],
+                        "layout": {{
+                            "line-cap": "round",
+                            "line-join": "round"
+                        }},
+                        "paint": {{
+                            "line-color": "#3bb2d0",
+                            "line-width": 2
+                        }}
+                    }},
+                    {{
+                        "id": "gl-draw-polygon-stroke-active",
+                        "type": "line",
+                        "filter": ["all", ["==", "active", "true"], ["==", "$type", "Polygon"]],
+                        "layout": {{
+                            "line-cap": "round",
+                            "line-join": "round"
+                        }},
+                        "paint": {{
+                            "line-color": "#fbb03b",
+                            "line-width": 2,
+                            "line-dasharray": ["literal", [0.2, 2]]
+                        }}
+                    }},
+                    // Vertices (corner points) for editing
+                    {{
+                        "id": "gl-draw-polygon-and-line-vertex-stroke-inactive",
+                        "type": "circle",
+                        "filter": ["all", ["==", "meta", "vertex"], ["==", "$type", "Point"], ["!=", "mode", "static"]],
+                        "paint": {{
+                            "circle-radius": 5,
+                            "circle-color": "#fff"
+                        }}
+                    }},
+                    {{
+                        "id": "gl-draw-polygon-and-line-vertex-inactive",
+                        "type": "circle",
+                        "filter": ["all", ["==", "meta", "vertex"], ["==", "$type", "Point"], ["!=", "mode", "static"]],
+                        "paint": {{
+                            "circle-radius": 3,
+                            "circle-color": "#fbb03b"
+                        }}
+                    }},
+                    // Midpoint
+                    {{
+                        "id": "gl-draw-polygon-midpoint",
+                        "type": "circle",
+                        "filter": ["all", ["==", "$type", "Point"], ["==", "meta", "midpoint"]],
+                        "paint": {{
+                            "circle-radius": 3,
+                            "circle-color": "#fbb03b"
+                        }}
+                    }},
+                    // Active line vertex styles
+                    {{
+                        "id": "gl-draw-line-vertex-stroke-active",
+                        "type": "circle",
+                        "filter": ["all", ["==", "$type", "Point"], ["==", "meta", "vertex"], ["!=", "meta", "midpoint"]],
+                        "paint": {{
+                            "circle-radius": 7,
+                            "circle-color": "#fff"
+                        }}
+                    }},
+                    {{
+                        "id": "gl-draw-line-vertex-active",
+                        "type": "circle",
+                        "filter": ["all", ["==", "$type", "Point"], ["==", "meta", "vertex"], ["!=", "meta", "midpoint"]],
+                        "paint": {{
+                            "circle-radius": 5,
+                            "circle-color": "#fbb03b"
+                        }}
+                    }},
+                    // Polygon vertex styles for direct select mode
+                    {{
+                        "id": "gl-draw-polygon-vertex-stroke-active",
+                        "type": "circle",
+                        "filter": ["all", ["==", "$type", "Point"], ["==", "meta", "vertex"], ["!=", "meta", "midpoint"]],
+                        "paint": {{
+                            "circle-radius": 7,
+                            "circle-color": "#fff"
+                        }}
+                    }},
+                    {{
+                        "id": "gl-draw-polygon-vertex-active",
+                        "type": "circle",
+                        "filter": ["all", ["==", "$type", "Point"], ["==", "meta", "vertex"], ["!=", "meta", "midpoint"]],
+                        "paint": {{
+                            "circle-radius": 5,
+                            "circle-color": "#fbb03b"
+                        }}
+                    }}
+                ];
+
+                console.log('MapboxDraw configured for MapLibre compatibility with custom styles');
+            }}
+
+            // LayerControl class for HTML export
+            class LayerControl {{
+                constructor(options, map, model = null) {{
+                    this.options = options;
+                    this.map = map;
+                    this.model = model; // Can be null in HTML export
+                    this.collapsed = options.collapsed !== false;
+                    this.layerStates = options.layerStates || {{}};
+                    this.targetLayers = options.layers || Object.keys(this.layerStates);
+
+                    // Create control container
+                    this.container = document.createElement('div');
+                    this.container.className = 'maplibregl-ctrl maplibregl-ctrl-group maplibregl-ctrl-layer-control';
+
+                    // Create toggle button
+                    this.button = document.createElement('button');
+                    this.button.type = 'button';
+                    this.button.title = 'Layer Control';
+                    this.button.setAttribute('aria-label', 'Layer Control');
+
+                    // Create icon (proper layers icon)
+                    const icon = document.createElement('span');
+                    icon.className = 'layer-control-icon';
+                    this.button.appendChild(icon);
+
+                    // Create panel
+                    this.panel = document.createElement('div');
+                    this.panel.className = 'layer-control-panel';
+
+                    if (!this.collapsed) {{
+                        this.panel.classList.add('expanded');
+                    }}
+
+                    // Add header
+                    const header = document.createElement('div');
+                    header.className = 'layer-control-panel-header';
+                    header.textContent = 'Layers';
+                    this.panel.appendChild(header);
+
+                    // Build layer items
+                    this.buildLayerItems();
+
+                    // Add event listeners
+                    this.button.addEventListener('click', (e) => {{
+                        e.stopPropagation();
+                        this.toggle();
+                    }});
+
+                    // Assemble control
+                    this.container.appendChild(this.button);
+                    this.container.appendChild(this.panel);
+
+                    // Click outside to close
+                    document.addEventListener('click', (e) => {{
+                        if (!this.container.contains(e.target)) {{
+                            this.collapse();
+                        }}
+                    }});
+                }}
+
+                buildLayerItems() {{
+                    // Clear existing items first (in case of rebuild)
+                    const existingItems = this.panel.querySelectorAll('.layer-control-item');
+                    existingItems.forEach(item => item.remove());
+
+                    // Add items for all layers in our state
+                    Object.entries(this.layerStates).forEach(([layerId, state]) => {{
+                        if (this.targetLayers.includes(layerId)) {{
+                            this.addLayerItem(layerId, state);
+                        }}
+                    }});
+                }}
+
+                toggle() {{
+                    if (this.collapsed) {{
+                        this.expand();
+                    }} else {{
+                        this.collapse();
+                    }}
+                }}
+
+                expand() {{
+                    this.collapsed = false;
+                    this.panel.classList.add('expanded');
+                }}
+
+                collapse() {{
+                    this.collapsed = true;
+                    this.panel.classList.remove('expanded');
+                }}
+
+                addLayerItem(layerId, state) {{
+                    const item = document.createElement('div');
+                    item.className = 'layer-control-item';
+                    item.setAttribute('data-layer-id', layerId);
+
+                    // Checkbox for visibility
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.className = 'layer-control-checkbox';
+                    checkbox.checked = state.visible;
+                    checkbox.addEventListener('change', () => {{
+                        if (layerId === 'Background') {{
+                            this.toggleBackgroundVisibility(checkbox.checked);
+                        }} else {{
+                            this.toggleLayerVisibility(layerId, checkbox.checked);
+                        }}
+                    }});
+
+                    // Layer name
+                    const name = document.createElement('span');
+                    name.className = 'layer-control-name';
+                    name.textContent = layerId === 'Background' ? 'Background' : (state.name || layerId);
+
+                    // Opacity slider
+                    const opacity = document.createElement('input');
+                    opacity.type = 'range';
+                    opacity.className = 'layer-control-opacity';
+                    opacity.min = '0';
+                    opacity.max = '1';
+                    opacity.step = '0.01';
+                    opacity.value = state.opacity;
+                    opacity.title = `Opacity: ${{Math.round(state.opacity * 100)}}%`;
+                    opacity.addEventListener('input', () => {{
+                        if (layerId === 'Background') {{
+                            this.changeBackgroundOpacity(parseFloat(opacity.value));
+                        }} else {{
+                            this.changeLayerOpacity(layerId, parseFloat(opacity.value));
+                        }}
+                        opacity.title = `Opacity: ${{Math.round(opacity.value * 100)}}%`;
+                    }});
+
+                    item.appendChild(checkbox);
+                    item.appendChild(name);
+                    item.appendChild(opacity);
+
+                    this.panel.appendChild(item);
+                }}
+
+                toggleLayerVisibility(layerId, visible) {{
+                    // Update local state
+                    if (this.layerStates[layerId]) {{
+                        this.layerStates[layerId].visible = visible;
+                    }}
+
+                    // Call map's visibility method
+                    this.map.setLayoutProperty(layerId, 'visibility', visible ? 'visible' : 'none');
+                }}
+
+                changeLayerOpacity(layerId, opacity) {{
+                    // Update local state
+                    if (this.layerStates[layerId]) {{
+                        this.layerStates[layerId].opacity = opacity;
+                    }}
+
+                    // Apply opacity to map layer
+                    const layer = this.map.getLayer(layerId);
+                    if (layer) {{
+                        const layerType = layer.type;
+                        let opacityProperty;
+
+                        switch (layerType) {{
+                            case 'fill':
+                                opacityProperty = 'fill-opacity';
+                                break;
+                            case 'line':
+                                opacityProperty = 'line-opacity';
+                                break;
+                            case 'circle':
+                                opacityProperty = 'circle-opacity';
+                                break;
+                            case 'symbol':
+                                this.map.setPaintProperty(layerId, 'icon-opacity', opacity);
+                                this.map.setPaintProperty(layerId, 'text-opacity', opacity);
+                                return;
+                            case 'raster':
+                                opacityProperty = 'raster-opacity';
+                                break;
+                            case 'background':
+                                opacityProperty = 'background-opacity';
+                                break;
+                            default:
+                                opacityProperty = `${{layerType}}-opacity`;
+                        }}
+
+                        this.map.setPaintProperty(layerId, opacityProperty, opacity);
+                    }}
+                }}
+
+                toggleBackgroundVisibility(visible) {{
+                    // Update local state
+                    if (this.layerStates['Background']) {{
+                        this.layerStates['Background'].visible = visible;
+                    }}
+
+                    // Apply to all style layers (Background layers)
+                    const styleLayers = this.map.getStyle().layers || [];
+                    styleLayers.forEach(layer => {{
+                        // Skip user-added layers
+                        if (!this.layerStates[layer.id] || layer.id === 'Background') {{
+                            this.map.setLayoutProperty(layer.id, 'visibility', visible ? 'visible' : 'none');
+                        }}
+                    }});
+                }}
+
+                changeBackgroundOpacity(opacity) {{
+                    // Update local state
+                    if (this.layerStates['Background']) {{
+                        this.layerStates['Background'].opacity = opacity;
+                    }}
+
+                    // Apply to all style layers (Background layers)
+                    const styleLayers = this.map.getStyle().layers || [];
+                    styleLayers.forEach(styleLayer => {{
+                        // Skip user-added layers
+                        if (!this.layerStates[styleLayer.id] || styleLayer.id === 'Background') {{
+                            const layer = this.map.getLayer(styleLayer.id);
+                            if (layer) {{
+                                const layerType = layer.type;
+                                let opacityProperty;
+
+                                switch (layerType) {{
+                                    case 'fill':
+                                        opacityProperty = 'fill-opacity';
+                                        break;
+                                    case 'line':
+                                        opacityProperty = 'line-opacity';
+                                        break;
+                                    case 'circle':
+                                        opacityProperty = 'circle-opacity';
+                                        break;
+                                    case 'symbol':
+                                        this.map.setPaintProperty(styleLayer.id, 'icon-opacity', opacity);
+                                        this.map.setPaintProperty(styleLayer.id, 'text-opacity', opacity);
+                                        return;
+                                    case 'raster':
+                                        opacityProperty = 'raster-opacity';
+                                        break;
+                                    case 'background':
+                                        opacityProperty = 'background-opacity';
+                                        break;
+                                    default:
+                                        opacityProperty = `${{layerType}}-opacity`;
+                                }}
+
+                                if (opacityProperty) {{
+                                    this.map.setPaintProperty(styleLayer.id, opacityProperty, opacity);
+                                }}
+                            }}
+                        }}
+                    }});
+                }}
+
+                onAdd(map) {{
+                    return this.container;
+                }}
+
+                onRemove() {{
+                    this.container.parentNode.removeChild(this.container);
+                }}
+            }}
+
+            // Map state from Python
+            const mapState = {map_state_json};
+
+            // Initialize MapLibre map
+            const map = new maplibregl.Map({{
+                container: 'map',
+                style: mapState.style || 'https://demotiles.maplibre.org/style.json',
+                center: [mapState.center[0], mapState.center[1]], // Convert [lat, lng] to [lng, lat]
+                zoom: mapState.zoom || 2,
+                bearing: mapState.bearing || 0,
+                pitch: mapState.pitch || 0,
+                antialias: mapState.antialias !== undefined ? mapState.antialias : true
+            }});
+
+            // Force default cursor for all map interactions
+            map.on('load', function() {{
+                const canvas = map.getCanvas();
+                canvas.style.cursor = 'default';
+            }});
+
+            // Restore layers and sources after map loads
+            map.on('load', function() {{
+                // Add sources first
+                const sources = mapState._sources || {{}};
+                Object.entries(sources).forEach(([sourceId, sourceConfig]) => {{
+                    try {{
+                        map.addSource(sourceId, sourceConfig);
+                    }} catch (error) {{
+                        console.warn(`Failed to add source ${{sourceId}}:`, error);
+                    }}
+                }});
+
+                // Then add layers
+                const layers = mapState._layers || {{}};
+                Object.entries(layers).forEach(([layerId, layerConfig]) => {{
+                    try {{
+                        map.addLayer(layerConfig);
+                    }} catch (error) {{
+                        console.warn(`Failed to add layer ${{layerId}}:`, error);
+                    }}
+                }});
+
+                // Set terrain if it exists
+                const terrain = mapState._terrain || {{}};
+                if (Object.keys(terrain).length > 0) {{
+                    try {{
+                        map.setTerrain(terrain);
+                        console.log('Terrain restored successfully:', terrain);
+                    }} catch (error) {{
+                        console.warn('Failed to restore terrain:', error);
+                    }}
+                }}
+            }});
+
+            // Add controls from map state
+            const controls = mapState._controls || {{}};
+            Object.entries(controls).forEach(([controlKey, controlConfig]) => {{
+                try {{
+                    const {{ type: controlType, position, options: controlOptions }} = controlConfig;
+                    let control;
+
+                    switch (controlType) {{
+                        case 'navigation':
+                            control = new maplibregl.NavigationControl(controlOptions || {{}});
+                            break;
+                        case 'scale':
+                            control = new maplibregl.ScaleControl(controlOptions || {{}});
+                            break;
+                        case 'fullscreen':
+                            control = new maplibregl.FullscreenControl(controlOptions || {{}});
+                            break;
+                        case 'geolocate':
+                            control = new maplibregl.GeolocateControl(controlOptions || {{}});
+                            break;
+                        case 'attribution':
+                            control = new maplibregl.AttributionControl(controlOptions || {{}});
+                            break;
+                        case 'globe':
+                            control = new maplibregl.GlobeControl(controlOptions || {{}});
+                            break;
+                        case 'draw':
+                            // Handle draw control restoration
+                            if (typeof MapboxDraw !== 'undefined') {{
+                                // Use custom styles for MapLibre compatibility
+                                const drawOptions = {{
+                                    ...controlOptions,
+                                    styles: window.MapLibreDrawStyles || undefined
+                                }};
+                                control = new MapboxDraw(drawOptions);
+
+                                // Store reference for data loading
+                                window.drawControl = control;
+
+                                // Set up draw event handlers
+                                map.on('draw.create', function(e) {{
+                                    console.log('Draw created:', e.features);
+                                }});
+                                map.on('draw.update', function(e) {{
+                                    console.log('Draw updated:', e.features);
+                                }});
+                                map.on('draw.delete', function(e) {{
+                                    console.log('Draw deleted:', e.features);
+                                }});
+                                map.on('draw.selectionchange', function(e) {{
+                                    console.log('Draw selection changed:', e.features);
+                                }});
+
+                                console.log('Draw control restored successfully with custom styles');
+
+                                // Load saved draw data if it exists
+                                const savedDrawData = mapState._draw_data;
+                                if (savedDrawData && savedDrawData.features && savedDrawData.features.length > 0) {{
+                                    try {{
+                                        control.set(savedDrawData);
+                                        console.log('Saved draw data loaded successfully:', savedDrawData);
+                                    }} catch (error) {{
+                                        console.error('Failed to load saved draw data:', error);
+                                    }}
+                                }}
+                            }} else {{
+                                console.warn('MapboxDraw not available during restore');
+                                return;
+                            }}
+                            break;
+                        case 'terra_draw':
+                            // Handle Terra Draw control restoration
+                            if (typeof MaplibreTerradrawControl !== 'undefined') {{
+                                const terraDrawOptions = {{
+                                    ...controlOptions
+                                }};
+                                control = new MaplibreTerradrawControl.MaplibreTerradrawControl(terraDrawOptions);
+
+                                // Store reference for data operations
+                                window.terraDrawControl = control;
+
+                                console.log('Terra Draw control restored successfully');
+
+                                // Load saved Terra Draw data if it exists
+                                const savedTerraDrawData = mapState._terra_draw_data;
+                                if (savedTerraDrawData && savedTerraDrawData.features && savedTerraDrawData.features.length > 0) {{
+                                    try {{
+                                        // Terra Draw data loading would need to be implemented based on the library's API
+                                        console.log('Saved Terra Draw data found:', savedTerraDrawData);
+                                    }} catch (error) {{
+                                        console.error('Failed to load saved Terra Draw data:', error);
+                                    }}
+                                }}
+                            }} else {{
+                                console.warn('MaplibreTerradrawControl not available during restore');
+                                return;
+                            }}
+                            break;
+                        case 'layer_control':
+                            // Handle layer control restoration
+                            control = new LayerControl(controlOptions || {{}}, map);
+                            break;
+                        case 'geocoder':
+                            // Handle geocoder control restoration
+                            if (typeof MaplibreGeocoder !== 'undefined') {{
+                                const apiConfig = controlOptions.api_config || {{}};
+
+                                // Create geocoder API implementation
+                                const geocoderApi = {{
+                                    forwardGeocode: async (config) => {{
+                                        const features = [];
+                                        try {{
+                                            const request = `${{apiConfig.api_url || 'https://nominatim.openstreetmap.org/search'}}?q=${{config.query}}&format=geojson&polygon_geojson=1&addressdetails=1&limit=${{apiConfig.limit || 5}}`;
+                                            const response = await fetch(request);
+                                            const geojson = await response.json();
+
+                                            for (const feature of geojson.features) {{
+                                                const center = [
+                                                    feature.bbox[0] + (feature.bbox[2] - feature.bbox[0]) / 2,
+                                                    feature.bbox[1] + (feature.bbox[3] - feature.bbox[1]) / 2,
+                                                ];
+                                                const point = {{
+                                                    type: "Feature",
+                                                    geometry: {{
+                                                        type: "Point",
+                                                        coordinates: center,
+                                                    }},
+                                                    place_name: feature.properties.display_name,
+                                                    properties: feature.properties,
+                                                    text: feature.properties.display_name,
+                                                    place_type: ["place"],
+                                                    center,
+                                                }};
+                                                features.push(point);
+                                            }}
+                                        }} catch (e) {{
+                                            console.error(`Failed to forwardGeocode with error: ${{e}}`);
+                                        }}
+
+                                        return {{ features }};
+                                    }},
+                                }};
+
+                                // Create geocoder control
+                                const geocoderOptions = {{
+                                    maplibregl: maplibregl,
+                                    placeholder: apiConfig.placeholder || 'Search for places...',
+                                    collapsed: controlOptions.collapsed !== false,
+                                    ...controlOptions
+                                }};
+                                delete geocoderOptions.api_config; // Remove from options passed to geocoder
+                                delete geocoderOptions.position; // Remove position from geocoder options
+
+                                control = new MaplibreGeocoder(geocoderApi, geocoderOptions);
+                                console.log('Geocoder control restored successfully');
+                            }} else {{
+                                console.warn('MaplibreGeocoder not available during restore');
+                                return;
+                            }}
+                            break;
+                        case 'basemap_control':
+                            // Handle basemap control restoration
+                            if (typeof MaplibreGLBasemapsControl !== 'undefined') {{
+                                const basemapsOptions = {{
+                                    basemaps: controlOptions.basemaps || [],
+                                    initialBasemap: controlOptions.initialBasemap,
+                                    expandDirection: controlOptions.expandDirection || 'down',
+                                    ...controlOptions
+                                }};
+                                delete basemapsOptions.position; // Remove position from options passed to control
+
+                                control = new MaplibreGLBasemapsControl(basemapsOptions);
+                                console.log('Basemap control restored successfully');
+                            }} else {{
+                                console.warn('MaplibreGLBasemapsControl not available during restore');
+                                return;
+                            }}
+                            break;
+                        default:
+                            console.warn(`Unknown control type during restore: ${{controlType}}`);
+                            return;
+                    }}
+
+                    map.addControl(control, position);
+                }} catch (error) {{
+                    console.warn(`Failed to add control ${{controlKey}}:`, error);
+                }}
+            }});
+
+            // Log map events for debugging
+            map.on('click', function(e) {{
+                console.log('Map clicked at:', e.lngLat);
+            }});
+
+            map.on('load', function() {{
+                console.log('Map loaded successfully');
+            }});
+
+            map.on('error', function(e) {{
+                console.error('Map error:', e);
+            }});
+        </script>
+    </body>
+</html>

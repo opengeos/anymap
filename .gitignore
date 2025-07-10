@@ -110,3 +110,4 @@ ENV/
 
 # IDE settings
 .vscode/
+GEMINI.md

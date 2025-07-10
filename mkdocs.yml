@@ -89,6 +89,12 @@ nav:
           - examples/deckgl_example.ipynb
           - examples/keplergl_example.ipynb
           - examples/potree_example.ipynb
+          - examples/pmtiles_example.ipynb
+          - examples/draw_control_example.ipynb
+          - examples/layer_control_example.ipynb
+          - examples/geocoder_example.ipynb
+          - examples/terrain_example.ipynb
+          - examples/streetview_example.ipynb
     - API Reference:
           - anymap module: anymap.md
           - base module: base.md
@@ -99,6 +105,8 @@ nav:
           - leaflet module: leaflet.md
           - mapbox module: mapbox.md
           - maplibre module: maplibre.md
+          - maplibre_widgets module: maplibre_widgets.md
           - openlayers module: openlayers.md
           - potree module: potree.md
+          - stac module: stac.md
           - utils module: utils.md

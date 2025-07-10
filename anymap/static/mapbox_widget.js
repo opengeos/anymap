@@ -53,6 +53,16 @@ function render({ model, el }) {
 
   // Restore layers and sources from model state
   const restoreMapState = () => {
+
+    // Initial calls that were issued before map was loaded
+    const calls = model.get("_js_calls") || [];
+    calls.forEach(call => {
+      executeMapMethod(map, call, el);
+    });
+    // Clear the calls after processing
+    model.set("_js_calls", []);
+    model.save_changes();
+
     const layers = model.get("_layers") || {};
     const sources = model.get("_sources") || {};
 
@@ -101,6 +111,7 @@ function render({ model, el }) {
       // Restore state after map is fully loaded
       restoreMapState();
     }, 200);
+
   });
 
   // Additional resize handling for late-rendered widgets
