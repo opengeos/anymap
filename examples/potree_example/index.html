@@ -715,6 +715,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#working-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Working example
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#basic-point-cloud-viewer" class="md-nav__link">
     <span class="md-ellipsis">
       Basic Point Cloud Viewer
@@ -1451,6 +1460,15 @@
   <a href="#setup" class="md-nav__link">
     <span class="md-ellipsis">
       Setup
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#working-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Working example
     </span>
   </a>
   
@@ -2195,7 +2213,10 @@ print("Potree backend loaded successfully!")</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="basic-point-cloud-viewer">Basic Point Cloud Viewer<a class="anchor-link" href="#basic-point-cloud-viewer">¶</a></h2><p>Create a basic Potree viewer. Note that you'll need a converted Potree point cloud dataset (with metadata.json) to load actual data:</p>
+<h2 id="working-example">Working example<a class="anchor-link" href="#working-example">¶</a></h2><p>Create a basic Potree viewer.</p>
+<p>Loads an example that ships with the potree distribution, or use your own point cloud.</p>
+<p>⚠️ Currently only one Potree viewer can be rendered at a time.</p>
+<p>Rendering other Potree viewers, or more views of the same viewer will cause conflicts with the controls.</p>
 </div>
 </div>
 </div>
@@ -2209,6 +2230,131 @@ print("Potree backend loaded successfully!")</div>
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-2">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="s2">"/files/potreelibs/pointclouds/lion_takanawa_las/cloud.js"</span>
+<span class="n">viewer</span> <span class="o">=</span> <span class="n">PotreeMap</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">"Lion"</span><span class="p">,</span> <span class="n">point_cloud_url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s2">"400px"</span><span class="p">)</span>
+
+<span class="n">viewer</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-2">url = "/files/potreelibs/pointclouds/lion_takanawa_las/cloud.js"
+viewer = PotreeMap(description="Lion", point_cloud_url=url, height="400px")
+
+viewer</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
+<pre>/home/runner/work/anymap/anymap/anymap/potree.py:218: UserWarning: PotreeMap is currently only supported through a JupyterLab environment.
+  warnings.warn(
+</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[2]:</div>
+<div class="jupyter-widgets jp-OutputArea-output jp-OutputArea-executeResult" id="58331669-8097-46f2-b61b-73e88c1390a5" tabindex="0">
+<script type="text/javascript">
+var element = document.getElementById('58331669-8097-46f2-b61b-73e88c1390a5');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"version_major": 2, "version_minor": 1, "model_id": "c78e6f2812344e41a21b859958b532dd"}
+</script>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [3]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-3">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Update the description (title)</span>
+<span class="n">viewer</span><span class="o">.</span><span class="n">set_description</span><span class="p">(</span><span class="s2">"Lion Takanawa"</span><span class="p">)</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-3"># Update the description (title)
+viewer.set_description("Lion Takanawa")</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [4]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-4">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">viewer</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s2">"Lion"</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-4">viewer.description = "Lion"</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="basic-point-cloud-viewer">Basic Point Cloud Viewer<a class="anchor-link" href="#basic-point-cloud-viewer">¶</a></h2><p>Create a basic Potree viewer. Note that you'll need a converted Potree point cloud dataset (with metadata.json) to load actual data:</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [5]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-5">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2237,7 +2383,7 @@ print("Potree backend loaded successfully!")</div>
 
 <span class="n">viewer</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-2"># Create a basic Potree viewer
+<div class="clipboard-copy-txt" id="cell-5"># Create a basic Potree viewer
 viewer = PotreeMap(
     width="100%",
     height="600px",
@@ -2264,13 +2410,13 @@ viewer</div>
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[2]:</div>
-<div class="jupyter-widgets jp-OutputArea-output jp-OutputArea-executeResult" id="2e29f381-bb5a-4b35-8a1e-99d915d234ee" tabindex="0">
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[5]:</div>
+<div class="jupyter-widgets jp-OutputArea-output jp-OutputArea-executeResult" id="67f0bbce-7ca2-443a-9f3e-b40679b9baa6" tabindex="0">
 <script type="text/javascript">
-var element = document.getElementById('2e29f381-bb5a-4b35-8a1e-99d915d234ee');
+var element = document.getElementById('67f0bbce-7ca2-443a-9f3e-b40679b9baa6');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
-{"version_major": 2, "version_minor": 1, "model_id": "a3791d931316491e97e9d55592369f45"}
+{"version_major": 2, "version_minor": 1, "model_id": "01865d785b4b4dca88e6a02a6d106435"}
 </script>
 </div>
 </div>
@@ -2298,10 +2444,10 @@ PotreeConverter<span class="w"> </span>input.las<span class="w"> </span>-o<span 
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [3]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [6]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-3">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-6">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2321,7 +2467,7 @@ PotreeConverter<span class="w"> </span>input.las<span class="w"> </span>-o<span 
 <span class="nb">print</span><span class="p">(</span><span class="s2">"To load actual point cloud data, you need a Potree-converted dataset."</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"Point the load_point_cloud method to your metadata.json file."</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-3"># Example of loading a point cloud (requires actual converted data)
+<div class="clipboard-copy-txt" id="cell-6"># Example of loading a point cloud (requires actual converted data)
 # Replace with the URL to your Potree-converted point cloud metadata.json
 # viewer.load_point_cloud(
 #     "https://example.com/pointclouds/your_pointcloud/metadata.json",
@@ -2366,10 +2512,10 @@ Point the load_point_cloud method to your metadata.json file.
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [4]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [7]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-4">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-7">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2391,7 +2537,7 @@ Point the load_point_cloud method to your metadata.json file.
 <span class="n">viewer</span><span class="o">.</span><span class="n">set_point_shape</span><span class="p">(</span><span class="s2">"circle"</span><span class="p">)</span>  <span class="c1"># Options: "square", "circle"</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"Point shape set to circle"</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-4"># Adjust point size
+<div class="clipboard-copy-txt" id="cell-7"># Adjust point size
 viewer.set_point_size(2.0)
 print("Point size set to 2.0")
 
@@ -2439,10 +2585,10 @@ Point shape set to circle
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [5]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [8]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-5">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-8">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2464,7 +2610,7 @@ Point shape set to circle
 <span class="n">viewer</span><span class="o">.</span><span class="n">set_clip_distances</span><span class="p">(</span><span class="n">near</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">far</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"Clipping distances updated"</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-5"># Set camera position and target
+<div class="clipboard-copy-txt" id="cell-8"># Set camera position and target
 viewer.set_camera_position(position=[20, 20, 30], target=[0, 0, 0])
 print("Camera position updated")
 
@@ -2512,10 +2658,10 @@ Clipping distances updated
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [6]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [9]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-6">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-9">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2538,7 +2684,7 @@ Clipping distances updated
 <span class="n">viewer</span><span class="o">.</span><span class="n">set_background_color</span><span class="p">(</span><span class="s2">"#2a2a2a"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"Background color changed"</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-6"># Configure Eye Dome Lighting (EDL) for better depth perception
+<div class="clipboard-copy-txt" id="cell-9"># Configure Eye Dome Lighting (EDL) for better depth perception
 viewer.enable_edl(True)
 viewer.set_edl_settings(radius=1.5, strength=1.2)
 print("Eye Dome Lighting configured")
@@ -2587,10 +2733,10 @@ Background color changed
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [7]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [10]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-7">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-10">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2606,7 +2752,7 @@ Background color changed
 
 <span class="c1"># For large datasets, you might want to use "medium" or "low" for better performance</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-7"># Set rendering quality
+<div class="clipboard-copy-txt" id="cell-10"># Set rendering quality
 viewer.set_quality("high")  # Options: "low", "medium", "high"
 print("Rendering quality set to high")
 
@@ -2646,10 +2792,10 @@ print("Rendering quality set to high")
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [8]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [11]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-8">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-11">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2674,7 +2820,7 @@ print("Rendering quality set to high")
 <span class="c1"># viewer.load_multiple_point_clouds(point_clouds)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"Multiple point clouds can be loaded simultaneously"</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-8"># Example of loading multiple point clouds
+<div class="clipboard-copy-txt" id="cell-11"># Example of loading multiple point clouds
 point_clouds = [
     {
         "url": "https://example.com/pointclouds/scan1/metadata.json",
@@ -2723,10 +2869,10 @@ print("Multiple point clouds can be loaded simultaneously")</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [9]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [12]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-9">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-12">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2757,7 +2903,7 @@ print("Multiple point clouds can be loaded simultaneously")</div>
 <span class="c1"># viewer.clear_filters()</span>
 <span class="c1"># print("All filters cleared")</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-9"># Filter points by elevation
+<div class="clipboard-copy-txt" id="cell-12"># Filter points by elevation
 viewer.filter_by_elevation(min_elevation=0, max_elevation=50)
 print("Elevation filter applied (0-50 units)")
 
@@ -2813,10 +2959,10 @@ Classification filter applied
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [10]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [13]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-10">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-13">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2842,7 +2988,7 @@ Classification filter applied
 <span class="c1"># viewer.clear_measurements()</span>
 <span class="c1"># print("All measurements cleared")</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-10"># Add distance measurement tool
+<div class="clipboard-copy-txt" id="cell-13"># Add distance measurement tool
 viewer.add_measurement("distance")
 print("Distance measurement tool added")
 
@@ -2894,10 +3040,10 @@ Volume measurement tool added
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [11]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [14]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-11">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-14">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2921,7 +3067,7 @@ Volume measurement tool added
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Camera position: </span><span class="si">{</span><span class="n">camera_pos</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Camera target: </span><span class="si">{</span><span class="n">camera_target</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-11"># Fit point clouds to screen
+<div class="clipboard-copy-txt" id="cell-14"># Fit point clouds to screen
 viewer.fit_to_screen()
 print("View fitted to point cloud bounds")
 
@@ -2972,10 +3118,10 @@ Camera target: [0, 0, 0]
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [12]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [15]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-12">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-15">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2989,7 +3135,7 @@ Camera target: [0, 0, 0]
 <span class="c1"># This should maintain all the settings and state from above</span>
 <span class="n">viewer</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-12"># Display the same viewer instance again
+<div class="clipboard-copy-txt" id="cell-15"># Display the same viewer instance again
 # This should maintain all the settings and state from above
 viewer</div>
 </div>
@@ -3001,13 +3147,13 @@ viewer</div>
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[12]:</div>
-<div class="jupyter-widgets jp-OutputArea-output jp-OutputArea-executeResult" id="786437ad-d31d-4693-a8ba-f1e7c2d5f06b" tabindex="0">
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[15]:</div>
+<div class="jupyter-widgets jp-OutputArea-output jp-OutputArea-executeResult" id="370dc313-037f-44be-8722-7029690ffa49" tabindex="0">
 <script type="text/javascript">
-var element = document.getElementById('786437ad-d31d-4693-a8ba-f1e7c2d5f06b');
+var element = document.getElementById('370dc313-037f-44be-8722-7029690ffa49');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
-{"version_major": 2, "version_minor": 1, "model_id": "a3791d931316491e97e9d55592369f45"}
+{"version_major": 2, "version_minor": 1, "model_id": "01865d785b4b4dca88e6a02a6d106435"}
 </script>
 </div>
 </div>
@@ -3020,10 +3166,10 @@ var element = document.getElementById('786437ad-d31d-4693-a8ba-f1e7c2d5f06b');
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [13]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [16]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-13">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-16">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -3040,7 +3186,7 @@ var element = document.getElementById('786437ad-d31d-4693-a8ba-f1e7c2d5f06b');
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">"Settings changed! Updates should appear on all viewer instances above."</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-13"># Change settings while displayed in multiple cells
+<div class="clipboard-copy-txt" id="cell-16"># Change settings while displayed in multiple cells
 viewer.set_background_color("#0a0a0a")
 viewer.set_point_size(3.0)
 viewer.set_point_shape("square")
@@ -3081,10 +3227,10 @@ print("Settings changed! Updates should appear on all viewer instances above.")<
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [14]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [17]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-14">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-17">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -3115,7 +3261,7 @@ print("Settings changed! Updates should appear on all viewer instances above.")<
 
 <span class="n">viewer2</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-14"># Create a second, independent viewer with different settings
+<div class="clipboard-copy-txt" id="cell-17"># Create a second, independent viewer with different settings
 viewer2 = PotreeMap(
     width="100%",
     height="500px",
@@ -3144,13 +3290,13 @@ viewer2</div>
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[14]:</div>
-<div class="jupyter-widgets jp-OutputArea-output jp-OutputArea-executeResult" id="92f156e2-de17-47a4-887e-17c5cc44a994" tabindex="0">
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[17]:</div>
+<div class="jupyter-widgets jp-OutputArea-output jp-OutputArea-executeResult" id="fa732d8c-078d-4919-bcdf-de409e15ac3e" tabindex="0">
 <script type="text/javascript">
-var element = document.getElementById('92f156e2-de17-47a4-887e-17c5cc44a994');
+var element = document.getElementById('fa732d8c-078d-4919-bcdf-de409e15ac3e');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
-{"version_major": 2, "version_minor": 1, "model_id": "e054f5877cf744b8b425748df19adba4"}
+{"version_major": 2, "version_minor": 1, "model_id": "6fc9ec5aa5014e30900055c321f8a5f5"}
 </script>
 </div>
 </div>
@@ -3174,10 +3320,10 @@ var element = document.getElementById('92f156e2-de17-47a4-887e-17c5cc44a994');
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [15]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [18]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-15">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-18">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -3199,7 +3345,7 @@ var element = document.getElementById('92f156e2-de17-47a4-887e-17c5cc44a994');
 <span class="n">viewer</span><span class="o">.</span><span class="n">clear_filters</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"Filters cleared"</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-15"># Clear all point clouds from the first viewer
+<div class="clipboard-copy-txt" id="cell-18"># Clear all point clouds from the first viewer
 viewer.clear_point_clouds()
 print("Point clouds cleared from first viewer")
 
@@ -3273,7 +3419,7 @@ Filters cleared
 </div> <!-- jp-Notebook -->
 </div> <!-- jupyter-wrapper -->
 <script type="application/vnd.jupyter.widget-state+json">
-{"state": {"931b73eaf0e948468acce97025dc1f15": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "51b05bf550bb43bea0f9d0985d1fa18f": {"model_name": "ForceLoadModel", "model_module": "jupyter-vue", "model_module_version": "^1.11.2", "state": {"_dom_classes": [], "_model_module": "jupyter-vue", "_model_module_version": "^1.11.2", "_model_name": "ForceLoadModel", "_view_count": null, "_view_module": null, "_view_module_version": "", "_view_name": null, "layout": "IPY_MODEL_931b73eaf0e948468acce97025dc1f15", "tabbable": null, "tooltip": null}}, "1005cfd99c474e5f8e93701259987bc2": {"model_name": "ThemeModel", "model_module": "jupyter-vuetify", "model_module_version": "^1.11.3", "state": {"_model_module": "jupyter-vuetify", "_model_module_version": "^1.11.3", "_model_name": "ThemeModel", "_view_count": null, "_view_module": null, "_view_module_version": "^1.11.3", "_view_name": null, "dark": null, "dark_effective": null}}, "ffa264a4795043ae8be6a3defc88d59f": {"model_name": "ThemeColorsModel", "model_module": "jupyter-vuetify", "model_module_version": "^1.11.3", "state": {"_model_module": "jupyter-vuetify", "_model_module_version": "^1.11.3", "_model_name": "ThemeColorsModel", "_theme_name": "light", "_view_count": null, "_view_module": null, "_view_module_version": "^1.11.3", "_view_name": null, "accent": "#82B1FF", "anchor": null, "error": "#FF5252", "info": "#2196F3", "primary": "#1976D2", "secondary": "#424242", "success": "#4CAF50", "warning": "#FB8C00"}}, "fe7ce30ccbe5490d97c7398f043a3f02": {"model_name": "ThemeColorsModel", "model_module": "jupyter-vuetify", "model_module_version": "^1.11.3", "state": {"_model_module": "jupyter-vuetify", "_model_module_version": "^1.11.3", "_model_name": "ThemeColorsModel", "_theme_name": "dark", "_view_count": null, "_view_module": null, "_view_module_version": "^1.11.3", "_view_name": null, "accent": "#FF4081", "anchor": null, "error": "#FF5252", "info": "#2196F3", "primary": "#2196F3", "secondary": "#424242", "success": "#4CAF50", "warning": "#FB8C00"}}, "3ca8765296e54cb588a4a1c4d2522d01": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "a3791d931316491e97e9d55592369f45": {"model_name": "AnyModel", "model_module": "anywidget", "model_module_version": "~0.9.*", "state": {"_anywidget_id": "anymap.potree.PotreeMap", "_controls": {}, "_css": "\/* Potree Widget Styling *\/\n\n\/* Main container styling *\/\n.anymap-potree-container {\n    width: 100%;\n    height: 100%;\n    position: relative;\n    overflow: hidden;\n    background-color: #000000;\n    font-family: 'Arial', sans-serif;\n}\n\n\/* Canvas styling for Potree *\/\n.anymap-potree-container canvas {\n    pointer-events: auto;\n    cursor: grab;\n    display: block;\n    outline: none;\n    border: none;\n}\n\n.anymap-potree-container canvas:active {\n    cursor: grabbing;\n}\n\n\/* Loading indicator *\/\n.anymap-potree-loading {\n    position: absolute;\n    top: 50%;\n    left: 50%;\n    transform: translate(-50%, -50%);\n    color: #ffffff;\n    font-size: 16px;\n    font-weight: normal;\n    text-align: center;\n    z-index: 1000;\n    pointer-events: none;\n}\n\n\/* Error message styling *\/\n.anymap-potree-error {\n    position: absolute;\n    top: 50%;\n    left: 50%;\n    transform: translate(-50%, -50%);\n    color: #ff4444;\n    font-size: 16px;\n    font-weight: normal;\n    text-align: center;\n    z-index: 1000;\n    pointer-events: none;\n    background-color: rgba(0, 0, 0, 0.8);\n    padding: 10px 20px;\n    border-radius: 5px;\n}\n\n\/* Control panel styling (if needed for future controls) *\/\n.anymap-potree-controls {\n    position: absolute;\n    top: 10px;\n    right: 10px;\n    background-color: rgba(0, 0, 0, 0.7);\n    border-radius: 5px;\n    padding: 10px;\n    color: #ffffff;\n    font-size: 12px;\n    z-index: 100;\n    pointer-events: auto;\n}\n\n\/* Info panel styling *\/\n.anymap-potree-info {\n    position: absolute;\n    bottom: 10px;\n    left: 10px;\n    background-color: rgba(0, 0, 0, 0.7);\n    border-radius: 5px;\n    padding: 8px 12px;\n    color: #ffffff;\n    font-size: 11px;\n    z-index: 100;\n    pointer-events: none;\n    max-width: 300px;\n}\n\n\/* Measurement tools styling *\/\n.anymap-potree-measurement {\n    position: absolute;\n    background-color: rgba(255, 255, 255, 0.9);\n    border: 1px solid #cccccc;\n    border-radius: 3px;\n    padding: 5px 8px;\n    color: #333333;\n    font-size: 11px;\n    font-weight: bold;\n    z-index: 200;\n    pointer-events: none;\n    white-space: nowrap;\n}\n\n\/* Button styling for any UI controls *\/\n.anymap-potree-button {\n    background-color: rgba(255, 255, 255, 0.9);\n    border: 1px solid #cccccc;\n    border-radius: 3px;\n    padding: 6px 12px;\n    color: #333333;\n    font-size: 12px;\n    cursor: pointer;\n    margin: 2px;\n    transition: background-color 0.2s;\n}\n\n.anymap-potree-button:hover {\n    background-color: rgba(255, 255, 255, 1.0);\n}\n\n.anymap-potree-button:active {\n    background-color: rgba(230, 230, 230, 1.0);\n}\n\n\/* Progress bar for loading *\/\n.anymap-potree-progress {\n    position: absolute;\n    bottom: 20px;\n    left: 50%;\n    transform: translateX(-50%);\n    width: 200px;\n    height: 4px;\n    background-color: rgba(255, 255, 255, 0.2);\n    border-radius: 2px;\n    z-index: 1000;\n}\n\n.anymap-potree-progress-bar {\n    height: 100%;\n    background-color: #00aaff;\n    border-radius: 2px;\n    transition: width 0.3s ease;\n}\n\n\/* Responsive design adjustments *\/\n@media (max-width: 768px) {\n    .anymap-potree-controls {\n        top: 5px;\n        right: 5px;\n        padding: 8px;\n        font-size: 11px;\n    }\n\n    .anymap-potree-info {\n        bottom: 5px;\n        left: 5px;\n        padding: 6px 10px;\n        font-size: 10px;\n        max-width: 250px;\n    }\n\n    .anymap-potree-loading {\n        font-size: 14px;\n    }\n}\n\n\/* Disable text selection on the widget *\/\n.anymap-potree-container {\n    -webkit-user-select: none;\n    -moz-user-select: none;\n    -ms-user-select: none;\n    user-select: none;\n}\n\n\/* Focus outline for accessibility *\/\n.anymap-potree-container:focus {\n    outline: 2px solid #0066cc;\n    outline-offset: 2px;\n}\n\n\/* Fullscreen styling *\/\n.anymap-potree-container.fullscreen {\n    position: fixed !important;\n    top: 0 !important;\n    left: 0 !important;\n    width: 100vw !important;\n    height: 100vh !important;\n    z-index: 9999 !important;\n}\n\n\/* Dark theme adjustments *\/\n.anymap-potree-container.dark-theme {\n    background-color: #1a1a1a;\n}\n\n.anymap-potree-container.dark-theme .anymap-potree-controls {\n    background-color: rgba(40, 40, 40, 0.9);\n    color: #e0e0e0;\n}\n\n.anymap-potree-container.dark-theme .anymap-potree-info {\n    background-color: rgba(40, 40, 40, 0.9);\n    color: #e0e0e0;\n}", "_dom_classes": [], "_esm": "\/\/ Load Three.js and OrbitControls from CDN using traditional script tags\nfunction loadThreeJS() {\n  return new Promise((resolve, reject) => {\n    \/\/ Check if Three.js is already loaded\n    if (window.THREE) {\n      resolve();\n      return;\n    }\n\n    \/\/ Check if script is already being loaded\n    const existingScript = document.head.querySelector('script[src*=\"three.min.js\"]');\n    if (existingScript) {\n      existingScript.addEventListener('load', resolve);\n      existingScript.addEventListener('error', reject);\n      return;\n    }\n\n    \/\/ Load Three.js first\n    const threeScript = document.createElement('script');\n    threeScript.src = 'https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/three.js\/r156\/three.min.js';\n    threeScript.async = false;\n\n    threeScript.addEventListener('load', () => {\n      \/\/ Load OrbitControls after Three.js\n      const controlsScript = document.createElement('script');\n      controlsScript.src = 'https:\/\/cdn.jsdelivr.net\/npm\/three@0.156.1\/examples\/js\/controls\/OrbitControls.js';\n      controlsScript.async = false;\n\n      controlsScript.addEventListener('load', () => {\n        \/\/ Make OrbitControls available\n        if (window.THREE && window.THREE.OrbitControls) {\n          resolve();\n        } else {\n          \/\/ Fallback: create a basic OrbitControls placeholder\n          window.THREE = window.THREE || {};\n          window.THREE.OrbitControls = function(camera, domElement) {\n            this.camera = camera;\n            this.domElement = domElement;\n            this.target = new THREE.Vector3();\n            this.update = function() {};\n            this.dispose = function() {};\n          };\n          resolve();\n        }\n      });\n\n      controlsScript.addEventListener('error', () => {\n        \/\/ If OrbitControls fails to load, continue without it\n        console.warn('OrbitControls failed to load, continuing without camera controls');\n        resolve();\n      });\n\n      document.head.appendChild(controlsScript);\n    });\n\n    threeScript.addEventListener('error', reject);\n    document.head.appendChild(threeScript);\n\n    \/\/ Fallback timeout\n    setTimeout(() => {\n      if (!window.THREE) {\n        reject(new Error('Three.js failed to load'));\n      }\n    }, 15000);\n  });\n}\n\nfunction render({ model, el }) {\n  \/\/ Create unique ID for this widget instance\n  const widgetId = `anymap-potree-${Math.random().toString(36).substr(2, 9)}`;\n\n  \/\/ Create container for the viewer\n  const container = document.createElement(\"div\");\n  container.id = widgetId;\n  container.style.width = model.get(\"width\");\n  container.style.height = model.get(\"height\");\n  container.style.position = \"relative\";\n  container.style.overflow = \"hidden\";\n  container.style.backgroundColor = model.get(\"background_color\") || \"#000000\";\n\n  \/\/ Ensure parent element has proper styling\n  el.style.width = \"100%\";\n  el.style.display = \"block\";\n\n  \/\/ Clear any existing content and cleanup\n  if (el._scene) {\n    el._scene = null;\n  }\n  if (el._camera) {\n    el._camera = null;\n  }\n  if (el._renderer) {\n    el._renderer.dispose();\n    el._renderer = null;\n  }\n  if (el._controls) {\n    el._controls.dispose();\n    el._controls = null;\n  }\n  if (el._potree) {\n    el._potree = null;\n  }\n  if (el._pointClouds) {\n    el._pointClouds = [];\n  }\n\n  el.innerHTML = \"\";\n  el.appendChild(container);\n\n  \/\/ Show loading indicator\n  const loadingDiv = document.createElement(\"div\");\n  loadingDiv.className = \"anymap-potree-loading\";\n  loadingDiv.style.position = \"absolute\";\n  loadingDiv.style.top = \"50%\";\n  loadingDiv.style.left = \"50%\";\n  loadingDiv.style.transform = \"translate(-50%, -50%)\";\n  loadingDiv.style.color = \"#ffffff\";\n  loadingDiv.style.fontSize = \"16px\";\n  loadingDiv.style.fontFamily = \"Arial, sans-serif\";\n  loadingDiv.textContent = \"Loading Three.js...\";\n  container.appendChild(loadingDiv);\n\n  \/\/ Load Three.js and initialize when ready\n  loadThreeJS().then(() => {\n    initializeViewer();\n  }).catch((error) => {\n    console.error(\"Failed to load Three.js:\", error);\n    console.log(\"Falling back to basic canvas renderer\");\n    initializeFallbackViewer();\n  });\n\n  \/\/ Function to initialize viewer when library is ready\n  function initializeViewer() {\n    if (!window.THREE) {\n      console.error(\"Three.js library not loaded\");\n      return;\n    }\n\n    \/\/ Remove loading indicator\n    if (loadingDiv.parentNode) {\n      loadingDiv.parentNode.removeChild(loadingDiv);\n    }\n\n    \/\/ Initialize Three.js scene\n    const scene = new THREE.Scene();\n    const camera = new THREE.PerspectiveCamera(\n      model.get(\"fov\") || 60,\n      container.clientWidth \/ container.clientHeight,\n      model.get(\"near_clip\") || 0.1,\n      model.get(\"far_clip\") || 1000\n    );\n\n    const renderer = new THREE.WebGLRenderer({ antialias: true });\n    renderer.setSize(container.clientWidth, container.clientHeight);\n    renderer.setClearColor(new THREE.Color(model.get(\"background_color\") || \"#000000\"));\n    container.appendChild(renderer.domElement);\n\n    \/\/ Set up camera position\n    const cameraPos = model.get(\"camera_position\") || [0, 0, 10];\n    const cameraTarget = model.get(\"camera_target\") || [0, 0, 0];\n    camera.position.set(cameraPos[0], cameraPos[1], cameraPos[2]);\n    camera.lookAt(new THREE.Vector3(cameraTarget[0], cameraTarget[1], cameraTarget[2]));\n\n    \/\/ Set up orbit controls\n    let controls;\n    if (window.THREE.OrbitControls) {\n      controls = new THREE.OrbitControls(camera, renderer.domElement);\n      controls.target.set(cameraTarget[0], cameraTarget[1], cameraTarget[2]);\n      controls.update();\n    }\n\n    \/\/ Store references\n    el._scene = scene;\n    el._camera = camera;\n    el._renderer = renderer;\n    el._controls = controls;\n    el._pointClouds = [];\n    el._widgetId = widgetId;\n\n    \/\/ Add coordinate grid if enabled\n    if (model.get(\"show_grid\")) {\n      const gridSize = model.get(\"grid_size\") || 10;\n      const gridColor = new THREE.Color(model.get(\"grid_color\") || \"#aaaaaa\");\n      const grid = new THREE.GridHelper(gridSize, 10, gridColor, gridColor);\n      scene.add(grid);\n    }\n\n    \/\/ Setup resize observer\n    let resizeObserver;\n    if (window.ResizeObserver) {\n      resizeObserver = new ResizeObserver(() => {\n        setTimeout(() => {\n          if (camera && renderer && container) {\n            camera.aspect = container.clientWidth \/ container.clientHeight;\n            camera.updateProjectionMatrix();\n            renderer.setSize(container.clientWidth, container.clientHeight);\n          }\n        }, 100);\n      });\n      resizeObserver.observe(el);\n      resizeObserver.observe(container);\n    }\n\n    \/\/ Animation loop\n    function animate() {\n      requestAnimationFrame(animate);\n\n      if (controls) {\n        controls.update();\n      }\n\n      \/\/ Render the scene\n      renderer.render(scene, camera);\n    }\n    animate();\n\n    \/\/ Load initial point cloud if provided\n    const initialPointCloudUrl = model.get(\"point_cloud_url\");\n    if (initialPointCloudUrl) {\n      loadPointCloudFromUrl(initialPointCloudUrl);\n    }\n\n    \/\/ Restore state from model\n    restoreViewerState();\n  }\n\n  \/\/ Function to load point cloud from URL (placeholder)\n  function loadPointCloudFromUrl(url, name = \"Point Cloud\") {\n    console.log(\"Point cloud loading requested:\", url, name);\n    console.warn(\"Point cloud loading not yet implemented - requires Potree library integration\");\n\n    \/\/ For now, just add a simple placeholder object\n    const geometry = new THREE.BoxGeometry(1, 1, 1);\n    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });\n    const placeholder = new THREE.Mesh(geometry, material);\n    placeholder.name = name || \"Placeholder\";\n\n    el._scene.add(placeholder);\n    el._pointClouds.push(placeholder);\n\n    fitToScreen();\n  }\n\n  \/\/ Function to fit point clouds to screen\n  function fitToScreen() {\n    if (!el._pointClouds.length || !el._camera || !el._controls) {\n      return;\n    }\n\n    \/\/ Calculate bounding box of all objects\n    const box = new THREE.Box3();\n    el._pointClouds.forEach(obj => {\n      const objBox = new THREE.Box3().setFromObject(obj);\n      box.union(objBox);\n    });\n\n    if (!box.isEmpty()) {\n      const center = box.getCenter(new THREE.Vector3());\n      const size = box.getSize(new THREE.Vector3());\n      const maxSize = Math.max(size.x, size.y, size.z);\n\n      \/\/ Position camera\n      const distance = maxSize * 3;\n      el._camera.position.copy(center);\n      el._camera.position.z += distance;\n\n      if (el._controls) {\n        el._controls.target.copy(center);\n        el._controls.update();\n      }\n    }\n  }\n\n  \/\/ Function to restore viewer state from model\n  function restoreViewerState() {\n    \/\/ This would restore any persistent state if needed\n  }\n\n  \/\/ Fallback viewer without Three.js dependencies\n  function initializeFallbackViewer() {\n    \/\/ Remove loading indicator\n    if (loadingDiv.parentNode) {\n      loadingDiv.parentNode.removeChild(loadingDiv);\n    }\n\n    \/\/ Create a simple canvas fallback\n    const canvas = document.createElement('canvas');\n    canvas.width = container.clientWidth;\n    canvas.height = container.clientHeight;\n    canvas.style.width = '100%';\n    canvas.style.height = '100%';\n    canvas.style.display = 'block';\n    container.appendChild(canvas);\n\n    const ctx = canvas.getContext('2d');\n\n    \/\/ Draw a simple visualization\n    function drawFallback() {\n      ctx.fillStyle = model.get(\"background_color\") || \"#000000\";\n      ctx.fillRect(0, 0, canvas.width, canvas.height);\n\n      \/\/ Draw grid if enabled\n      if (model.get(\"show_grid\")) {\n        ctx.strokeStyle = model.get(\"grid_color\") || \"#444444\";\n        ctx.lineWidth = 1;\n        const gridSize = 50; \/\/ Fixed grid size for fallback\n\n        for (let x = 0; x <= canvas.width; x += gridSize) {\n          ctx.beginPath();\n          ctx.moveTo(x, 0);\n          ctx.lineTo(x, canvas.height);\n          ctx.stroke();\n        }\n\n        for (let y = 0; y <= canvas.height; y += gridSize) {\n          ctx.beginPath();\n          ctx.moveTo(0, y);\n          ctx.lineTo(canvas.width, y);\n          ctx.stroke();\n        }\n      }\n\n      \/\/ Draw center message\n      ctx.fillStyle = \"#ffffff\";\n      ctx.font = \"16px Arial\";\n      ctx.textAlign = \"center\";\n      ctx.fillText(\"Potree Viewer\", canvas.width \/ 2, canvas.height \/ 2 - 20);\n      ctx.fillText(\"(Three.js library not available)\", canvas.width \/ 2, canvas.height \/ 2 + 20);\n    }\n\n    drawFallback();\n\n    \/\/ Store minimal references\n    el._canvas = canvas;\n    el._ctx = ctx;\n    el._widgetId = widgetId;\n\n    \/\/ Handle resize\n    window.addEventListener('resize', () => {\n      canvas.width = container.clientWidth;\n      canvas.height = container.clientHeight;\n      drawFallback();\n    });\n\n    \/\/ Redraw when background color changes\n    model.on(\"change:background_color\", drawFallback);\n    model.on(\"change:show_grid\", drawFallback);\n    model.on(\"change:grid_color\", drawFallback);\n  }\n\n  \/\/ Handle JavaScript method calls from Python\n  function handleJSMethodCall(call) {\n    const { method, args, kwargs } = call;\n\n    try {\n      switch (method) {\n        case \"loadPointCloud\":\n          if (args && args.length > 0) {\n            const options = args[0];\n            loadPointCloudFromUrl(options.url, options.name);\n          }\n          break;\n\n        case \"fitToScreen\":\n          fitToScreen();\n          break;\n\n        case \"clearPointClouds\":\n          el._pointClouds.forEach(pc => {\n            el._scene.remove(pc);\n          });\n          el._pointClouds = [];\n          break;\n\n        case \"takeScreenshot\":\n          \/\/ Render current frame to get screenshot\n          el._renderer.render(el._scene, el._camera);\n          const dataURL = el._renderer.domElement.toDataURL();\n          \/\/ Could emit event back to Python with screenshot data\n          break;\n\n        case \"loadMultiplePointClouds\":\n          if (args && args.length > 0) {\n            const pointClouds = args[0];\n            pointClouds.forEach(pc => {\n              loadPointCloudFromUrl(pc.url, pc.name);\n            });\n          }\n          break;\n\n        case \"setQuality\":\n          if (args && args.length > 0) {\n            const quality = args[0];\n            \/\/ Adjust rendering quality based on setting\n            if (quality === \"low\") {\n              el._renderer.setPixelRatio(0.5);\n            } else if (quality === \"medium\") {\n              el._renderer.setPixelRatio(0.75);\n            } else if (quality === \"high\") {\n              el._renderer.setPixelRatio(1.0);\n            }\n          }\n          break;\n\n        case \"addMeasurement\":\n          \/\/ Implementation would depend on Potree measurement tools\n          console.log(\"Measurement tools not yet implemented\");\n          break;\n\n        case \"clearMeasurements\":\n          \/\/ Clear measurement objects\n          console.log(\"Clear measurements not yet implemented\");\n          break;\n\n        case \"clearFilters\":\n          \/\/ Reset any applied filters\n          el._pointClouds.forEach(pc => {\n            if (pc.material) {\n              \/\/ Reset material properties to defaults\n            }\n          });\n          break;\n\n        default:\n          console.warn(`Unknown method: ${method}`);\n      }\n    } catch (error) {\n      console.error(`Error executing method ${method}:`, error);\n    }\n  }\n\n  \/\/ Listen for JavaScript method calls\n  model.on(\"change:_js_calls\", () => {\n    const calls = model.get(\"_js_calls\") || [];\n    const lastCall = calls[calls.length - 1];\n    if (lastCall) {\n      handleJSMethodCall(lastCall);\n    }\n  });\n\n  \/\/ Listen for trait changes\n  model.on(\"change:point_size\", () => {\n    const size = model.get(\"point_size\");\n    console.log(\"Point size changed to:\", size);\n    \/\/ Point size changes will be implemented when actual point cloud loading is added\n  });\n\n  model.on(\"change:point_size_type\", () => {\n    const sizeType = model.get(\"point_size_type\");\n    console.log(\"Point size type changed to:\", sizeType);\n    \/\/ Point size type changes will be implemented when actual point cloud loading is added\n  });\n\n  model.on(\"change:point_shape\", () => {\n    const shape = model.get(\"point_shape\");\n    console.log(\"Point shape changed to:\", shape);\n    \/\/ Point shape changes will be implemented when actual point cloud loading is added\n  });\n\n  model.on(\"change:background_color\", () => {\n    const color = model.get(\"background_color\");\n    if (el._renderer) {\n      el._renderer.setClearColor(new THREE.Color(color));\n    }\n    container.style.backgroundColor = color;\n  });\n\n  model.on(\"change:camera_position\", () => {\n    const position = model.get(\"camera_position\");\n    if (el._camera && position && position.length >= 3) {\n      el._camera.position.set(position[0], position[1], position[2]);\n    }\n  });\n\n  model.on(\"change:camera_target\", () => {\n    const target = model.get(\"camera_target\");\n    if (el._controls && target && target.length >= 3) {\n      el._controls.target.set(target[0], target[1], target[2]);\n      el._controls.update();\n    }\n  });\n\n  model.on(\"change:fov\", () => {\n    const fov = model.get(\"fov\");\n    if (el._camera) {\n      el._camera.fov = fov;\n      el._camera.updateProjectionMatrix();\n    }\n  });\n\n  model.on(\"change:show_grid\", () => {\n    const showGrid = model.get(\"show_grid\");\n    \/\/ Find existing grid and toggle visibility\n    el._scene.children.forEach(child => {\n      if (child instanceof THREE.GridHelper) {\n        child.visible = showGrid;\n      }\n    });\n\n    \/\/ Add grid if it doesn't exist and should be shown\n    if (showGrid) {\n      const existingGrid = el._scene.children.find(child => child instanceof THREE.GridHelper);\n      if (!existingGrid) {\n        const gridSize = model.get(\"grid_size\") || 10;\n        const gridColor = new THREE.Color(model.get(\"grid_color\") || \"#aaaaaa\");\n        const grid = new THREE.GridHelper(gridSize, 10, gridColor, gridColor);\n        el._scene.add(grid);\n      }\n    }\n  });\n\n  \/\/ Cleanup function\n  el._cleanup = () => {\n    if (el._renderer) {\n      el._renderer.dispose();\n    }\n    if (el._controls && el._controls.dispose) {\n      el._controls.dispose();\n    }\n    if (typeof resizeObserver !== 'undefined' && resizeObserver) {\n      resizeObserver.disconnect();\n    }\n    \/\/ Clear any canvas contexts\n    if (el._canvas) {\n      el._canvas = null;\n    }\n    if (el._ctx) {\n      el._ctx = null;\n    }\n  };\n}\n\n\/\/ Cleanup function for proper widget disposal\nfunction cleanup(el) {\n  if (el._cleanup) {\n    el._cleanup();\n  }\n}\n\n\/\/ Export default object with render and cleanup functions\nexport default { render, cleanup };", "_js_calls": [{"id": 0, "method": "setQuality", "args": ["high"], "kwargs": {}}, {"id": 1, "method": "filterByElevation", "args": [{"min": 0, "max": 50}], "kwargs": {}}, {"id": 2, "method": "setClassificationVisibility", "args": [{"1": true, "2": true, "3": false, "4": false, "5": false, "6": true}], "kwargs": {}}, {"id": 3, "method": "addMeasurement", "args": ["distance"], "kwargs": {}}, {"id": 4, "method": "addMeasurement", "args": ["area"], "kwargs": {}}, {"id": 5, "method": "addMeasurement", "args": ["volume"], "kwargs": {}}, {"id": 6, "method": "fitToScreen", "args": [], "kwargs": {}}, {"id": 7, "method": "takeScreenshot", "args": [], "kwargs": {}}, {"id": 8, "method": "clearPointClouds", "args": [], "kwargs": {}}, {"id": 9, "method": "clearMeasurements", "args": [], "kwargs": {}}, {"id": 10, "method": "clearFilters", "args": [], "kwargs": {}}], "_js_events": [], "_layers": {}, "_model_module": "anywidget", "_model_module_version": "~0.9.*", "_model_name": "AnyModel", "_projection": {}, "_sources": {}, "_terrain": {}, "_view_count": null, "_view_module": "anywidget", "_view_module_version": "~0.9.*", "_view_name": "AnyView", "background_color": "#0a0a0a", "camera_position": [20, 20, 30], "camera_target": [0, 0, 0], "center": [0.0, 0.0], "edl_enabled": true, "edl_radius": 1.5, "edl_strength": 1.2, "far_clip": 1000.0, "fov": 75.0, "grid_color": "#666666", "grid_size": 20.0, "height": "600px", "layout": "IPY_MODEL_3ca8765296e54cb588a4a1c4d2522d01", "min_node_size": 100.0, "near_clip": 0.1, "point_cloud_url": "", "point_shape": "square", "point_size": 3.0, "point_size_type": "fixed", "show_grid": true, "style": "", "tabbable": null, "tooltip": null, "width": "100%", "zoom": 2.0}}, "f762151657d74adbb92e3109956bc5e4": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "e054f5877cf744b8b425748df19adba4": {"model_name": "AnyModel", "model_module": "anywidget", "model_module_version": "~0.9.*", "state": {"_anywidget_id": "anymap.potree.PotreeMap", "_controls": {}, "_css": "\/* Potree Widget Styling *\/\n\n\/* Main container styling *\/\n.anymap-potree-container {\n    width: 100%;\n    height: 100%;\n    position: relative;\n    overflow: hidden;\n    background-color: #000000;\n    font-family: 'Arial', sans-serif;\n}\n\n\/* Canvas styling for Potree *\/\n.anymap-potree-container canvas {\n    pointer-events: auto;\n    cursor: grab;\n    display: block;\n    outline: none;\n    border: none;\n}\n\n.anymap-potree-container canvas:active {\n    cursor: grabbing;\n}\n\n\/* Loading indicator *\/\n.anymap-potree-loading {\n    position: absolute;\n    top: 50%;\n    left: 50%;\n    transform: translate(-50%, -50%);\n    color: #ffffff;\n    font-size: 16px;\n    font-weight: normal;\n    text-align: center;\n    z-index: 1000;\n    pointer-events: none;\n}\n\n\/* Error message styling *\/\n.anymap-potree-error {\n    position: absolute;\n    top: 50%;\n    left: 50%;\n    transform: translate(-50%, -50%);\n    color: #ff4444;\n    font-size: 16px;\n    font-weight: normal;\n    text-align: center;\n    z-index: 1000;\n    pointer-events: none;\n    background-color: rgba(0, 0, 0, 0.8);\n    padding: 10px 20px;\n    border-radius: 5px;\n}\n\n\/* Control panel styling (if needed for future controls) *\/\n.anymap-potree-controls {\n    position: absolute;\n    top: 10px;\n    right: 10px;\n    background-color: rgba(0, 0, 0, 0.7);\n    border-radius: 5px;\n    padding: 10px;\n    color: #ffffff;\n    font-size: 12px;\n    z-index: 100;\n    pointer-events: auto;\n}\n\n\/* Info panel styling *\/\n.anymap-potree-info {\n    position: absolute;\n    bottom: 10px;\n    left: 10px;\n    background-color: rgba(0, 0, 0, 0.7);\n    border-radius: 5px;\n    padding: 8px 12px;\n    color: #ffffff;\n    font-size: 11px;\n    z-index: 100;\n    pointer-events: none;\n    max-width: 300px;\n}\n\n\/* Measurement tools styling *\/\n.anymap-potree-measurement {\n    position: absolute;\n    background-color: rgba(255, 255, 255, 0.9);\n    border: 1px solid #cccccc;\n    border-radius: 3px;\n    padding: 5px 8px;\n    color: #333333;\n    font-size: 11px;\n    font-weight: bold;\n    z-index: 200;\n    pointer-events: none;\n    white-space: nowrap;\n}\n\n\/* Button styling for any UI controls *\/\n.anymap-potree-button {\n    background-color: rgba(255, 255, 255, 0.9);\n    border: 1px solid #cccccc;\n    border-radius: 3px;\n    padding: 6px 12px;\n    color: #333333;\n    font-size: 12px;\n    cursor: pointer;\n    margin: 2px;\n    transition: background-color 0.2s;\n}\n\n.anymap-potree-button:hover {\n    background-color: rgba(255, 255, 255, 1.0);\n}\n\n.anymap-potree-button:active {\n    background-color: rgba(230, 230, 230, 1.0);\n}\n\n\/* Progress bar for loading *\/\n.anymap-potree-progress {\n    position: absolute;\n    bottom: 20px;\n    left: 50%;\n    transform: translateX(-50%);\n    width: 200px;\n    height: 4px;\n    background-color: rgba(255, 255, 255, 0.2);\n    border-radius: 2px;\n    z-index: 1000;\n}\n\n.anymap-potree-progress-bar {\n    height: 100%;\n    background-color: #00aaff;\n    border-radius: 2px;\n    transition: width 0.3s ease;\n}\n\n\/* Responsive design adjustments *\/\n@media (max-width: 768px) {\n    .anymap-potree-controls {\n        top: 5px;\n        right: 5px;\n        padding: 8px;\n        font-size: 11px;\n    }\n\n    .anymap-potree-info {\n        bottom: 5px;\n        left: 5px;\n        padding: 6px 10px;\n        font-size: 10px;\n        max-width: 250px;\n    }\n\n    .anymap-potree-loading {\n        font-size: 14px;\n    }\n}\n\n\/* Disable text selection on the widget *\/\n.anymap-potree-container {\n    -webkit-user-select: none;\n    -moz-user-select: none;\n    -ms-user-select: none;\n    user-select: none;\n}\n\n\/* Focus outline for accessibility *\/\n.anymap-potree-container:focus {\n    outline: 2px solid #0066cc;\n    outline-offset: 2px;\n}\n\n\/* Fullscreen styling *\/\n.anymap-potree-container.fullscreen {\n    position: fixed !important;\n    top: 0 !important;\n    left: 0 !important;\n    width: 100vw !important;\n    height: 100vh !important;\n    z-index: 9999 !important;\n}\n\n\/* Dark theme adjustments *\/\n.anymap-potree-container.dark-theme {\n    background-color: #1a1a1a;\n}\n\n.anymap-potree-container.dark-theme .anymap-potree-controls {\n    background-color: rgba(40, 40, 40, 0.9);\n    color: #e0e0e0;\n}\n\n.anymap-potree-container.dark-theme .anymap-potree-info {\n    background-color: rgba(40, 40, 40, 0.9);\n    color: #e0e0e0;\n}", "_dom_classes": [], "_esm": "\/\/ Load Three.js and OrbitControls from CDN using traditional script tags\nfunction loadThreeJS() {\n  return new Promise((resolve, reject) => {\n    \/\/ Check if Three.js is already loaded\n    if (window.THREE) {\n      resolve();\n      return;\n    }\n\n    \/\/ Check if script is already being loaded\n    const existingScript = document.head.querySelector('script[src*=\"three.min.js\"]');\n    if (existingScript) {\n      existingScript.addEventListener('load', resolve);\n      existingScript.addEventListener('error', reject);\n      return;\n    }\n\n    \/\/ Load Three.js first\n    const threeScript = document.createElement('script');\n    threeScript.src = 'https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/three.js\/r156\/three.min.js';\n    threeScript.async = false;\n\n    threeScript.addEventListener('load', () => {\n      \/\/ Load OrbitControls after Three.js\n      const controlsScript = document.createElement('script');\n      controlsScript.src = 'https:\/\/cdn.jsdelivr.net\/npm\/three@0.156.1\/examples\/js\/controls\/OrbitControls.js';\n      controlsScript.async = false;\n\n      controlsScript.addEventListener('load', () => {\n        \/\/ Make OrbitControls available\n        if (window.THREE && window.THREE.OrbitControls) {\n          resolve();\n        } else {\n          \/\/ Fallback: create a basic OrbitControls placeholder\n          window.THREE = window.THREE || {};\n          window.THREE.OrbitControls = function(camera, domElement) {\n            this.camera = camera;\n            this.domElement = domElement;\n            this.target = new THREE.Vector3();\n            this.update = function() {};\n            this.dispose = function() {};\n          };\n          resolve();\n        }\n      });\n\n      controlsScript.addEventListener('error', () => {\n        \/\/ If OrbitControls fails to load, continue without it\n        console.warn('OrbitControls failed to load, continuing without camera controls');\n        resolve();\n      });\n\n      document.head.appendChild(controlsScript);\n    });\n\n    threeScript.addEventListener('error', reject);\n    document.head.appendChild(threeScript);\n\n    \/\/ Fallback timeout\n    setTimeout(() => {\n      if (!window.THREE) {\n        reject(new Error('Three.js failed to load'));\n      }\n    }, 15000);\n  });\n}\n\nfunction render({ model, el }) {\n  \/\/ Create unique ID for this widget instance\n  const widgetId = `anymap-potree-${Math.random().toString(36).substr(2, 9)}`;\n\n  \/\/ Create container for the viewer\n  const container = document.createElement(\"div\");\n  container.id = widgetId;\n  container.style.width = model.get(\"width\");\n  container.style.height = model.get(\"height\");\n  container.style.position = \"relative\";\n  container.style.overflow = \"hidden\";\n  container.style.backgroundColor = model.get(\"background_color\") || \"#000000\";\n\n  \/\/ Ensure parent element has proper styling\n  el.style.width = \"100%\";\n  el.style.display = \"block\";\n\n  \/\/ Clear any existing content and cleanup\n  if (el._scene) {\n    el._scene = null;\n  }\n  if (el._camera) {\n    el._camera = null;\n  }\n  if (el._renderer) {\n    el._renderer.dispose();\n    el._renderer = null;\n  }\n  if (el._controls) {\n    el._controls.dispose();\n    el._controls = null;\n  }\n  if (el._potree) {\n    el._potree = null;\n  }\n  if (el._pointClouds) {\n    el._pointClouds = [];\n  }\n\n  el.innerHTML = \"\";\n  el.appendChild(container);\n\n  \/\/ Show loading indicator\n  const loadingDiv = document.createElement(\"div\");\n  loadingDiv.className = \"anymap-potree-loading\";\n  loadingDiv.style.position = \"absolute\";\n  loadingDiv.style.top = \"50%\";\n  loadingDiv.style.left = \"50%\";\n  loadingDiv.style.transform = \"translate(-50%, -50%)\";\n  loadingDiv.style.color = \"#ffffff\";\n  loadingDiv.style.fontSize = \"16px\";\n  loadingDiv.style.fontFamily = \"Arial, sans-serif\";\n  loadingDiv.textContent = \"Loading Three.js...\";\n  container.appendChild(loadingDiv);\n\n  \/\/ Load Three.js and initialize when ready\n  loadThreeJS().then(() => {\n    initializeViewer();\n  }).catch((error) => {\n    console.error(\"Failed to load Three.js:\", error);\n    console.log(\"Falling back to basic canvas renderer\");\n    initializeFallbackViewer();\n  });\n\n  \/\/ Function to initialize viewer when library is ready\n  function initializeViewer() {\n    if (!window.THREE) {\n      console.error(\"Three.js library not loaded\");\n      return;\n    }\n\n    \/\/ Remove loading indicator\n    if (loadingDiv.parentNode) {\n      loadingDiv.parentNode.removeChild(loadingDiv);\n    }\n\n    \/\/ Initialize Three.js scene\n    const scene = new THREE.Scene();\n    const camera = new THREE.PerspectiveCamera(\n      model.get(\"fov\") || 60,\n      container.clientWidth \/ container.clientHeight,\n      model.get(\"near_clip\") || 0.1,\n      model.get(\"far_clip\") || 1000\n    );\n\n    const renderer = new THREE.WebGLRenderer({ antialias: true });\n    renderer.setSize(container.clientWidth, container.clientHeight);\n    renderer.setClearColor(new THREE.Color(model.get(\"background_color\") || \"#000000\"));\n    container.appendChild(renderer.domElement);\n\n    \/\/ Set up camera position\n    const cameraPos = model.get(\"camera_position\") || [0, 0, 10];\n    const cameraTarget = model.get(\"camera_target\") || [0, 0, 0];\n    camera.position.set(cameraPos[0], cameraPos[1], cameraPos[2]);\n    camera.lookAt(new THREE.Vector3(cameraTarget[0], cameraTarget[1], cameraTarget[2]));\n\n    \/\/ Set up orbit controls\n    let controls;\n    if (window.THREE.OrbitControls) {\n      controls = new THREE.OrbitControls(camera, renderer.domElement);\n      controls.target.set(cameraTarget[0], cameraTarget[1], cameraTarget[2]);\n      controls.update();\n    }\n\n    \/\/ Store references\n    el._scene = scene;\n    el._camera = camera;\n    el._renderer = renderer;\n    el._controls = controls;\n    el._pointClouds = [];\n    el._widgetId = widgetId;\n\n    \/\/ Add coordinate grid if enabled\n    if (model.get(\"show_grid\")) {\n      const gridSize = model.get(\"grid_size\") || 10;\n      const gridColor = new THREE.Color(model.get(\"grid_color\") || \"#aaaaaa\");\n      const grid = new THREE.GridHelper(gridSize, 10, gridColor, gridColor);\n      scene.add(grid);\n    }\n\n    \/\/ Setup resize observer\n    let resizeObserver;\n    if (window.ResizeObserver) {\n      resizeObserver = new ResizeObserver(() => {\n        setTimeout(() => {\n          if (camera && renderer && container) {\n            camera.aspect = container.clientWidth \/ container.clientHeight;\n            camera.updateProjectionMatrix();\n            renderer.setSize(container.clientWidth, container.clientHeight);\n          }\n        }, 100);\n      });\n      resizeObserver.observe(el);\n      resizeObserver.observe(container);\n    }\n\n    \/\/ Animation loop\n    function animate() {\n      requestAnimationFrame(animate);\n\n      if (controls) {\n        controls.update();\n      }\n\n      \/\/ Render the scene\n      renderer.render(scene, camera);\n    }\n    animate();\n\n    \/\/ Load initial point cloud if provided\n    const initialPointCloudUrl = model.get(\"point_cloud_url\");\n    if (initialPointCloudUrl) {\n      loadPointCloudFromUrl(initialPointCloudUrl);\n    }\n\n    \/\/ Restore state from model\n    restoreViewerState();\n  }\n\n  \/\/ Function to load point cloud from URL (placeholder)\n  function loadPointCloudFromUrl(url, name = \"Point Cloud\") {\n    console.log(\"Point cloud loading requested:\", url, name);\n    console.warn(\"Point cloud loading not yet implemented - requires Potree library integration\");\n\n    \/\/ For now, just add a simple placeholder object\n    const geometry = new THREE.BoxGeometry(1, 1, 1);\n    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });\n    const placeholder = new THREE.Mesh(geometry, material);\n    placeholder.name = name || \"Placeholder\";\n\n    el._scene.add(placeholder);\n    el._pointClouds.push(placeholder);\n\n    fitToScreen();\n  }\n\n  \/\/ Function to fit point clouds to screen\n  function fitToScreen() {\n    if (!el._pointClouds.length || !el._camera || !el._controls) {\n      return;\n    }\n\n    \/\/ Calculate bounding box of all objects\n    const box = new THREE.Box3();\n    el._pointClouds.forEach(obj => {\n      const objBox = new THREE.Box3().setFromObject(obj);\n      box.union(objBox);\n    });\n\n    if (!box.isEmpty()) {\n      const center = box.getCenter(new THREE.Vector3());\n      const size = box.getSize(new THREE.Vector3());\n      const maxSize = Math.max(size.x, size.y, size.z);\n\n      \/\/ Position camera\n      const distance = maxSize * 3;\n      el._camera.position.copy(center);\n      el._camera.position.z += distance;\n\n      if (el._controls) {\n        el._controls.target.copy(center);\n        el._controls.update();\n      }\n    }\n  }\n\n  \/\/ Function to restore viewer state from model\n  function restoreViewerState() {\n    \/\/ This would restore any persistent state if needed\n  }\n\n  \/\/ Fallback viewer without Three.js dependencies\n  function initializeFallbackViewer() {\n    \/\/ Remove loading indicator\n    if (loadingDiv.parentNode) {\n      loadingDiv.parentNode.removeChild(loadingDiv);\n    }\n\n    \/\/ Create a simple canvas fallback\n    const canvas = document.createElement('canvas');\n    canvas.width = container.clientWidth;\n    canvas.height = container.clientHeight;\n    canvas.style.width = '100%';\n    canvas.style.height = '100%';\n    canvas.style.display = 'block';\n    container.appendChild(canvas);\n\n    const ctx = canvas.getContext('2d');\n\n    \/\/ Draw a simple visualization\n    function drawFallback() {\n      ctx.fillStyle = model.get(\"background_color\") || \"#000000\";\n      ctx.fillRect(0, 0, canvas.width, canvas.height);\n\n      \/\/ Draw grid if enabled\n      if (model.get(\"show_grid\")) {\n        ctx.strokeStyle = model.get(\"grid_color\") || \"#444444\";\n        ctx.lineWidth = 1;\n        const gridSize = 50; \/\/ Fixed grid size for fallback\n\n        for (let x = 0; x <= canvas.width; x += gridSize) {\n          ctx.beginPath();\n          ctx.moveTo(x, 0);\n          ctx.lineTo(x, canvas.height);\n          ctx.stroke();\n        }\n\n        for (let y = 0; y <= canvas.height; y += gridSize) {\n          ctx.beginPath();\n          ctx.moveTo(0, y);\n          ctx.lineTo(canvas.width, y);\n          ctx.stroke();\n        }\n      }\n\n      \/\/ Draw center message\n      ctx.fillStyle = \"#ffffff\";\n      ctx.font = \"16px Arial\";\n      ctx.textAlign = \"center\";\n      ctx.fillText(\"Potree Viewer\", canvas.width \/ 2, canvas.height \/ 2 - 20);\n      ctx.fillText(\"(Three.js library not available)\", canvas.width \/ 2, canvas.height \/ 2 + 20);\n    }\n\n    drawFallback();\n\n    \/\/ Store minimal references\n    el._canvas = canvas;\n    el._ctx = ctx;\n    el._widgetId = widgetId;\n\n    \/\/ Handle resize\n    window.addEventListener('resize', () => {\n      canvas.width = container.clientWidth;\n      canvas.height = container.clientHeight;\n      drawFallback();\n    });\n\n    \/\/ Redraw when background color changes\n    model.on(\"change:background_color\", drawFallback);\n    model.on(\"change:show_grid\", drawFallback);\n    model.on(\"change:grid_color\", drawFallback);\n  }\n\n  \/\/ Handle JavaScript method calls from Python\n  function handleJSMethodCall(call) {\n    const { method, args, kwargs } = call;\n\n    try {\n      switch (method) {\n        case \"loadPointCloud\":\n          if (args && args.length > 0) {\n            const options = args[0];\n            loadPointCloudFromUrl(options.url, options.name);\n          }\n          break;\n\n        case \"fitToScreen\":\n          fitToScreen();\n          break;\n\n        case \"clearPointClouds\":\n          el._pointClouds.forEach(pc => {\n            el._scene.remove(pc);\n          });\n          el._pointClouds = [];\n          break;\n\n        case \"takeScreenshot\":\n          \/\/ Render current frame to get screenshot\n          el._renderer.render(el._scene, el._camera);\n          const dataURL = el._renderer.domElement.toDataURL();\n          \/\/ Could emit event back to Python with screenshot data\n          break;\n\n        case \"loadMultiplePointClouds\":\n          if (args && args.length > 0) {\n            const pointClouds = args[0];\n            pointClouds.forEach(pc => {\n              loadPointCloudFromUrl(pc.url, pc.name);\n            });\n          }\n          break;\n\n        case \"setQuality\":\n          if (args && args.length > 0) {\n            const quality = args[0];\n            \/\/ Adjust rendering quality based on setting\n            if (quality === \"low\") {\n              el._renderer.setPixelRatio(0.5);\n            } else if (quality === \"medium\") {\n              el._renderer.setPixelRatio(0.75);\n            } else if (quality === \"high\") {\n              el._renderer.setPixelRatio(1.0);\n            }\n          }\n          break;\n\n        case \"addMeasurement\":\n          \/\/ Implementation would depend on Potree measurement tools\n          console.log(\"Measurement tools not yet implemented\");\n          break;\n\n        case \"clearMeasurements\":\n          \/\/ Clear measurement objects\n          console.log(\"Clear measurements not yet implemented\");\n          break;\n\n        case \"clearFilters\":\n          \/\/ Reset any applied filters\n          el._pointClouds.forEach(pc => {\n            if (pc.material) {\n              \/\/ Reset material properties to defaults\n            }\n          });\n          break;\n\n        default:\n          console.warn(`Unknown method: ${method}`);\n      }\n    } catch (error) {\n      console.error(`Error executing method ${method}:`, error);\n    }\n  }\n\n  \/\/ Listen for JavaScript method calls\n  model.on(\"change:_js_calls\", () => {\n    const calls = model.get(\"_js_calls\") || [];\n    const lastCall = calls[calls.length - 1];\n    if (lastCall) {\n      handleJSMethodCall(lastCall);\n    }\n  });\n\n  \/\/ Listen for trait changes\n  model.on(\"change:point_size\", () => {\n    const size = model.get(\"point_size\");\n    console.log(\"Point size changed to:\", size);\n    \/\/ Point size changes will be implemented when actual point cloud loading is added\n  });\n\n  model.on(\"change:point_size_type\", () => {\n    const sizeType = model.get(\"point_size_type\");\n    console.log(\"Point size type changed to:\", sizeType);\n    \/\/ Point size type changes will be implemented when actual point cloud loading is added\n  });\n\n  model.on(\"change:point_shape\", () => {\n    const shape = model.get(\"point_shape\");\n    console.log(\"Point shape changed to:\", shape);\n    \/\/ Point shape changes will be implemented when actual point cloud loading is added\n  });\n\n  model.on(\"change:background_color\", () => {\n    const color = model.get(\"background_color\");\n    if (el._renderer) {\n      el._renderer.setClearColor(new THREE.Color(color));\n    }\n    container.style.backgroundColor = color;\n  });\n\n  model.on(\"change:camera_position\", () => {\n    const position = model.get(\"camera_position\");\n    if (el._camera && position && position.length >= 3) {\n      el._camera.position.set(position[0], position[1], position[2]);\n    }\n  });\n\n  model.on(\"change:camera_target\", () => {\n    const target = model.get(\"camera_target\");\n    if (el._controls && target && target.length >= 3) {\n      el._controls.target.set(target[0], target[1], target[2]);\n      el._controls.update();\n    }\n  });\n\n  model.on(\"change:fov\", () => {\n    const fov = model.get(\"fov\");\n    if (el._camera) {\n      el._camera.fov = fov;\n      el._camera.updateProjectionMatrix();\n    }\n  });\n\n  model.on(\"change:show_grid\", () => {\n    const showGrid = model.get(\"show_grid\");\n    \/\/ Find existing grid and toggle visibility\n    el._scene.children.forEach(child => {\n      if (child instanceof THREE.GridHelper) {\n        child.visible = showGrid;\n      }\n    });\n\n    \/\/ Add grid if it doesn't exist and should be shown\n    if (showGrid) {\n      const existingGrid = el._scene.children.find(child => child instanceof THREE.GridHelper);\n      if (!existingGrid) {\n        const gridSize = model.get(\"grid_size\") || 10;\n        const gridColor = new THREE.Color(model.get(\"grid_color\") || \"#aaaaaa\");\n        const grid = new THREE.GridHelper(gridSize, 10, gridColor, gridColor);\n        el._scene.add(grid);\n      }\n    }\n  });\n\n  \/\/ Cleanup function\n  el._cleanup = () => {\n    if (el._renderer) {\n      el._renderer.dispose();\n    }\n    if (el._controls && el._controls.dispose) {\n      el._controls.dispose();\n    }\n    if (typeof resizeObserver !== 'undefined' && resizeObserver) {\n      resizeObserver.disconnect();\n    }\n    \/\/ Clear any canvas contexts\n    if (el._canvas) {\n      el._canvas = null;\n    }\n    if (el._ctx) {\n      el._ctx = null;\n    }\n  };\n}\n\n\/\/ Cleanup function for proper widget disposal\nfunction cleanup(el) {\n  if (el._cleanup) {\n    el._cleanup();\n  }\n}\n\n\/\/ Export default object with render and cleanup functions\nexport default { render, cleanup };", "_js_calls": [], "_js_events": [], "_layers": {}, "_model_module": "anywidget", "_model_module_version": "~0.9.*", "_model_name": "AnyModel", "_projection": {}, "_sources": {}, "_terrain": {}, "_view_count": null, "_view_module": "anywidget", "_view_module_version": "~0.9.*", "_view_name": "AnyView", "background_color": "#003366", "camera_position": [10, 10, 20], "camera_target": [0.0, 0.0, 0.0], "center": [0.0, 0.0], "edl_enabled": false, "edl_radius": 1.0, "edl_strength": 1.0, "far_clip": 1000.0, "fov": 60.0, "grid_color": "#aaaaaa", "grid_size": 10.0, "height": "500px", "layout": "IPY_MODEL_f762151657d74adbb92e3109956bc5e4", "min_node_size": 100.0, "near_clip": 0.1, "point_cloud_url": "", "point_shape": "circle", "point_size": 1.0, "point_size_type": "attenuation", "show_grid": false, "style": "", "tabbable": null, "tooltip": null, "width": "100%", "zoom": 2.0}}}, "version_major": 2, "version_minor": 0}
+{"state": {"0e99d4799ce442daa8cb9c7bdde622a4": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "565f700f429445c58668a72e8d2ede60": {"model_name": "ForceLoadModel", "model_module": "jupyter-vue", "model_module_version": "^1.11.2", "state": {"_dom_classes": [], "_model_module": "jupyter-vue", "_model_module_version": "^1.11.2", "_model_name": "ForceLoadModel", "_view_count": null, "_view_module": null, "_view_module_version": "", "_view_name": null, "layout": "IPY_MODEL_0e99d4799ce442daa8cb9c7bdde622a4", "tabbable": null, "tooltip": null}}, "aea6620e8f8948efb2ec8b824ba0b28b": {"model_name": "ThemeModel", "model_module": "jupyter-vuetify", "model_module_version": "^1.11.3", "state": {"_model_module": "jupyter-vuetify", "_model_module_version": "^1.11.3", "_model_name": "ThemeModel", "_view_count": null, "_view_module": null, "_view_module_version": "^1.11.3", "_view_name": null, "dark": null, "dark_effective": null}}, "50361892182e4d7d8ee969a97ad2fe1c": {"model_name": "ThemeColorsModel", "model_module": "jupyter-vuetify", "model_module_version": "^1.11.3", "state": {"_model_module": "jupyter-vuetify", "_model_module_version": "^1.11.3", "_model_name": "ThemeColorsModel", "_theme_name": "light", "_view_count": null, "_view_module": null, "_view_module_version": "^1.11.3", "_view_name": null, "accent": "#82B1FF", "anchor": null, "error": "#FF5252", "info": "#2196F3", "primary": "#1976D2", "secondary": "#424242", "success": "#4CAF50", "warning": "#FB8C00"}}, "03d58b60f85642aea971cff8c246b988": {"model_name": "ThemeColorsModel", "model_module": "jupyter-vuetify", "model_module_version": "^1.11.3", "state": {"_model_module": "jupyter-vuetify", "_model_module_version": "^1.11.3", "_model_name": "ThemeColorsModel", "_theme_name": "dark", "_view_count": null, "_view_module": null, "_view_module_version": "^1.11.3", "_view_name": null, "accent": "#FF4081", "anchor": null, "error": "#FF5252", "info": "#2196F3", "primary": "#2196F3", "secondary": "#424242", "success": "#4CAF50", "warning": "#FB8C00"}}, "82d9cb056f884953aea4de1fff0688b7": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "c78e6f2812344e41a21b859958b532dd": {"model_name": "AnyModel", "model_module": "anywidget", "model_module_version": "~0.9.*", "state": {"POTREE_LIBS_DIR": "", "_anywidget_id": "anymap.potree.PotreeMap", "_controls": {}, "_css": "\n            .potree-warning {\n                font-family: sans-serif;\n                padding: 1rem;\n                background-color: #fff3cd;\n                color: #856404;\n                border: 1px solid #ffeeba;\n                border-radius: 8px;\n                margin: 1rem 0;\n                box-shadow: 0 2px 4px rgba(0,0,0,0.05);\n            }\n            ", "_dom_classes": [], "_esm": "\n            function render({ model, el }) {\n                let div = document.createElement(\"div\");\n                div.className = \"potree-warning\";\n                const msg = document.createTextNode(\"\ud83d\udeab PotreeMap is not yet supported in your environment. Try running it in JupyterLab instead.\");\n                div.appendChild(msg);\n                el.appendChild(div);\n            }\n            export default { render };\n            ", "_js_calls": [], "_js_events": [], "_layers": {}, "_model_module": "anywidget", "_model_module_version": "~0.9.*", "_model_name": "AnyModel", "_projection": {}, "_sources": {}, "_terrain": {}, "_view_count": null, "_view_module": "anywidget", "_view_module_version": "~0.9.*", "_view_name": "AnyView", "background_color": "#000000", "camera_position": [0.0, 0.0, 10.0], "camera_target": [0.0, 0.0, 0.0], "center": [0.0, 0.0], "description": "Lion", "edl_enabled": true, "edl_radius": 1.0, "edl_strength": 1.0, "far_clip": 1000.0, "fov": 60.0, "grid_color": "#aaaaaa", "grid_size": 10.0, "height": "600px", "layout": "IPY_MODEL_82d9cb056f884953aea4de1fff0688b7", "min_node_size": 100.0, "near_clip": 0.1, "point_cloud_url": "", "point_shape": "square", "point_size": 1.0, "point_size_type": "adaptive", "show_grid": false, "style": "", "tabbable": null, "tooltip": null, "width": "100%", "zoom": 2.0}}, "2b6344258c9c467e9575534cbc119fb7": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "01865d785b4b4dca88e6a02a6d106435": {"model_name": "AnyModel", "model_module": "anywidget", "model_module_version": "~0.9.*", "state": {"POTREE_LIBS_DIR": "", "_anywidget_id": "anymap.potree.PotreeMap", "_controls": {}, "_css": "\n            .potree-warning {\n                font-family: sans-serif;\n                padding: 1rem;\n                background-color: #fff3cd;\n                color: #856404;\n                border: 1px solid #ffeeba;\n                border-radius: 8px;\n                margin: 1rem 0;\n                box-shadow: 0 2px 4px rgba(0,0,0,0.05);\n            }\n            ", "_dom_classes": [], "_esm": "\n            function render({ model, el }) {\n                let div = document.createElement(\"div\");\n                div.className = \"potree-warning\";\n                const msg = document.createTextNode(\"\ud83d\udeab PotreeMap is not yet supported in your environment. Try running it in JupyterLab instead.\");\n                div.appendChild(msg);\n                el.appendChild(div);\n            }\n            export default { render };\n            ", "_js_calls": [{"id": 0, "method": "setQuality", "args": ["high"], "kwargs": {}}, {"id": 1, "method": "filterByElevation", "args": [{"min": 0, "max": 50}], "kwargs": {}}, {"id": 2, "method": "setClassificationVisibility", "args": [{"1": true, "2": true, "3": false, "4": false, "5": false, "6": true}], "kwargs": {}}, {"id": 3, "method": "addMeasurement", "args": ["distance"], "kwargs": {}}, {"id": 4, "method": "addMeasurement", "args": ["area"], "kwargs": {}}, {"id": 5, "method": "addMeasurement", "args": ["volume"], "kwargs": {}}, {"id": 6, "method": "fitToScreen", "args": [], "kwargs": {}}, {"id": 7, "method": "takeScreenshot", "args": [], "kwargs": {}}, {"id": 8, "method": "clearPointClouds", "args": [], "kwargs": {}}, {"id": 9, "method": "clearMeasurements", "args": [], "kwargs": {}}, {"id": 10, "method": "clearFilters", "args": [], "kwargs": {}}], "_js_events": [], "_layers": {}, "_model_module": "anywidget", "_model_module_version": "~0.9.*", "_model_name": "AnyModel", "_projection": {}, "_sources": {}, "_terrain": {}, "_view_count": null, "_view_module": "anywidget", "_view_module_version": "~0.9.*", "_view_name": "AnyView", "background_color": "#0a0a0a", "camera_position": [20, 20, 30], "camera_target": [0.0, 0.0, 0.0], "center": [0.0, 0.0], "description": "", "edl_enabled": true, "edl_radius": 1.5, "edl_strength": 1.2, "far_clip": 1000.0, "fov": 75.0, "grid_color": "#666666", "grid_size": 20.0, "height": "600px", "layout": "IPY_MODEL_2b6344258c9c467e9575534cbc119fb7", "min_node_size": 100.0, "near_clip": 0.1, "point_cloud_url": "", "point_shape": "square", "point_size": 3.0, "point_size_type": "fixed", "show_grid": true, "style": "", "tabbable": null, "tooltip": null, "width": "100%", "zoom": 2.0}}, "fbd03a5ab39a4201818882401df37c45": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "6fc9ec5aa5014e30900055c321f8a5f5": {"model_name": "AnyModel", "model_module": "anywidget", "model_module_version": "~0.9.*", "state": {"POTREE_LIBS_DIR": "", "_anywidget_id": "anymap.potree.PotreeMap", "_controls": {}, "_css": "\n            .potree-warning {\n                font-family: sans-serif;\n                padding: 1rem;\n                background-color: #fff3cd;\n                color: #856404;\n                border: 1px solid #ffeeba;\n                border-radius: 8px;\n                margin: 1rem 0;\n                box-shadow: 0 2px 4px rgba(0,0,0,0.05);\n            }\n            ", "_dom_classes": [], "_esm": "\n            function render({ model, el }) {\n                let div = document.createElement(\"div\");\n                div.className = \"potree-warning\";\n                const msg = document.createTextNode(\"\ud83d\udeab PotreeMap is not yet supported in your environment. Try running it in JupyterLab instead.\");\n                div.appendChild(msg);\n                el.appendChild(div);\n            }\n            export default { render };\n            ", "_js_calls": [], "_js_events": [], "_layers": {}, "_model_module": "anywidget", "_model_module_version": "~0.9.*", "_model_name": "AnyModel", "_projection": {}, "_sources": {}, "_terrain": {}, "_view_count": null, "_view_module": "anywidget", "_view_module_version": "~0.9.*", "_view_name": "AnyView", "background_color": "#000000", "camera_position": [0.0, 0.0, 10.0], "camera_target": [0.0, 0.0, 0.0], "center": [0.0, 0.0], "description": "", "edl_enabled": true, "edl_radius": 1.0, "edl_strength": 1.0, "far_clip": 1000.0, "fov": 60.0, "grid_color": "#aaaaaa", "grid_size": 10.0, "height": "600px", "layout": "IPY_MODEL_fbd03a5ab39a4201818882401df37c45", "min_node_size": 100.0, "near_clip": 0.1, "point_cloud_url": "", "point_shape": "square", "point_size": 1.0, "point_size_type": "adaptive", "show_grid": false, "style": "", "tabbable": null, "tooltip": null, "width": "100%", "zoom": 2.0}}}, "version_major": 2, "version_minor": 0}
 </script>
 
         <style>
@@ -3302,7 +3448,7 @@ Filters cleared
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 3, 2025 16:11:23 UTC"><span class="timeago" datetime="2025-07-03T16:11:23+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 3, 2025 16:11:23 UTC">2025-07-03</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 11, 2025 05:27:16 UTC"><span class="timeago" datetime="2025-07-11T05:27:16+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 11, 2025 05:27:16 UTC">2025-07-11</span>
   </span>
 
     

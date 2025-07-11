@@ -1319,6 +1319,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.potree.PotreeMap.set_description" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_description()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.potree.PotreeMap.set_edl_settings" class="md-nav__link">
     <span class="md-ellipsis">
       set_edl_settings()
@@ -1647,6 +1656,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.potree.PotreeMap.set_description" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_description()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.potree.PotreeMap.set_edl_settings" class="md-nav__link">
     <span class="md-ellipsis">
       set_edl_settings()
@@ -1788,6 +1806,7 @@ PotreeMap            (<a class="autorefs autorefs-internal" title="anymap.base.M
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Potree point cloud viewer implementation of the map widget.&quot;&quot;&quot;</span>
 
     <span class="c1"># Potree-specific traits</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Unicode</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">point_cloud_url</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Unicode</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">point_size</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Float</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">point_size_type</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Unicode</span><span class="p">(</span><span class="s2">&quot;adaptive&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span>
@@ -1814,6 +1833,8 @@ PotreeMap            (<a class="autorefs autorefs-internal" title="anymap.base.M
     <span class="n">_esm</span> <span class="o">=</span> <span class="n">_esm_potree</span>
     <span class="n">_css</span> <span class="o">=</span> <span class="n">_css_potree</span>
 
+    <span class="n">POTREE_LIBS_DIR</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Unicode</span><span class="p">(</span><span class="n">read_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">point_cloud_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
@@ -1828,6 +1849,7 @@ PotreeMap            (<a class="autorefs autorefs-internal" title="anymap.base.M
         <span class="n">background_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;#000000&quot;</span><span class="p">,</span>
         <span class="n">edl_enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">show_grid</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">quiet</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize Potree map widget.</span>
@@ -1845,7 +1867,45 @@ PotreeMap            (<a class="autorefs autorefs-internal" title="anymap.base.M
 <span class="sd">            background_color: Background color of the viewer</span>
 <span class="sd">            edl_enabled: Enable Eye Dome Lighting for better depth perception</span>
 <span class="sd">            show_grid: Show coordinate grid</span>
+<span class="sd">            quiet: Don&#39;t print any information messages</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">JUPYTER_ROOT</span> <span class="o">=</span> <span class="n">_get_jupyter_root</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">JUPYTER_ROOT</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;PotreeMap is currently only supported through a JupyterLab environment.&quot;</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_css</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            .potree-warning {</span>
+<span class="s2">                font-family: sans-serif;</span>
+<span class="s2">                padding: 1rem;</span>
+<span class="s2">                background-color: #fff3cd;</span>
+<span class="s2">                color: #856404;</span>
+<span class="s2">                border: 1px solid #ffeeba;</span>
+<span class="s2">                border-radius: 8px;</span>
+<span class="s2">                margin: 1rem 0;</span>
+<span class="s2">                box-shadow: 0 2px 4px rgba(0,0,0,0.05);</span>
+<span class="s2">            }</span>
+<span class="s2">            &quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_esm</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            function render({ model, el }) {</span>
+<span class="s2">                let div = document.createElement(&quot;div&quot;);</span>
+<span class="s2">                div.className = &quot;potree-warning&quot;;</span>
+<span class="s2">                const msg = document.createTextNode(&quot;🚫 PotreeMap is not yet supported in your environment. Try running it in JupyterLab instead.&quot;);</span>
+<span class="s2">                div.appendChild(msg);</span>
+<span class="s2">                el.appendChild(div);</span>
+<span class="s2">            }</span>
+<span class="s2">            export default { render };</span>
+<span class="s2">            &quot;&quot;&quot;</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_trait</span><span class="p">(</span><span class="s2">&quot;POTREE_LIBS_DIR&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="s2">&quot;/files/potreelibs&quot;</span><span class="p">))</span>
+
+        <span class="n">got_potree_libs</span> <span class="o">=</span> <span class="n">_get_potree_libs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">JUPYTER_ROOT</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="n">quiet</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">got_potree_libs</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Something went wrong -- could not get potree libs&quot;</span><span class="p">)</span>
+
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
             <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
@@ -1861,6 +1921,10 @@ PotreeMap            (<a class="autorefs autorefs-internal" title="anymap.base.M
             <span class="n">show_grid</span><span class="o">=</span><span class="n">show_grid</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
         <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_description</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the description.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">description</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">load_point_cloud</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">point_cloud_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">point_cloud_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
@@ -2083,12 +2147,14 @@ PotreeMap            (<a class="autorefs autorefs-internal" title="anymap.base.M
 
 
 
+
+
   <div class="doc doc-object doc-method">
 
 
 
 <h3 id="anymap.potree.PotreeMap.__init__" class="doc doc-heading">
-<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point_cloud_url</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="s1">&#39;100%&#39;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s1">&#39;600px&#39;</span><span class="p">,</span> <span class="n">point_size</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">point_size_type</span><span class="o">=</span><span class="s1">&#39;adaptive&#39;</span><span class="p">,</span> <span class="n">point_shape</span><span class="o">=</span><span class="s1">&#39;square&#39;</span><span class="p">,</span> <span class="n">camera_position</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">],</span> <span class="n">camera_target</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">fov</span><span class="o">=</span><span class="mf">60.0</span><span class="p">,</span> <span class="n">background_color</span><span class="o">=</span><span class="s1">&#39;#000000&#39;</span><span class="p">,</span> <span class="n">edl_enabled</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">show_grid</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point_cloud_url</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="s1">&#39;100%&#39;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s1">&#39;600px&#39;</span><span class="p">,</span> <span class="n">point_size</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">point_size_type</span><span class="o">=</span><span class="s1">&#39;adaptive&#39;</span><span class="p">,</span> <span class="n">point_shape</span><span class="o">=</span><span class="s1">&#39;square&#39;</span><span class="p">,</span> <span class="n">camera_position</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">],</span> <span class="n">camera_target</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">fov</span><span class="o">=</span><span class="mf">60.0</span><span class="p">,</span> <span class="n">background_color</span><span class="o">=</span><span class="s1">&#39;#000000&#39;</span><span class="p">,</span> <span class="n">edl_enabled</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">show_grid</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-special"><code>special</code></small>
@@ -2183,6 +2249,12 @@ PotreeMap            (<a class="autorefs autorefs-internal" title="anymap.base.M
         <td><p>Show coordinate grid</p></td>
         <td><code>False</code></td>
       </tr>
+      <tr>
+        <td><code>quiet</code></td>
+        <td><code>bool</code></td>
+        <td><p>Don't print any information messages</p></td>
+        <td><code>False</code></td>
+      </tr>
   </tbody>
 </table>
         <details class="quote">
@@ -2201,6 +2273,7 @@ PotreeMap            (<a class="autorefs autorefs-internal" title="anymap.base.M
     <span class="n">background_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;#000000&quot;</span><span class="p">,</span>
     <span class="n">edl_enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">show_grid</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">quiet</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize Potree map widget.</span>
@@ -2218,7 +2291,45 @@ PotreeMap            (<a class="autorefs autorefs-internal" title="anymap.base.M
 <span class="sd">        background_color: Background color of the viewer</span>
 <span class="sd">        edl_enabled: Enable Eye Dome Lighting for better depth perception</span>
 <span class="sd">        show_grid: Show coordinate grid</span>
+<span class="sd">        quiet: Don&#39;t print any information messages</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">JUPYTER_ROOT</span> <span class="o">=</span> <span class="n">_get_jupyter_root</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">JUPYTER_ROOT</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">&quot;PotreeMap is currently only supported through a JupyterLab environment.&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_css</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        .potree-warning {</span>
+<span class="s2">            font-family: sans-serif;</span>
+<span class="s2">            padding: 1rem;</span>
+<span class="s2">            background-color: #fff3cd;</span>
+<span class="s2">            color: #856404;</span>
+<span class="s2">            border: 1px solid #ffeeba;</span>
+<span class="s2">            border-radius: 8px;</span>
+<span class="s2">            margin: 1rem 0;</span>
+<span class="s2">            box-shadow: 0 2px 4px rgba(0,0,0,0.05);</span>
+<span class="s2">        }</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_esm</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        function render({ model, el }) {</span>
+<span class="s2">            let div = document.createElement(&quot;div&quot;);</span>
+<span class="s2">            div.className = &quot;potree-warning&quot;;</span>
+<span class="s2">            const msg = document.createTextNode(&quot;🚫 PotreeMap is not yet supported in your environment. Try running it in JupyterLab instead.&quot;);</span>
+<span class="s2">            div.appendChild(msg);</span>
+<span class="s2">            el.appendChild(div);</span>
+<span class="s2">        }</span>
+<span class="s2">        export default { render };</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="k">return</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">set_trait</span><span class="p">(</span><span class="s2">&quot;POTREE_LIBS_DIR&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="s2">&quot;/files/potreelibs&quot;</span><span class="p">))</span>
+
+    <span class="n">got_potree_libs</span> <span class="o">=</span> <span class="n">_get_potree_libs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">JUPYTER_ROOT</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="n">quiet</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">got_potree_libs</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Something went wrong -- could not get potree libs&quot;</span><span class="p">)</span>
+
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
         <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
         <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
@@ -2894,6 +3005,33 @@ PotreeMap            (<a class="autorefs autorefs-internal" title="anymap.base.M
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">near_clip</span> <span class="o">=</span> <span class="n">near</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">far_clip</span> <span class="o">=</span> <span class="n">far</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="anymap.potree.PotreeMap.set_description" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">set_description</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">description</span><span class="p">)</span></code>
+
+
+<a href="#anymap.potree.PotreeMap.set_description" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Sets the description.</p>
+
+        <details class="quote">
+          <summary>Source code in <code>anymap/potree.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">set_description</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sets the description.&quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">description</span>
 </code></pre></div>
         </details>
     </div>
