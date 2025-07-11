@@ -73,11 +73,37 @@ async function render({ model, el }) {
   el.appendChild(container);
   el.appendChild(sideBar);
 
-  //
   const viewer = new Potree.Viewer(container);
-  viewer.setEDLEnabled(true);
-  viewer.setFOV(60);
-  viewer.setPointBudget(1_000_000);
+
+  // Monkey-patch viewer methods so we can sync with model (python)
+  function syncViewerMethodWithTrait(viewer, model, methodName, traitName) {
+    const originalFn = viewer[methodName]?.bind(viewer);
+
+    if (!originalFn) {
+      console.warn(`viewer.${methodName} is not defined`);
+      return;
+    }
+
+    viewer[methodName] = function(value) {
+      originalFn(value);
+      model.set(traitName, value);
+      model.save_changes();
+    };
+  }
+
+  syncViewerMethodWithTrait(viewer, model, "setPointBudget", "point_budget");
+  syncViewerMethodWithTrait(viewer, model, "setFOV", "fov");
+  syncViewerMethodWithTrait(viewer, model, "setEDLRadius", "edl_radius");
+  syncViewerMethodWithTrait(viewer, model, "setEDLStrength", "edl_strength");
+  syncViewerMethodWithTrait(viewer, model, "setEDLOpacity", "edl_opacity");
+  syncViewerMethodWithTrait(viewer, model, "setBackground", "background");
+
+  viewer.setEDLEnabled(model.get("edl_enabled"));
+  viewer.setEDLRadius(model.get("edl_radius"));
+  viewer.setEDLStrength(model.get("edl_strength"));
+  viewer.setEDLOpacity(model.get("edl_opacity"));
+  viewer.setFOV(model.get("fov"));
+  viewer.setPointBudget(model.get("point_budget"));
   viewer.setDescription(model.get("description"));
   viewer.loadSettingsFromURL();
 
@@ -108,7 +134,33 @@ async function render({ model, el }) {
     const newDesc = model.get("description") || "";
     viewer.setDescription(newDesc);
   });
-
+  // Appearance settings
+  model.on("change:point_budget", ()=>{
+    viewer.setPointBudget(model.get("point_budget"));
+  })
+  model.on("change:fov", ()=>{
+    viewer.setFOV(model.get("fov"));
+  })
+  // Appearance: Eye-Dome Lighting
+  model.on("change:edl_enabled", () => {
+    viewer.setEDLEnabled(model.get("edl_enabled"));
+  });
+  model.on("change:edl_radius", () => {
+    viewer.setEDLRadius(model.get("edl_radius"));
+  });
+  model.on("change:edl_strength", () => {
+    viewer.setEDLStrength(model.get("edl_strength"));
+  });
+  model.on("change:edl_opacity", () => {
+    viewer.setEDLOpacity(model.get("edl_opacity"));
+  });
+  // Appearance: background
+  model.on("change:background", () => {
+    const bg = model.get("background");
+    viewer.setBackground(bg);
+    // Update the UI buttons:
+    $(`input[name=background_options][value=${bg}]`).trigger("click");
+  });
   // Handle JavaScript method calls from Python
   model.on("change:_js_calls", () => {
     const calls = model.get("_js_calls") || [];

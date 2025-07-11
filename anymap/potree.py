@@ -149,6 +149,21 @@ class PotreeMap(MapWidget):
     """Potree point cloud viewer implementation of the map widget."""
 
     # Potree-specific traits
+
+    # Appearance
+    point_budget = traitlets.Int(1_000_000).tag(sync=True)
+    fov = traitlets.Float(60.0).tag(sync=True)
+    background = traitlets.Enum(
+        values=["skybox", "gradient", "black", "white", "none"],
+        default_value="gradient",
+    ).tag(sync=True)
+
+    # Appearance: Eye-Dome Lighting
+    edl_enabled = traitlets.Bool(True).tag(sync=True)
+    edl_radius = traitlets.Float(1.4).tag(sync=True)
+    edl_strength = traitlets.Float(0.4).tag(sync=True)
+    edl_opacity = traitlets.Float(1.0).tag(sync=True)
+
     description = traitlets.Unicode("").tag(sync=True)
     point_cloud_url = traitlets.Unicode("").tag(sync=True)
     point_size = traitlets.Float(1.0).tag(sync=True)
@@ -161,14 +176,10 @@ class PotreeMap(MapWidget):
     grid_size = traitlets.Float(10.0).tag(sync=True)
     grid_color = traitlets.Unicode("#aaaaaa").tag(sync=True)
     background_color = traitlets.Unicode("#000000").tag(sync=True)
-    edl_enabled = traitlets.Bool(True).tag(sync=True)  # Eye Dome Lighting
-    edl_radius = traitlets.Float(1.0).tag(sync=True)
-    edl_strength = traitlets.Float(1.0).tag(sync=True)
 
     # Camera controls
     camera_position = traitlets.List([0.0, 0.0, 10.0]).tag(sync=True)
     camera_target = traitlets.List([0.0, 0.0, 0.0]).tag(sync=True)
-    fov = traitlets.Float(60.0).tag(sync=True)
     near_clip = traitlets.Float(0.1).tag(sync=True)
     far_clip = traitlets.Float(1000.0).tag(sync=True)
 
@@ -183,6 +194,7 @@ class PotreeMap(MapWidget):
         point_cloud_url: str = "",
         width: str = "100%",
         height: str = "600px",
+        point_budget: int = 1_000_000,
         point_size: float = 1.0,
         point_size_type: str = "adaptive",
         point_shape: str = "square",
@@ -201,6 +213,7 @@ class PotreeMap(MapWidget):
             point_cloud_url: URL to the point cloud metadata.json file
             width: Widget width
             height: Widget height
+            point_budget: Point budget: influences the point density on screen
             point_size: Size of rendered points
             point_size_type: How point size is calculated ("fixed", "adaptive", "attenuation")
             point_shape: Shape of rendered points ("square", "circle")
@@ -252,6 +265,7 @@ class PotreeMap(MapWidget):
         super().__init__(
             width=width,
             height=height,
+            point_budget=point_budget,
             point_cloud_url=point_cloud_url,
             point_size=point_size,
             point_size_type=point_size_type,
@@ -268,6 +282,11 @@ class PotreeMap(MapWidget):
     def set_description(self, description: str) -> None:
         """Sets the description."""
         self.description = description
+
+    # Appearance
+    def set_point_budget(self, point_budget: int) -> None:
+        """Sets the point budget"""
+        self.point_budget = point_budget
 
     def load_point_cloud(
         self, point_cloud_url: str, point_cloud_name: Optional[str] = None
@@ -333,15 +352,19 @@ class PotreeMap(MapWidget):
         """
         self.edl_enabled = enabled
 
-    def set_edl_settings(self, radius: float = 1.0, strength: float = 1.0) -> None:
+    def set_edl_settings(
+        self, radius: float = 1.4, strength: float = 0.4, opacity: float = 1.0
+    ) -> None:
         """Set Eye Dome Lighting parameters.
 
         Args:
             radius: EDL radius
             strength: EDL strength
+            opacity: EDL opacity
         """
         self.edl_radius = radius
         self.edl_strength = strength
+        self.edl_opacity = opacity
 
     def show_coordinate_grid(
         self, show: bool = True, size: float = 10.0, color: str = "#aaaaaa"
