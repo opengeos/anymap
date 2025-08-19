@@ -141,6 +141,9 @@ class MapLibreMap(MapWidget):
         if isinstance(style, str):
             style = construct_maplibre_style(style)
 
+        if abs(center[1]) > 90:
+            center = center[::-1]
+
         super().__init__(
             center=center,
             zoom=zoom,
@@ -1397,6 +1400,26 @@ class MapLibreMap(MapWidget):
 
         # Send to JavaScript
         self.call_js_method("loadDrawData", geojson_data)
+
+    def add_draw_data(self, geojson_data: Union[Dict[str, Any], str]) -> None:
+        """Add GeoJSON features to the existing draw control data.
+
+        This method appends new features to the draw control without clearing
+        existing drawn features, unlike load_draw_data which replaces all data.
+
+        Args:
+            geojson_data: GeoJSON data as dictionary or JSON string. Can be a
+                         FeatureCollection or a single Feature.
+        """
+        if isinstance(geojson_data, str):
+            geojson_data = json.loads(geojson_data)
+
+        # Normalize input to FeatureCollection if it's a single Feature
+        if geojson_data.get("type") == "Feature":
+            geojson_data = {"type": "FeatureCollection", "features": [geojson_data]}
+
+        # Send to JavaScript - it will handle adding features and syncing back the data
+        self.call_js_method("addDrawData", geojson_data)
 
     def get_draw_data(self) -> Dict[str, Any]:
         """Get all drawn features as GeoJSON.
