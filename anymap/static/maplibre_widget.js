@@ -2004,6 +2004,36 @@ function render({ model, el }) {
             }
             break;
 
+          case 'addDrawData':
+            const [geojsonDataToAdd] = args;
+            try {
+              if (el._drawControl) {
+                // Add features without clearing existing ones
+                if (geojsonDataToAdd && geojsonDataToAdd.type === 'FeatureCollection' && geojsonDataToAdd.features) {
+                  geojsonDataToAdd.features.forEach(feature => {
+                    el._drawControl.add(feature);
+                  });
+                } else if (geojsonDataToAdd && geojsonDataToAdd.type === 'Feature') {
+                  el._drawControl.add(geojsonDataToAdd);
+                }
+
+                // Immediately sync the updated data back to Python
+                const updatedData = el._drawControl.getAll();
+                model.set('_draw_data', updatedData);
+                model.save_changes();
+
+                console.log('Draw data added and synced successfully', updatedData);
+
+                // Send event to notify successful addition
+                sendEvent('draw_data_added', { data: updatedData });
+              } else {
+                console.warn('Draw control not initialized');
+              }
+            } catch (error) {
+              console.error('Failed to add draw data:', error);
+            }
+            break;
+
           case 'getDrawData':
             try {
               if (el._drawControl) {

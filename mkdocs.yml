@@ -91,6 +91,7 @@ nav:
           - examples/potree_example.ipynb
           - examples/pmtiles_example.ipynb
           - examples/draw_control_example.ipynb
+          - examples/add_draw_data_example.ipynb
           - examples/layer_control_example.ipynb
           - examples/geocoder_example.ipynb
           - examples/terrain_example.ipynb
