@@ -3792,6 +3792,7 @@ data sources, custom styling, and interactive features.</p>
         <span class="n">default_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;simple_select&quot;</span><span class="p">,</span>
         <span class="n">keybindings</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">touch_enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">preserve_selection_on_edit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a draw control to the map for drawing and editing geometries.</span>
@@ -3803,6 +3804,9 @@ data sources, custom styling, and interactive features.</p>
 <span class="sd">            default_mode: Initial interaction mode (&#39;simple_select&#39;, &#39;direct_select&#39;, &#39;draw_point&#39;, etc.)</span>
 <span class="sd">            keybindings: Whether to enable keyboard shortcuts</span>
 <span class="sd">            touch_enabled: Whether to enable touch interactions</span>
+<span class="sd">            preserve_selection_on_edit: Whether to keep features selected during vertex editing/moving.</span>
+<span class="sd">                                       If True, features remain selected after editing. If False, uses</span>
+<span class="sd">                                       default MapboxDraw behavior (deselection after edit).</span>
 <span class="sd">            **kwargs: Additional options to pass to MapboxDraw constructor</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">controls</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -3820,6 +3824,7 @@ data sources, custom styling, and interactive features.</p>
             <span class="s2">&quot;keybindings&quot;</span><span class="p">:</span> <span class="n">keybindings</span><span class="p">,</span>
             <span class="s2">&quot;touchEnabled&quot;</span><span class="p">:</span> <span class="n">touch_enabled</span><span class="p">,</span>
             <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
+            <span class="s2">&quot;preserveSelectionOnEdit&quot;</span><span class="p">:</span> <span class="n">preserve_selection_on_edit</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
         <span class="p">}</span>
 
@@ -5205,7 +5210,7 @@ using a dropdown or expandable control. It uses the maplibre-gl-basemaps library
 
 
 <h3 id="anymap.maplibre.MapLibreMap.add_draw_control" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">add_draw_control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s1">&#39;top-left&#39;</span><span class="p">,</span> <span class="n">controls</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">default_mode</span><span class="o">=</span><span class="s1">&#39;simple_select&#39;</span><span class="p">,</span> <span class="n">keybindings</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">touch_enabled</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">add_draw_control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s1">&#39;top-left&#39;</span><span class="p">,</span> <span class="n">controls</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">default_mode</span><span class="o">=</span><span class="s1">&#39;simple_select&#39;</span><span class="p">,</span> <span class="n">keybindings</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">touch_enabled</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">preserve_selection_on_edit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
 
 <a href="#anymap.maplibre.MapLibreMap.add_draw_control" class="headerlink" title="Permanent link">&para;</a></h3>
@@ -5257,6 +5262,14 @@ using a dropdown or expandable control. It uses the maplibre-gl-basemaps library
         <td><code>True</code></td>
       </tr>
       <tr>
+        <td><code>preserve_selection_on_edit</code></td>
+        <td><code>bool</code></td>
+        <td><p>Whether to keep features selected during vertex editing/moving.
+                       If True, features remain selected after editing. If False, uses
+                       default MapboxDraw behavior (deselection after edit).</p></td>
+        <td><code>True</code></td>
+      </tr>
+      <tr>
         <td><code>**kwargs</code></td>
         <td><code>Any</code></td>
         <td><p>Additional options to pass to MapboxDraw constructor</p></td>
@@ -5273,6 +5286,7 @@ using a dropdown or expandable control. It uses the maplibre-gl-basemaps library
     <span class="n">default_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;simple_select&quot;</span><span class="p">,</span>
     <span class="n">keybindings</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">touch_enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">preserve_selection_on_edit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a draw control to the map for drawing and editing geometries.</span>
@@ -5284,6 +5298,9 @@ using a dropdown or expandable control. It uses the maplibre-gl-basemaps library
 <span class="sd">        default_mode: Initial interaction mode (&#39;simple_select&#39;, &#39;direct_select&#39;, &#39;draw_point&#39;, etc.)</span>
 <span class="sd">        keybindings: Whether to enable keyboard shortcuts</span>
 <span class="sd">        touch_enabled: Whether to enable touch interactions</span>
+<span class="sd">        preserve_selection_on_edit: Whether to keep features selected during vertex editing/moving.</span>
+<span class="sd">                                   If True, features remain selected after editing. If False, uses</span>
+<span class="sd">                                   default MapboxDraw behavior (deselection after edit).</span>
 <span class="sd">        **kwargs: Additional options to pass to MapboxDraw constructor</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">controls</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -5301,6 +5318,7 @@ using a dropdown or expandable control. It uses the maplibre-gl-basemaps library
         <span class="s2">&quot;keybindings&quot;</span><span class="p">:</span> <span class="n">keybindings</span><span class="p">,</span>
         <span class="s2">&quot;touchEnabled&quot;</span><span class="p">:</span> <span class="n">touch_enabled</span><span class="p">,</span>
         <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
+        <span class="s2">&quot;preserveSelectionOnEdit&quot;</span><span class="p">:</span> <span class="n">preserve_selection_on_edit</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">}</span>
 
