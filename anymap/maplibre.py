@@ -28,6 +28,13 @@ import traitlets
 from IPython.display import display
 
 from .base import MapWidget
+
+try:
+    import geopandas as gpd
+
+    HAS_GEOPANDAS = True
+except ImportError:
+    HAS_GEOPANDAS = False
 from .utils import construct_maplibre_style, get_env_var
 from .maplibre_widgets import Container, LayerManagerWidget
 
@@ -1469,6 +1476,58 @@ class MapLibreMap(MapWidget):
                  'draw_line_string', 'draw_polygon', 'static')
         """
         self.call_js_method("setDrawMode", mode)
+
+    def save_draw_data(self, filepath: str, driver: Optional[str] = None) -> None:
+        """Save drawn features to a file in various formats.
+
+        Args:
+            filepath: Path where to save the file. The file extension determines
+                     the output format if driver is not specified.
+            driver: GeoPandas driver name (e.g., 'GeoJSON', 'ESRI Shapefile', 'GPKG').
+                   If None, inferred from file extension.
+
+        Raises:
+            ImportError: If geopandas is not installed.
+            ValueError: If no drawn features exist or invalid driver/format.
+
+        Note:
+            For shapefiles, all features must have the same geometry type.
+            Use GeoJSON or GPKG formats for mixed geometry types.
+        """
+        if not HAS_GEOPANDAS:
+            raise ImportError(
+                "geopandas is required for save_draw_data. "
+                "Install it with: pip install geopandas"
+            )
+
+        # Get the drawn features
+        draw_data = self.get_draw_data()
+
+        if not draw_data or not draw_data.get("features"):
+            raise ValueError("No drawn features to save")
+
+        # Convert to GeoDataFrame
+        gdf = gpd.GeoDataFrame.from_features(draw_data["features"])
+
+        # Set a default CRS if not present
+        if gdf.crs is None:
+            gdf.set_crs("EPSG:4326", inplace=True)
+
+        # Save to file
+        try:
+            gdf.to_file(filepath, driver=driver)
+        except Exception as e:
+            # Provide helpful error message for common shapefile issues
+            if "shapefile" in str(e).lower() or (
+                driver and "shapefile" in driver.lower()
+            ):
+                geometry_types = gdf.geometry.geom_type.unique()
+                if len(geometry_types) > 1:
+                    raise ValueError(
+                        f"Cannot save mixed geometry types {list(geometry_types)} to shapefile. "
+                        "Use GeoJSON (.geojson) or GeoPackage (.gpkg) format instead."
+                    ) from e
+            raise e
 
     def add_terra_draw(
         self,
