@@ -97,6 +97,7 @@ nav:
           - examples/geocoder_example.ipynb
           - examples/terrain_example.ipynb
           - examples/streetview_example.ipynb
+          - examples/clicked_attribute_example.ipynb
     - API Reference:
           - anymap module: anymap.md
           - base module: base.md

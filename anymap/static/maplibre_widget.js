@@ -1402,6 +1402,16 @@ function render({ model, el }) {
     });
 
     map.on('click', (e) => {
+      const clickData = {
+        lng: e.lngLat.lng,
+        lat: e.lngLat.lat
+      };
+
+      // Update the clicked trait
+      model.set("clicked", clickData);
+      model.save_changes();
+
+      // Also send as event for backwards compatibility
       sendEvent('click', {
         lngLat: [e.lngLat.lng, e.lngLat.lat],
         point: [e.point.x, e.point.y]

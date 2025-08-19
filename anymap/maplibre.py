@@ -90,6 +90,7 @@ class MapLibreMap(MapWidget):
     _terra_draw_data = traitlets.Dict().tag(sync=True)
     _terra_draw_enabled = traitlets.Bool(False).tag(sync=True)
     _layer_dict = traitlets.Dict().tag(sync=True)
+    clicked = traitlets.Dict().tag(sync=True)
 
     # Define the JavaScript module path
     _esm = _esm_maplibre
