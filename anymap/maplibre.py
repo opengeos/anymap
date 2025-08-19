@@ -1351,6 +1351,7 @@ class MapLibreMap(MapWidget):
         default_mode: str = "simple_select",
         keybindings: bool = True,
         touch_enabled: bool = True,
+        preserve_selection_on_edit: bool = True,
         **kwargs: Any,
     ) -> None:
         """Add a draw control to the map for drawing and editing geometries.
@@ -1362,6 +1363,9 @@ class MapLibreMap(MapWidget):
             default_mode: Initial interaction mode ('simple_select', 'direct_select', 'draw_point', etc.)
             keybindings: Whether to enable keyboard shortcuts
             touch_enabled: Whether to enable touch interactions
+            preserve_selection_on_edit: Whether to keep features selected during vertex editing/moving.
+                                       If True, features remain selected after editing. If False, uses
+                                       default MapboxDraw behavior (deselection after edit).
             **kwargs: Additional options to pass to MapboxDraw constructor
         """
         if controls is None:
@@ -1379,6 +1383,7 @@ class MapLibreMap(MapWidget):
             "keybindings": keybindings,
             "touchEnabled": touch_enabled,
             "position": position,
+            "preserveSelectionOnEdit": preserve_selection_on_edit,
             **kwargs,
         }
 
