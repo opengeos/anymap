@@ -977,6 +977,11 @@ function render({ model, el }) {
                   el._drawControl = new window.MapboxDraw(drawOptions);
                   map.addControl(el._drawControl, position);
 
+                  // Track selection state for preserving selection during updates
+                  let lastSelectedFeatureIds = [];
+                  let preserveSelectionOnNextChange = false;
+                  const preserveSelectionOnEdit = controlOptions.preserveSelectionOnEdit !== false;
+
                   // Set up draw event handlers with data sync
                   map.on('draw.create', (e) => {
                     const allData = el._drawControl.getAll();
@@ -984,19 +989,55 @@ function render({ model, el }) {
                     model.save_changes();
                     sendEvent('draw.create', { features: e.features, allData: allData });
                   });
+
                   map.on('draw.update', (e) => {
+                    // Store selected feature IDs before update to preserve selection
+                    if (preserveSelectionOnEdit) {
+                      const selectedFeatures = el._drawControl.getSelected().features;
+                      if (selectedFeatures.length > 0) {
+                        lastSelectedFeatureIds = selectedFeatures.map(f => f.id);
+                        preserveSelectionOnNextChange = true;
+
+                        // Re-select the features after a short delay to ensure the update completes
+                        setTimeout(() => {
+                          if (preserveSelectionOnNextChange && lastSelectedFeatureIds.length > 0) {
+                            try {
+                              // Check if features still exist before re-selecting
+                              const allFeatures = el._drawControl.getAll().features;
+                              const validIds = lastSelectedFeatureIds.filter(id =>
+                                allFeatures.some(f => f.id === id)
+                              );
+
+                              if (validIds.length > 0) {
+                                el._drawControl.changeMode('simple_select', { featureIds: validIds });
+                              }
+                            } catch (err) {
+                              console.warn('Failed to restore selection after update:', err);
+                            }
+                            preserveSelectionOnNextChange = false;
+                          }
+                        }, 10);
+                      }
+                    }
+
                     const allData = el._drawControl.getAll();
                     model.set('_draw_data', allData);
                     model.save_changes();
                     sendEvent('draw.update', { features: e.features, allData: allData });
                   });
+
                   map.on('draw.delete', (e) => {
                     const allData = el._drawControl.getAll();
                     model.set('_draw_data', allData);
                     model.save_changes();
                     sendEvent('draw.delete', { features: e.features, allData: allData });
                   });
+
                   map.on('draw.selectionchange', (e) => {
+                    // Don't update tracking if we're in the middle of preserving selection
+                    if (!preserveSelectionOnNextChange) {
+                      lastSelectedFeatureIds = e.features.map(f => f.id);
+                    }
                     sendEvent('draw.selectionchange', { features: e.features });
                   });
 
@@ -1956,6 +1997,11 @@ function render({ model, el }) {
                 el._drawControl = new window.MapboxDraw(finalDrawOptions);
                 map.addControl(el._drawControl, drawOptions.position || 'top-left');
 
+                // Track selection state for preserving selection during updates
+                let lastSelectedFeatureIds = [];
+                let preserveSelectionOnNextChange = false;
+                const preserveSelectionOnEdit = drawOptions.preserveSelectionOnEdit !== false;
+
                 // Set up draw event handlers with data sync
                 map.on('draw.create', (e) => {
                   const allData = el._drawControl.getAll();
@@ -1963,19 +2009,55 @@ function render({ model, el }) {
                   model.save_changes();
                   sendEvent('draw.create', { features: e.features, allData: allData });
                 });
+
                 map.on('draw.update', (e) => {
+                  // Store selected feature IDs before update to preserve selection
+                  if (preserveSelectionOnEdit) {
+                    const selectedFeatures = el._drawControl.getSelected().features;
+                    if (selectedFeatures.length > 0) {
+                      lastSelectedFeatureIds = selectedFeatures.map(f => f.id);
+                      preserveSelectionOnNextChange = true;
+
+                      // Re-select the features after a short delay to ensure the update completes
+                      setTimeout(() => {
+                        if (preserveSelectionOnNextChange && lastSelectedFeatureIds.length > 0) {
+                          try {
+                            // Check if features still exist before re-selecting
+                            const allFeatures = el._drawControl.getAll().features;
+                            const validIds = lastSelectedFeatureIds.filter(id =>
+                              allFeatures.some(f => f.id === id)
+                            );
+
+                            if (validIds.length > 0) {
+                              el._drawControl.changeMode('simple_select', { featureIds: validIds });
+                            }
+                          } catch (err) {
+                            console.warn('Failed to restore selection after update:', err);
+                          }
+                          preserveSelectionOnNextChange = false;
+                        }
+                      }, 10);
+                    }
+                  }
+
                   const allData = el._drawControl.getAll();
                   model.set('_draw_data', allData);
                   model.save_changes();
                   sendEvent('draw.update', { features: e.features, allData: allData });
                 });
+
                 map.on('draw.delete', (e) => {
                   const allData = el._drawControl.getAll();
                   model.set('_draw_data', allData);
                   model.save_changes();
                   sendEvent('draw.delete', { features: e.features, allData: allData });
                 });
+
                 map.on('draw.selectionchange', (e) => {
+                  // Don't update tracking if we're in the middle of preserving selection
+                  if (!preserveSelectionOnNextChange) {
+                    lastSelectedFeatureIds = e.features.map(f => f.id);
+                  }
                   sendEvent('draw.selectionchange', { features: e.features });
                 });
 
