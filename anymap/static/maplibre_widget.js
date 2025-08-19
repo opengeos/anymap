@@ -969,10 +969,11 @@ function render({ model, el }) {
               case 'draw':
                 // Handle draw control restoration
                 if (window.MapboxDraw && !el._drawControl) {
-                  // Use custom styles for MapLibre compatibility
+                  // Use custom styles if provided, otherwise use MapLibre compatibility styles
+                  const customStyles = controlOptions.customStyles;
                   const drawOptions = {
                     ...controlOptions,
-                    styles: window.MapLibreDrawStyles || undefined
+                    styles: customStyles || window.MapLibreDrawStyles || undefined
                   };
                   el._drawControl = new window.MapboxDraw(drawOptions);
                   map.addControl(el._drawControl, position);
@@ -1989,10 +1990,11 @@ function render({ model, el }) {
             const [drawOptions] = args;
             try {
               if (window.MapboxDraw && !el._drawControl) {
-                // Use custom styles for MapLibre compatibility
+                // Use custom styles if provided, otherwise use MapLibre compatibility styles
+                const customStyles = drawOptions.customStyles;
                 const finalDrawOptions = {
                   ...drawOptions,
-                  styles: window.MapLibreDrawStyles || undefined
+                  styles: customStyles || window.MapLibreDrawStyles || undefined
                 };
                 el._drawControl = new window.MapboxDraw(finalDrawOptions);
                 map.addControl(el._drawControl, drawOptions.position || 'top-left');

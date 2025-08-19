@@ -99,12 +99,14 @@ nav:
           - examples/streetview_example.ipynb
           - examples/clicked_attribute_example.ipynb
           - examples/map_click_polygon_intersection.ipynb
+          - examples/custom_draw_styles_example.ipynb
     - API Reference:
           - anymap module: anymap.md
           - base module: base.md
           - cesium module: cesium.md
           - compare module: compare.md
           - deckgl module: deckgl.md
+          - draw_styles module: draw_styles.md
           - keplergl module: keplergl.md
           - leaflet module: leaflet.md
           - mapbox module: mapbox.md
