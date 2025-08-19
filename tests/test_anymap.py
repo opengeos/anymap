@@ -115,12 +115,12 @@ class TestMapLibreMap(unittest.TestCase):
     def setUp(self):
         """Set up test fixtures."""
         self.map = MapLibreMap(
-            center=[37.7749, -122.4194], zoom=12, style="dark-matter", controls={}
+            center=[-122.4194, 37.7749], zoom=12, style="dark-matter", controls={}
         )
 
     def test_initialization(self):
         """Test MapLibre map initialization."""
-        self.assertEqual(self.map.center, [37.7749, -122.4194])
+        self.assertEqual(self.map.center, [-122.4194, 37.7749])
         self.assertEqual(self.map.zoom, 12)
         self.assertEqual(
             self.map.style,
@@ -417,14 +417,14 @@ class TestMapboxMap(unittest.TestCase):
     def setUp(self):
         """Set up test fixtures."""
         self.map = MapboxMap(
-            center=[37.7749, -122.4194],
+            center=[-122.4194, 37.7749],
             zoom=12,
             style="mapbox://styles/mapbox/streets-v12",
         )
 
     def test_initialization(self):
         """Test Mapbox map initialization."""
-        self.assertEqual(self.map.center, [37.7749, -122.4194])
+        self.assertEqual(self.map.center, [-122.4194, 37.7749])
         self.assertEqual(self.map.zoom, 12)
         self.assertEqual(self.map.style, "mapbox://styles/mapbox/streets-v12")
         self.assertEqual(self.map.bearing, 0.0)
@@ -569,14 +569,14 @@ class TestCesiumMap(unittest.TestCase):
     def setUp(self):
         """Set up test fixtures."""
         self.map = CesiumMap(
-            center=[37.7749, -122.4194],
+            center=[-122.4194, 37.7749],
             zoom=12,
             camera_height=15000000,
         )
 
     def test_initialization(self):
         """Test Cesium map initialization."""
-        self.assertEqual(self.map.center, [37.7749, -122.4194])
+        self.assertEqual(self.map.center, [-122.4194, 37.7749])
         self.assertEqual(self.map.zoom, 12)
         self.assertEqual(self.map.camera_height, 15000000)
         self.assertEqual(self.map.heading, 0.0)
