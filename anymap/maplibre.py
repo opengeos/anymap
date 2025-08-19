@@ -1352,6 +1352,7 @@ class MapLibreMap(MapWidget):
         keybindings: bool = True,
         touch_enabled: bool = True,
         preserve_selection_on_edit: bool = True,
+        styles: Optional[List[Dict[str, Any]]] = None,
         **kwargs: Any,
     ) -> None:
         """Add a draw control to the map for drawing and editing geometries.
@@ -1366,6 +1367,9 @@ class MapLibreMap(MapWidget):
             preserve_selection_on_edit: Whether to keep features selected during vertex editing/moving.
                                        If True, features remain selected after editing. If False, uses
                                        default MapboxDraw behavior (deselection after edit).
+            styles: Optional list of custom MapboxDraw style objects. If None, uses default styles.
+                   Each style should be a dict with 'id', 'type', 'filter', and 'paint'/'layout' properties.
+                   See MapboxDraw documentation for style object format.
             **kwargs: Additional options to pass to MapboxDraw constructor
         """
         if controls is None:
@@ -1384,6 +1388,7 @@ class MapLibreMap(MapWidget):
             "touchEnabled": touch_enabled,
             "position": position,
             "preserveSelectionOnEdit": preserve_selection_on_edit,
+            "customStyles": styles,
             **kwargs,
         }
 
@@ -1398,6 +1403,8 @@ class MapLibreMap(MapWidget):
         self._controls = current_controls
 
         self.call_js_method("addDrawControl", draw_options)
+
+    # Draw styles moved to draw_styles.py module
 
     def load_draw_data(self, geojson_data: Union[Dict[str, Any], str]) -> None:
         """Load GeoJSON data into the draw control.
@@ -1457,6 +1464,11 @@ class MapLibreMap(MapWidget):
             if self._draw_data
             else {"type": "FeatureCollection", "features": []}
         )
+
+    @property
+    def draw_data(self) -> Dict[str, Any]:
+        """Get the current draw data as GeoJSON."""
+        return self.get_draw_data()
 
     def clear_draw_data(self) -> None:
         """Clear all drawn features from the draw control."""
