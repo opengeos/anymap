@@ -891,6 +891,29 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/custom_draw_styles_example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Custom draw styles example
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1043,6 +1066,29 @@
   
   <span class="md-ellipsis">
     deckgl module
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../draw_styles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    draw_styles module
     
   </span>
   
@@ -1219,6 +1265,15 @@
   <a href="#anymap.maplibre.MapLibreMap.current_zoom" class="md-nav__link">
     <span class="md-ellipsis">
       current_zoom
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.draw_data" class="md-nav__link">
+    <span class="md-ellipsis">
+      draw_data
     </span>
   </a>
   
@@ -1895,6 +1950,15 @@
   <a href="#anymap.maplibre.MapLibreMap.current_zoom" class="md-nav__link">
     <span class="md-ellipsis">
       current_zoom
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.draw_data" class="md-nav__link">
+    <span class="md-ellipsis">
+      draw_data
     </span>
   </a>
   
@@ -3793,6 +3857,7 @@ data sources, custom styling, and interactive features.</p>
         <span class="n">keybindings</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">touch_enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">preserve_selection_on_edit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">styles</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a draw control to the map for drawing and editing geometries.</span>
@@ -3807,6 +3872,9 @@ data sources, custom styling, and interactive features.</p>
 <span class="sd">            preserve_selection_on_edit: Whether to keep features selected during vertex editing/moving.</span>
 <span class="sd">                                       If True, features remain selected after editing. If False, uses</span>
 <span class="sd">                                       default MapboxDraw behavior (deselection after edit).</span>
+<span class="sd">            styles: Optional list of custom MapboxDraw style objects. If None, uses default styles.</span>
+<span class="sd">                   Each style should be a dict with &#39;id&#39;, &#39;type&#39;, &#39;filter&#39;, and &#39;paint&#39;/&#39;layout&#39; properties.</span>
+<span class="sd">                   See MapboxDraw documentation for style object format.</span>
 <span class="sd">            **kwargs: Additional options to pass to MapboxDraw constructor</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">controls</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -3825,6 +3893,7 @@ data sources, custom styling, and interactive features.</p>
             <span class="s2">&quot;touchEnabled&quot;</span><span class="p">:</span> <span class="n">touch_enabled</span><span class="p">,</span>
             <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
             <span class="s2">&quot;preserveSelectionOnEdit&quot;</span><span class="p">:</span> <span class="n">preserve_selection_on_edit</span><span class="p">,</span>
+            <span class="s2">&quot;customStyles&quot;</span><span class="p">:</span> <span class="n">styles</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
         <span class="p">}</span>
 
@@ -3839,6 +3908,8 @@ data sources, custom styling, and interactive features.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">_controls</span> <span class="o">=</span> <span class="n">current_controls</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addDrawControl&quot;</span><span class="p">,</span> <span class="n">draw_options</span><span class="p">)</span>
+
+    <span class="c1"># Draw styles moved to draw_styles.py module</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">load_draw_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geojson_data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Load GeoJSON data into the draw control.</span>
@@ -3898,6 +3969,11 @@ data sources, custom styling, and interactive features.</p>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_draw_data</span>
             <span class="k">else</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;FeatureCollection&quot;</span><span class="p">,</span> <span class="s2">&quot;features&quot;</span><span class="p">:</span> <span class="p">[]}</span>
         <span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">draw_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the current draw data as GeoJSON.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_draw_data</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">clear_draw_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Clear all drawn features from the draw control.&quot;&quot;&quot;</span>
@@ -4359,6 +4435,29 @@ data sources, custom styling, and interactive features.</p>
     <div class="doc doc-contents ">
 
       <p>Get the current map zoom level.</p>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="anymap.maplibre.MapLibreMap.draw_data" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">draw_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-property"><code>property</code></small>
+      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
+  </span>
+
+<a href="#anymap.maplibre.MapLibreMap.draw_data" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Get the current draw data as GeoJSON.</p>
     </div>
 
   </div>
@@ -5210,7 +5309,7 @@ using a dropdown or expandable control. It uses the maplibre-gl-basemaps library
 
 
 <h3 id="anymap.maplibre.MapLibreMap.add_draw_control" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">add_draw_control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s1">&#39;top-left&#39;</span><span class="p">,</span> <span class="n">controls</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">default_mode</span><span class="o">=</span><span class="s1">&#39;simple_select&#39;</span><span class="p">,</span> <span class="n">keybindings</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">touch_enabled</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">preserve_selection_on_edit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">add_draw_control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s1">&#39;top-left&#39;</span><span class="p">,</span> <span class="n">controls</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">default_mode</span><span class="o">=</span><span class="s1">&#39;simple_select&#39;</span><span class="p">,</span> <span class="n">keybindings</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">touch_enabled</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">preserve_selection_on_edit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">styles</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
 
 <a href="#anymap.maplibre.MapLibreMap.add_draw_control" class="headerlink" title="Permanent link">&para;</a></h3>
@@ -5270,6 +5369,14 @@ using a dropdown or expandable control. It uses the maplibre-gl-basemaps library
         <td><code>True</code></td>
       </tr>
       <tr>
+        <td><code>styles</code></td>
+        <td><code>Optional[List[Dict[str, Any]]]</code></td>
+        <td><p>Optional list of custom MapboxDraw style objects. If None, uses default styles.
+   Each style should be a dict with 'id', 'type', 'filter', and 'paint'/'layout' properties.
+   See MapboxDraw documentation for style object format.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
         <td><code>**kwargs</code></td>
         <td><code>Any</code></td>
         <td><p>Additional options to pass to MapboxDraw constructor</p></td>
@@ -5287,6 +5394,7 @@ using a dropdown or expandable control. It uses the maplibre-gl-basemaps library
     <span class="n">keybindings</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">touch_enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">preserve_selection_on_edit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">styles</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a draw control to the map for drawing and editing geometries.</span>
@@ -5301,6 +5409,9 @@ using a dropdown or expandable control. It uses the maplibre-gl-basemaps library
 <span class="sd">        preserve_selection_on_edit: Whether to keep features selected during vertex editing/moving.</span>
 <span class="sd">                                   If True, features remain selected after editing. If False, uses</span>
 <span class="sd">                                   default MapboxDraw behavior (deselection after edit).</span>
+<span class="sd">        styles: Optional list of custom MapboxDraw style objects. If None, uses default styles.</span>
+<span class="sd">               Each style should be a dict with &#39;id&#39;, &#39;type&#39;, &#39;filter&#39;, and &#39;paint&#39;/&#39;layout&#39; properties.</span>
+<span class="sd">               See MapboxDraw documentation for style object format.</span>
 <span class="sd">        **kwargs: Additional options to pass to MapboxDraw constructor</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">controls</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -5319,6 +5430,7 @@ using a dropdown or expandable control. It uses the maplibre-gl-basemaps library
         <span class="s2">&quot;touchEnabled&quot;</span><span class="p">:</span> <span class="n">touch_enabled</span><span class="p">,</span>
         <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
         <span class="s2">&quot;preserveSelectionOnEdit&quot;</span><span class="p">:</span> <span class="n">preserve_selection_on_edit</span><span class="p">,</span>
+        <span class="s2">&quot;customStyles&quot;</span><span class="p">:</span> <span class="n">styles</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">}</span>
 

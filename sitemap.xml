@@ -33,6 +33,10 @@
          <lastmod>2025-08-19</lastmod>
     </url>
     <url>
+         <loc>https://anymap.dev/draw_styles/</loc>
+         <lastmod>2025-08-19</lastmod>
+    </url>
+    <url>
          <loc>https://anymap.dev/faq/</loc>
          <lastmod>2025-08-19</lastmod>
     </url>
@@ -94,6 +98,10 @@
     </url>
     <url>
          <loc>https://anymap.dev/examples/clicked_attribute_example/</loc>
+         <lastmod>2025-08-19</lastmod>
+    </url>
+    <url>
+         <loc>https://anymap.dev/examples/custom_draw_styles_example/</loc>
          <lastmod>2025-08-19</lastmod>
     </url>
     <url>
