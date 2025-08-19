@@ -714,6 +714,29 @@
   
   
     <li class="md-nav__item">
+      <a href="../examples/add_draw_data_example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Add draw data example
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../examples/layer_control_example/" class="md-nav__link">
         
   
@@ -1199,6 +1222,15 @@
   <a href="#anymap.maplibre.MapLibreMap.add_draw_control" class="md-nav__link">
     <span class="md-ellipsis">
       add_draw_control()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.add_draw_data" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_draw_data()
     </span>
   </a>
   
@@ -1863,6 +1895,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.add_draw_data" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_draw_data()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.add_geocoder_control" class="md-nav__link">
     <span class="md-ellipsis">
       add_geocoder_control()
@@ -2459,6 +2500,9 @@ data sources, custom styling, and interactive features.</p>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">style</span> <span class="o">=</span> <span class="n">construct_maplibre_style</span><span class="p">(</span><span class="n">style</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">90</span><span class="p">:</span>
+            <span class="n">center</span> <span class="o">=</span> <span class="n">center</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">center</span><span class="o">=</span><span class="n">center</span><span class="p">,</span>
@@ -3717,6 +3761,26 @@ data sources, custom styling, and interactive features.</p>
         <span class="c1"># Send to JavaScript</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;loadDrawData&quot;</span><span class="p">,</span> <span class="n">geojson_data</span><span class="p">)</span>
 
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_draw_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geojson_data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add GeoJSON features to the existing draw control data.</span>
+
+<span class="sd">        This method appends new features to the draw control without clearing</span>
+<span class="sd">        existing drawn features, unlike load_draw_data which replaces all data.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            geojson_data: GeoJSON data as dictionary or JSON string. Can be a</span>
+<span class="sd">                         FeatureCollection or a single Feature.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">geojson_data</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">geojson_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">geojson_data</span><span class="p">)</span>
+
+        <span class="c1"># Normalize input to FeatureCollection if it&#39;s a single Feature</span>
+        <span class="k">if</span> <span class="n">geojson_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;Feature&quot;</span><span class="p">:</span>
+            <span class="n">geojson_data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;FeatureCollection&quot;</span><span class="p">,</span> <span class="s2">&quot;features&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">geojson_data</span><span class="p">]}</span>
+
+        <span class="c1"># Send to JavaScript - it will handle adding features and syncing back the data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addDrawData&quot;</span><span class="p">,</span> <span class="n">geojson_data</span><span class="p">)</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">get_draw_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get all drawn features as GeoJSON.</span>
 
@@ -4399,6 +4463,9 @@ data sources, custom styling, and interactive features.</p>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">style</span> <span class="o">=</span> <span class="n">construct_maplibre_style</span><span class="p">(</span><span class="n">style</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">90</span><span class="p">:</span>
+        <span class="n">center</span> <span class="o">=</span> <span class="n">center</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
         <span class="n">center</span><span class="o">=</span><span class="n">center</span><span class="p">,</span>
@@ -5106,6 +5173,71 @@ using a dropdown or expandable control. It uses the maplibre-gl-basemaps library
     <span class="bp">self</span><span class="o">.</span><span class="n">_controls</span> <span class="o">=</span> <span class="n">current_controls</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addDrawControl&quot;</span><span class="p">,</span> <span class="n">draw_options</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="anymap.maplibre.MapLibreMap.add_draw_data" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">add_draw_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geojson_data</span><span class="p">)</span></code>
+
+
+<a href="#anymap.maplibre.MapLibreMap.add_draw_data" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Add GeoJSON features to the existing draw control data.</p>
+<p>This method appends new features to the draw control without clearing
+existing drawn features, unlike load_draw_data which replaces all data.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>geojson_data</code></td>
+        <td><code>Union[Dict[str, Any], str]</code></td>
+        <td><p>GeoJSON data as dictionary or JSON string. Can be a
+         FeatureCollection or a single Feature.</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>anymap/maplibre.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_draw_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geojson_data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add GeoJSON features to the existing draw control data.</span>
+
+<span class="sd">    This method appends new features to the draw control without clearing</span>
+<span class="sd">    existing drawn features, unlike load_draw_data which replaces all data.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        geojson_data: GeoJSON data as dictionary or JSON string. Can be a</span>
+<span class="sd">                     FeatureCollection or a single Feature.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">geojson_data</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">geojson_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">geojson_data</span><span class="p">)</span>
+
+    <span class="c1"># Normalize input to FeatureCollection if it&#39;s a single Feature</span>
+    <span class="k">if</span> <span class="n">geojson_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;Feature&quot;</span><span class="p">:</span>
+        <span class="n">geojson_data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;FeatureCollection&quot;</span><span class="p">,</span> <span class="s2">&quot;features&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">geojson_data</span><span class="p">]}</span>
+
+    <span class="c1"># Send to JavaScript - it will handle adding features and syncing back the data</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addDrawData&quot;</span><span class="p">,</span> <span class="n">geojson_data</span><span class="p">)</span>
 </code></pre></div>
         </details>
     </div>
