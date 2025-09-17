@@ -35,8 +35,8 @@ try:
     HAS_GEOPANDAS = True
 except ImportError:
     HAS_GEOPANDAS = False
-from .utils import construct_maplibre_style, get_env_var
 from .maplibre_widgets import Container, LayerManagerWidget
+from . import utils
 
 # Load MapLibre-specific js and css
 with open(
@@ -147,7 +147,7 @@ class MapLibreMap(MapWidget):
         """
 
         if isinstance(style, str):
-            style = construct_maplibre_style(style)
+            style = utils.construct_maplibre_style(style)
 
         if abs(center[1]) > 90:
             center = center[::-1]
@@ -689,11 +689,13 @@ class MapLibreMap(MapWidget):
 
     def add_layer(
         self,
-        layer_id: str,
         layer: Dict[str, Any],
         before_id: Optional[str] = None,
+        layer_id: str = None,
         opacity: Optional[float] = 1.0,
         visible: Optional[bool] = True,
+        overwrite: bool = False,
+        **kwargs: Any,
     ) -> None:
         """Add a layer to the map.
 
@@ -704,6 +706,22 @@ class MapLibreMap(MapWidget):
             before_id: Optional layer ID to insert this layer before.
                       If None, layer is added on top.
         """
+
+        if isinstance(layer, dict):
+            if "minzoom" in layer:
+                layer["min-zoom"] = layer.pop("minzoom")
+            if "maxzoom" in layer:
+                layer["max-zoom"] = layer.pop("maxzoom")
+            layer = utils.replace_top_level_hyphens(layer)
+
+        if "name" in kwargs and layer_id is None:
+            layer_id = kwargs.pop("name")
+
+        if layer_id is None:
+            layer_id = utils.get_unique_name(
+                layer["id"], list(self._layers.keys()), overwrite
+            )
+
         # Store layer in local state for persistence
         current_layers = dict(self._layers)
         current_layers[layer_id] = layer
@@ -762,7 +780,7 @@ class MapLibreMap(MapWidget):
         if paint:
             layer_config["paint"] = paint
 
-        self.add_layer(layer_id, layer_config, before_id)
+        self.add_layer(layer=layer_config, before_id=before_id, layer_id=layer_id)
 
     def add_marker(self, lng: float, lat: float, popup: Optional[str] = None) -> None:
         """Add a marker to the map.
@@ -829,7 +847,7 @@ class MapLibreMap(MapWidget):
         if layout:
             layer_config["layout"] = layout
 
-        self.add_layer(layer_id, layer_config, before_id)
+        self.add_layer(layer=layer_config, before_id=before_id, layer_id=layer_id)
 
     def add_vector_layer(
         self,
@@ -870,7 +888,7 @@ class MapLibreMap(MapWidget):
         if layout:
             layer_config["layout"] = layout
 
-        self.add_layer(layer_id, layer_config, before_id)
+        self.add_layer(layer=layer_config, before_id=before_id, layer_id=layer_id)
 
     def add_image_layer(
         self,
@@ -903,7 +921,7 @@ class MapLibreMap(MapWidget):
         if paint:
             layer_config["paint"] = paint
 
-        self.add_layer(layer_id, layer_config, before_id)
+        self.add_layer(layer=layer_config, before_id=before_id, layer_id=layer_id)
 
     def add_control(
         self,
@@ -1085,7 +1103,7 @@ class MapLibreMap(MapWidget):
             ValueError: If no API key is provided and none can be found in environment variables
         """
         if api_key is None:
-            api_key = get_env_var("GOOGLE_MAPS_API_KEY")
+            api_key = utils.get_env_var("GOOGLE_MAPS_API_KEY")
             if api_key is None:
                 raise ValueError(
                     "Google Maps API key is required. Please provide it as a parameter "
@@ -1218,7 +1236,11 @@ class MapLibreMap(MapWidget):
             layer_config["paint"] = paint
 
         self.add_layer(
-            layer_id, layer_config, before_id, opacity=opacity, visible=visible
+            layer=layer_config,
+            before_id=before_id,
+            layer_id=layer_id,
+            opacity=opacity,
+            visible=visible,
         )
 
     def add_pmtiles(
@@ -1293,9 +1315,9 @@ class MapLibreMap(MapWidget):
         # Add all layers
         for layer_config in layers:
             self.add_layer(
-                layer_config["id"],
-                layer_config,
-                before_id,
+                layer=layer_config,
+                before_id=before_id,
+                layer_id=layer_config["id"],
                 opacity=opacity,
                 visible=visible,
             )

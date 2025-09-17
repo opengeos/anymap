@@ -27,7 +27,7 @@ Example:
 import json
 import os
 import requests
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, Union, List, Tuple
 
 
 def _in_colab_shell() -> bool:
@@ -357,3 +357,129 @@ def construct_maplibre_style(style: str, **kwargs) -> str:
             style = construct_carto_style(style)
 
     return style
+
+
+def replace_top_level_hyphens(d: Union[Dict, Any]) -> Union[Dict, Any]:
+    """
+    Replaces hyphens with underscores in top-level dictionary keys.
+
+    Args:
+        d (Union[Dict, Any]): The input dictionary or any other data type.
+
+    Returns:
+        Union[Dict, Any]: The modified dictionary with top-level keys having hyphens replaced with underscores,
+        or the original input if it's not a dictionary.
+    """
+    if isinstance(d, dict):
+        return {k.replace("-", "_"): v for k, v in d.items()}
+    return d
+
+
+def replace_hyphens_in_keys(d: Union[Dict, List, Any]) -> Union[Dict, List, Any]:
+    """
+    Recursively replaces hyphens with underscores in dictionary keys.
+
+    Args:
+        d (Union[Dict, List, Any]): The input dictionary, list or any other data type.
+
+    Returns:
+        Union[Dict, List, Any]: The modified dictionary or list with keys having hyphens replaced with underscores,
+        or the original input if it's not a dictionary or list.
+    """
+    if isinstance(d, dict):
+        return {k.replace("-", "_"): replace_hyphens_in_keys(v) for k, v in d.items()}
+    elif isinstance(d, list):
+        return [replace_hyphens_in_keys(i) for i in d]
+    else:
+        return d
+
+
+def replace_underscores_in_keys(d: Union[Dict, List, Any]) -> Union[Dict, List, Any]:
+    """
+    Recursively replaces underscores with hyphens in dictionary keys.
+
+    Args:
+        d (Union[Dict, List, Any]): The input dictionary, list or any other data type.
+
+    Returns:
+        Union[Dict, List, Any]: The modified dictionary or list with keys having underscores replaced with hyphens,
+        or the original input if it's not a dictionary or list.
+    """
+    if isinstance(d, dict):
+        return {
+            k.replace("_", "-"): replace_underscores_in_keys(v) for k, v in d.items()
+        }
+    elif isinstance(d, list):
+        return [replace_underscores_in_keys(i) for i in d]
+    else:
+        return d
+
+
+def get_unique_name(name: str, names: list, overwrite: bool = False) -> str:
+    """
+    Generates a unique name based on the input name and existing names.
+
+    Args:
+        name (str): The base name to generate a unique name from.
+        names (list): A list of existing names to check against.
+        overwrite (bool, optional): If True, the function will return the original name even if it exists in the list. Defaults to False.
+
+    Returns:
+        str: A unique name based on the input name.
+    """
+    if overwrite or name not in names:
+        return name
+    else:
+        counter = 1
+        while True:
+            unique_name = f"{name}_{counter}"
+            if unique_name not in names:
+                return unique_name
+            counter += 1
+
+
+def check_color(in_color: Union[str, Tuple, List]) -> str:
+    """Checks the input color and returns the corresponding hex color code.
+
+    Args:
+        in_color (str or tuple or list): It can be a string (e.g., 'red', '#ffff00', 'ffff00', 'ff0') or RGB tuple/list (e.g., (255, 127, 0)).
+
+    Returns:
+        str: A hex color code.
+    """
+    from matplotlib import colors
+
+    out_color = "#000000"  # default black color
+    # Handle RGB tuple or list
+    if isinstance(in_color, (tuple, list)) and len(in_color) == 3:
+        # rescale color if necessary
+        if all(isinstance(item, int) for item in in_color):
+            # Ensure values are floats between 0 and 1 for to_hex
+            in_color = [c / 255.0 for c in in_color]
+        try:
+            return colors.to_hex(in_color)
+        except ValueError:
+            print(
+                f"The provided RGB color ({in_color}) is invalid. Using the default black color."
+            )
+            return out_color
+
+    # Handle string color input
+    elif isinstance(in_color, str):
+        try:
+            # Try converting directly (handles color names and hex with #)
+            return colors.to_hex(in_color)
+        except ValueError:
+            try:
+                # Try again by adding an extra # (handles hex without #)
+                return colors.to_hex(f"#{in_color}")
+            except ValueError:
+                print(
+                    f"The provided color string ({in_color}) is invalid. Using the default black color."
+                )
+                return out_color
+    else:
+        print(
+            f"The provided color type ({type(in_color)}) is invalid. Using the default black color."
+        )
+        return out_color
