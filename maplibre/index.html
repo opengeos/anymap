@@ -3746,7 +3746,7 @@ data sources, custom styling, and interactive features.</p>
 <span class="sd">            before_id: Optional layer ID to insert this layer before.</span>
 <span class="sd">            titiler_endpoint: Optional TiTiler endpoint URL. If None, checks COG CRS</span>
 <span class="sd">                and uses TiTiler automatically for non-EPSG:3857 COGs. Set to a TiTiler</span>
-<span class="sd">                URL (e.g., &quot;https://titiler.xyz&quot;) to force using TiTiler.</span>
+<span class="sd">                URL (e.g., &quot;https://giswqs-titiler-endpoint.hf.space&quot;) to force using TiTiler.</span>
 <span class="sd">            fit_bounds: If True, automatically fit map bounds to COG extent.</span>
 <span class="sd">            **kwargs: Additional parameters passed to TiTiler (e.g., rescale, colormap,</span>
 <span class="sd">                bidx for band selection).</span>
@@ -3763,7 +3763,7 @@ data sources, custom styling, and interactive features.</p>
 <span class="sd">            &gt;&gt;&gt; m.add_cog_layer(</span>
 <span class="sd">            ...     &quot;cog3&quot;,</span>
 <span class="sd">            ...     &quot;https://example.com/data.tif&quot;,</span>
-<span class="sd">            ...     titiler_endpoint=&quot;https://titiler.xyz&quot;,</span>
+<span class="sd">            ...     titiler_endpoint=&quot;https://giswqs-titiler-endpoint.hf.space&quot;,</span>
 <span class="sd">            ...     rescale=&quot;0,255&quot;,</span>
 <span class="sd">            ...     colormap=&quot;viridis&quot;</span>
 <span class="sd">            ... )</span>
@@ -5367,7 +5367,7 @@ in other CRS, it uses TiTiler to reproject on-the-fly.</p>
         <td><code>Optional[str]</code></td>
         <td><p>Optional TiTiler endpoint URL. If None, checks COG CRS
 and uses TiTiler automatically for non-EPSG:3857 COGs. Set to a TiTiler
-URL (e.g., "https://titiler.xyz") to force using TiTiler.</p></td>
+URL (e.g., "https://giswqs-titiler-endpoint.hf.space") to force using TiTiler.</p></td>
         <td><code>None</code></td>
       </tr>
       <tr>
@@ -5397,7 +5397,7 @@ bidx for band selection).</p></td>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">m</span><span class="o">.</span><span class="n">add_cog_layer</span><span class="p">(</span>
 <span class="o">...</span>     <span class="s2">&quot;cog3&quot;</span><span class="p">,</span>
 <span class="o">...</span>     <span class="s2">&quot;https://example.com/data.tif&quot;</span><span class="p">,</span>
-<span class="o">...</span>     <span class="n">titiler_endpoint</span><span class="o">=</span><span class="s2">&quot;https://titiler.xyz&quot;</span><span class="p">,</span>
+<span class="o">...</span>     <span class="n">titiler_endpoint</span><span class="o">=</span><span class="s2">&quot;https://giswqs-titiler-endpoint.hf.space&quot;</span><span class="p">,</span>
 <span class="o">...</span>     <span class="n">rescale</span><span class="o">=</span><span class="s2">&quot;0,255&quot;</span><span class="p">,</span>
 <span class="o">...</span>     <span class="n">colormap</span><span class="o">=</span><span class="s2">&quot;viridis&quot;</span>
 <span class="o">...</span> <span class="p">)</span>
@@ -5432,7 +5432,7 @@ bidx for band selection).</p></td>
 <span class="sd">        before_id: Optional layer ID to insert this layer before.</span>
 <span class="sd">        titiler_endpoint: Optional TiTiler endpoint URL. If None, checks COG CRS</span>
 <span class="sd">            and uses TiTiler automatically for non-EPSG:3857 COGs. Set to a TiTiler</span>
-<span class="sd">            URL (e.g., &quot;https://titiler.xyz&quot;) to force using TiTiler.</span>
+<span class="sd">            URL (e.g., &quot;https://giswqs-titiler-endpoint.hf.space&quot;) to force using TiTiler.</span>
 <span class="sd">        fit_bounds: If True, automatically fit map bounds to COG extent.</span>
 <span class="sd">        **kwargs: Additional parameters passed to TiTiler (e.g., rescale, colormap,</span>
 <span class="sd">            bidx for band selection).</span>
@@ -5449,7 +5449,7 @@ bidx for band selection).</p></td>
 <span class="sd">        &gt;&gt;&gt; m.add_cog_layer(</span>
 <span class="sd">        ...     &quot;cog3&quot;,</span>
 <span class="sd">        ...     &quot;https://example.com/data.tif&quot;,</span>
-<span class="sd">        ...     titiler_endpoint=&quot;https://titiler.xyz&quot;,</span>
+<span class="sd">        ...     titiler_endpoint=&quot;https://giswqs-titiler-endpoint.hf.space&quot;,</span>
 <span class="sd">        ...     rescale=&quot;0,255&quot;,</span>
 <span class="sd">        ...     colormap=&quot;viridis&quot;</span>
 <span class="sd">        ... )</span>
