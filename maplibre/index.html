@@ -1514,6 +1514,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.get_cog_metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_cog_metadata()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.get_draw_data" class="md-nav__link">
     <span class="md-ellipsis">
       get_draw_data()
@@ -2199,6 +2208,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.get_cog_metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_cog_metadata()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.get_draw_data" class="md-nav__link">
     <span class="md-ellipsis">
       get_draw_data()
@@ -2652,7 +2670,7 @@ data sources, custom styling, and interactive features.</p>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="n">style</span> <span class="o">=</span> <span class="n">construct_maplibre_style</span><span class="p">(</span><span class="n">style</span><span class="p">)</span>
+            <span class="n">style</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">construct_maplibre_style</span><span class="p">(</span><span class="n">style</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">90</span><span class="p">:</span>
             <span class="n">center</span> <span class="o">=</span> <span class="n">center</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
@@ -3194,11 +3212,13 @@ data sources, custom styling, and interactive features.</p>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">add_layer</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">layer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">layer</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
         <span class="n">before_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">layer_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">opacity</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
         <span class="n">visible</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">overwrite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a layer to the map.</span>
 
@@ -3209,6 +3229,22 @@ data sources, custom styling, and interactive features.</p>
 <span class="sd">            before_id: Optional layer ID to insert this layer before.</span>
 <span class="sd">                      If None, layer is added on top.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">if</span> <span class="s2">&quot;minzoom&quot;</span> <span class="ow">in</span> <span class="n">layer</span><span class="p">:</span>
+                <span class="n">layer</span><span class="p">[</span><span class="s2">&quot;min-zoom&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;minzoom&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;maxzoom&quot;</span> <span class="ow">in</span> <span class="n">layer</span><span class="p">:</span>
+                <span class="n">layer</span><span class="p">[</span><span class="s2">&quot;max-zoom&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;maxzoom&quot;</span><span class="p">)</span>
+            <span class="n">layer</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">replace_top_level_hyphens</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s2">&quot;name&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="n">layer_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">layer_id</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">layer_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">layer_id</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_unique_name</span><span class="p">(</span>
+                <span class="n">layer</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_layers</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="n">overwrite</span>
+            <span class="p">)</span>
+
         <span class="c1"># Store layer in local state for persistence</span>
         <span class="n">current_layers</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_layers</span><span class="p">)</span>
         <span class="n">current_layers</span><span class="p">[</span><span class="n">layer_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">layer</span>
@@ -3267,7 +3303,7 @@ data sources, custom styling, and interactive features.</p>
         <span class="k">if</span> <span class="n">paint</span><span class="p">:</span>
             <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;paint&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">paint</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">layer_id</span><span class="p">,</span> <span class="n">layer_config</span><span class="p">,</span> <span class="n">before_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">layer</span><span class="o">=</span><span class="n">layer_config</span><span class="p">,</span> <span class="n">before_id</span><span class="o">=</span><span class="n">before_id</span><span class="p">,</span> <span class="n">layer_id</span><span class="o">=</span><span class="n">layer_id</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">add_marker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lng</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lat</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">popup</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a marker to the map.</span>
@@ -3334,7 +3370,7 @@ data sources, custom styling, and interactive features.</p>
         <span class="k">if</span> <span class="n">layout</span><span class="p">:</span>
             <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;layout&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">layout</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">layer_id</span><span class="p">,</span> <span class="n">layer_config</span><span class="p">,</span> <span class="n">before_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">layer</span><span class="o">=</span><span class="n">layer_config</span><span class="p">,</span> <span class="n">before_id</span><span class="o">=</span><span class="n">before_id</span><span class="p">,</span> <span class="n">layer_id</span><span class="o">=</span><span class="n">layer_id</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">add_vector_layer</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -3375,7 +3411,7 @@ data sources, custom styling, and interactive features.</p>
         <span class="k">if</span> <span class="n">layout</span><span class="p">:</span>
             <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;layout&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">layout</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">layer_id</span><span class="p">,</span> <span class="n">layer_config</span><span class="p">,</span> <span class="n">before_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">layer</span><span class="o">=</span><span class="n">layer_config</span><span class="p">,</span> <span class="n">before_id</span><span class="o">=</span><span class="n">before_id</span><span class="p">,</span> <span class="n">layer_id</span><span class="o">=</span><span class="n">layer_id</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">add_image_layer</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -3408,7 +3444,7 @@ data sources, custom styling, and interactive features.</p>
         <span class="k">if</span> <span class="n">paint</span><span class="p">:</span>
             <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;paint&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">paint</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">layer_id</span><span class="p">,</span> <span class="n">layer_config</span><span class="p">,</span> <span class="n">before_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">layer</span><span class="o">=</span><span class="n">layer_config</span><span class="p">,</span> <span class="n">before_id</span><span class="o">=</span><span class="n">before_id</span><span class="p">,</span> <span class="n">layer_id</span><span class="o">=</span><span class="n">layer_id</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">add_control</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -3590,7 +3626,7 @@ data sources, custom styling, and interactive features.</p>
 <span class="sd">            ValueError: If no API key is provided and none can be found in environment variables</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">api_key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">api_key</span> <span class="o">=</span> <span class="n">get_env_var</span><span class="p">(</span><span class="s2">&quot;GOOGLE_MAPS_API_KEY&quot;</span><span class="p">)</span>
+            <span class="n">api_key</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_env_var</span><span class="p">(</span><span class="s2">&quot;GOOGLE_MAPS_API_KEY&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">api_key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                     <span class="s2">&quot;Google Maps API key is required. Please provide it as a parameter &quot;</span>
@@ -3691,8 +3727,15 @@ data sources, custom styling, and interactive features.</p>
         <span class="n">visible</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">paint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">before_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">titiler_endpoint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">fit_bounds</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a Cloud Optimized GeoTIFF (COG) layer to the map.</span>
+
+<span class="sd">        This method supports COGs in any coordinate reference system (CRS). For COGs</span>
+<span class="sd">        in EPSG:3857, it uses the maplibre-cog-protocol for direct rendering. For COGs</span>
+<span class="sd">        in other CRS, it uses TiTiler to reproject on-the-fly.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            layer_id: Unique identifier for the COG layer.</span>
@@ -3701,20 +3744,101 @@ data sources, custom styling, and interactive features.</p>
 <span class="sd">            visible: Whether the layer should be visible initially.</span>
 <span class="sd">            paint: Optional paint properties for the layer.</span>
 <span class="sd">            before_id: Optional layer ID to insert this layer before.</span>
+<span class="sd">            titiler_endpoint: Optional TiTiler endpoint URL. If None, checks COG CRS</span>
+<span class="sd">                and uses TiTiler automatically for non-EPSG:3857 COGs. Set to a TiTiler</span>
+<span class="sd">                URL (e.g., &quot;https://titiler.xyz&quot;) to force using TiTiler.</span>
+<span class="sd">            fit_bounds: If True, automatically fit map bounds to COG extent.</span>
+<span class="sd">            **kwargs: Additional parameters passed to TiTiler (e.g., rescale, colormap,</span>
+<span class="sd">                bidx for band selection).</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; m = MapLibreMap()</span>
+<span class="sd">            &gt;&gt;&gt; # COG in EPSG:3857 (uses cog:// protocol)</span>
+<span class="sd">            &gt;&gt;&gt; m.add_cog_layer(&quot;cog1&quot;, &quot;https://example.com/data_3857.tif&quot;)</span>
+<span class="sd">            &gt;&gt;&gt;</span>
+<span class="sd">            &gt;&gt;&gt; # COG in any other CRS (uses TiTiler)</span>
+<span class="sd">            &gt;&gt;&gt; m.add_cog_layer(&quot;cog2&quot;, &quot;https://example.com/data_4326.tif&quot;)</span>
+<span class="sd">            &gt;&gt;&gt;</span>
+<span class="sd">            &gt;&gt;&gt; # Force TiTiler with custom endpoint</span>
+<span class="sd">            &gt;&gt;&gt; m.add_cog_layer(</span>
+<span class="sd">            ...     &quot;cog3&quot;,</span>
+<span class="sd">            ...     &quot;https://example.com/data.tif&quot;,</span>
+<span class="sd">            ...     titiler_endpoint=&quot;https://titiler.xyz&quot;,</span>
+<span class="sd">            ...     rescale=&quot;0,255&quot;,</span>
+<span class="sd">            ...     colormap=&quot;viridis&quot;</span>
+<span class="sd">            ... )</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">source_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">layer_id</span><span class="si">}</span><span class="s2">_source&quot;</span>
 
-        <span class="c1"># Add COG source using cog:// protocol</span>
-        <span class="n">cog_source_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;cog://</span><span class="si">{</span><span class="n">cog_url</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="c1"># Check if we should use TiTiler</span>
+        <span class="n">use_titiler</span> <span class="o">=</span> <span class="n">titiler_endpoint</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_source</span><span class="p">(</span>
-            <span class="n">source_id</span><span class="p">,</span>
-            <span class="p">{</span>
-                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;raster&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">cog_source_url</span><span class="p">,</span>
-                <span class="s2">&quot;tileSize&quot;</span><span class="p">:</span> <span class="mi">256</span><span class="p">,</span>
-            <span class="p">},</span>
-        <span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">use_titiler</span><span class="p">:</span>
+            <span class="c1"># Auto-detect if TiTiler is needed by checking COG CRS</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">metadata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cog_metadata</span><span class="p">(</span><span class="n">cog_url</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">metadata</span> <span class="ow">and</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;crs&quot;</span><span class="p">):</span>
+                    <span class="n">cog_crs</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;crs&quot;</span><span class="p">]</span>
+                    <span class="c1"># Use TiTiler if COG is not in EPSG:3857</span>
+                    <span class="k">if</span> <span class="n">cog_crs</span> <span class="o">!=</span> <span class="s2">&quot;EPSG:3857&quot;</span><span class="p">:</span>
+                        <span class="n">use_titiler</span> <span class="o">=</span> <span class="kc">True</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;COG is in </span><span class="si">{</span><span class="n">cog_crs</span><span class="si">}</span><span class="s2">, using TiTiler for reprojection&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not determine COG CRS, trying cog:// protocol: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">use_titiler</span><span class="p">:</span>
+            <span class="c1"># Use TiTiler for on-the-fly reprojection</span>
+            <span class="k">if</span> <span class="n">titiler_endpoint</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">titiler_endpoint</span> <span class="o">=</span> <span class="s2">&quot;https://giswqs-titiler-endpoint.hf.space&quot;</span>
+
+            <span class="c1"># Build TiTiler tile URL</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">urllib.parse</span><span class="w"> </span><span class="kn">import</span> <span class="n">urlencode</span><span class="p">,</span> <span class="n">quote</span>
+
+            <span class="c1"># Encode the COG URL</span>
+            <span class="n">encoded_url</span> <span class="o">=</span> <span class="n">quote</span><span class="p">(</span><span class="n">cog_url</span><span class="p">,</span> <span class="n">safe</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Build query parameters</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">cog_url</span><span class="p">,</span>
+                <span class="s2">&quot;TileMatrixSetId&quot;</span><span class="p">:</span> <span class="s2">&quot;WebMercatorQuad&quot;</span><span class="p">,</span>  <span class="c1"># Reproject to Web Mercator</span>
+            <span class="p">}</span>
+
+            <span class="c1"># Add any additional TiTiler parameters</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">params</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+            <span class="n">query_string</span> <span class="o">=</span> <span class="n">urlencode</span><span class="p">({</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s2">&quot;url&quot;</span><span class="p">})</span>
+
+            <span class="c1"># TiTiler tile URL format: {endpoint}/cog/tiles/WebMercatorQuad/{z}/{x}/{y}</span>
+            <span class="n">tile_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">titiler_endpoint</span><span class="si">}</span><span class="s2">/cog/tiles/WebMercatorQuad/</span><span class="se">{{</span><span class="s2">z</span><span class="se">}}</span><span class="s2">/</span><span class="se">{{</span><span class="s2">x</span><span class="se">}}</span><span class="s2">/</span><span class="se">{{</span><span class="s2">y</span><span class="se">}}</span><span class="s2">?url=</span><span class="si">{</span><span class="n">encoded_url</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">if</span> <span class="n">query_string</span><span class="p">:</span>
+                <span class="n">tile_url</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&amp;</span><span class="si">{</span><span class="n">query_string</span><span class="si">}</span><span class="s2">&quot;</span>
+
+            <span class="c1"># print(f&quot;Using TiTiler: {titiler_endpoint}&quot;)</span>
+            <span class="c1"># print(f&quot;Tile URL pattern: {tile_url[:100]}...&quot;)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_source</span><span class="p">(</span>
+                <span class="n">source_id</span><span class="p">,</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;raster&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;tiles&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">tile_url</span><span class="p">],</span>
+                    <span class="s2">&quot;tileSize&quot;</span><span class="p">:</span> <span class="mi">256</span><span class="p">,</span>
+                    <span class="s2">&quot;attribution&quot;</span><span class="p">:</span> <span class="s2">&quot;TiTiler&quot;</span><span class="p">,</span>
+                <span class="p">},</span>
+            <span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Use cog:// protocol for EPSG:3857 COGs</span>
+            <span class="n">cog_source_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;cog://</span><span class="si">{</span><span class="n">cog_url</span><span class="si">}</span><span class="s2">&quot;</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_source</span><span class="p">(</span>
+                <span class="n">source_id</span><span class="p">,</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;raster&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">cog_source_url</span><span class="p">,</span>
+                    <span class="s2">&quot;tileSize&quot;</span><span class="p">:</span> <span class="mi">256</span><span class="p">,</span>
+                <span class="p">},</span>
+            <span class="p">)</span>
 
         <span class="c1"># Add raster layer</span>
         <span class="n">layer_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">layer_id</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;raster&quot;</span><span class="p">,</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">source_id</span><span class="p">}</span>
@@ -3723,8 +3847,24 @@ data sources, custom styling, and interactive features.</p>
             <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;paint&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">paint</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span>
-            <span class="n">layer_id</span><span class="p">,</span> <span class="n">layer_config</span><span class="p">,</span> <span class="n">before_id</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="n">opacity</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="n">visible</span>
+            <span class="n">layer</span><span class="o">=</span><span class="n">layer_config</span><span class="p">,</span>
+            <span class="n">before_id</span><span class="o">=</span><span class="n">before_id</span><span class="p">,</span>
+            <span class="n">layer_id</span><span class="o">=</span><span class="n">layer_id</span><span class="p">,</span>
+            <span class="n">opacity</span><span class="o">=</span><span class="n">opacity</span><span class="p">,</span>
+            <span class="n">visible</span><span class="o">=</span><span class="n">visible</span><span class="p">,</span>
         <span class="p">)</span>
+
+        <span class="c1"># Optionally fit bounds to COG extent</span>
+        <span class="k">if</span> <span class="n">fit_bounds</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">metadata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cog_metadata</span><span class="p">(</span><span class="n">cog_url</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="s2">&quot;EPSG:4326&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">metadata</span> <span class="ow">and</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;bbox&quot;</span><span class="p">):</span>
+                    <span class="n">bbox</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;bbox&quot;</span><span class="p">]</span>
+                    <span class="n">bounds</span> <span class="o">=</span> <span class="p">[[</span><span class="n">bbox</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bbox</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="p">[</span><span class="n">bbox</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">bbox</span><span class="p">[</span><span class="mi">3</span><span class="p">]]]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">fit_bounds</span><span class="p">(</span><span class="n">bounds</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+                    <span class="c1"># print(f&quot;Map fitted to COG bounds: {bounds}&quot;)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not fit bounds to COG extent: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">add_pmtiles</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -3798,9 +3938,9 @@ data sources, custom styling, and interactive features.</p>
         <span class="c1"># Add all layers</span>
         <span class="k">for</span> <span class="n">layer_config</span> <span class="ow">in</span> <span class="n">layers</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span>
-                <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span>
-                <span class="n">layer_config</span><span class="p">,</span>
-                <span class="n">before_id</span><span class="p">,</span>
+                <span class="n">layer</span><span class="o">=</span><span class="n">layer_config</span><span class="p">,</span>
+                <span class="n">before_id</span><span class="o">=</span><span class="n">before_id</span><span class="p">,</span>
+                <span class="n">layer_id</span><span class="o">=</span><span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span>
                 <span class="n">opacity</span><span class="o">=</span><span class="n">opacity</span><span class="p">,</span>
                 <span class="n">visible</span><span class="o">=</span><span class="n">visible</span><span class="p">,</span>
             <span class="p">)</span>
@@ -4252,6 +4392,57 @@ data sources, custom styling, and interactive features.</p>
             <span class="s2">&quot;pitch&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_pitch</span><span class="p">,</span>
             <span class="s2">&quot;bounds&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_bounds</span><span class="p">,</span>
         <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_cog_metadata</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">crs</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;EPSG:4326&quot;</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve metadata from a Cloud Optimized GeoTIFF (COG) file.</span>
+
+<span class="sd">        This method fetches metadata from a COG file. It uses rasterio if available,</span>
+<span class="sd">        which provides comprehensive metadata extraction capabilities.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            This feature corresponds to the getCogMetadata function in maplibre-cog-protocol,</span>
+<span class="sd">            which is marked as [unstable]. Some metadata internals may change in future releases.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            url (str): The URL of the COG file to retrieve metadata from.</span>
+<span class="sd">            crs (str, optional): The coordinate reference system to use for the output bbox.</span>
+<span class="sd">                Defaults to &quot;EPSG:4326&quot; (WGS84 lat/lon). Set to None to use the COG&#39;s native CRS.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Optional[Dict[str, Any]]: A dictionary containing COG metadata with keys such as:</span>
+<span class="sd">                - bbox: Bounding box coordinates [west, south, east, north] in the specified CRS</span>
+<span class="sd">                - bounds: BoundingBox in native CRS</span>
+<span class="sd">                - width: Width of the raster in pixels</span>
+<span class="sd">                - height: Height of the raster in pixels</span>
+<span class="sd">                - crs: Original coordinate reference system of the COG</span>
+<span class="sd">                - output_crs: CRS of the returned bbox</span>
+<span class="sd">                - transform: Affine transformation matrix</span>
+<span class="sd">                - count: Number of bands</span>
+<span class="sd">                - dtypes: Data types for each band</span>
+<span class="sd">                - nodata: NoData value</span>
+<span class="sd">                - scale: Scale value (if available)</span>
+<span class="sd">                - offset: Offset value (if available)</span>
+<span class="sd">            Returns None if metadata retrieval fails.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; m = MapLibreMap()</span>
+<span class="sd">            &gt;&gt;&gt; url = &quot;https://example.com/data.tif&quot;</span>
+<span class="sd">            &gt;&gt;&gt; # Get metadata with bbox in WGS84 (default)</span>
+<span class="sd">            &gt;&gt;&gt; metadata = m.get_cog_metadata(url)</span>
+<span class="sd">            &gt;&gt;&gt; if metadata:</span>
+<span class="sd">            ...     print(f&quot;Bounding box (WGS84): {metadata.get(&#39;bbox&#39;)}&quot;)</span>
+<span class="sd">            ...     # Fit bounds using WGS84 coordinates</span>
+<span class="sd">            ...     bbox = metadata[&#39;bbox&#39;]</span>
+<span class="sd">            ...     m.fit_bounds([[bbox[0], bbox[1]], [bbox[2], bbox[3]]])</span>
+<span class="sd">            &gt;&gt;&gt;</span>
+<span class="sd">            &gt;&gt;&gt; # Get metadata in native CRS</span>
+<span class="sd">            &gt;&gt;&gt; metadata = m.get_cog_metadata(url, crs=None)</span>
+<span class="sd">            &gt;&gt;&gt; if metadata:</span>
+<span class="sd">            ...     print(f&quot;Native CRS: {metadata.get(&#39;crs&#39;)}&quot;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_cog_metadata</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="n">crs</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">add_basemap_control</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -4708,7 +4899,7 @@ data sources, custom styling, and interactive features.</p>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="n">style</span> <span class="o">=</span> <span class="n">construct_maplibre_style</span><span class="p">(</span><span class="n">style</span><span class="p">)</span>
+        <span class="n">style</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">construct_maplibre_style</span><span class="p">(</span><span class="n">style</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">90</span><span class="p">:</span>
         <span class="n">center</span> <span class="o">=</span> <span class="n">center</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
@@ -5112,7 +5303,7 @@ using a dropdown or expandable control. It uses the maplibre-gl-basemaps library
 
 
 <h3 id="anymap.maplibre.MapLibreMap.add_cog_layer" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">add_cog_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer_id</span><span class="p">,</span> <span class="n">cog_url</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">paint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">before_id</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">add_cog_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer_id</span><span class="p">,</span> <span class="n">cog_url</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">paint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">before_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">titiler_endpoint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fit_bounds</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
 
 <a href="#anymap.maplibre.MapLibreMap.add_cog_layer" class="headerlink" title="Permanent link">&para;</a></h3>
@@ -5120,6 +5311,9 @@ using a dropdown or expandable control. It uses the maplibre-gl-basemaps library
     <div class="doc doc-contents ">
 
       <p>Add a Cloud Optimized GeoTIFF (COG) layer to the map.</p>
+<p>This method supports COGs in any coordinate reference system (CRS). For COGs
+in EPSG:3857, it uses the maplibre-cog-protocol for direct rendering. For COGs
+in other CRS, it uses TiTiler to reproject on-the-fly.</p>
 
 <p><strong>Parameters:</strong></p>
 <table>
@@ -5168,8 +5362,47 @@ using a dropdown or expandable control. It uses the maplibre-gl-basemaps library
         <td><p>Optional layer ID to insert this layer before.</p></td>
         <td><code>None</code></td>
       </tr>
+      <tr>
+        <td><code>titiler_endpoint</code></td>
+        <td><code>Optional[str]</code></td>
+        <td><p>Optional TiTiler endpoint URL. If None, checks COG CRS
+and uses TiTiler automatically for non-EPSG:3857 COGs. Set to a TiTiler
+URL (e.g., "https://titiler.xyz") to force using TiTiler.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>fit_bounds</code></td>
+        <td><code>bool</code></td>
+        <td><p>If True, automatically fit map bounds to COG extent.</p></td>
+        <td><code>True</code></td>
+      </tr>
+      <tr>
+        <td><code>**kwargs</code></td>
+        <td><code>Any</code></td>
+        <td><p>Additional parameters passed to TiTiler (e.g., rescale, colormap,
+bidx for band selection).</p></td>
+        <td><code>{}</code></td>
+      </tr>
   </tbody>
 </table>
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">m</span> <span class="o">=</span> <span class="n">MapLibreMap</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="c1"># COG in EPSG:3857 (uses cog:// protocol)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">m</span><span class="o">.</span><span class="n">add_cog_layer</span><span class="p">(</span><span class="s2">&quot;cog1&quot;</span><span class="p">,</span> <span class="s2">&quot;https://example.com/data_3857.tif&quot;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="c1"># COG in any other CRS (uses TiTiler)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">m</span><span class="o">.</span><span class="n">add_cog_layer</span><span class="p">(</span><span class="s2">&quot;cog2&quot;</span><span class="p">,</span> <span class="s2">&quot;https://example.com/data_4326.tif&quot;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="c1"># Force TiTiler with custom endpoint</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">m</span><span class="o">.</span><span class="n">add_cog_layer</span><span class="p">(</span>
+<span class="o">...</span>     <span class="s2">&quot;cog3&quot;</span><span class="p">,</span>
+<span class="o">...</span>     <span class="s2">&quot;https://example.com/data.tif&quot;</span><span class="p">,</span>
+<span class="o">...</span>     <span class="n">titiler_endpoint</span><span class="o">=</span><span class="s2">&quot;https://titiler.xyz&quot;</span><span class="p">,</span>
+<span class="o">...</span>     <span class="n">rescale</span><span class="o">=</span><span class="s2">&quot;0,255&quot;</span><span class="p">,</span>
+<span class="o">...</span>     <span class="n">colormap</span><span class="o">=</span><span class="s2">&quot;viridis&quot;</span>
+<span class="o">...</span> <span class="p">)</span>
+</code></pre></div>
+
         <details class="quote">
           <summary>Source code in <code>anymap/maplibre.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_cog_layer</span><span class="p">(</span>
@@ -5180,8 +5413,15 @@ using a dropdown or expandable control. It uses the maplibre-gl-basemaps library
     <span class="n">visible</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">paint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">before_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">titiler_endpoint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">fit_bounds</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a Cloud Optimized GeoTIFF (COG) layer to the map.</span>
+
+<span class="sd">    This method supports COGs in any coordinate reference system (CRS). For COGs</span>
+<span class="sd">    in EPSG:3857, it uses the maplibre-cog-protocol for direct rendering. For COGs</span>
+<span class="sd">    in other CRS, it uses TiTiler to reproject on-the-fly.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        layer_id: Unique identifier for the COG layer.</span>
@@ -5190,20 +5430,101 @@ using a dropdown or expandable control. It uses the maplibre-gl-basemaps library
 <span class="sd">        visible: Whether the layer should be visible initially.</span>
 <span class="sd">        paint: Optional paint properties for the layer.</span>
 <span class="sd">        before_id: Optional layer ID to insert this layer before.</span>
+<span class="sd">        titiler_endpoint: Optional TiTiler endpoint URL. If None, checks COG CRS</span>
+<span class="sd">            and uses TiTiler automatically for non-EPSG:3857 COGs. Set to a TiTiler</span>
+<span class="sd">            URL (e.g., &quot;https://titiler.xyz&quot;) to force using TiTiler.</span>
+<span class="sd">        fit_bounds: If True, automatically fit map bounds to COG extent.</span>
+<span class="sd">        **kwargs: Additional parameters passed to TiTiler (e.g., rescale, colormap,</span>
+<span class="sd">            bidx for band selection).</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; m = MapLibreMap()</span>
+<span class="sd">        &gt;&gt;&gt; # COG in EPSG:3857 (uses cog:// protocol)</span>
+<span class="sd">        &gt;&gt;&gt; m.add_cog_layer(&quot;cog1&quot;, &quot;https://example.com/data_3857.tif&quot;)</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; # COG in any other CRS (uses TiTiler)</span>
+<span class="sd">        &gt;&gt;&gt; m.add_cog_layer(&quot;cog2&quot;, &quot;https://example.com/data_4326.tif&quot;)</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; # Force TiTiler with custom endpoint</span>
+<span class="sd">        &gt;&gt;&gt; m.add_cog_layer(</span>
+<span class="sd">        ...     &quot;cog3&quot;,</span>
+<span class="sd">        ...     &quot;https://example.com/data.tif&quot;,</span>
+<span class="sd">        ...     titiler_endpoint=&quot;https://titiler.xyz&quot;,</span>
+<span class="sd">        ...     rescale=&quot;0,255&quot;,</span>
+<span class="sd">        ...     colormap=&quot;viridis&quot;</span>
+<span class="sd">        ... )</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">source_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">layer_id</span><span class="si">}</span><span class="s2">_source&quot;</span>
 
-    <span class="c1"># Add COG source using cog:// protocol</span>
-    <span class="n">cog_source_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;cog://</span><span class="si">{</span><span class="n">cog_url</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="c1"># Check if we should use TiTiler</span>
+    <span class="n">use_titiler</span> <span class="o">=</span> <span class="n">titiler_endpoint</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
-    <span class="bp">self</span><span class="o">.</span><span class="n">add_source</span><span class="p">(</span>
-        <span class="n">source_id</span><span class="p">,</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;raster&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">cog_source_url</span><span class="p">,</span>
-            <span class="s2">&quot;tileSize&quot;</span><span class="p">:</span> <span class="mi">256</span><span class="p">,</span>
-        <span class="p">},</span>
-    <span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">use_titiler</span><span class="p">:</span>
+        <span class="c1"># Auto-detect if TiTiler is needed by checking COG CRS</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">metadata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cog_metadata</span><span class="p">(</span><span class="n">cog_url</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">metadata</span> <span class="ow">and</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;crs&quot;</span><span class="p">):</span>
+                <span class="n">cog_crs</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;crs&quot;</span><span class="p">]</span>
+                <span class="c1"># Use TiTiler if COG is not in EPSG:3857</span>
+                <span class="k">if</span> <span class="n">cog_crs</span> <span class="o">!=</span> <span class="s2">&quot;EPSG:3857&quot;</span><span class="p">:</span>
+                    <span class="n">use_titiler</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;COG is in </span><span class="si">{</span><span class="n">cog_crs</span><span class="si">}</span><span class="s2">, using TiTiler for reprojection&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not determine COG CRS, trying cog:// protocol: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">use_titiler</span><span class="p">:</span>
+        <span class="c1"># Use TiTiler for on-the-fly reprojection</span>
+        <span class="k">if</span> <span class="n">titiler_endpoint</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">titiler_endpoint</span> <span class="o">=</span> <span class="s2">&quot;https://giswqs-titiler-endpoint.hf.space&quot;</span>
+
+        <span class="c1"># Build TiTiler tile URL</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">urllib.parse</span><span class="w"> </span><span class="kn">import</span> <span class="n">urlencode</span><span class="p">,</span> <span class="n">quote</span>
+
+        <span class="c1"># Encode the COG URL</span>
+        <span class="n">encoded_url</span> <span class="o">=</span> <span class="n">quote</span><span class="p">(</span><span class="n">cog_url</span><span class="p">,</span> <span class="n">safe</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Build query parameters</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">cog_url</span><span class="p">,</span>
+            <span class="s2">&quot;TileMatrixSetId&quot;</span><span class="p">:</span> <span class="s2">&quot;WebMercatorQuad&quot;</span><span class="p">,</span>  <span class="c1"># Reproject to Web Mercator</span>
+        <span class="p">}</span>
+
+        <span class="c1"># Add any additional TiTiler parameters</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">params</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+        <span class="n">query_string</span> <span class="o">=</span> <span class="n">urlencode</span><span class="p">({</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s2">&quot;url&quot;</span><span class="p">})</span>
+
+        <span class="c1"># TiTiler tile URL format: {endpoint}/cog/tiles/WebMercatorQuad/{z}/{x}/{y}</span>
+        <span class="n">tile_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">titiler_endpoint</span><span class="si">}</span><span class="s2">/cog/tiles/WebMercatorQuad/</span><span class="se">{{</span><span class="s2">z</span><span class="se">}}</span><span class="s2">/</span><span class="se">{{</span><span class="s2">x</span><span class="se">}}</span><span class="s2">/</span><span class="se">{{</span><span class="s2">y</span><span class="se">}}</span><span class="s2">?url=</span><span class="si">{</span><span class="n">encoded_url</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="n">query_string</span><span class="p">:</span>
+            <span class="n">tile_url</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&amp;</span><span class="si">{</span><span class="n">query_string</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="c1"># print(f&quot;Using TiTiler: {titiler_endpoint}&quot;)</span>
+        <span class="c1"># print(f&quot;Tile URL pattern: {tile_url[:100]}...&quot;)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_source</span><span class="p">(</span>
+            <span class="n">source_id</span><span class="p">,</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;raster&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;tiles&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">tile_url</span><span class="p">],</span>
+                <span class="s2">&quot;tileSize&quot;</span><span class="p">:</span> <span class="mi">256</span><span class="p">,</span>
+                <span class="s2">&quot;attribution&quot;</span><span class="p">:</span> <span class="s2">&quot;TiTiler&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Use cog:// protocol for EPSG:3857 COGs</span>
+        <span class="n">cog_source_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;cog://</span><span class="si">{</span><span class="n">cog_url</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_source</span><span class="p">(</span>
+            <span class="n">source_id</span><span class="p">,</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;raster&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">cog_source_url</span><span class="p">,</span>
+                <span class="s2">&quot;tileSize&quot;</span><span class="p">:</span> <span class="mi">256</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">)</span>
 
     <span class="c1"># Add raster layer</span>
     <span class="n">layer_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">layer_id</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;raster&quot;</span><span class="p">,</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">source_id</span><span class="p">}</span>
@@ -5212,8 +5533,24 @@ using a dropdown or expandable control. It uses the maplibre-gl-basemaps library
         <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;paint&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">paint</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span>
-        <span class="n">layer_id</span><span class="p">,</span> <span class="n">layer_config</span><span class="p">,</span> <span class="n">before_id</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="n">opacity</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="n">visible</span>
+        <span class="n">layer</span><span class="o">=</span><span class="n">layer_config</span><span class="p">,</span>
+        <span class="n">before_id</span><span class="o">=</span><span class="n">before_id</span><span class="p">,</span>
+        <span class="n">layer_id</span><span class="o">=</span><span class="n">layer_id</span><span class="p">,</span>
+        <span class="n">opacity</span><span class="o">=</span><span class="n">opacity</span><span class="p">,</span>
+        <span class="n">visible</span><span class="o">=</span><span class="n">visible</span><span class="p">,</span>
     <span class="p">)</span>
+
+    <span class="c1"># Optionally fit bounds to COG extent</span>
+    <span class="k">if</span> <span class="n">fit_bounds</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">metadata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cog_metadata</span><span class="p">(</span><span class="n">cog_url</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="s2">&quot;EPSG:4326&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">metadata</span> <span class="ow">and</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;bbox&quot;</span><span class="p">):</span>
+                <span class="n">bbox</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;bbox&quot;</span><span class="p">]</span>
+                <span class="n">bounds</span> <span class="o">=</span> <span class="p">[[</span><span class="n">bbox</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bbox</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="p">[</span><span class="n">bbox</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">bbox</span><span class="p">[</span><span class="mi">3</span><span class="p">]]]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">fit_bounds</span><span class="p">(</span><span class="n">bounds</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+                <span class="c1"># print(f&quot;Map fitted to COG bounds: {bounds}&quot;)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not fit bounds to COG extent: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
         </details>
     </div>
@@ -5716,7 +6053,7 @@ By default, it uses the Nominatim (OpenStreetMap) geocoding API.</p>
     <span class="k">if</span> <span class="n">paint</span><span class="p">:</span>
         <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;paint&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">paint</span>
 
-    <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">layer_id</span><span class="p">,</span> <span class="n">layer_config</span><span class="p">,</span> <span class="n">before_id</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">layer</span><span class="o">=</span><span class="n">layer_config</span><span class="p">,</span> <span class="n">before_id</span><span class="o">=</span><span class="n">before_id</span><span class="p">,</span> <span class="n">layer_id</span><span class="o">=</span><span class="n">layer_id</span><span class="p">)</span>
 </code></pre></div>
         </details>
     </div>
@@ -5809,7 +6146,7 @@ street-level imagery at clicked locations on the map.</p>
 <span class="sd">        ValueError: If no API key is provided and none can be found in environment variables</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">api_key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">api_key</span> <span class="o">=</span> <span class="n">get_env_var</span><span class="p">(</span><span class="s2">&quot;GOOGLE_MAPS_API_KEY&quot;</span><span class="p">)</span>
+        <span class="n">api_key</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_env_var</span><span class="p">(</span><span class="s2">&quot;GOOGLE_MAPS_API_KEY&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">api_key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;Google Maps API key is required. Please provide it as a parameter &quot;</span>
@@ -5934,7 +6271,7 @@ street-level imagery at clicked locations on the map.</p>
     <span class="k">if</span> <span class="n">paint</span><span class="p">:</span>
         <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;paint&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">paint</span>
 
-    <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">layer_id</span><span class="p">,</span> <span class="n">layer_config</span><span class="p">,</span> <span class="n">before_id</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">layer</span><span class="o">=</span><span class="n">layer_config</span><span class="p">,</span> <span class="n">before_id</span><span class="o">=</span><span class="n">before_id</span><span class="p">,</span> <span class="n">layer_id</span><span class="o">=</span><span class="n">layer_id</span><span class="p">)</span>
 </code></pre></div>
         </details>
     </div>
@@ -5948,7 +6285,7 @@ street-level imagery at clicked locations on the map.</p>
 
 
 <h3 id="anymap.maplibre.MapLibreMap.add_layer" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">add_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer_id</span><span class="p">,</span> <span class="n">layer</span><span class="p">,</span> <span class="n">before_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">add_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer</span><span class="p">,</span> <span class="n">before_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layer_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
 
 <a href="#anymap.maplibre.MapLibreMap.add_layer" class="headerlink" title="Permanent link">&para;</a></h3>
@@ -5972,7 +6309,7 @@ street-level imagery at clicked locations on the map.</p>
         <td><code>layer_id</code></td>
         <td><code>str</code></td>
         <td><p>Unique identifier for the layer.</p></td>
-        <td><em>required</em></td>
+        <td><code>None</code></td>
       </tr>
       <tr>
         <td><code>layer_config</code></td>
@@ -5994,11 +6331,13 @@ street-level imagery at clicked locations on the map.</p>
           <summary>Source code in <code>anymap/maplibre.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_layer</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
-    <span class="n">layer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">layer</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
     <span class="n">before_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">layer_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">opacity</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
     <span class="n">visible</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">overwrite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a layer to the map.</span>
 
@@ -6009,6 +6348,22 @@ street-level imagery at clicked locations on the map.</p>
 <span class="sd">        before_id: Optional layer ID to insert this layer before.</span>
 <span class="sd">                  If None, layer is added on top.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s2">&quot;minzoom&quot;</span> <span class="ow">in</span> <span class="n">layer</span><span class="p">:</span>
+            <span class="n">layer</span><span class="p">[</span><span class="s2">&quot;min-zoom&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;minzoom&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;maxzoom&quot;</span> <span class="ow">in</span> <span class="n">layer</span><span class="p">:</span>
+            <span class="n">layer</span><span class="p">[</span><span class="s2">&quot;max-zoom&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;maxzoom&quot;</span><span class="p">)</span>
+        <span class="n">layer</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">replace_top_level_hyphens</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;name&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="n">layer_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">layer_id</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">layer_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">layer_id</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_unique_name</span><span class="p">(</span>
+            <span class="n">layer</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_layers</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="n">overwrite</span>
+        <span class="p">)</span>
+
     <span class="c1"># Store layer in local state for persistence</span>
     <span class="n">current_layers</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_layers</span><span class="p">)</span>
     <span class="n">current_layers</span><span class="p">[</span><span class="n">layer_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">layer</span>
@@ -6375,9 +6730,9 @@ similar to other controls, and expands when clicked.</p>
     <span class="c1"># Add all layers</span>
     <span class="k">for</span> <span class="n">layer_config</span> <span class="ow">in</span> <span class="n">layers</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span>
-            <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span>
-            <span class="n">layer_config</span><span class="p">,</span>
-            <span class="n">before_id</span><span class="p">,</span>
+            <span class="n">layer</span><span class="o">=</span><span class="n">layer_config</span><span class="p">,</span>
+            <span class="n">before_id</span><span class="o">=</span><span class="n">before_id</span><span class="p">,</span>
+            <span class="n">layer_id</span><span class="o">=</span><span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span>
             <span class="n">opacity</span><span class="o">=</span><span class="n">opacity</span><span class="p">,</span>
             <span class="n">visible</span><span class="o">=</span><span class="n">visible</span><span class="p">,</span>
         <span class="p">)</span>
@@ -6652,7 +7007,7 @@ similar to other controls, and expands when clicked.</p>
     <span class="k">if</span> <span class="n">layout</span><span class="p">:</span>
         <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;layout&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">layout</span>
 
-    <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">layer_id</span><span class="p">,</span> <span class="n">layer_config</span><span class="p">,</span> <span class="n">before_id</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">layer</span><span class="o">=</span><span class="n">layer_config</span><span class="p">,</span> <span class="n">before_id</span><span class="o">=</span><span class="n">before_id</span><span class="p">,</span> <span class="n">layer_id</span><span class="o">=</span><span class="n">layer_id</span><span class="p">)</span>
 </code></pre></div>
         </details>
     </div>
@@ -6895,7 +7250,7 @@ similar to other controls, and expands when clicked.</p>
     <span class="k">if</span> <span class="n">layout</span><span class="p">:</span>
         <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;layout&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">layout</span>
 
-    <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">layer_id</span><span class="p">,</span> <span class="n">layer_config</span><span class="p">,</span> <span class="n">before_id</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">layer</span><span class="o">=</span><span class="n">layer_config</span><span class="p">,</span> <span class="n">before_id</span><span class="o">=</span><span class="n">before_id</span><span class="p">,</span> <span class="n">layer_id</span><span class="o">=</span><span class="n">layer_id</span><span class="p">)</span>
 </code></pre></div>
         </details>
     </div>
@@ -7196,6 +7551,158 @@ alongside a sidebar. The sidebar can be customized with visibility, width, and a
 <span class="sd">        padding: Padding around the bounds in pixels.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;fitBounds&quot;</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;padding&quot;</span><span class="p">:</span> <span class="n">padding</span><span class="p">})</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="anymap.maplibre.MapLibreMap.get_cog_metadata" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_cog_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="s1">&#39;EPSG:4326&#39;</span><span class="p">)</span></code>
+
+
+<a href="#anymap.maplibre.MapLibreMap.get_cog_metadata" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Retrieve metadata from a Cloud Optimized GeoTIFF (COG) file.</p>
+<p>This method fetches metadata from a COG file. It uses rasterio if available,
+which provides comprehensive metadata extraction capabilities.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This feature corresponds to the getCogMetadata function in maplibre-cog-protocol,
+which is marked as [unstable]. Some metadata internals may change in future releases.</p>
+</div>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>url</code></td>
+        <td><code>str</code></td>
+        <td><p>The URL of the COG file to retrieve metadata from.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>crs</code></td>
+        <td><code>str</code></td>
+        <td><p>The coordinate reference system to use for the output bbox.
+Defaults to "EPSG:4326" (WGS84 lat/lon). Set to None to use the COG's native CRS.</p></td>
+        <td><code>&#39;EPSG:4326&#39;</code></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>Optional[Dict[str, Any]]</code></td>
+      <td><p>A dictionary containing COG metadata with keys such as:
+    - bbox: Bounding box coordinates [west, south, east, north] in the specified CRS
+    - bounds: BoundingBox in native CRS
+    - width: Width of the raster in pixels
+    - height: Height of the raster in pixels
+    - crs: Original coordinate reference system of the COG
+    - output_crs: CRS of the returned bbox
+    - transform: Affine transformation matrix
+    - count: Number of bands
+    - dtypes: Data types for each band
+    - nodata: NoData value
+    - scale: Scale value (if available)
+    - offset: Offset value (if available)
+Returns None if metadata retrieval fails.</p></td>
+    </tr>
+  </tbody>
+</table>
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">m</span> <span class="o">=</span> <span class="n">MapLibreMap</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://example.com/data.tif&quot;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="c1"># Get metadata with bbox in WGS84 (default)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">get_cog_metadata</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">if</span> <span class="n">metadata</span><span class="p">:</span>
+<span class="o">...</span>     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Bounding box (WGS84): </span><span class="si">{</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;bbox&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="o">...</span>     <span class="c1"># Fit bounds using WGS84 coordinates</span>
+<span class="o">...</span>     <span class="n">bbox</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;bbox&#39;</span><span class="p">]</span>
+<span class="o">...</span>     <span class="n">m</span><span class="o">.</span><span class="n">fit_bounds</span><span class="p">([[</span><span class="n">bbox</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bbox</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="p">[</span><span class="n">bbox</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">bbox</span><span class="p">[</span><span class="mi">3</span><span class="p">]]])</span>
+<span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="c1"># Get metadata in native CRS</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">get_cog_metadata</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">if</span> <span class="n">metadata</span><span class="p">:</span>
+<span class="o">...</span>     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Native CRS: </span><span class="si">{</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;crs&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+        <details class="quote">
+          <summary>Source code in <code>anymap/maplibre.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_cog_metadata</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">crs</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;EPSG:4326&quot;</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Retrieve metadata from a Cloud Optimized GeoTIFF (COG) file.</span>
+
+<span class="sd">    This method fetches metadata from a COG file. It uses rasterio if available,</span>
+<span class="sd">    which provides comprehensive metadata extraction capabilities.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        This feature corresponds to the getCogMetadata function in maplibre-cog-protocol,</span>
+<span class="sd">        which is marked as [unstable]. Some metadata internals may change in future releases.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        url (str): The URL of the COG file to retrieve metadata from.</span>
+<span class="sd">        crs (str, optional): The coordinate reference system to use for the output bbox.</span>
+<span class="sd">            Defaults to &quot;EPSG:4326&quot; (WGS84 lat/lon). Set to None to use the COG&#39;s native CRS.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Optional[Dict[str, Any]]: A dictionary containing COG metadata with keys such as:</span>
+<span class="sd">            - bbox: Bounding box coordinates [west, south, east, north] in the specified CRS</span>
+<span class="sd">            - bounds: BoundingBox in native CRS</span>
+<span class="sd">            - width: Width of the raster in pixels</span>
+<span class="sd">            - height: Height of the raster in pixels</span>
+<span class="sd">            - crs: Original coordinate reference system of the COG</span>
+<span class="sd">            - output_crs: CRS of the returned bbox</span>
+<span class="sd">            - transform: Affine transformation matrix</span>
+<span class="sd">            - count: Number of bands</span>
+<span class="sd">            - dtypes: Data types for each band</span>
+<span class="sd">            - nodata: NoData value</span>
+<span class="sd">            - scale: Scale value (if available)</span>
+<span class="sd">            - offset: Offset value (if available)</span>
+<span class="sd">        Returns None if metadata retrieval fails.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; m = MapLibreMap()</span>
+<span class="sd">        &gt;&gt;&gt; url = &quot;https://example.com/data.tif&quot;</span>
+<span class="sd">        &gt;&gt;&gt; # Get metadata with bbox in WGS84 (default)</span>
+<span class="sd">        &gt;&gt;&gt; metadata = m.get_cog_metadata(url)</span>
+<span class="sd">        &gt;&gt;&gt; if metadata:</span>
+<span class="sd">        ...     print(f&quot;Bounding box (WGS84): {metadata.get(&#39;bbox&#39;)}&quot;)</span>
+<span class="sd">        ...     # Fit bounds using WGS84 coordinates</span>
+<span class="sd">        ...     bbox = metadata[&#39;bbox&#39;]</span>
+<span class="sd">        ...     m.fit_bounds([[bbox[0], bbox[1]], [bbox[2], bbox[3]]])</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; # Get metadata in native CRS</span>
+<span class="sd">        &gt;&gt;&gt; metadata = m.get_cog_metadata(url, crs=None)</span>
+<span class="sd">        &gt;&gt;&gt; if metadata:</span>
+<span class="sd">        ...     print(f&quot;Native CRS: {metadata.get(&#39;crs&#39;)}&quot;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_cog_metadata</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="n">crs</span><span class="p">)</span>
 </code></pre></div>
         </details>
     </div>

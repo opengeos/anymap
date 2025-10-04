@@ -12,13 +12,9 @@
         <meta name="author" content="giswqs">
       
       
-        <link rel="canonical" href="https://anymap.dev/examples/save_draw_data_example/">
+        <link rel="canonical" href="https://anymap.dev/examples/cog_metadata_example/">
       
       
-        <link rel="prev" href="../add_draw_data_example/">
-      
-      
-        <link rel="next" href="../layer_control_example/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -26,7 +22,7 @@
     
     
       
-        <title>Save draw data example - anymap</title>
+        <title>Cog metadata example - anymap</title>
       
     
     
@@ -82,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#save-draw-data-example" class="md-skip">
+        <a href="#cog-metadata-example" class="md-skip">
           Skip to content
         </a>
       
@@ -118,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Save draw data example
+              Cog metadata example
             
           </span>
         </div>
@@ -420,20 +416,18 @@
       
   
   
-    
   
   
-  
     
     
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
         
           
           <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
@@ -449,7 +443,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             Examples
@@ -736,32 +730,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    Save draw data example
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../save_draw_data_example/" class="md-nav__link">
         
   
   
@@ -772,173 +744,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#installation-requirements" class="md-nav__link">
-    <span class="md-ellipsis">
-      Installation Requirements
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#basic-usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      Basic Usage
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#adding-sample-data" class="md-nav__link">
-    <span class="md-ellipsis">
-      Adding Sample Data
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#saving-to-different-formats" class="md-nav__link">
-    <span class="md-ellipsis">
-      Saving to Different Formats
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Saving to Different Formats">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#save-to-geojson" class="md-nav__link">
-    <span class="md-ellipsis">
-      Save to GeoJSON
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#save-to-geopackage" class="md-nav__link">
-    <span class="md-ellipsis">
-      Save to GeoPackage
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#save-to-shapefile-points-only" class="md-nav__link">
-    <span class="md-ellipsis">
-      Save to Shapefile (Points Only)
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#error-handling" class="md-nav__link">
-    <span class="md-ellipsis">
-      Error Handling
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Error Handling">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#mixed-geometry-types-in-shapefile" class="md-nav__link">
-    <span class="md-ellipsis">
-      Mixed Geometry Types in Shapefile
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#no-features-to-save" class="md-nav__link">
-    <span class="md-ellipsis">
-      No Features to Save
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#loading-saved-data" class="md-nav__link">
-    <span class="md-ellipsis">
-      Loading Saved Data
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#working-with-geopandas" class="md-nav__link">
-    <span class="md-ellipsis">
-      Working with GeoPandas
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#supported-formats" class="md-nav__link">
-    <span class="md-ellipsis">
-      Supported Formats
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cleanup" class="md-nav__link">
-    <span class="md-ellipsis">
-      Cleanup
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#summary" class="md-nav__link">
-    <span class="md-ellipsis">
-      Summary
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1529,147 +1334,36 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#installation-requirements" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
-      Installation Requirements
+      Overview
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#basic-usage" class="md-nav__link">
+  <a href="#example-1-get-cog-metadata-with-default-crs-epsg4326" class="md-nav__link">
     <span class="md-ellipsis">
-      Basic Usage
+      Example 1: Get COG Metadata with Default CRS (EPSG:4326)
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#adding-sample-data" class="md-nav__link">
+  <a href="#example-2-get-cog-metadata-in-native-crs" class="md-nav__link">
     <span class="md-ellipsis">
-      Adding Sample Data
+      Example 2: Get COG Metadata in Native CRS
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#saving-to-different-formats" class="md-nav__link">
+  <a href="#example-3-using-map-instance-method" class="md-nav__link">
     <span class="md-ellipsis">
-      Saving to Different Formats
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Saving to Different Formats">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#save-to-geojson" class="md-nav__link">
-    <span class="md-ellipsis">
-      Save to GeoJSON
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#save-to-geopackage" class="md-nav__link">
-    <span class="md-ellipsis">
-      Save to GeoPackage
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#save-to-shapefile-points-only" class="md-nav__link">
-    <span class="md-ellipsis">
-      Save to Shapefile (Points Only)
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#error-handling" class="md-nav__link">
-    <span class="md-ellipsis">
-      Error Handling
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Error Handling">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#mixed-geometry-types-in-shapefile" class="md-nav__link">
-    <span class="md-ellipsis">
-      Mixed Geometry Types in Shapefile
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#no-features-to-save" class="md-nav__link">
-    <span class="md-ellipsis">
-      No Features to Save
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#loading-saved-data" class="md-nav__link">
-    <span class="md-ellipsis">
-      Loading Saved Data
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#working-with-geopandas" class="md-nav__link">
-    <span class="md-ellipsis">
-      Working with GeoPandas
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#supported-formats" class="md-nav__link">
-    <span class="md-ellipsis">
-      Supported Formats
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cleanup" class="md-nav__link">
-    <span class="md-ellipsis">
-      Cleanup
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#summary" class="md-nav__link">
-    <span class="md-ellipsis">
-      Summary
+      Example 3: Using Map Instance Method
     </span>
   </a>
   
@@ -1688,7 +1382,7 @@
               <article class="md-content__inner md-typeset">
                 
 
-    <a href="/examples/save_draw_data_example/save_draw_data_example.ipynb" title="Download Notebook" class="md-content__button md-icon">
+    <a href="/examples/cog_metadata_example/cog_metadata_example.ipynb" title="Download Notebook" class="md-content__button md-icon">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 20h14v-2H5m14-9h-4V3H9v6H5l7 7z"/></svg>
     </a>
 
@@ -2143,31 +1837,19 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="save-draw-data-example">Save Draw Data Example<a class="anchor-link" href="#save-draw-data-example">¶</a></h1><p>This notebook demonstrates the new <code>save_draw_data()</code> method in AnyMap, which allows you to save drawn features to various file formats supported by GeoPandas.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="installation-requirements">Installation Requirements<a class="anchor-link" href="#installation-requirements">¶</a></h2><p>The <code>save_draw_data</code> method requires GeoPandas to be installed:</p>
-<div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>geopandas
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="basic-usage">Basic Usage<a class="anchor-link" href="#basic-usage">¶</a></h2><p>First, let's create a map and add a draw control:</p>
+<h1 id="cog-metadata-example">COG Metadata Example<a class="anchor-link" href="#cog-metadata-example">¶</a></h1><p>This notebook demonstrates how to retrieve and use metadata from Cloud Optimized GeoTIFF (COG) files using the AnyMap package.</p>
+<h2 id="overview">Overview<a class="anchor-link" href="#overview">¶</a></h2><p>The <code>get_cog_metadata()</code> function retrieves metadata from COG files, including:</p>
+<ul>
+<li>Bounding box (bbox) - <strong>Returned in EPSG:4326 (WGS84) by default</strong></li>
+<li>Width and height (in pixels)</li>
+<li>Coordinate reference system (CRS)</li>
+<li>Number of bands</li>
+<li>Data types</li>
+<li>NoData value</li>
+<li>Scale and offset values (if available)</li>
+</ul>
+<p><strong>Important:</strong> By default, the bounding box coordinates are reprojected to EPSG:4326 (WGS84) for compatibility with MapLibre. You can get coordinates in the native CRS by passing <code>crs=None</code>.</p>
+<p><strong>Note:</strong> This feature uses the <code>getCogMetadata</code> function from maplibre-cog-protocol, which is marked as [unstable]. Some metadata internals may change in future releases.</p>
 </div>
 </div>
 </div>
@@ -2190,37 +1872,11 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">anymap.maplibre</span><span class="w"> </span><span class="kn">import</span> <span class="n">MapLibreMap</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-
-<span class="c1"># Create a map centered on New York City</span>
-<span class="n">m</span> <span class="o">=</span> <span class="n">MapLibreMap</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">74.0</span><span class="p">,</span> <span class="mf">40.7</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-<span class="n">m</span><span class="o">.</span><span class="n">add_basemap</span><span class="p">(</span><span class="s2">"OpenStreetMap.Mapnik"</span><span class="p">)</span>
-
-<span class="c1"># Add a draw control so users can draw features</span>
-<span class="n">m</span><span class="o">.</span><span class="n">add_draw_control</span><span class="p">(</span>
-    <span class="n">position</span><span class="o">=</span><span class="s2">"top-left"</span><span class="p">,</span>
-    <span class="n">controls</span><span class="o">=</span><span class="p">{</span><span class="s2">"point"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"line_string"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"polygon"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"trash"</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
-<span class="p">)</span>
-
-<span class="n">m</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">anymap</span><span class="w"> </span><span class="kn">import</span> <span class="n">MapLibreMap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">anymap.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_cog_metadata</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-1">from anymap.maplibre import MapLibreMap
-import tempfile
-import os
-
-# Create a map centered on New York City
-m = MapLibreMap(center=[-74.0, 40.7], zoom=10)
-m.add_basemap("OpenStreetMap.Mapnik")
-
-# Add a draw control so users can draw features
-m.add_draw_control(
-    position="top-left",
-    controls={"point": True, "line_string": True, "polygon": True, "trash": True},
-)
-
-m</div>
+<div class="clipboard-copy-txt" id="cell-1">from anymap import MapLibreMap
+from anymap.utils import get_cog_metadata</div>
 </div>
 </div>
 </div>
@@ -2233,7 +1889,7 @@ m</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="adding-sample-data">Adding Sample Data<a class="anchor-link" href="#adding-sample-data">¶</a></h2><p>Let's add some sample features for demonstration:</p>
+<h2 id="example-1-get-cog-metadata-with-default-crs-epsg4326">Example 1: Get COG Metadata with Default CRS (EPSG:4326)<a class="anchor-link" href="#example-1-get-cog-metadata-with-default-crs-epsg4326">¶</a></h2><p>By default, the bounding box coordinates are reprojected to EPSG:4326 (WGS84) for easy use with MapLibre.</p>
 </div>
 </div>
 </div>
@@ -2256,81 +1912,45 @@ m</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Add some sample drawn features</span>
-<span class="n">sample_features</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"FeatureCollection"</span><span class="p">,</span>
-    <span class="s2">"features"</span><span class="p">:</span> <span class="p">[</span>
-        <span class="p">{</span>
-            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Feature"</span><span class="p">,</span>
-            <span class="s2">"properties"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Central Park"</span><span class="p">,</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"park"</span><span class="p">},</span>
-            <span class="s2">"geometry"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Point"</span><span class="p">,</span> <span class="s2">"coordinates"</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">73.9665</span><span class="p">,</span> <span class="mf">40.7812</span><span class="p">]},</span>
-        <span class="p">},</span>
-        <span class="p">{</span>
-            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Feature"</span><span class="p">,</span>
-            <span class="s2">"properties"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Brooklyn Bridge"</span><span class="p">,</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"landmark"</span><span class="p">},</span>
-            <span class="s2">"geometry"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Point"</span><span class="p">,</span> <span class="s2">"coordinates"</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">73.9969</span><span class="p">,</span> <span class="mf">40.7061</span><span class="p">]},</span>
-        <span class="p">},</span>
-        <span class="p">{</span>
-            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Feature"</span><span class="p">,</span>
-            <span class="s2">"properties"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Manhattan Area"</span><span class="p">,</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"area"</span><span class="p">},</span>
-            <span class="s2">"geometry"</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Polygon"</span><span class="p">,</span>
-                <span class="s2">"coordinates"</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="p">[</span>
-                        <span class="p">[</span><span class="o">-</span><span class="mf">74.02</span><span class="p">,</span> <span class="mf">40.70</span><span class="p">],</span>
-                        <span class="p">[</span><span class="o">-</span><span class="mf">73.93</span><span class="p">,</span> <span class="mf">40.70</span><span class="p">],</span>
-                        <span class="p">[</span><span class="o">-</span><span class="mf">73.93</span><span class="p">,</span> <span class="mf">40.80</span><span class="p">],</span>
-                        <span class="p">[</span><span class="o">-</span><span class="mf">74.02</span><span class="p">,</span> <span class="mf">40.80</span><span class="p">],</span>
-                        <span class="p">[</span><span class="o">-</span><span class="mf">74.02</span><span class="p">,</span> <span class="mf">40.70</span><span class="p">],</span>
-                    <span class="p">]</span>
-                <span class="p">],</span>
-            <span class="p">},</span>
-        <span class="p">},</span>
-    <span class="p">],</span>
-<span class="p">}</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Sample COG URL from MapLibre documentation</span>
+<span class="n">cog_url</span> <span class="o">=</span> <span class="s2">"https://maplibre.org/maplibre-gl-js/docs/assets/cog.tif"</span>
 
-<span class="c1"># Load the sample data into the draw control</span>
-<span class="n">m</span><span class="o">.</span><span class="n">load_draw_data</span><span class="p">(</span><span class="n">sample_features</span><span class="p">)</span>
+<span class="c1"># Get metadata with default CRS (EPSG:4326)</span>
+<span class="n">metadata</span> <span class="o">=</span> <span class="n">get_cog_metadata</span><span class="p">(</span><span class="n">cog_url</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Loaded </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">get_draw_data</span><span class="p">()[</span><span class="s1">'features'</span><span class="p">])</span><span class="si">}</span><span class="s2"> features"</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">metadata</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"COG Metadata (bbox in EPSG:4326):"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"="</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">metadata</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">key</span><span class="si">:</span><span class="s2">15</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span> <span class="s2">"="</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Note: The bbox coordinates are in EPSG:4326 (WGS84)"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Native CRS: </span><span class="si">{</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'crs'</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Output CRS: </span><span class="si">{</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'output_crs'</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Failed to retrieve metadata. Make sure rasterio is installed:"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"pip install rasterio"</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-2"># Add some sample drawn features
-sample_features = {
-    "type": "FeatureCollection",
-    "features": [
-        {
-            "type": "Feature",
-            "properties": {"name": "Central Park", "type": "park"},
-            "geometry": {"type": "Point", "coordinates": [-73.9665, 40.7812]},
-        },
-        {
-            "type": "Feature",
-            "properties": {"name": "Brooklyn Bridge", "type": "landmark"},
-            "geometry": {"type": "Point", "coordinates": [-73.9969, 40.7061]},
-        },
-        {
-            "type": "Feature",
-            "properties": {"name": "Manhattan Area", "type": "area"},
-            "geometry": {
-                "type": "Polygon",
-                "coordinates": [
-                    [
-                        [-74.02, 40.70],
-                        [-73.93, 40.70],
-                        [-73.93, 40.80],
-                        [-74.02, 40.80],
-                        [-74.02, 40.70],
-                    ]
-                ],
-            },
-        },
-    ],
-}
+<div class="clipboard-copy-txt" id="cell-2"># Sample COG URL from MapLibre documentation
+cog_url = "https://maplibre.org/maplibre-gl-js/docs/assets/cog.tif"
 
-# Load the sample data into the draw control
-m.load_draw_data(sample_features)
+# Get metadata with default CRS (EPSG:4326)
+metadata = get_cog_metadata(cog_url)
 
-print(f"Loaded {len(m.get_draw_data()['features'])} features")</div>
+if metadata:
+    print("COG Metadata (bbox in EPSG:4326):")
+    print("=" * 50)
+    for key, value in metadata.items():
+        print(f"{key:15}: {value}")
+
+    print("\n" + "=" * 50)
+    print("Note: The bbox coordinates are in EPSG:4326 (WGS84)")
+    print(f"Native CRS: {metadata.get('crs')}")
+    print(f"Output CRS: {metadata.get('output_crs')}")
+else:
+    print("Failed to retrieve metadata. Make sure rasterio is installed:")
+    print("pip install rasterio")</div>
 </div>
 </div>
 </div>
@@ -2343,18 +1963,7 @@ print(f"Loaded {len(m.get_draw_data()['features'])} features")</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="saving-to-different-formats">Saving to Different Formats<a class="anchor-link" href="#saving-to-different-formats">¶</a></h2><p>Now let's demonstrate saving the drawn data to various formats:</p>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="save-to-geojson">Save to GeoJSON<a class="anchor-link" href="#save-to-geojson">¶</a></h3><p>GeoJSON is the most common format for web mapping and supports all geometry types:</p>
+<h2 id="example-2-get-cog-metadata-in-native-crs">Example 2: Get COG Metadata in Native CRS<a class="anchor-link" href="#example-2-get-cog-metadata-in-native-crs">¶</a></h2><p>You can also retrieve the metadata in the COG's native CRS by passing <code>crs=None</code>.</p>
 </div>
 </div>
 </div>
@@ -2377,19 +1986,61 @@ print(f"Loaded {len(m.get_draw_data()['features'])} features")</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Save to GeoJSON format</span>
-<span class="n">geojson_path</span> <span class="o">=</span> <span class="s2">"/tmp/drawn_features.geojson"</span>
-<span class="n">m</span><span class="o">.</span><span class="n">save_draw_data</span><span class="p">(</span><span class="n">geojson_path</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Get metadata in native CRS (EPSG:3857 in this case)</span>
+<span class="n">metadata_native</span> <span class="o">=</span> <span class="n">get_cog_metadata</span><span class="p">(</span><span class="n">cog_url</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"✓ Saved to GeoJSON: </span><span class="si">{</span><span class="n">geojson_path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"File size: </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">geojson_path</span><span class="p">)</span><span class="si">}</span><span class="s2"> bytes"</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">metadata_native</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"COG Metadata (bbox in native CRS):"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"="</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+    <span class="n">bbox</span> <span class="o">=</span> <span class="n">metadata_native</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"bbox"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">bbox</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Bounding Box (native CRS):"</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  West:  </span><span class="si">{</span><span class="n">bbox</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  South: </span><span class="si">{</span><span class="n">bbox</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  East:  </span><span class="si">{</span><span class="n">bbox</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  North: </span><span class="si">{</span><span class="n">bbox</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Native CRS: </span><span class="si">{</span><span class="n">metadata_native</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'crs'</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Output CRS: </span><span class="si">{</span><span class="n">metadata_native</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'output_crs'</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">"Dimensions: </span><span class="si">{</span><span class="n">metadata_native</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'width'</span><span class="p">)</span><span class="si">}</span><span class="s2"> x </span><span class="si">{</span><span class="n">metadata_native</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'height'</span><span class="p">)</span><span class="si">}</span><span class="s2"> pixels"</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Bands: </span><span class="si">{</span><span class="n">metadata_native</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'count'</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span> <span class="s2">"="</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"COMPARISON:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"="</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">metadata</span> <span class="ow">and</span> <span class="n">metadata_native</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"EPSG:4326 bbox: </span><span class="si">{</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'bbox'</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Native bbox:    </span><span class="si">{</span><span class="n">metadata_native</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'bbox'</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-3"># Save to GeoJSON format
-geojson_path = "/tmp/drawn_features.geojson"
-m.save_draw_data(geojson_path)
+<div class="clipboard-copy-txt" id="cell-3"># Get metadata in native CRS (EPSG:3857 in this case)
+metadata_native = get_cog_metadata(cog_url, crs=None)
 
-print(f"✓ Saved to GeoJSON: {geojson_path}")
-print(f"File size: {os.path.getsize(geojson_path)} bytes")</div>
+if metadata_native:
+    print("COG Metadata (bbox in native CRS):")
+    print("=" * 50)
+    bbox = metadata_native.get("bbox")
+    if bbox:
+        print(f"Bounding Box (native CRS):")
+        print(f"  West:  {bbox[0]:.2f}")
+        print(f"  South: {bbox[1]:.2f}")
+        print(f"  East:  {bbox[2]:.2f}")
+        print(f"  North: {bbox[3]:.2f}")
+
+    print(f"\nNative CRS: {metadata_native.get('crs')}")
+    print(f"Output CRS: {metadata_native.get('output_crs')}")
+    print(
+        f"Dimensions: {metadata_native.get('width')} x {metadata_native.get('height')} pixels"
+    )
+    print(f"Bands: {metadata_native.get('count')}")
+
+print("\n" + "=" * 50)
+print("COMPARISON:")
+print("=" * 50)
+if metadata and metadata_native:
+    print(f"EPSG:4326 bbox: {metadata.get('bbox')}")
+    print(f"Native bbox:    {metadata_native.get('bbox')}")</div>
 </div>
 </div>
 </div>
@@ -2402,7 +2053,7 @@ print(f"File size: {os.path.getsize(geojson_path)} bytes")</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="save-to-geopackage">Save to GeoPackage<a class="anchor-link" href="#save-to-geopackage">¶</a></h3><p>GeoPackage is a modern, standards-based format that supports mixed geometry types:</p>
+<h2 id="example-3-using-map-instance-method">Example 3: Using Map Instance Method<a class="anchor-link" href="#example-3-using-map-instance-method">¶</a></h2><p>You can also use the <code>get_cog_metadata()</code> method directly on a MapLibreMap instance.</p>
 </div>
 </div>
 </div>
@@ -2425,32 +2076,53 @@ print(f"File size: {os.path.getsize(geojson_path)} bytes")</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Save to GeoPackage format</span>
-<span class="n">gpkg_path</span> <span class="o">=</span> <span class="s2">"/tmp/drawn_features.gpkg"</span>
-<span class="n">m</span><span class="o">.</span><span class="n">save_draw_data</span><span class="p">(</span><span class="n">gpkg_path</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Create a map instance</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">MapLibreMap</span><span class="p">()</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"✓ Saved to GeoPackage: </span><span class="si">{</span><span class="n">gpkg_path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"File size: </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">gpkg_path</span><span class="p">)</span><span class="si">}</span><span class="s2"> bytes"</span><span class="p">)</span>
+<span class="c1"># Get metadata using the map instance method (defaults to EPSG:4326)</span>
+<span class="n">cog_url</span> <span class="o">=</span> <span class="s2">"https://huggingface.co/datasets/giswqs/geospatial/resolve/main/naip_rgb_train_3857.tif"</span>
+<span class="n">metadata</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">get_cog_metadata</span><span class="p">(</span><span class="n">cog_url</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">metadata</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Using MapLibreMap instance method:"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"="</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+    <span class="n">bbox</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"bbox"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">bbox</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Bounding Box (EPSG:4326):"</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  West:  </span><span class="si">{</span><span class="n">bbox</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">°"</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  South: </span><span class="si">{</span><span class="n">bbox</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">°"</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  East:  </span><span class="si">{</span><span class="n">bbox</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">°"</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  North: </span><span class="si">{</span><span class="n">bbox</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">°"</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Dimensions: </span><span class="si">{</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'width'</span><span class="p">)</span><span class="si">}</span><span class="s2"> x </span><span class="si">{</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'height'</span><span class="p">)</span><span class="si">}</span><span class="s2"> pixels"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Bands: </span><span class="si">{</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'count'</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Native CRS: </span><span class="si">{</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'crs'</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Output CRS: </span><span class="si">{</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'output_crs'</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-4"># Save to GeoPackage format
-gpkg_path = "/tmp/drawn_features.gpkg"
-m.save_draw_data(gpkg_path)
+<div class="clipboard-copy-txt" id="cell-4"># Create a map instance
+m = MapLibreMap()
 
-print(f"✓ Saved to GeoPackage: {gpkg_path}")
-print(f"File size: {os.path.getsize(gpkg_path)} bytes")</div>
+# Get metadata using the map instance method (defaults to EPSG:4326)
+cog_url = "https://huggingface.co/datasets/giswqs/geospatial/resolve/main/naip_rgb_train_3857.tif"
+metadata = m.get_cog_metadata(cog_url)
+
+if metadata:
+    print("Using MapLibreMap instance method:")
+    print("=" * 50)
+    bbox = metadata.get("bbox")
+    if bbox:
+        print(f"Bounding Box (EPSG:4326):")
+        print(f"  West:  {bbox[0]:.6f}°")
+        print(f"  South: {bbox[1]:.6f}°")
+        print(f"  East:  {bbox[2]:.6f}°")
+        print(f"  North: {bbox[3]:.6f}°")
+
+    print(f"\nDimensions: {metadata.get('width')} x {metadata.get('height')} pixels")
+    print(f"Bands: {metadata.get('count')}")
+    print(f"Native CRS: {metadata.get('crs')}")
+    print(f"Output CRS: {metadata.get('output_crs')}")</div>
 </div>
 </div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="save-to-shapefile-points-only">Save to Shapefile (Points Only)<a class="anchor-link" href="#save-to-shapefile-points-only">¶</a></h3><p>Shapefiles require all features to have the same geometry type. Let's create a map with only points:</p>
 </div>
 </div>
 </div>
@@ -2473,99 +2145,11 @@ print(f"File size: {os.path.getsize(gpkg_path)} bytes")</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Create a new map with only point features</span>
-<span class="n">m_points</span> <span class="o">=</span> <span class="n">MapLibreMap</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">74.0</span><span class="p">,</span> <span class="mf">40.7</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-<span class="n">m_points</span><span class="o">.</span><span class="n">add_basemap</span><span class="p">(</span><span class="s2">"OpenStreetMap.Mapnik"</span><span class="p">)</span>
-<span class="n">m_points</span><span class="o">.</span><span class="n">add_draw_control</span><span class="p">()</span>
-
-<span class="c1"># Add only point features</span>
-<span class="n">point_features</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"FeatureCollection"</span><span class="p">,</span>
-    <span class="s2">"features"</span><span class="p">:</span> <span class="p">[</span>
-        <span class="p">{</span>
-            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Feature"</span><span class="p">,</span>
-            <span class="s2">"properties"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Central Park"</span><span class="p">,</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"park"</span><span class="p">},</span>
-            <span class="s2">"geometry"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Point"</span><span class="p">,</span> <span class="s2">"coordinates"</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">73.9665</span><span class="p">,</span> <span class="mf">40.7812</span><span class="p">]},</span>
-        <span class="p">},</span>
-        <span class="p">{</span>
-            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Feature"</span><span class="p">,</span>
-            <span class="s2">"properties"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Brooklyn Bridge"</span><span class="p">,</span> <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"landmark"</span><span class="p">},</span>
-            <span class="s2">"geometry"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Point"</span><span class="p">,</span> <span class="s2">"coordinates"</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">73.9969</span><span class="p">,</span> <span class="mf">40.7061</span><span class="p">]},</span>
-        <span class="p">},</span>
-    <span class="p">],</span>
-<span class="p">}</span>
-
-<span class="n">m_points</span><span class="o">.</span><span class="n">load_draw_data</span><span class="p">(</span><span class="n">point_features</span><span class="p">)</span>
-
-<span class="c1"># Now save to shapefile</span>
-<span class="n">shp_path</span> <span class="o">=</span> <span class="s2">"/tmp/drawn_points.shp"</span>
-<span class="n">m_points</span><span class="o">.</span><span class="n">save_draw_data</span><span class="p">(</span><span class="n">shp_path</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"✓ Saved points to Shapefile: </span><span class="si">{</span><span class="n">shp_path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span>
-    <span class="sa">f</span><span class="s2">"Files created: </span><span class="si">{</span><span class="p">[</span><span class="n">f</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="s1">'/tmp'</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">f</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'drawn_points.'</span><span class="p">)]</span><span class="si">}</span><span class="s2">"</span>
-<span class="p">)</span>
-
-<span class="n">m_points</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">m</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-5"># Create a new map with only point features
-m_points = MapLibreMap(center=[-74.0, 40.7], zoom=10)
-m_points.add_basemap("OpenStreetMap.Mapnik")
-m_points.add_draw_control()
-
-# Add only point features
-point_features = {
-    "type": "FeatureCollection",
-    "features": [
-        {
-            "type": "Feature",
-            "properties": {"name": "Central Park", "type": "park"},
-            "geometry": {"type": "Point", "coordinates": [-73.9665, 40.7812]},
-        },
-        {
-            "type": "Feature",
-            "properties": {"name": "Brooklyn Bridge", "type": "landmark"},
-            "geometry": {"type": "Point", "coordinates": [-73.9969, 40.7061]},
-        },
-    ],
-}
-
-m_points.load_draw_data(point_features)
-
-# Now save to shapefile
-shp_path = "/tmp/drawn_points.shp"
-m_points.save_draw_data(shp_path)
-
-print(f"✓ Saved points to Shapefile: {shp_path}")
-print(
-    f"Files created: {[f for f in os.listdir('/tmp') if f.startswith('drawn_points.')]}"
-)
-
-m_points</div>
+<div class="clipboard-copy-txt" id="cell-5">m</div>
 </div>
 </div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="error-handling">Error Handling<a class="anchor-link" href="#error-handling">¶</a></h2><p>The <code>save_draw_data</code> method provides helpful error messages for common issues:</p>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="mixed-geometry-types-in-shapefile">Mixed Geometry Types in Shapefile<a class="anchor-link" href="#mixed-geometry-types-in-shapefile">¶</a></h3><p>Let's see what happens when we try to save mixed geometry types to a shapefile:</p>
 </div>
 </div>
 </div>
@@ -2588,287 +2172,11 @@ m_points</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Try to save mixed geometry types to shapefile</span>
-<span class="k">try</span><span class="p">:</span>
-    <span class="n">m</span><span class="o">.</span><span class="n">save_draw_data</span><span class="p">(</span><span class="s2">"/tmp/mixed_geometries.shp"</span><span class="p">)</span>
-<span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Expected error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">m</span><span class="o">.</span><span class="n">add_cog_layer</span><span class="p">(</span><span class="n">layer_id</span><span class="o">=</span><span class="s2">"cogLayer"</span><span class="p">,</span> <span class="n">cog_url</span><span class="o">=</span><span class="n">cog_url</span><span class="p">,</span> <span class="n">fit_bounds</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-6"># Try to save mixed geometry types to shapefile
-try:
-    m.save_draw_data("/tmp/mixed_geometries.shp")
-except ValueError as e:
-    print(f"Expected error: {e}")</div>
+<div class="clipboard-copy-txt" id="cell-6">m.add_cog_layer(layer_id="cogLayer", cog_url=cog_url, fit_bounds=True)</div>
 </div>
 </div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="no-features-to-save">No Features to Save<a class="anchor-link" href="#no-features-to-save">¶</a></h3><p>Let's see what happens when there are no drawn features:</p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-7">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Create a map with no drawn features</span>
-<span class="n">empty_map</span> <span class="o">=</span> <span class="n">MapLibreMap</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-
-<span class="k">try</span><span class="p">:</span>
-    <span class="n">empty_map</span><span class="o">.</span><span class="n">save_draw_data</span><span class="p">(</span><span class="s2">"/tmp/empty.geojson"</span><span class="p">)</span>
-<span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Expected error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-7"># Create a map with no drawn features
-empty_map = MapLibreMap(center=[0, 0], zoom=2)
-
-try:
-    empty_map.save_draw_data("/tmp/empty.geojson")
-except ValueError as e:
-    print(f"Expected error: {e}")</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="loading-saved-data">Loading Saved Data<a class="anchor-link" href="#loading-saved-data">¶</a></h2><p>You can load the saved data back into a map or use it with other geospatial tools:</p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-8">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
-
-<span class="c1"># Create a new map and load the saved GeoJSON data</span>
-<span class="n">m_new</span> <span class="o">=</span> <span class="n">MapLibreMap</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">74.0</span><span class="p">,</span> <span class="mf">40.7</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-<span class="n">m_new</span><span class="o">.</span><span class="n">add_basemap</span><span class="p">(</span><span class="s2">"OpenStreetMap.Mapnik"</span><span class="p">)</span>
-<span class="n">m_new</span><span class="o">.</span><span class="n">add_draw_control</span><span class="p">()</span>
-
-<span class="c1"># Load the saved data</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">geojson_path</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-    <span class="n">saved_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-
-<span class="n">m_new</span><span class="o">.</span><span class="n">load_draw_data</span><span class="p">(</span><span class="n">saved_data</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Loaded </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">m_new</span><span class="o">.</span><span class="n">get_draw_data</span><span class="p">()[</span><span class="s1">'features'</span><span class="p">])</span><span class="si">}</span><span class="s2"> features from saved file"</span><span class="p">)</span>
-
-<span class="n">m_new</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-8">import json
-
-# Create a new map and load the saved GeoJSON data
-m_new = MapLibreMap(center=[-74.0, 40.7], zoom=10)
-m_new.add_basemap("OpenStreetMap.Mapnik")
-m_new.add_draw_control()
-
-# Load the saved data
-with open(geojson_path, "r") as f:
-    saved_data = json.load(f)
-
-m_new.load_draw_data(saved_data)
-print(f"Loaded {len(m_new.get_draw_data()['features'])} features from saved file")
-
-m_new</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="working-with-geopandas">Working with GeoPandas<a class="anchor-link" href="#working-with-geopandas">¶</a></h2><p>Since the save method uses GeoPandas, you can also work directly with the data:</p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-9">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">geopandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gpd</span>
-
-<span class="c1"># Read the saved GeoJSON with GeoPandas</span>
-<span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">geojson_path</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"GeoPandas DataFrame:"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">gdf</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">CRS: </span><span class="si">{</span><span class="n">gdf</span><span class="o">.</span><span class="n">crs</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Geometry types: </span><span class="si">{</span><span class="n">gdf</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">geom_type</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-9">import geopandas as gpd
-
-# Read the saved GeoJSON with GeoPandas
-gdf = gpd.read_file(geojson_path)
-
-print("GeoPandas DataFrame:")
-print(gdf)
-print(f"\nCRS: {gdf.crs}")
-print(f"Geometry types: {gdf.geometry.geom_type.unique()}")</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="supported-formats">Supported Formats<a class="anchor-link" href="#supported-formats">¶</a></h2><p>The <code>save_draw_data</code> method supports all formats that GeoPandas can write to, including:</p>
-<ul>
-<li><strong>GeoJSON</strong> (<code>.geojson</code>) - Best for web applications, supports all geometry types</li>
-<li><strong>GeoPackage</strong> (<code>.gpkg</code>) - Modern SQLite-based format, supports all geometry types</li>
-<li><strong>Shapefile</strong> (<code>.shp</code>) - Traditional GIS format, requires same geometry type for all features</li>
-<li><strong>KML</strong> (<code>.kml</code>) - Google Earth format</li>
-<li><strong>GML</strong> (<code>.gml</code>) - OGC Geography Markup Language</li>
-<li><strong>CSV</strong> (<code>.csv</code>) - Only for point data without geometry</li>
-</ul>
-<p>You can also specify the driver explicitly:</p>
-<div class="highlight"><pre><span></span><span class="n">m</span><span class="o">.</span><span class="n">save_draw_data</span><span class="p">(</span><span class="s2">"output.gpkg"</span><span class="p">,</span> <span class="n">driver</span><span class="o">=</span><span class="s2">"GPKG"</span><span class="p">)</span>
-<span class="n">m</span><span class="o">.</span><span class="n">save_draw_data</span><span class="p">(</span><span class="s2">"output.shp"</span><span class="p">,</span> <span class="n">driver</span><span class="o">=</span><span class="s2">"ESRI Shapefile"</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="cleanup">Cleanup<a class="anchor-link" href="#cleanup">¶</a></h2><p>Clean up the temporary files:</p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-10">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Clean up temporary files</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
-
-<span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"/tmp/drawn_features.*"</span><span class="p">,</span> <span class="s2">"/tmp/drawn_points.*"</span><span class="p">]:</span>
-    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">pattern</span><span class="p">):</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Removed </span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-        <span class="k">except</span><span class="p">:</span>
-            <span class="k">pass</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-10"># Clean up temporary files
-import glob
-
-for pattern in ["/tmp/drawn_features.*", "/tmp/drawn_points.*"]:
-    for file in glob.glob(pattern):
-        try:
-            os.remove(file)
-            print(f"Removed {file}")
-        except:
-            pass</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="summary">Summary<a class="anchor-link" href="#summary">¶</a></h2><p>The <code>save_draw_data()</code> method provides a simple way to export drawn features from AnyMap to various geospatial file formats:</p>
-<ol>
-<li><strong>Easy to use</strong>: Just call <code>map.save_draw_data("filename.geojson")</code></li>
-<li><strong>Multiple formats</strong>: Supports all GeoPandas-compatible formats</li>
-<li><strong>Error handling</strong>: Provides helpful error messages for common issues</li>
-<li><strong>Format detection</strong>: Automatically detects format from file extension</li>
-<li><strong>CRS handling</strong>: Automatically sets EPSG:4326 if no CRS is present</li>
-</ol>
-<p>This makes it easy to integrate drawn features with other geospatial workflows and tools!</p>
 </div>
 </div>
 </div>
@@ -2902,7 +2210,7 @@ for pattern in ["/tmp/drawn_features.*", "/tmp/drawn_points.*"]:
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="August 19, 2025 01:34:49 UTC"><span class="timeago" datetime="2025-08-19T01:34:49+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="August 19, 2025 01:34:49 UTC">2025-08-19</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="October 4, 2025 02:50:36 UTC"><span class="timeago" datetime="2025-10-04T02:50:36+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 4, 2025 02:50:36 UTC">2025-10-04</span>
   </span>
 
     
@@ -2912,7 +2220,7 @@ for pattern in ["/tmp/drawn_features.*", "/tmp/drawn_points.*"]:
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="August 19, 2025 01:34:49 UTC"><span class="timeago" datetime="2025-08-19T01:34:49+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="August 19, 2025 01:34:49 UTC">2025-08-19</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="October 4, 2025 02:50:36 UTC"><span class="timeago" datetime="2025-10-04T02:50:36+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 4, 2025 02:50:36 UTC">2025-10-04</span>
   </span>
 
     

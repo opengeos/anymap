@@ -1347,6 +1347,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#anymap.utils.check_color" class="md-nav__link">
+    <span class="md-ellipsis">
+      check_color()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anymap.utils.construct_amazon_style" class="md-nav__link">
     <span class="md-ellipsis">
       construct_amazon_style()
@@ -1383,6 +1392,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#anymap.utils.get_cog_metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_cog_metadata()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anymap.utils.get_env_var" class="md-nav__link">
     <span class="md-ellipsis">
       get_env_var()
@@ -1392,9 +1410,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#anymap.utils.get_unique_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_unique_name()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anymap.utils.maptiler_3d_style" class="md-nav__link">
     <span class="md-ellipsis">
       maptiler_3d_style()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anymap.utils.replace_hyphens_in_keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      replace_hyphens_in_keys()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anymap.utils.replace_top_level_hyphens" class="md-nav__link">
+    <span class="md-ellipsis">
+      replace_top_level_hyphens()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anymap.utils.replace_underscores_in_keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      replace_underscores_in_keys()
     </span>
   </a>
   
@@ -1452,6 +1506,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#anymap.utils.check_color" class="md-nav__link">
+    <span class="md-ellipsis">
+      check_color()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anymap.utils.construct_amazon_style" class="md-nav__link">
     <span class="md-ellipsis">
       construct_amazon_style()
@@ -1488,6 +1551,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#anymap.utils.get_cog_metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_cog_metadata()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anymap.utils.get_env_var" class="md-nav__link">
     <span class="md-ellipsis">
       get_env_var()
@@ -1497,9 +1569,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#anymap.utils.get_unique_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_unique_name()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#anymap.utils.maptiler_3d_style" class="md-nav__link">
     <span class="md-ellipsis">
       maptiler_3d_style()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anymap.utils.replace_hyphens_in_keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      replace_hyphens_in_keys()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anymap.utils.replace_top_level_hyphens" class="md-nav__link">
+    <span class="md-ellipsis">
+      replace_top_level_hyphens()
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anymap.utils.replace_underscores_in_keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      replace_underscores_in_keys()
     </span>
   </a>
   
@@ -1567,6 +1675,109 @@ construct_maplibre_style: Construct MapLibre style configuration.</p>
 
 
 
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="anymap.utils.check_color" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">check_color</span><span class="p">(</span><span class="n">in_color</span><span class="p">)</span></code>
+
+
+<a href="#anymap.utils.check_color" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Checks the input color and returns the corresponding hex color code.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>in_color</code></td>
+        <td><code>str or tuple or list</code></td>
+        <td><p>It can be a string (e.g., 'red', '#ffff00', 'ffff00', 'ff0') or RGB tuple/list (e.g., (255, 127, 0)).</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>str</code></td>
+      <td><p>A hex color code.</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>anymap/utils.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">check_color</span><span class="p">(</span><span class="n">in_color</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks the input color and returns the corresponding hex color code.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        in_color (str or tuple or list): It can be a string (e.g., &#39;red&#39;, &#39;#ffff00&#39;, &#39;ffff00&#39;, &#39;ff0&#39;) or RGB tuple/list (e.g., (255, 127, 0)).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: A hex color code.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">colors</span>
+
+    <span class="n">out_color</span> <span class="o">=</span> <span class="s2">&quot;#000000&quot;</span>  <span class="c1"># default black color</span>
+    <span class="c1"># Handle RGB tuple or list</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">in_color</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">))</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">in_color</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="c1"># rescale color if necessary</span>
+        <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">in_color</span><span class="p">):</span>
+            <span class="c1"># Ensure values are floats between 0 and 1 for to_hex</span>
+            <span class="n">in_color</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="o">/</span> <span class="mf">255.0</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">in_color</span><span class="p">]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">colors</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(</span><span class="n">in_color</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;The provided RGB color (</span><span class="si">{</span><span class="n">in_color</span><span class="si">}</span><span class="s2">) is invalid. Using the default black color.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">out_color</span>
+
+    <span class="c1"># Handle string color input</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">in_color</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Try converting directly (handles color names and hex with #)</span>
+            <span class="k">return</span> <span class="n">colors</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(</span><span class="n">in_color</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Try again by adding an extra # (handles hex without #)</span>
+                <span class="k">return</span> <span class="n">colors</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;#</span><span class="si">{</span><span class="n">in_color</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;The provided color string (</span><span class="si">{</span><span class="n">in_color</span><span class="si">}</span><span class="s2">) is invalid. Using the default black color.&quot;</span>
+                <span class="p">)</span>
+                <span class="k">return</span> <span class="n">out_color</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;The provided color type (</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">in_color</span><span class="p">)</span><span class="si">}</span><span class="s2">) is invalid. Using the default black color.&quot;</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">out_color</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
 
 
 
@@ -1948,6 +2159,255 @@ attempts to retrieve the API key using a predefined method. Defaults to None.</p
 
 
 
+<h2 id="anymap.utils.get_cog_metadata" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_cog_metadata</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="s1">&#39;EPSG:4326&#39;</span><span class="p">)</span></code>
+
+
+<a href="#anymap.utils.get_cog_metadata" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Retrieve metadata from a Cloud Optimized GeoTIFF (COG) file.</p>
+<p>This function fetches metadata from a COG file using rasterio.
+The metadata includes information such as offset, scale, NoData value, and bounding box.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This feature corresponds to the getCogMetadata function in maplibre-cog-protocol,
+which is marked as [unstable] in the library documentation. Some metadata internals
+may change in future releases.</p>
+</div>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>url</code></td>
+        <td><code>str</code></td>
+        <td><p>The URL of the COG file to retrieve metadata from.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>crs</code></td>
+        <td><code>str</code></td>
+        <td><p>The coordinate reference system to use for the output bbox.
+Defaults to "EPSG:4326" (WGS84 lat/lon). Set to None to use the COG's native CRS.</p></td>
+        <td><code>&#39;EPSG:4326&#39;</code></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>Optional[Dict[str, Any]]</code></td>
+      <td><p>A dictionary containing COG metadata with keys such as:
+    - bounds: BoundingBox in the specified CRS
+    - bbox: Bounding box coordinates [west, south, east, north] in the specified CRS
+    - width: Width of the raster in pixels
+    - height: Height of the raster in pixels
+    - crs: Original coordinate reference system of the COG
+    - output_crs: CRS of the returned bbox (if reprojected)
+    - transform: Affine transformation matrix
+    - count: Number of bands
+    - dtypes: Data types for each band
+    - nodata: NoData value
+    - scale: Scale value (if available)
+    - offset: Offset value (if available)
+Returns None if metadata retrieval fails.</p></td>
+    </tr>
+  </tbody>
+</table>
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">anymap.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_cog_metadata</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://example.com/data.tif&quot;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="c1"># Get metadata with bbox in WGS84 (default)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">get_cog_metadata</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">if</span> <span class="n">metadata</span><span class="p">:</span>
+<span class="o">...</span>     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Bounding box (WGS84): </span><span class="si">{</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;bbox&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="c1"># Get metadata in native CRS</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">get_cog_metadata</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">if</span> <span class="n">metadata</span><span class="p">:</span>
+<span class="o">...</span>     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Bounding box (native): </span><span class="si">{</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;bbox&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<p><strong>Exceptions:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>ImportError</code></td>
+        <td><p>If rasterio is not installed.</p></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>anymap/utils.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_cog_metadata</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">crs</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;EPSG:4326&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Retrieve metadata from a Cloud Optimized GeoTIFF (COG) file.</span>
+
+<span class="sd">    This function fetches metadata from a COG file using rasterio.</span>
+<span class="sd">    The metadata includes information such as offset, scale, NoData value, and bounding box.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        This feature corresponds to the getCogMetadata function in maplibre-cog-protocol,</span>
+<span class="sd">        which is marked as [unstable] in the library documentation. Some metadata internals</span>
+<span class="sd">        may change in future releases.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        url (str): The URL of the COG file to retrieve metadata from.</span>
+<span class="sd">        crs (str, optional): The coordinate reference system to use for the output bbox.</span>
+<span class="sd">            Defaults to &quot;EPSG:4326&quot; (WGS84 lat/lon). Set to None to use the COG&#39;s native CRS.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Optional[Dict[str, Any]]: A dictionary containing COG metadata with keys such as:</span>
+<span class="sd">            - bounds: BoundingBox in the specified CRS</span>
+<span class="sd">            - bbox: Bounding box coordinates [west, south, east, north] in the specified CRS</span>
+<span class="sd">            - width: Width of the raster in pixels</span>
+<span class="sd">            - height: Height of the raster in pixels</span>
+<span class="sd">            - crs: Original coordinate reference system of the COG</span>
+<span class="sd">            - output_crs: CRS of the returned bbox (if reprojected)</span>
+<span class="sd">            - transform: Affine transformation matrix</span>
+<span class="sd">            - count: Number of bands</span>
+<span class="sd">            - dtypes: Data types for each band</span>
+<span class="sd">            - nodata: NoData value</span>
+<span class="sd">            - scale: Scale value (if available)</span>
+<span class="sd">            - offset: Offset value (if available)</span>
+<span class="sd">        Returns None if metadata retrieval fails.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; from anymap.utils import get_cog_metadata</span>
+<span class="sd">        &gt;&gt;&gt; url = &quot;https://example.com/data.tif&quot;</span>
+<span class="sd">        &gt;&gt;&gt; # Get metadata with bbox in WGS84 (default)</span>
+<span class="sd">        &gt;&gt;&gt; metadata = get_cog_metadata(url)</span>
+<span class="sd">        &gt;&gt;&gt; if metadata:</span>
+<span class="sd">        ...     print(f&quot;Bounding box (WGS84): {metadata.get(&#39;bbox&#39;)}&quot;)</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; # Get metadata in native CRS</span>
+<span class="sd">        &gt;&gt;&gt; metadata = get_cog_metadata(url, crs=None)</span>
+<span class="sd">        &gt;&gt;&gt; if metadata:</span>
+<span class="sd">        ...     print(f&quot;Bounding box (native): {metadata.get(&#39;bbox&#39;)}&quot;)</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ImportError: If rasterio is not installed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">rasterio</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">rasterio.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">RasterioIOError</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">rasterio.warp</span><span class="w"> </span><span class="kn">import</span> <span class="n">transform_bounds</span>
+
+        <span class="k">with</span> <span class="n">rasterio</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="k">as</span> <span class="n">src</span><span class="p">:</span>
+            <span class="c1"># Get bounds in native CRS</span>
+            <span class="n">native_bounds</span> <span class="o">=</span> <span class="n">src</span><span class="o">.</span><span class="n">bounds</span>
+            <span class="n">native_crs</span> <span class="o">=</span> <span class="n">src</span><span class="o">.</span><span class="n">crs</span>
+
+            <span class="c1"># Determine output CRS and bbox</span>
+            <span class="k">if</span> <span class="n">crs</span> <span class="ow">and</span> <span class="n">native_crs</span> <span class="ow">and</span> <span class="nb">str</span><span class="p">(</span><span class="n">native_crs</span><span class="p">)</span> <span class="o">!=</span> <span class="n">crs</span><span class="p">:</span>
+                <span class="c1"># Reproject bounds to target CRS</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">reprojected_bounds</span> <span class="o">=</span> <span class="n">transform_bounds</span><span class="p">(</span>
+                        <span class="n">native_crs</span><span class="p">,</span>
+                        <span class="n">crs</span><span class="p">,</span>
+                        <span class="n">native_bounds</span><span class="o">.</span><span class="n">left</span><span class="p">,</span>
+                        <span class="n">native_bounds</span><span class="o">.</span><span class="n">bottom</span><span class="p">,</span>
+                        <span class="n">native_bounds</span><span class="o">.</span><span class="n">right</span><span class="p">,</span>
+                        <span class="n">native_bounds</span><span class="o">.</span><span class="n">top</span><span class="p">,</span>
+                    <span class="p">)</span>
+                    <span class="n">output_bbox</span> <span class="o">=</span> <span class="p">[</span>
+                        <span class="n">reprojected_bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>  <span class="c1"># west</span>
+                        <span class="n">reprojected_bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>  <span class="c1"># south</span>
+                        <span class="n">reprojected_bounds</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>  <span class="c1"># east</span>
+                        <span class="n">reprojected_bounds</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>  <span class="c1"># north</span>
+                    <span class="p">]</span>
+                    <span class="n">output_crs</span> <span class="o">=</span> <span class="n">crs</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Warning: Failed to reproject bounds to </span><span class="si">{</span><span class="n">crs</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using native CRS </span><span class="si">{</span><span class="n">native_crs</span><span class="si">}</span><span class="s2"> instead.&quot;</span><span class="p">)</span>
+                    <span class="n">output_bbox</span> <span class="o">=</span> <span class="p">[</span>
+                        <span class="n">native_bounds</span><span class="o">.</span><span class="n">left</span><span class="p">,</span>
+                        <span class="n">native_bounds</span><span class="o">.</span><span class="n">bottom</span><span class="p">,</span>
+                        <span class="n">native_bounds</span><span class="o">.</span><span class="n">right</span><span class="p">,</span>
+                        <span class="n">native_bounds</span><span class="o">.</span><span class="n">top</span><span class="p">,</span>
+                    <span class="p">]</span>
+                    <span class="n">output_crs</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">native_crs</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Use native CRS</span>
+                <span class="n">output_bbox</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">native_bounds</span><span class="o">.</span><span class="n">left</span><span class="p">,</span>
+                    <span class="n">native_bounds</span><span class="o">.</span><span class="n">bottom</span><span class="p">,</span>
+                    <span class="n">native_bounds</span><span class="o">.</span><span class="n">right</span><span class="p">,</span>
+                    <span class="n">native_bounds</span><span class="o">.</span><span class="n">top</span><span class="p">,</span>
+                <span class="p">]</span>
+                <span class="n">output_crs</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">native_crs</span><span class="p">)</span> <span class="k">if</span> <span class="n">native_crs</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;bounds&quot;</span><span class="p">:</span> <span class="n">native_bounds</span><span class="p">,</span>
+                <span class="s2">&quot;bbox&quot;</span><span class="p">:</span> <span class="n">output_bbox</span><span class="p">,</span>
+                <span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="n">src</span><span class="o">.</span><span class="n">width</span><span class="p">,</span>
+                <span class="s2">&quot;height&quot;</span><span class="p">:</span> <span class="n">src</span><span class="o">.</span><span class="n">height</span><span class="p">,</span>
+                <span class="s2">&quot;crs&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">native_crs</span><span class="p">)</span> <span class="k">if</span> <span class="n">native_crs</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s2">&quot;output_crs&quot;</span><span class="p">:</span> <span class="n">output_crs</span><span class="p">,</span>
+                <span class="s2">&quot;transform&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">transform</span><span class="p">),</span>
+                <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="n">src</span><span class="o">.</span><span class="n">count</span><span class="p">,</span>
+                <span class="s2">&quot;dtypes&quot;</span><span class="p">:</span> <span class="n">src</span><span class="o">.</span><span class="n">dtypes</span><span class="p">,</span>
+                <span class="s2">&quot;nodata&quot;</span><span class="p">:</span> <span class="n">src</span><span class="o">.</span><span class="n">nodata</span><span class="p">,</span>
+            <span class="p">}</span>
+
+            <span class="c1"># Add scale and offset if available</span>
+            <span class="k">if</span> <span class="n">src</span><span class="o">.</span><span class="n">scales</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">scales</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;scale&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">src</span><span class="o">.</span><span class="n">scales</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">src</span><span class="o">.</span><span class="n">offsets</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">offsets</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;offset&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">src</span><span class="o">.</span><span class="n">offsets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="k">return</span> <span class="n">metadata</span>
+
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="c1"># If rasterio is not available, provide a helpful message</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;COG metadata retrieval requires rasterio. Install it with: pip install rasterio&quot;</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;Alternatively, use the get_cog_metadata method on a MapLibreMap instance &quot;</span>
+            <span class="s2">&quot;which uses the JavaScript maplibre-cog-protocol library.&quot;</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">except</span> <span class="n">RasterioIOError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to open COG file: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to retrieve COG metadata: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
 <h2 id="anymap.utils.get_env_var" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">get_env_var</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
@@ -2027,6 +2487,97 @@ name is provided, the function attempts to retrieve the key from user data
             <span class="k">pass</span>
         <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
     <span class="k">return</span> <span class="kc">None</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="anymap.utils.get_unique_name" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_unique_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">names</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+
+
+<a href="#anymap.utils.get_unique_name" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Generates a unique name based on the input name and existing names.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>name</code></td>
+        <td><code>str</code></td>
+        <td><p>The base name to generate a unique name from.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>names</code></td>
+        <td><code>list</code></td>
+        <td><p>A list of existing names to check against.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>overwrite</code></td>
+        <td><code>bool</code></td>
+        <td><p>If True, the function will return the original name even if it exists in the list. Defaults to False.</p></td>
+        <td><code>False</code></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>str</code></td>
+      <td><p>A unique name based on the input name.</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>anymap/utils.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_unique_name</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">names</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates a unique name based on the input name and existing names.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str): The base name to generate a unique name from.</span>
+<span class="sd">        names (list): A list of existing names to check against.</span>
+<span class="sd">        overwrite (bool, optional): If True, the function will return the original name even if it exists in the list. Defaults to False.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: A unique name based on the input name.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">overwrite</span> <span class="ow">or</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">name</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">counter</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">unique_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">counter</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">if</span> <span class="n">unique_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">unique_name</span>
+            <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
 </code></pre></div>
         </details>
     </div>
@@ -2292,6 +2843,233 @@ webp, png, jpg. Defaults to None.</p></td>
     <span class="p">}</span>
 
     <span class="k">return</span> <span class="n">style</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="anymap.utils.replace_hyphens_in_keys" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">replace_hyphens_in_keys</span><span class="p">(</span><span class="n">d</span><span class="p">)</span></code>
+
+
+<a href="#anymap.utils.replace_hyphens_in_keys" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Recursively replaces hyphens with underscores in dictionary keys.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>d</code></td>
+        <td><code>Union[Dict, List, Any]</code></td>
+        <td><p>The input dictionary, list or any other data type.</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>Union[Dict, List, Any]</code></td>
+      <td><p>The modified dictionary or list with keys having hyphens replaced with underscores,
+or the original input if it's not a dictionary or list.</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>anymap/utils.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">replace_hyphens_in_keys</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Recursively replaces hyphens with underscores in dictionary keys.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        d (Union[Dict, List, Any]): The input dictionary, list or any other data type.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Union[Dict, List, Any]: The modified dictionary or list with keys having hyphens replaced with underscores,</span>
+<span class="sd">        or the original input if it&#39;s not a dictionary or list.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">):</span> <span class="n">replace_hyphens_in_keys</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">replace_hyphens_in_keys</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">d</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">d</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="anymap.utils.replace_top_level_hyphens" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">replace_top_level_hyphens</span><span class="p">(</span><span class="n">d</span><span class="p">)</span></code>
+
+
+<a href="#anymap.utils.replace_top_level_hyphens" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Replaces hyphens with underscores in top-level dictionary keys.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>d</code></td>
+        <td><code>Union[Dict, Any]</code></td>
+        <td><p>The input dictionary or any other data type.</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>Union[Dict, Any]</code></td>
+      <td><p>The modified dictionary with top-level keys having hyphens replaced with underscores,
+or the original input if it's not a dictionary.</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>anymap/utils.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">replace_top_level_hyphens</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Replaces hyphens with underscores in top-level dictionary keys.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        d (Union[Dict, Any]): The input dictionary or any other data type.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Union[Dict, Any]: The modified dictionary with top-level keys having hyphens replaced with underscores,</span>
+<span class="sd">        or the original input if it&#39;s not a dictionary.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">):</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+    <span class="k">return</span> <span class="n">d</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h2 id="anymap.utils.replace_underscores_in_keys" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">replace_underscores_in_keys</span><span class="p">(</span><span class="n">d</span><span class="p">)</span></code>
+
+
+<a href="#anymap.utils.replace_underscores_in_keys" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Recursively replaces underscores with hyphens in dictionary keys.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>d</code></td>
+        <td><code>Union[Dict, List, Any]</code></td>
+        <td><p>The input dictionary, list or any other data type.</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>Union[Dict, List, Any]</code></td>
+      <td><p>The modified dictionary or list with keys having underscores replaced with hyphens,
+or the original input if it's not a dictionary or list.</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>anymap/utils.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">replace_underscores_in_keys</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Recursively replaces underscores with hyphens in dictionary keys.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        d (Union[Dict, List, Any]): The input dictionary, list or any other data type.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Union[Dict, List, Any]: The modified dictionary or list with keys having underscores replaced with hyphens,</span>
+<span class="sd">        or the original input if it&#39;s not a dictionary or list.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="n">k</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">):</span> <span class="n">replace_underscores_in_keys</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="p">}</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">replace_underscores_in_keys</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">d</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">d</span>
 </code></pre></div>
         </details>
     </div>

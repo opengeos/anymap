@@ -4723,7 +4723,7 @@ https://opendata.digitalglobe.com/events/mauritius-oil-spill/post-event/2020-08-
             <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
         <span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="n">titiler_endpoint</span> <span class="o">=</span> <span class="s2">&quot;https://titiler.xyz&quot;</span>
+        <span class="n">titiler_endpoint</span> <span class="o">=</span> <span class="s2">&quot;https://giswqs-titiler-endpoint.hf.space&quot;</span>
         <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">titiler_endpoint</span><span class="si">}</span><span class="s2">/cog/</span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
             <span class="n">params</span><span class="o">=</span><span class="p">{</span>
@@ -5257,7 +5257,7 @@ https://opendata.digitalglobe.com/events/mauritius-oil-spill/post-event/2020-08-
             <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
         <span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="n">titiler_endpoint</span> <span class="o">=</span> <span class="s2">&quot;https://titiler.xyz&quot;</span>
+        <span class="n">titiler_endpoint</span> <span class="o">=</span> <span class="s2">&quot;https://giswqs-titiler-endpoint.hf.space&quot;</span>
         <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">titiler_endpoint</span><span class="si">}</span><span class="s2">/cog/statistics&quot;</span><span class="p">,</span>
             <span class="n">params</span><span class="o">=</span><span class="p">{</span>
@@ -5386,7 +5386,7 @@ For example, to apply a rescaling to multiple bands, use something like
     <span class="k">try</span><span class="p">:</span>
         <span class="n">band_names</span> <span class="o">=</span> <span class="n">cog_bands</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">titiler_endpoint</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="n">titiler_endpoint</span> <span class="o">=</span> <span class="s2">&quot;https://titiler.xyz&quot;</span>
+        <span class="n">titiler_endpoint</span> <span class="o">=</span> <span class="s2">&quot;https://giswqs-titiler-endpoint.hf.space&quot;</span>
         <span class="n">band_names</span> <span class="o">=</span> <span class="n">cog_bands</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">titiler_endpoint</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bands</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
@@ -5425,7 +5425,7 @@ For example, to apply a rescaling to multiple bands, use something like
         <span class="k">try</span><span class="p">:</span>
             <span class="n">stats</span> <span class="o">=</span> <span class="n">cog_stats</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">titiler_endpoint</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">titiler_endpoint</span> <span class="o">=</span> <span class="s2">&quot;https://titiler.xyz&quot;</span>
+            <span class="n">titiler_endpoint</span> <span class="o">=</span> <span class="s2">&quot;https://giswqs-titiler-endpoint.hf.space&quot;</span>
             <span class="n">stats</span> <span class="o">=</span> <span class="n">cog_stats</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">titiler_endpoint</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="s2">&quot;message&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">stats</span><span class="p">:</span>
@@ -5460,7 +5460,7 @@ For example, to apply a rescaling to multiple bands, use something like
             <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
         <span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="n">titiler_endpoint</span> <span class="o">=</span> <span class="s2">&quot;https://titiler.xyz&quot;</span>
+        <span class="n">titiler_endpoint</span> <span class="o">=</span> <span class="s2">&quot;https://giswqs-titiler-endpoint.hf.space&quot;</span>
         <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">titiler_endpoint</span><span class="si">}</span><span class="s2">/cog/</span><span class="si">{</span><span class="n">TileMatrixSetId</span><span class="si">}</span><span class="s2">/tilejson.json&quot;</span><span class="p">,</span>
             <span class="n">params</span><span class="o">=</span><span class="n">kwargs</span><span class="p">,</span>
@@ -9787,7 +9787,7 @@ unmarshalling errors. Defaults to None.</p></td>
                     <span class="n">titiler_endpoint</span><span class="o">=</span><span class="n">titiler_endpoint</span><span class="p">,</span>
                 <span class="p">)</span>
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="n">titiler_endpoint</span> <span class="o">=</span> <span class="s2">&quot;https://titiler.xyz&quot;</span>
+                <span class="n">titiler_endpoint</span> <span class="o">=</span> <span class="s2">&quot;https://giswqs-titiler-endpoint.hf.space&quot;</span>
                 <span class="n">stats</span> <span class="o">=</span> <span class="n">stac_stats</span><span class="p">(</span>
                     <span class="n">collection</span><span class="o">=</span><span class="n">collection</span><span class="p">,</span>
                     <span class="n">item</span><span class="o">=</span><span class="n">item</span><span class="p">,</span>
@@ -9865,7 +9865,7 @@ unmarshalling errors. Defaults to None.</p></td>
                     <span class="n">titiler_endpoint</span><span class="o">=</span><span class="n">titiler_endpoint</span><span class="p">,</span>
                 <span class="p">)</span>
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="n">titiler_endpoint</span> <span class="o">=</span> <span class="s2">&quot;https://titiler.xyz&quot;</span>
+                <span class="n">titiler_endpoint</span> <span class="o">=</span> <span class="s2">&quot;https://giswqs-titiler-endpoint.hf.space&quot;</span>
                 <span class="n">stats</span> <span class="o">=</span> <span class="n">stac_stats</span><span class="p">(</span>
                     <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
                     <span class="n">assets</span><span class="o">=</span><span class="n">assets</span><span class="p">,</span>
@@ -9909,7 +9909,7 @@ unmarshalling errors. Defaults to None.</p></td>
                 <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
             <span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">titiler_endpoint</span> <span class="o">=</span> <span class="s2">&quot;https://titiler.xyz&quot;</span>
+            <span class="n">titiler_endpoint</span> <span class="o">=</span> <span class="s2">&quot;https://giswqs-titiler-endpoint.hf.space&quot;</span>
             <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">titiler_endpoint</span><span class="si">}</span><span class="s2">/mosaicjson/</span><span class="si">{</span><span class="n">TileMatrixSetId</span><span class="si">}</span><span class="s2">/tilejson.json&quot;</span><span class="p">,</span>
                 <span class="n">params</span><span class="o">=</span><span class="n">kwargs</span><span class="p">,</span>
@@ -9924,7 +9924,7 @@ unmarshalling errors. Defaults to None.</p></td>
                     <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
                 <span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="n">titiler_endpoint</span> <span class="o">=</span> <span class="s2">&quot;https://titiler.xyz&quot;</span>
+                <span class="n">titiler_endpoint</span> <span class="o">=</span> <span class="s2">&quot;https://giswqs-titiler-endpoint.hf.space&quot;</span>
                 <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">titiler_endpoint</span><span class="si">}</span><span class="s2">/stac/</span><span class="si">{</span><span class="n">TileMatrixSetId</span><span class="si">}</span><span class="s2">/tilejson.json&quot;</span><span class="p">,</span>
                     <span class="n">params</span><span class="o">=</span><span class="n">kwargs</span><span class="p">,</span>
