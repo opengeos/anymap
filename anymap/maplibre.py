@@ -35,8 +35,8 @@ try:
     HAS_GEOPANDAS = True
 except ImportError:
     HAS_GEOPANDAS = False
-from .utils import construct_maplibre_style, get_env_var
 from .maplibre_widgets import Container, LayerManagerWidget
+from . import utils
 
 # Load MapLibre-specific js and css
 with open(
@@ -147,7 +147,7 @@ class MapLibreMap(MapWidget):
         """
 
         if isinstance(style, str):
-            style = construct_maplibre_style(style)
+            style = utils.construct_maplibre_style(style)
 
         if abs(center[1]) > 90:
             center = center[::-1]
@@ -689,11 +689,13 @@ class MapLibreMap(MapWidget):
 
     def add_layer(
         self,
-        layer_id: str,
         layer: Dict[str, Any],
         before_id: Optional[str] = None,
+        layer_id: str = None,
         opacity: Optional[float] = 1.0,
         visible: Optional[bool] = True,
+        overwrite: bool = False,
+        **kwargs: Any,
     ) -> None:
         """Add a layer to the map.
 
@@ -704,6 +706,22 @@ class MapLibreMap(MapWidget):
             before_id: Optional layer ID to insert this layer before.
                       If None, layer is added on top.
         """
+
+        if isinstance(layer, dict):
+            if "minzoom" in layer:
+                layer["min-zoom"] = layer.pop("minzoom")
+            if "maxzoom" in layer:
+                layer["max-zoom"] = layer.pop("maxzoom")
+            layer = utils.replace_top_level_hyphens(layer)
+
+        if "name" in kwargs and layer_id is None:
+            layer_id = kwargs.pop("name")
+
+        if layer_id is None:
+            layer_id = utils.get_unique_name(
+                layer["id"], list(self._layers.keys()), overwrite
+            )
+
         # Store layer in local state for persistence
         current_layers = dict(self._layers)
         current_layers[layer_id] = layer
@@ -762,7 +780,7 @@ class MapLibreMap(MapWidget):
         if paint:
             layer_config["paint"] = paint
 
-        self.add_layer(layer_id, layer_config, before_id)
+        self.add_layer(layer=layer_config, before_id=before_id, layer_id=layer_id)
 
     def add_marker(self, lng: float, lat: float, popup: Optional[str] = None) -> None:
         """Add a marker to the map.
@@ -829,7 +847,7 @@ class MapLibreMap(MapWidget):
         if layout:
             layer_config["layout"] = layout
 
-        self.add_layer(layer_id, layer_config, before_id)
+        self.add_layer(layer=layer_config, before_id=before_id, layer_id=layer_id)
 
     def add_vector_layer(
         self,
@@ -870,7 +888,7 @@ class MapLibreMap(MapWidget):
         if layout:
             layer_config["layout"] = layout
 
-        self.add_layer(layer_id, layer_config, before_id)
+        self.add_layer(layer=layer_config, before_id=before_id, layer_id=layer_id)
 
     def add_image_layer(
         self,
@@ -903,7 +921,7 @@ class MapLibreMap(MapWidget):
         if paint:
             layer_config["paint"] = paint
 
-        self.add_layer(layer_id, layer_config, before_id)
+        self.add_layer(layer=layer_config, before_id=before_id, layer_id=layer_id)
 
     def add_control(
         self,
@@ -1085,7 +1103,7 @@ class MapLibreMap(MapWidget):
             ValueError: If no API key is provided and none can be found in environment variables
         """
         if api_key is None:
-            api_key = get_env_var("GOOGLE_MAPS_API_KEY")
+            api_key = utils.get_env_var("GOOGLE_MAPS_API_KEY")
             if api_key is None:
                 raise ValueError(
                     "Google Maps API key is required. Please provide it as a parameter "
@@ -1186,8 +1204,15 @@ class MapLibreMap(MapWidget):
         visible: Optional[bool] = True,
         paint: Optional[Dict[str, Any]] = None,
         before_id: Optional[str] = None,
+        titiler_endpoint: Optional[str] = None,
+        fit_bounds: bool = True,
+        **kwargs: Any,
     ) -> None:
         """Add a Cloud Optimized GeoTIFF (COG) layer to the map.
+
+        This method supports COGs in any coordinate reference system (CRS). For COGs
+        in EPSG:3857, it uses the maplibre-cog-protocol for direct rendering. For COGs
+        in other CRS, it uses TiTiler to reproject on-the-fly.
 
         Args:
             layer_id: Unique identifier for the COG layer.
@@ -1196,20 +1221,101 @@ class MapLibreMap(MapWidget):
             visible: Whether the layer should be visible initially.
             paint: Optional paint properties for the layer.
             before_id: Optional layer ID to insert this layer before.
+            titiler_endpoint: Optional TiTiler endpoint URL. If None, checks COG CRS
+                and uses TiTiler automatically for non-EPSG:3857 COGs. Set to a TiTiler
+                URL (e.g., "https://titiler.xyz") to force using TiTiler.
+            fit_bounds: If True, automatically fit map bounds to COG extent.
+            **kwargs: Additional parameters passed to TiTiler (e.g., rescale, colormap,
+                bidx for band selection).
+
+        Example:
+            >>> m = MapLibreMap()
+            >>> # COG in EPSG:3857 (uses cog:// protocol)
+            >>> m.add_cog_layer("cog1", "https://example.com/data_3857.tif")
+            >>>
+            >>> # COG in any other CRS (uses TiTiler)
+            >>> m.add_cog_layer("cog2", "https://example.com/data_4326.tif")
+            >>>
+            >>> # Force TiTiler with custom endpoint
+            >>> m.add_cog_layer(
+            ...     "cog3",
+            ...     "https://example.com/data.tif",
+            ...     titiler_endpoint="https://titiler.xyz",
+            ...     rescale="0,255",
+            ...     colormap="viridis"
+            ... )
         """
         source_id = f"{layer_id}_source"
 
-        # Add COG source using cog:// protocol
-        cog_source_url = f"cog://{cog_url}"
+        # Check if we should use TiTiler
+        use_titiler = titiler_endpoint is not None
 
-        self.add_source(
-            source_id,
-            {
-                "type": "raster",
-                "url": cog_source_url,
-                "tileSize": 256,
-            },
-        )
+        if not use_titiler:
+            # Auto-detect if TiTiler is needed by checking COG CRS
+            try:
+                metadata = self.get_cog_metadata(cog_url, crs=None)
+                if metadata and metadata.get("crs"):
+                    cog_crs = metadata["crs"]
+                    # Use TiTiler if COG is not in EPSG:3857
+                    if cog_crs != "EPSG:3857":
+                        use_titiler = True
+                        print(f"COG is in {cog_crs}, using TiTiler for reprojection")
+            except Exception as e:
+                print(f"Could not determine COG CRS, trying cog:// protocol: {e}")
+
+        if use_titiler:
+            # Use TiTiler for on-the-fly reprojection
+            if titiler_endpoint is None:
+                titiler_endpoint = "https://giswqs-titiler-endpoint.hf.space"
+
+            # Build TiTiler tile URL
+            from urllib.parse import urlencode, quote
+
+            # Encode the COG URL
+            encoded_url = quote(cog_url, safe="")
+
+            # Build query parameters
+            params = {
+                "url": cog_url,
+                "TileMatrixSetId": "WebMercatorQuad",  # Reproject to Web Mercator
+            }
+
+            # Add any additional TiTiler parameters
+            for key, value in kwargs.items():
+                params[key] = value
+
+            query_string = urlencode({k: v for k, v in params.items() if k != "url"})
+
+            # TiTiler tile URL format: {endpoint}/cog/tiles/WebMercatorQuad/{z}/{x}/{y}
+            tile_url = f"{titiler_endpoint}/cog/tiles/WebMercatorQuad/{{z}}/{{x}}/{{y}}?url={encoded_url}"
+            if query_string:
+                tile_url += f"&{query_string}"
+
+            # print(f"Using TiTiler: {titiler_endpoint}")
+            # print(f"Tile URL pattern: {tile_url[:100]}...")
+
+            self.add_source(
+                source_id,
+                {
+                    "type": "raster",
+                    "tiles": [tile_url],
+                    "tileSize": 256,
+                    "attribution": "TiTiler",
+                },
+            )
+
+        else:
+            # Use cog:// protocol for EPSG:3857 COGs
+            cog_source_url = f"cog://{cog_url}"
+
+            self.add_source(
+                source_id,
+                {
+                    "type": "raster",
+                    "url": cog_source_url,
+                    "tileSize": 256,
+                },
+            )
 
         # Add raster layer
         layer_config = {"id": layer_id, "type": "raster", "source": source_id}
@@ -1218,8 +1324,24 @@ class MapLibreMap(MapWidget):
             layer_config["paint"] = paint
 
         self.add_layer(
-            layer_id, layer_config, before_id, opacity=opacity, visible=visible
+            layer=layer_config,
+            before_id=before_id,
+            layer_id=layer_id,
+            opacity=opacity,
+            visible=visible,
         )
+
+        # Optionally fit bounds to COG extent
+        if fit_bounds:
+            try:
+                metadata = self.get_cog_metadata(cog_url, crs="EPSG:4326")
+                if metadata and metadata.get("bbox"):
+                    bbox = metadata["bbox"]
+                    bounds = [[bbox[0], bbox[1]], [bbox[2], bbox[3]]]
+                    self.fit_bounds(bounds, padding=50)
+                    # print(f"Map fitted to COG bounds: {bounds}")
+            except Exception as e:
+                print(f"Could not fit bounds to COG extent: {e}")
 
     def add_pmtiles(
         self,
@@ -1293,9 +1415,9 @@ class MapLibreMap(MapWidget):
         # Add all layers
         for layer_config in layers:
             self.add_layer(
-                layer_config["id"],
-                layer_config,
-                before_id,
+                layer=layer_config,
+                before_id=before_id,
+                layer_id=layer_config["id"],
                 opacity=opacity,
                 visible=visible,
             )
@@ -1747,6 +1869,57 @@ class MapLibreMap(MapWidget):
             "pitch": self._current_pitch,
             "bounds": self._current_bounds,
         }
+
+    def get_cog_metadata(
+        self, url: str, crs: str = "EPSG:4326"
+    ) -> Optional[Dict[str, Any]]:
+        """Retrieve metadata from a Cloud Optimized GeoTIFF (COG) file.
+
+        This method fetches metadata from a COG file. It uses rasterio if available,
+        which provides comprehensive metadata extraction capabilities.
+
+        Note:
+            This feature corresponds to the getCogMetadata function in maplibre-cog-protocol,
+            which is marked as [unstable]. Some metadata internals may change in future releases.
+
+        Args:
+            url (str): The URL of the COG file to retrieve metadata from.
+            crs (str, optional): The coordinate reference system to use for the output bbox.
+                Defaults to "EPSG:4326" (WGS84 lat/lon). Set to None to use the COG's native CRS.
+
+        Returns:
+            Optional[Dict[str, Any]]: A dictionary containing COG metadata with keys such as:
+                - bbox: Bounding box coordinates [west, south, east, north] in the specified CRS
+                - bounds: BoundingBox in native CRS
+                - width: Width of the raster in pixels
+                - height: Height of the raster in pixels
+                - crs: Original coordinate reference system of the COG
+                - output_crs: CRS of the returned bbox
+                - transform: Affine transformation matrix
+                - count: Number of bands
+                - dtypes: Data types for each band
+                - nodata: NoData value
+                - scale: Scale value (if available)
+                - offset: Offset value (if available)
+            Returns None if metadata retrieval fails.
+
+        Example:
+            >>> m = MapLibreMap()
+            >>> url = "https://example.com/data.tif"
+            >>> # Get metadata with bbox in WGS84 (default)
+            >>> metadata = m.get_cog_metadata(url)
+            >>> if metadata:
+            ...     print(f"Bounding box (WGS84): {metadata.get('bbox')}")
+            ...     # Fit bounds using WGS84 coordinates
+            ...     bbox = metadata['bbox']
+            ...     m.fit_bounds([[bbox[0], bbox[1]], [bbox[2], bbox[3]]])
+            >>>
+            >>> # Get metadata in native CRS
+            >>> metadata = m.get_cog_metadata(url, crs=None)
+            >>> if metadata:
+            ...     print(f"Native CRS: {metadata.get('crs')}")
+        """
+        return utils.get_cog_metadata(url, crs=crs)
 
     def add_basemap_control(
         self,

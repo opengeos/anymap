@@ -540,7 +540,7 @@ function render({ model, el }) {
       // Load COG protocol
       if (!window.MaplibreCOGProtocol) {
         const cogScript = document.createElement('script');
-        cogScript.src = 'https://unpkg.com/@geomatico/maplibre-cog-protocol@0.4.0/dist/index.js';
+        cogScript.src = 'https://unpkg.com/@geomatico/maplibre-cog-protocol@0.8.0/dist/index.js';
 
         await new Promise((resolve, reject) => {
           cogScript.onload = resolve;
@@ -663,8 +663,14 @@ function render({ model, el }) {
 
       // Register the COG protocol
       if (window.MaplibreCOGProtocol && window.MaplibreCOGProtocol.cogProtocol) {
-        maplibregl.addProtocol("cog", window.MaplibreCOGProtocol.cogProtocol);
-        console.log("COG protocol registered successfully");
+        // Check if protocol is already registered to avoid duplicates
+        if (!window._cogProtocolRegistered) {
+          maplibregl.addProtocol("cog", window.MaplibreCOGProtocol.cogProtocol);
+          window._cogProtocolRegistered = true;
+          console.log("COG protocol registered successfully");
+        } else {
+          console.log("COG protocol already registered");
+        }
       } else {
         console.warn("MaplibreCOGProtocol not available");
       }
@@ -922,18 +928,54 @@ function render({ model, el }) {
       Object.entries(sources).forEach(([sourceId, sourceConfig]) => {
         if (!map.getSource(sourceId)) {
           try {
-            map.addSource(sourceId, sourceConfig);
+            // Check if this is a COG source and if protocol is ready
+            const isCogSource = sourceConfig.url && sourceConfig.url.startsWith('cog://');
+            if (isCogSource && !window._cogProtocolRegistered) {
+              console.warn(`COG protocol not ready for source ${sourceId}, will retry`);
+              // Retry after a short delay
+              setTimeout(() => {
+                if (!map.getSource(sourceId) && window._cogProtocolRegistered) {
+                  try {
+                    map.addSource(sourceId, sourceConfig);
+                    console.log(`COG source ${sourceId} added successfully on retry`);
+                  } catch (retryError) {
+                    console.warn(`Failed to add COG source ${sourceId} on retry:`, retryError);
+                  }
+                }
+              }, 500);
+            } else {
+              map.addSource(sourceId, sourceConfig);
+            }
           } catch (error) {
             console.warn(`Failed to restore source ${sourceId}:`, error);
           }
         }
       });
 
-      // Then add layers
+      // Then add layers (with delay for COG-dependent layers)
       Object.entries(layers).forEach(([layerId, layerConfig]) => {
         if (!map.getLayer(layerId)) {
           try {
-            map.addLayer(layerConfig);
+            // Check if this layer uses a COG source
+            const sourceId = layerConfig.source;
+            const sourceConfig = sources[sourceId];
+            const isCogLayer = sourceConfig && sourceConfig.url && sourceConfig.url.startsWith('cog://');
+
+            if (isCogLayer && !window._cogProtocolRegistered) {
+              // Retry adding COG-dependent layers after source is ready
+              setTimeout(() => {
+                if (!map.getLayer(layerId) && map.getSource(sourceId)) {
+                  try {
+                    map.addLayer(layerConfig);
+                    console.log(`COG layer ${layerId} added successfully on retry`);
+                  } catch (retryError) {
+                    console.warn(`Failed to add COG layer ${layerId} on retry:`, retryError);
+                  }
+                }
+              }, 600);
+            } else {
+              map.addLayer(layerConfig);
+            }
           } catch (error) {
             console.warn(`Failed to restore layer ${layerId}:`, error);
           }

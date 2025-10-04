@@ -27,7 +27,7 @@ Example:
 import json
 import os
 import requests
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, Union, List, Tuple
 
 
 def _in_colab_shell() -> bool:
@@ -357,3 +357,265 @@ def construct_maplibre_style(style: str, **kwargs) -> str:
             style = construct_carto_style(style)
 
     return style
+
+
+def replace_top_level_hyphens(d: Union[Dict, Any]) -> Union[Dict, Any]:
+    """
+    Replaces hyphens with underscores in top-level dictionary keys.
+
+    Args:
+        d (Union[Dict, Any]): The input dictionary or any other data type.
+
+    Returns:
+        Union[Dict, Any]: The modified dictionary with top-level keys having hyphens replaced with underscores,
+        or the original input if it's not a dictionary.
+    """
+    if isinstance(d, dict):
+        return {k.replace("-", "_"): v for k, v in d.items()}
+    return d
+
+
+def replace_hyphens_in_keys(d: Union[Dict, List, Any]) -> Union[Dict, List, Any]:
+    """
+    Recursively replaces hyphens with underscores in dictionary keys.
+
+    Args:
+        d (Union[Dict, List, Any]): The input dictionary, list or any other data type.
+
+    Returns:
+        Union[Dict, List, Any]: The modified dictionary or list with keys having hyphens replaced with underscores,
+        or the original input if it's not a dictionary or list.
+    """
+    if isinstance(d, dict):
+        return {k.replace("-", "_"): replace_hyphens_in_keys(v) for k, v in d.items()}
+    elif isinstance(d, list):
+        return [replace_hyphens_in_keys(i) for i in d]
+    else:
+        return d
+
+
+def replace_underscores_in_keys(d: Union[Dict, List, Any]) -> Union[Dict, List, Any]:
+    """
+    Recursively replaces underscores with hyphens in dictionary keys.
+
+    Args:
+        d (Union[Dict, List, Any]): The input dictionary, list or any other data type.
+
+    Returns:
+        Union[Dict, List, Any]: The modified dictionary or list with keys having underscores replaced with hyphens,
+        or the original input if it's not a dictionary or list.
+    """
+    if isinstance(d, dict):
+        return {
+            k.replace("_", "-"): replace_underscores_in_keys(v) for k, v in d.items()
+        }
+    elif isinstance(d, list):
+        return [replace_underscores_in_keys(i) for i in d]
+    else:
+        return d
+
+
+def get_unique_name(name: str, names: list, overwrite: bool = False) -> str:
+    """
+    Generates a unique name based on the input name and existing names.
+
+    Args:
+        name (str): The base name to generate a unique name from.
+        names (list): A list of existing names to check against.
+        overwrite (bool, optional): If True, the function will return the original name even if it exists in the list. Defaults to False.
+
+    Returns:
+        str: A unique name based on the input name.
+    """
+    if overwrite or name not in names:
+        return name
+    else:
+        counter = 1
+        while True:
+            unique_name = f"{name}_{counter}"
+            if unique_name not in names:
+                return unique_name
+            counter += 1
+
+
+def check_color(in_color: Union[str, Tuple, List]) -> str:
+    """Checks the input color and returns the corresponding hex color code.
+
+    Args:
+        in_color (str or tuple or list): It can be a string (e.g., 'red', '#ffff00', 'ffff00', 'ff0') or RGB tuple/list (e.g., (255, 127, 0)).
+
+    Returns:
+        str: A hex color code.
+    """
+    from matplotlib import colors
+
+    out_color = "#000000"  # default black color
+    # Handle RGB tuple or list
+    if isinstance(in_color, (tuple, list)) and len(in_color) == 3:
+        # rescale color if necessary
+        if all(isinstance(item, int) for item in in_color):
+            # Ensure values are floats between 0 and 1 for to_hex
+            in_color = [c / 255.0 for c in in_color]
+        try:
+            return colors.to_hex(in_color)
+        except ValueError:
+            print(
+                f"The provided RGB color ({in_color}) is invalid. Using the default black color."
+            )
+            return out_color
+
+    # Handle string color input
+    elif isinstance(in_color, str):
+        try:
+            # Try converting directly (handles color names and hex with #)
+            return colors.to_hex(in_color)
+        except ValueError:
+            try:
+                # Try again by adding an extra # (handles hex without #)
+                return colors.to_hex(f"#{in_color}")
+            except ValueError:
+                print(
+                    f"The provided color string ({in_color}) is invalid. Using the default black color."
+                )
+                return out_color
+    else:
+        print(
+            f"The provided color type ({type(in_color)}) is invalid. Using the default black color."
+        )
+        return out_color
+
+
+def get_cog_metadata(url: str, crs: str = "EPSG:4326") -> Optional[Dict[str, Any]]:
+    """Retrieve metadata from a Cloud Optimized GeoTIFF (COG) file.
+
+    This function fetches metadata from a COG file using rasterio.
+    The metadata includes information such as offset, scale, NoData value, and bounding box.
+
+    Note:
+        This feature corresponds to the getCogMetadata function in maplibre-cog-protocol,
+        which is marked as [unstable] in the library documentation. Some metadata internals
+        may change in future releases.
+
+    Args:
+        url (str): The URL of the COG file to retrieve metadata from.
+        crs (str, optional): The coordinate reference system to use for the output bbox.
+            Defaults to "EPSG:4326" (WGS84 lat/lon). Set to None to use the COG's native CRS.
+
+    Returns:
+        Optional[Dict[str, Any]]: A dictionary containing COG metadata with keys such as:
+            - bounds: BoundingBox in the specified CRS
+            - bbox: Bounding box coordinates [west, south, east, north] in the specified CRS
+            - width: Width of the raster in pixels
+            - height: Height of the raster in pixels
+            - crs: Original coordinate reference system of the COG
+            - output_crs: CRS of the returned bbox (if reprojected)
+            - transform: Affine transformation matrix
+            - count: Number of bands
+            - dtypes: Data types for each band
+            - nodata: NoData value
+            - scale: Scale value (if available)
+            - offset: Offset value (if available)
+        Returns None if metadata retrieval fails.
+
+    Example:
+        >>> from anymap.utils import get_cog_metadata
+        >>> url = "https://example.com/data.tif"
+        >>> # Get metadata with bbox in WGS84 (default)
+        >>> metadata = get_cog_metadata(url)
+        >>> if metadata:
+        ...     print(f"Bounding box (WGS84): {metadata.get('bbox')}")
+        >>>
+        >>> # Get metadata in native CRS
+        >>> metadata = get_cog_metadata(url, crs=None)
+        >>> if metadata:
+        ...     print(f"Bounding box (native): {metadata.get('bbox')}")
+
+    Raises:
+        ImportError: If rasterio is not installed.
+    """
+    try:
+        import rasterio
+        from rasterio.errors import RasterioIOError
+        from rasterio.warp import transform_bounds
+
+        with rasterio.open(url) as src:
+            # Get bounds in native CRS
+            native_bounds = src.bounds
+            native_crs = src.crs
+
+            # Determine output CRS and bbox
+            if crs and native_crs and str(native_crs) != crs:
+                # Reproject bounds to target CRS
+                try:
+                    reprojected_bounds = transform_bounds(
+                        native_crs,
+                        crs,
+                        native_bounds.left,
+                        native_bounds.bottom,
+                        native_bounds.right,
+                        native_bounds.top,
+                    )
+                    output_bbox = [
+                        reprojected_bounds[0],  # west
+                        reprojected_bounds[1],  # south
+                        reprojected_bounds[2],  # east
+                        reprojected_bounds[3],  # north
+                    ]
+                    output_crs = crs
+                except Exception as e:
+                    print(f"Warning: Failed to reproject bounds to {crs}: {e}")
+                    print(f"Using native CRS {native_crs} instead.")
+                    output_bbox = [
+                        native_bounds.left,
+                        native_bounds.bottom,
+                        native_bounds.right,
+                        native_bounds.top,
+                    ]
+                    output_crs = str(native_crs)
+            else:
+                # Use native CRS
+                output_bbox = [
+                    native_bounds.left,
+                    native_bounds.bottom,
+                    native_bounds.right,
+                    native_bounds.top,
+                ]
+                output_crs = str(native_crs) if native_crs else None
+
+            metadata = {
+                "bounds": native_bounds,
+                "bbox": output_bbox,
+                "width": src.width,
+                "height": src.height,
+                "crs": str(native_crs) if native_crs else None,
+                "output_crs": output_crs,
+                "transform": list(src.transform),
+                "count": src.count,
+                "dtypes": src.dtypes,
+                "nodata": src.nodata,
+            }
+
+            # Add scale and offset if available
+            if src.scales and len(src.scales) > 0:
+                metadata["scale"] = src.scales[0]
+            if src.offsets and len(src.offsets) > 0:
+                metadata["offset"] = src.offsets[0]
+
+            return metadata
+
+    except ImportError:
+        # If rasterio is not available, provide a helpful message
+        print(
+            "COG metadata retrieval requires rasterio. Install it with: pip install rasterio"
+        )
+        print(
+            "Alternatively, use the get_cog_metadata method on a MapLibreMap instance "
+            "which uses the JavaScript maplibre-cog-protocol library."
+        )
+        return None
+    except RasterioIOError as e:
+        print(f"Failed to open COG file: {e}")
+        return None
+    except Exception as e:
+        print(f"Failed to retrieve COG metadata: {e}")
+        return None
