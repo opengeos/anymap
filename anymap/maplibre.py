@@ -1223,7 +1223,7 @@ class MapLibreMap(MapWidget):
             before_id: Optional layer ID to insert this layer before.
             titiler_endpoint: Optional TiTiler endpoint URL. If None, checks COG CRS
                 and uses TiTiler automatically for non-EPSG:3857 COGs. Set to a TiTiler
-                URL (e.g., "https://titiler.xyz") to force using TiTiler.
+                URL (e.g., "https://giswqs-titiler-endpoint.hf.space") to force using TiTiler.
             fit_bounds: If True, automatically fit map bounds to COG extent.
             **kwargs: Additional parameters passed to TiTiler (e.g., rescale, colormap,
                 bidx for band selection).
@@ -1240,7 +1240,7 @@ class MapLibreMap(MapWidget):
             >>> m.add_cog_layer(
             ...     "cog3",
             ...     "https://example.com/data.tif",
-            ...     titiler_endpoint="https://titiler.xyz",
+            ...     titiler_endpoint="https://giswqs-titiler-endpoint.hf.space",
             ...     rescale="0,255",
             ...     colormap="viridis"
             ... )
