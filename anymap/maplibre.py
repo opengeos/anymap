@@ -91,6 +91,7 @@ class MapLibreMap(MapWidget):
     _terra_draw_enabled = traitlets.Bool(False).tag(sync=True)
     _layer_dict = traitlets.Dict().tag(sync=True)
     clicked = traitlets.Dict().tag(sync=True)
+    _deckgl_layers = traitlets.Dict().tag(sync=True)
 
     # Define the JavaScript module path
     _esm = _esm_maplibre
@@ -2025,3 +2026,247 @@ class MapLibreMap(MapWidget):
         self._controls = current_controls
 
         self.call_js_method("addControl", "basemap_control", control_options)
+
+    def _process_deckgl_props(self, props: Dict[str, Any]) -> Dict[str, Any]:
+        """Process DeckGL properties to handle lambda functions and other non-serializable objects.
+
+        Args:
+            props: Dictionary of DeckGL layer properties.
+
+        Returns:
+            Processed properties dictionary with serializable values.
+        """
+        processed_props = {}
+
+        for key, value in props.items():
+            if callable(value):
+                # Handle lambda functions and other callables
+                if hasattr(value, "__name__") and value.__name__ == "<lambda>":
+                    # For lambda functions, we'll need to convert them to accessor strings
+                    # This is a simplified approach - in practice, you might want to
+                    # inspect the lambda to generate appropriate accessors
+                    processed_props[key] = f"@@=d => d.{key.replace('get', '').lower()}"
+                else:
+                    # For named functions, convert to string representation
+                    processed_props[key] = str(value)
+            else:
+                # Keep other values as-is
+                processed_props[key] = value
+
+        return processed_props
+
+    def add_deckgl_layer(
+        self,
+        layer_id: str,
+        layer_type: str,
+        data: Union[List[Dict], Dict[str, Any]],
+        props: Optional[Dict[str, Any]] = None,
+        visible: bool = True,
+        **kwargs: Any,
+    ) -> None:
+        """Add a DeckGL layer to the map.
+
+        This method adds a DeckGL layer overlay to the MapLibre map. DeckGL provides
+        high-performance visualization of large datasets with WebGL-powered layers.
+
+        Args:
+            layer_id: Unique identifier for the DeckGL layer.
+            layer_type: Type of DeckGL layer (e.g., 'ScatterplotLayer', 'PathLayer', 'GeoJsonLayer').
+            data: Data for the layer. Can be a list of objects or GeoJSON-like structure.
+            props: Layer-specific properties for styling and behavior.
+            visible: Whether the layer should be visible initially.
+            **kwargs: Additional layer properties.
+
+        Example:
+            >>> m = MapLibreMap()
+            >>>
+            >>> # Add a scatterplot layer
+            >>> data = [
+            ...     {"position": [-122.4, 37.8], "radius": 100, "color": [255, 0, 0]},
+            ...     {"position": [-74.0, 40.7], "radius": 150, "color": [0, 255, 0]}
+            ... ]
+            >>> m.add_deckgl_layer(
+            ...     "my_points",
+            ...     "ScatterplotLayer",
+            ...     data,
+            ...     props={
+            ...         "getPosition": "position",
+            ...         "getRadius": "radius",
+            ...         "getFillColor": "color",
+            ...         "pickable": True
+            ...     }
+            ... )
+        """
+        if props is None:
+            props = {}
+
+        # Merge kwargs into props
+        layer_props = {**props, **kwargs}
+
+        # Convert lambda functions to JavaScript-compatible strings
+        layer_props = self._process_deckgl_props(layer_props)
+
+        layer_config = {
+            "id": layer_id,
+            "type": layer_type,
+            "data": data,
+            "props": layer_props,
+            "visible": visible,
+        }
+
+        # Store layer in local state
+        current_layers = dict(self._deckgl_layers)
+        current_layers[layer_id] = layer_config
+        self._deckgl_layers = current_layers
+
+        # Send to JavaScript
+        self.call_js_method("addDeckGLLayer", layer_config)
+
+    def remove_deckgl_layer(self, layer_id: str) -> None:
+        """Remove a DeckGL layer from the map.
+
+        Args:
+            layer_id: Unique identifier of the DeckGL layer to remove.
+        """
+        # Remove from local state
+        if layer_id in self._deckgl_layers:
+            current_layers = dict(self._deckgl_layers)
+            del current_layers[layer_id]
+            self._deckgl_layers = current_layers
+
+        # Send to JavaScript
+        self.call_js_method("removeDeckGLLayer", layer_id)
+
+    def update_deckgl_layer(
+        self,
+        layer_id: str,
+        data: Optional[Union[List[Dict], Dict[str, Any]]] = None,
+        props: Optional[Dict[str, Any]] = None,
+        **kwargs: Any,
+    ) -> None:
+        """Update a DeckGL layer's data or properties.
+
+        Args:
+            layer_id: Unique identifier of the DeckGL layer to update.
+            data: New data for the layer. If None, data is not updated.
+            props: New or updated properties for the layer.
+            **kwargs: Additional layer properties to update.
+        """
+        if layer_id not in self._deckgl_layers:
+            raise ValueError(f"DeckGL layer '{layer_id}' not found")
+
+        # Get current layer config
+        current_layers = dict(self._deckgl_layers)
+        layer_config = current_layers[layer_id].copy()
+
+        # Update data if provided
+        if data is not None:
+            layer_config["data"] = data
+
+        # Update properties if provided
+        if props is not None or kwargs:
+            current_props = layer_config.get("props", {})
+            if props:
+                current_props.update(props)
+            if kwargs:
+                current_props.update(kwargs)
+            # Process the updated props to handle lambda functions
+            layer_config["props"] = self._process_deckgl_props(current_props)
+
+        # Store updated config
+        current_layers[layer_id] = layer_config
+        self._deckgl_layers = current_layers
+
+        # Send to JavaScript
+        self.call_js_method("updateDeckGLLayer", layer_config)
+
+    def set_deckgl_layer_visibility(self, layer_id: str, visible: bool) -> None:
+        """Set the visibility of a DeckGL layer.
+
+        Args:
+            layer_id: Unique identifier of the DeckGL layer.
+            visible: Whether the layer should be visible.
+        """
+        if layer_id in self._deckgl_layers:
+            current_layers = dict(self._deckgl_layers)
+            current_layers[layer_id]["visible"] = visible
+            self._deckgl_layers = current_layers
+
+            # Send to JavaScript
+            self.call_js_method("setDeckGLLayerVisibility", layer_id, visible)
+
+    def get_deckgl_layers(self) -> Dict[str, Dict[str, Any]]:
+        """Get all DeckGL layers currently on the map.
+
+        Returns:
+            Dictionary mapping layer IDs to their configurations.
+        """
+        return dict(self._deckgl_layers)
+
+    def clear_deckgl_layers(self) -> None:
+        """Remove all DeckGL layers from the map."""
+        # Clear local state
+        self._deckgl_layers = {}
+
+        # Send to JavaScript
+        self.call_js_method("clearDeckGLLayers")
+
+    def to_html(
+        self,
+        filename: Optional[str] = None,
+        title: str = "Anymap Export",
+        width: str = "100%",
+        height: str = "600px",
+        **kwargs: Any,
+    ) -> str:
+        """Export the map to a standalone HTML file with DeckGL layers.
+
+        This method extends the base to_html method to include DeckGL layer state.
+
+        Args:
+            filename: Optional filename to save the HTML. If None, returns HTML string.
+            title: Title for the HTML page.
+            width: Width of the map container as CSS string.
+            height: Height of the map container as CSS string.
+            **kwargs: Additional arguments passed to the HTML template.
+
+        Returns:
+            HTML string content of the exported map.
+        """
+        # Get the current map state
+        map_state = {
+            "center": self.center,
+            "zoom": self.zoom,
+            "width": width,
+            "height": height,
+            "style": self.style,
+            "_layers": dict(self._layers),
+            "_sources": dict(self._sources),
+            "_controls": dict(self._controls),
+            "_terrain": dict(self._terrain),
+            "_deckgl_layers": dict(self._deckgl_layers),  # Include DeckGL layers
+        }
+
+        # Add class-specific attributes
+        if hasattr(self, "style"):
+            map_state["style"] = self.style
+        if hasattr(self, "bearing"):
+            map_state["bearing"] = self.bearing
+        if hasattr(self, "pitch"):
+            map_state["pitch"] = self.pitch
+        if hasattr(self, "antialias"):
+            map_state["antialias"] = self.antialias
+        if hasattr(self, "_draw_data"):
+            map_state["_draw_data"] = dict(self._draw_data)
+        if hasattr(self, "_terra_draw_data"):
+            map_state["_terra_draw_data"] = dict(self._terra_draw_data)
+
+        # Generate HTML content
+        html_content = self._generate_html_template(map_state, title, **kwargs)
+
+        # Save to file if filename provided
+        if filename:
+            with open(filename, "w", encoding="utf-8") as f:
+                f.write(html_content)
+
+        return html_content

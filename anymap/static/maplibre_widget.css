@@ -1,6 +1,3 @@
-/* Import MapLibre GL CSS */
-@import url("https://unpkg.com/maplibre-gl@5.5.0/dist/maplibre-gl.css");
-
 /* Widget container styles */
 .anymap-container {
   position: relative;

@@ -339,8 +339,8 @@ class MapCompare(anywidget.AnyWidget):
 
         # Choose CDN URLs based on backend
         if widget_state["backend"] == "maplibre":
-            map_js_url = "https://unpkg.com/maplibre-gl@5.6.1/dist/maplibre-gl.js"
-            map_css_url = "https://unpkg.com/maplibre-gl@5.6.1/dist/maplibre-gl.css"
+            map_js_url = "https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js"
+            map_css_url = "https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css"
             global_var = "maplibregl"
         else:  # mapbox
             map_js_url = "https://api.mapbox.com/mapbox-gl-js/v3.13.0/mapbox-gl.js"
