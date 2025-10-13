@@ -1,4 +1,35 @@
-import maplibregl from "https://cdn.skypack.dev/maplibre-gl@5.5.0";
+// Helper function to process DeckGL properties
+function processDeckGLProps(props) {
+  const processed = {};
+
+  for (const [key, value] of Object.entries(props)) {
+    if (typeof value === 'string') {
+      // Handle different string accessor patterns
+      if (key.startsWith('get') && value !== 'position' && value !== 'color' && !value.startsWith('@@=')) {
+        // Convert simple property names to accessor functions
+        processed[key] = d => d[value];
+      } else if (value === 'position') {
+        // Special case for position accessor
+        processed[key] = d => d.position;
+      } else if (value.startsWith('@@=')) {
+        // Handle JavaScript expressions (from DeckGL backend pattern)
+        try {
+          const expression = value.substring(3); // Remove '@@='
+          processed[key] = new Function('d', `return ${expression}`);
+        } catch (e) {
+          console.warn(`Failed to parse expression: ${value}`, e);
+          processed[key] = value;
+        }
+      } else {
+        processed[key] = value;
+      }
+    } else {
+      processed[key] = value;
+    }
+  }
+
+  return processed;
+}
 
 // Layer Control class
 class LayerControl {
@@ -537,6 +568,28 @@ function render({ model, el }) {
   // Load and register protocols dynamically
   const loadProtocols = async () => {
     try {
+      // Load MapLibre GL JS first
+      if (!window.maplibregl) {
+        const maplibreScript = document.createElement('script');
+        maplibreScript.src = 'https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js';
+
+        await new Promise((resolve, reject) => {
+          maplibreScript.onload = resolve;
+          maplibreScript.onerror = reject;
+          document.head.appendChild(maplibreScript);
+        });
+
+        console.log("MapLibre GL JS loaded successfully");
+      }
+
+      // Load MapLibre GL CSS
+      if (!document.querySelector('link[href*="maplibre-gl.css"]')) {
+        const maplibreCSS = document.createElement('link');
+        maplibreCSS.rel = 'stylesheet';
+        maplibreCSS.href = 'https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css';
+        document.head.appendChild(maplibreCSS);
+      }
+
       // Load COG protocol
       if (!window.MaplibreCOGProtocol) {
         const cogScript = document.createElement('script');
@@ -659,6 +712,20 @@ function render({ model, el }) {
           basemapsCSS.href = 'https://unpkg.com/maplibre-gl-basemaps@0.1.3/lib/basemaps.css';
           document.head.appendChild(basemapsCSS);
         }
+      }
+
+      // Load DeckGL for overlay layers
+      if (!window.deck) {
+        const deckScript = document.createElement('script');
+        deckScript.src = 'https://unpkg.com/deck.gl@9.0.0/dist.min.js';
+
+        await new Promise((resolve, reject) => {
+          deckScript.onload = resolve;
+          deckScript.onerror = reject;
+          document.head.appendChild(deckScript);
+        });
+
+        console.log("DeckGL loaded successfully");
       }
 
       // Register the COG protocol
@@ -916,6 +983,8 @@ function render({ model, el }) {
     el._streetViewObservers = new Map(); // Track Street View mutation observers
     el._streetViewHandlers = new Map(); // Track Street View event handlers
     el._widgetId = widgetId;
+    el._mapReady = false; // Track if map is fully loaded
+    el._pendingCalls = []; // Queue for calls before map is ready
 
     // Restore layers, sources, controls, and projection from model state
     const restoreMapState = () => {
@@ -1455,6 +1524,35 @@ function render({ model, el }) {
         map.resize();
         // Restore state after map is fully loaded
         restoreMapState();
+
+        // Mark map as ready
+        el._mapReady = true;
+        console.log('[DeckGL Debug] Map is now ready!');
+
+        // Check if there are already calls in _js_calls that haven't been processed
+        const existingCalls = model.get("_js_calls") || [];
+        if (existingCalls.length > 0) {
+          console.log(`[DeckGL Debug] Found ${existingCalls.length} existing calls in _js_calls, processing now`);
+          existingCalls.forEach(call => {
+            console.log(`[DeckGL Debug] Processing existing call: ${call.method}`);
+            executeMapMethod(map, call, el);
+          });
+          // Clear them
+          model.set("_js_calls", []);
+          model.save_changes();
+        }
+
+        // Process any pending calls that came in before map was ready
+        if (el._pendingCalls && el._pendingCalls.length > 0) {
+          console.log(`[DeckGL Debug] Processing ${el._pendingCalls.length} pending calls after map load`);
+          el._pendingCalls.forEach(call => {
+            console.log(`[DeckGL Debug] Processing pending call: ${call.method}`);
+            executeMapMethod(map, call, el);
+          });
+          el._pendingCalls = [];
+        } else {
+          console.log('[DeckGL Debug] No pending calls to process');
+        }
       }, 200);
     });
 
@@ -1579,9 +1677,22 @@ function render({ model, el }) {
     // Handle JavaScript method calls from Python
     model.on("change:_js_calls", () => {
       const calls = model.get("_js_calls") || [];
-      calls.forEach(call => {
-        executeMapMethod(map, call, el);
-      });
+      console.log(`[DeckGL Debug] Received ${calls.length} calls from Python. Map ready: ${el._mapReady}`);
+
+      if (el._mapReady) {
+        // Map is ready, execute calls immediately
+        console.log('[DeckGL Debug] Map is ready, executing calls immediately');
+        calls.forEach(call => {
+          console.log(`[DeckGL Debug] Executing call: ${call.method}`);
+          executeMapMethod(map, call, el);
+        });
+      } else {
+        // Map not ready yet, queue the calls
+        console.log(`[DeckGL Debug] Map not ready, queuing ${calls.length} calls`);
+        el._pendingCalls.push(...calls);
+        console.log(`[DeckGL Debug] Total pending calls: ${el._pendingCalls.length}`);
+      }
+
       // Clear the calls after processing
       model.set("_js_calls", []);
       model.save_changes();
@@ -2466,6 +2577,152 @@ function render({ model, el }) {
             }
             break;
 
+          case 'addDeckGLLayer':
+            const deckLayerConfig = args[0];
+            try {
+              // Check if DeckGL is available
+              if (typeof window.deck === 'undefined') {
+                console.error('DeckGL not loaded yet. Waiting for loadProtocols to complete...');
+                // Retry after a short delay
+                setTimeout(() => {
+                  executeMapMethod(map, call, el);
+                }, 100);
+                break;
+              }
+
+              // Initialize DeckGL overlay if not exists
+              if (!el._deckglOverlay) {
+                el._deckglOverlay = new window.deck.MapboxOverlay({
+                  layers: []
+                });
+                map.addControl(el._deckglOverlay);
+                el._deckglLayers = new Map();
+              }
+
+              // Create DeckGL layer
+              const LayerClass = window.deck[deckLayerConfig.type];
+              if (!LayerClass) {
+                console.error(`Unknown DeckGL layer type: ${deckLayerConfig.type}`);
+                break;
+              }
+
+              // Process props to convert string accessors to functions
+              const processedProps = processDeckGLProps(deckLayerConfig.props);
+
+              const deckLayer = new LayerClass({
+                id: deckLayerConfig.id,
+                data: deckLayerConfig.data,
+                visible: deckLayerConfig.visible !== false,
+                ...processedProps
+              });
+
+              // Store layer reference
+              el._deckglLayers.set(deckLayerConfig.id, deckLayer);
+
+              // Update overlay with new layers
+              const allLayers = Array.from(el._deckglLayers.values());
+              el._deckglOverlay.setProps({ layers: allLayers });
+
+              console.log(`Added DeckGL layer: ${deckLayerConfig.id}`);
+            } catch (error) {
+              console.error('Failed to add DeckGL layer:', error);
+            }
+            break;
+
+          case 'removeDeckGLLayer':
+            const deckRemoveLayerId = args[0];
+            try {
+              if (el._deckglLayers && el._deckglLayers.has(deckRemoveLayerId)) {
+                el._deckglLayers.delete(deckRemoveLayerId);
+
+                // Update overlay with remaining layers
+                if (el._deckglOverlay) {
+                  const allLayers = Array.from(el._deckglLayers.values());
+                  el._deckglOverlay.setProps({ layers: allLayers });
+                }
+
+                console.log(`Removed DeckGL layer: ${deckRemoveLayerId}`);
+              }
+            } catch (error) {
+              console.error('Failed to remove DeckGL layer:', error);
+            }
+            break;
+
+          case 'updateDeckGLLayer':
+            const updateLayerConfig = args[0];
+            try {
+              if (el._deckglLayers && el._deckglLayers.has(updateLayerConfig.id)) {
+                // Create updated layer
+                const LayerClass = window.deck[updateLayerConfig.type];
+                if (!LayerClass) {
+                  console.error(`Unknown DeckGL layer type: ${updateLayerConfig.type}`);
+                  break;
+                }
+
+                // Process props to convert string accessors to functions
+                const processedProps = processDeckGLProps(updateLayerConfig.props);
+
+                const updatedLayer = new LayerClass({
+                  id: updateLayerConfig.id,
+                  data: updateLayerConfig.data,
+                  visible: updateLayerConfig.visible !== false,
+                  ...processedProps
+                });
+
+                // Replace layer
+                el._deckglLayers.set(updateLayerConfig.id, updatedLayer);
+
+                // Update overlay
+                if (el._deckglOverlay) {
+                  const allLayers = Array.from(el._deckglLayers.values());
+                  el._deckglOverlay.setProps({ layers: allLayers });
+                }
+
+                console.log(`Updated DeckGL layer: ${updateLayerConfig.id}`);
+              }
+            } catch (error) {
+              console.error('Failed to update DeckGL layer:', error);
+            }
+            break;
+
+          case 'setDeckGLLayerVisibility':
+            const [visLayerId, visible] = args;
+            try {
+              if (el._deckglLayers && el._deckglLayers.has(visLayerId)) {
+                const layer = el._deckglLayers.get(visLayerId);
+                const updatedLayer = layer.clone({ visible });
+                el._deckglLayers.set(visLayerId, updatedLayer);
+
+                // Update overlay
+                if (el._deckglOverlay) {
+                  const allLayers = Array.from(el._deckglLayers.values());
+                  el._deckglOverlay.setProps({ layers: allLayers });
+                }
+
+                console.log(`Set DeckGL layer ${visLayerId} visibility: ${visible}`);
+              }
+            } catch (error) {
+              console.error('Failed to set DeckGL layer visibility:', error);
+            }
+            break;
+
+          case 'clearDeckGLLayers':
+            try {
+              if (el._deckglLayers) {
+                el._deckglLayers.clear();
+
+                // Update overlay with empty layers
+                if (el._deckglOverlay) {
+                  el._deckglOverlay.setProps({ layers: [] });
+                }
+
+                console.log('Cleared all DeckGL layers');
+              }
+            } catch (error) {
+              console.error('Failed to clear DeckGL layers:', error);
+            }
+            break;
+
           default:
             // Try to call the method directly on the map object
             if (typeof map[method] === 'function') {
@@ -2497,6 +2754,18 @@ function render({ model, el }) {
       }
       if (el._terraDrawControl) {
         el._terraDrawControl = null;
+      }
+      if (el._deckglOverlay) {
+        try {
+          map.removeControl(el._deckglOverlay);
+        } catch (e) {
+          console.warn('Failed to remove DeckGL overlay:', e);
+        }
+        el._deckglOverlay = null;
+      }
+      if (el._deckglLayers) {
+        el._deckglLayers.clear();
+        el._deckglLayers = null;
       }
       if (el._streetViewPlugins) {
         el._streetViewPlugins.clear();

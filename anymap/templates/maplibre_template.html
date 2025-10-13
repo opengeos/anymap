@@ -9,6 +9,7 @@
             href="https://unpkg.com/maplibre-gl@5.6.1/dist/maplibre-gl.css"
             rel="stylesheet"
         />
+        <script src="https://unpkg.com/deck.gl@9.0.0/dist.min.js"></script>
         <style>
             body {{
                 margin: 0;
@@ -946,6 +947,85 @@
                     console.warn(`Failed to add control ${{controlKey}}:`, error);
                 }}
             }});
+
+            // Initialize DeckGL layers if present
+            const deckglLayers = mapState._deckgl_layers || {{}};
+            if (Object.keys(deckglLayers).length > 0) {{
+                // Helper function to process DeckGL properties
+                function processDecKGLProps(props) {{
+                    const processed = {{}};
+
+                    for (const [key, value] of Object.entries(props)) {{
+                        if (typeof value === 'string') {{
+                            // Handle different string accessor patterns
+                            if (key.startsWith('get') && value !== 'position' && value !== 'color' && !value.startsWith('@@=')) {{
+                                // Convert simple property names to accessor functions
+                                processed[key] = d => d[value];
+                            }} else if (value === 'position') {{
+                                // Special case for position accessor
+                                processed[key] = d => d.position;
+                            }} else if (value.startsWith('@@=')) {{
+                                // Handle JavaScript expressions
+                                try {{
+                                    const expression = value.substring(3); // Remove '@@='
+                                    processed[key] = new Function('d', `return ${{expression}}`);
+                                }} catch (e) {{
+                                    console.warn(`Failed to parse expression: ${{value}}`, e);
+                                    processed[key] = value;
+                                }}
+                            }} else {{
+                                processed[key] = value;
+                            }}
+                        }} else {{
+                            processed[key] = value;
+                        }}
+                    }}
+
+                    return processed;
+                }}
+
+                map.on('load', function() {{
+                    try {{
+                        // Create DeckGL overlay
+                        const layers = [];
+
+                        Object.entries(deckglLayers).forEach(([layerId, layerConfig]) => {{
+                            try {{
+                                const LayerClass = deck[layerConfig.type];
+                                if (!LayerClass) {{
+                                    console.error(`Unknown DeckGL layer type: ${{layerConfig.type}}`);
+                                    return;
+                                }}
+
+                                // Process props to convert string accessors to functions
+                                const processedProps = processDecKGLProps(layerConfig.props);
+
+                                const deckLayer = new LayerClass({{
+                                    id: layerConfig.id,
+                                    data: layerConfig.data,
+                                    visible: layerConfig.visible !== false,
+                                    ...processedProps
+                                }});
+
+                                layers.push(deckLayer);
+                                console.log(`Added DeckGL layer: ${{layerConfig.id}}`);
+                            }} catch (error) {{
+                                console.error(`Failed to create DeckGL layer ${{layerId}}:`, error);
+                            }}
+                        }});
+
+                        if (layers.length > 0) {{
+                            const deckglOverlay = new deck.MapboxOverlay({{
+                                layers: layers
+                            }});
+                            map.addControl(deckglOverlay);
+                            console.log(`Added ${{layers.length}} DeckGL layers to map`);
+                        }}
+                    }} catch (error) {{
+                        console.error('Failed to initialize DeckGL layers:', error);
+                    }}
+                }});
+            }}
 
             // Log map events for debugging
             map.on('click', function(e) {{
