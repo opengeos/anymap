@@ -1,5 +1,5 @@
 // Helper function to process DeckGL properties
-function processDecKGLProps(props) {
+function processDeckGLProps(props) {
   const processed = {};
 
   for (const [key, value] of Object.entries(props)) {
@@ -2607,7 +2607,7 @@ function render({ model, el }) {
               }
 
               // Process props to convert string accessors to functions
-              const processedProps = processDecKGLProps(deckLayerConfig.props);
+              const processedProps = processDeckGLProps(deckLayerConfig.props);
 
               const deckLayer = new LayerClass({
                 id: deckLayerConfig.id,
@@ -2660,7 +2660,7 @@ function render({ model, el }) {
                 }
 
                 // Process props to convert string accessors to functions
-                const processedProps = processDecKGLProps(updateLayerConfig.props);
+                const processedProps = processDeckGLProps(updateLayerConfig.props);
 
                 const updatedLayer = new LayerClass({
                   id: updateLayerConfig.id,
