@@ -751,6 +751,27 @@ function render({ model, el }) {
         console.log("DeckGL loaded successfully");
       }
 
+      // Load loaders.gl LASLoader using ESM CDN
+      if (!window._loadersGLLASLoader) {
+        try {
+          // Try using esm.sh which properly handles ES modules
+          const lasModule = await import('https://esm.sh/@loaders.gl/las@latest');
+          if (lasModule.LASLoader) {
+            window._loadersGLLASLoader = lasModule.LASLoader;
+            console.log('✓ Loaded LASLoader via esm.sh:', window._loadersGLLASLoader);
+          } else {
+            console.warn('LASLoader not found in esm.sh module, trying cdn.skypack.dev');
+            // Try skypack as fallback
+            const lasModule2 = await import('https://cdn.skypack.dev/@loaders.gl/las@latest');
+            window._loadersGLLASLoader = lasModule2.LASLoader;
+            console.log('✓ Loaded LASLoader via skypack:', window._loadersGLLASLoader);
+          }
+        } catch (error) {
+          console.error('Failed to load LASLoader via ESM CDNs:', error);
+          console.warn('LAZ files will not be supported without LASLoader');
+        }
+      }
+
       // Register the COG protocol
       if (window.MaplibreCOGProtocol && window.MaplibreCOGProtocol.cogProtocol) {
         // Check if protocol is already registered to avoid duplicates
@@ -2632,12 +2653,34 @@ function render({ model, el }) {
               // Process props to convert string accessors to functions
               const processedProps = processDeckGLProps(deckLayerConfig.props);
 
-              const deckLayer = new LayerClass({
+              // Add LASLoader for PointCloudLayer if loaders.gl is available
+              const layerOptions = {
                 id: deckLayerConfig.id,
                 data: deckLayerConfig.data,
                 visible: deckLayerConfig.visible !== false,
                 ...processedProps
-              });
+              };
+
+              // If this is a PointCloudLayer, add LASLoader if available
+              if (deckLayerConfig.type === 'PointCloudLayer') {
+                if (window._loadersGLLASLoader) {
+                  layerOptions.loaders = [window._loadersGLLASLoader];
+                  // Add fp64 support for LAZ files to fix floating point precision issues
+                  // This is critical for proper 3D elevation rendering with LNGLAT coordinates
+                  if (!layerOptions.loadOptions) {
+                    layerOptions.loadOptions = {};
+                  }
+                  if (!layerOptions.loadOptions.las) {
+                    layerOptions.loadOptions.las = {};
+                  }
+                  layerOptions.loadOptions.las.fp64 = true;
+                  console.log('✓ Added LASLoader to PointCloudLayer with fp64 precision (from ESM)');
+                } else {
+                  console.warn('⚠ LASLoader not available, LAZ files may not load');
+                }
+              }
+
+              const deckLayer = new LayerClass(layerOptions);
 
               // Store layer reference
               el._deckglLayers.set(deckLayerConfig.id, deckLayer);
@@ -2685,12 +2728,32 @@ function render({ model, el }) {
                 // Process props to convert string accessors to functions
                 const processedProps = processDeckGLProps(updateLayerConfig.props);
 
-                const updatedLayer = new LayerClass({
+                // Add LASLoader for PointCloudLayer if loaders.gl is available
+                const layerOptions = {
                   id: updateLayerConfig.id,
                   data: updateLayerConfig.data,
                   visible: updateLayerConfig.visible !== false,
                   ...processedProps
-                });
+                };
+
+                // If this is a PointCloudLayer, add LASLoader if available
+                if (updateLayerConfig.type === 'PointCloudLayer') {
+                  if (window._loadersGLLASLoader) {
+                    layerOptions.loaders = [window._loadersGLLASLoader];
+                    // Add fp64 support for LAZ files to fix floating point precision issues
+                    // This is critical for proper 3D elevation rendering with LNGLAT coordinates
+                    if (!layerOptions.loadOptions) {
+                      layerOptions.loadOptions = {};
+                    }
+                    if (!layerOptions.loadOptions.las) {
+                      layerOptions.loadOptions.las = {};
+                    }
+                    layerOptions.loadOptions.las.fp64 = true;
+                    console.log('✓ Added LASLoader to PointCloudLayer with fp64 precision (update, from ESM)');
+                  }
+                }
+
+                const updatedLayer = new LayerClass(layerOptions);
 
                 // Replace layer
                 el._deckglLayers.set(updateLayerConfig.id, updatedLayer);

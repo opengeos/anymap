@@ -10,6 +10,9 @@
             rel="stylesheet"
         />
         <script src="https://unpkg.com/deck.gl@9.0.0/dist.min.js"></script>
+        <!-- Loaders.gl for LAZ/LAS file support -->
+        <script src="https://unpkg.com/@loaders.gl/core@4.2.0/dist/dist.min.js"></script>
+        <script src="https://unpkg.com/@loaders.gl/las@4.2.0/dist/dist.min.js"></script>
         <style>
             body {{
                 margin: 0;
@@ -957,13 +960,36 @@
 
                     for (const [key, value] of Object.entries(props)) {{
                         if (typeof value === 'string') {{
+                            // Handle coordinate system constants
+                            if (key === 'coordinateSystem' && value.startsWith('COORDINATE_SYSTEM.')) {{
+                                try {{
+                                    // Convert string like "COORDINATE_SYSTEM.METER_OFFSETS" to actual constant
+                                    const constantName = value.replace('COORDINATE_SYSTEM.', '');
+                                    if (deck && deck.COORDINATE_SYSTEM && deck.COORDINATE_SYSTEM[constantName] !== undefined) {{
+                                        processed[key] = deck.COORDINATE_SYSTEM[constantName];
+                                        console.log(`Converted coordinate system: ${{value}} -> ${{deck.COORDINATE_SYSTEM[constantName]}}`);
+                                    }} else {{
+                                        console.warn(`Unknown coordinate system: ${{value}}, using as-is`);
+                                        processed[key] = value;
+                                    }}
+                                }} catch (e) {{
+                                    console.warn(`Failed to parse coordinate system: ${{value}}`, e);
+                                    processed[key] = value;
+                                }}
+                            }}
                             // Handle different string accessor patterns
-                            if (key.startsWith('get') && value !== 'position' && value !== 'color' && !value.startsWith('@@=')) {{
+                            else if (key.startsWith('get') && !value.startsWith('@@=')) {{
                                 // Convert simple property names to accessor functions
-                                processed[key] = d => d[value];
-                            }} else if (value === 'position') {{
-                                // Special case for position accessor
-                                processed[key] = d => d.position;
+                                // Special cases for common property names
+                                if (value === 'position') {{
+                                    processed[key] = d => d.position;
+                                }} else if (value === 'color') {{
+                                    processed[key] = d => d.color;
+                                }} else if (value === 'normal') {{
+                                    processed[key] = d => d.normal;
+                                }} else {{
+                                    processed[key] = d => d[value];
+                                }}
                             }} else if (value.startsWith('@@=')) {{
                                 // Handle JavaScript expressions
                                 try {{
@@ -1000,12 +1026,30 @@
                                 // Process props to convert string accessors to functions
                                 const processedProps = processDecKGLProps(layerConfig.props);
 
-                                const deckLayer = new LayerClass({{
+                                // Add LASLoader for PointCloudLayer if loaders.gl is available
+                                const layerOptions = {{
                                     id: layerConfig.id,
                                     data: layerConfig.data,
                                     visible: layerConfig.visible !== false,
                                     ...processedProps
-                                }});
+                                }};
+
+                                // If this is a PointCloudLayer and loaders.gl LAS is available, add the loader
+                                if (layerConfig.type === 'PointCloudLayer' && typeof loaders !== 'undefined' && loaders.LASLoader) {{
+                                    layerOptions.loaders = [loaders.LASLoader];
+                                    // Add fp64 support for LAZ files to fix floating point precision issues
+                                    // This is critical for proper 3D elevation rendering with LNGLAT coordinates
+                                    if (!layerOptions.loadOptions) {{
+                                        layerOptions.loadOptions = {{}};
+                                    }}
+                                    if (!layerOptions.loadOptions.las) {{
+                                        layerOptions.loadOptions.las = {{}};
+                                    }}
+                                    layerOptions.loadOptions.las.fp64 = true;
+                                    console.log('Added LASLoader to PointCloudLayer with fp64 precision');
+                                }}
+
+                                const deckLayer = new LayerClass(layerOptions);
 
                                 layers.push(deckLayer);
                                 console.log(`Added DeckGL layer: ${{layerConfig.id}}`);
