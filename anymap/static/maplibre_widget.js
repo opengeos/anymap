@@ -4,13 +4,36 @@ function processDeckGLProps(props) {
 
   for (const [key, value] of Object.entries(props)) {
     if (typeof value === 'string') {
+      // Handle coordinate system constants
+      if (key === 'coordinateSystem' && value.startsWith('COORDINATE_SYSTEM.')) {
+        try {
+          // Convert string like "COORDINATE_SYSTEM.METER_OFFSETS" to actual constant
+          const constantName = value.replace('COORDINATE_SYSTEM.', '');
+          if (window.deck && window.deck.COORDINATE_SYSTEM && window.deck.COORDINATE_SYSTEM[constantName] !== undefined) {
+            processed[key] = window.deck.COORDINATE_SYSTEM[constantName];
+            console.log(`Converted coordinate system: ${value} -> ${window.deck.COORDINATE_SYSTEM[constantName]}`);
+          } else {
+            console.warn(`Unknown coordinate system: ${value}, using as-is`);
+            processed[key] = value;
+          }
+        } catch (e) {
+          console.warn(`Failed to parse coordinate system: ${value}`, e);
+          processed[key] = value;
+        }
+      }
       // Handle different string accessor patterns
-      if (key.startsWith('get') && value !== 'position' && value !== 'color' && !value.startsWith('@@=')) {
+      else if (key.startsWith('get') && !value.startsWith('@@=')) {
         // Convert simple property names to accessor functions
-        processed[key] = d => d[value];
-      } else if (value === 'position') {
-        // Special case for position accessor
-        processed[key] = d => d.position;
+        // Special cases for common property names
+        if (value === 'position') {
+          processed[key] = d => d.position;
+        } else if (value === 'color') {
+          processed[key] = d => d.color;
+        } else if (value === 'normal') {
+          processed[key] = d => d.normal;
+        } else {
+          processed[key] = d => d[value];
+        }
       } else if (value.startsWith('@@=')) {
         // Handle JavaScript expressions (from DeckGL backend pattern)
         try {
@@ -726,6 +749,27 @@ function render({ model, el }) {
         });
 
         console.log("DeckGL loaded successfully");
+      }
+
+      // Load loaders.gl LASLoader using ESM CDN
+      if (!window._loadersGLLASLoader) {
+        try {
+          // Try using esm.sh which properly handles ES modules
+          const lasModule = await import('https://esm.sh/@loaders.gl/las@latest');
+          if (lasModule.LASLoader) {
+            window._loadersGLLASLoader = lasModule.LASLoader;
+            console.log('✓ Loaded LASLoader via esm.sh:', window._loadersGLLASLoader);
+          } else {
+            console.warn('LASLoader not found in esm.sh module, trying cdn.skypack.dev');
+            // Try skypack as fallback
+            const lasModule2 = await import('https://cdn.skypack.dev/@loaders.gl/las@latest');
+            window._loadersGLLASLoader = lasModule2.LASLoader;
+            console.log('✓ Loaded LASLoader via skypack:', window._loadersGLLASLoader);
+          }
+        } catch (error) {
+          console.error('Failed to load LASLoader via ESM CDNs:', error);
+          console.warn('LAZ files will not be supported without LASLoader');
+        }
       }
 
       // Register the COG protocol
@@ -2609,12 +2653,34 @@ function render({ model, el }) {
               // Process props to convert string accessors to functions
               const processedProps = processDeckGLProps(deckLayerConfig.props);
 
-              const deckLayer = new LayerClass({
+              // Add LASLoader for PointCloudLayer if loaders.gl is available
+              const layerOptions = {
                 id: deckLayerConfig.id,
                 data: deckLayerConfig.data,
                 visible: deckLayerConfig.visible !== false,
                 ...processedProps
-              });
+              };
+
+              // If this is a PointCloudLayer, add LASLoader if available
+              if (deckLayerConfig.type === 'PointCloudLayer') {
+                if (window._loadersGLLASLoader) {
+                  layerOptions.loaders = [window._loadersGLLASLoader];
+                  // Add fp64 support for LAZ files to fix floating point precision issues
+                  // This is critical for proper 3D elevation rendering with LNGLAT coordinates
+                  if (!layerOptions.loadOptions) {
+                    layerOptions.loadOptions = {};
+                  }
+                  if (!layerOptions.loadOptions.las) {
+                    layerOptions.loadOptions.las = {};
+                  }
+                  layerOptions.loadOptions.las.fp64 = true;
+                  console.log('✓ Added LASLoader to PointCloudLayer with fp64 precision (from ESM)');
+                } else {
+                  console.warn('⚠ LASLoader not available, LAZ files may not load');
+                }
+              }
+
+              const deckLayer = new LayerClass(layerOptions);
 
               // Store layer reference
               el._deckglLayers.set(deckLayerConfig.id, deckLayer);
@@ -2662,12 +2728,32 @@ function render({ model, el }) {
                 // Process props to convert string accessors to functions
                 const processedProps = processDeckGLProps(updateLayerConfig.props);
 
-                const updatedLayer = new LayerClass({
+                // Add LASLoader for PointCloudLayer if loaders.gl is available
+                const layerOptions = {
                   id: updateLayerConfig.id,
                   data: updateLayerConfig.data,
                   visible: updateLayerConfig.visible !== false,
                   ...processedProps
-                });
+                };
+
+                // If this is a PointCloudLayer, add LASLoader if available
+                if (updateLayerConfig.type === 'PointCloudLayer') {
+                  if (window._loadersGLLASLoader) {
+                    layerOptions.loaders = [window._loadersGLLASLoader];
+                    // Add fp64 support for LAZ files to fix floating point precision issues
+                    // This is critical for proper 3D elevation rendering with LNGLAT coordinates
+                    if (!layerOptions.loadOptions) {
+                      layerOptions.loadOptions = {};
+                    }
+                    if (!layerOptions.loadOptions.las) {
+                      layerOptions.loadOptions.las = {};
+                    }
+                    layerOptions.loadOptions.las.fp64 = true;
+                    console.log('✓ Added LASLoader to PointCloudLayer with fp64 precision (update, from ESM)');
+                  }
+                }
+
+                const updatedLayer = new LayerClass(layerOptions);
 
                 // Replace layer
                 el._deckglLayers.set(updateLayerConfig.id, updatedLayer);
