@@ -4,13 +4,36 @@ function processDeckGLProps(props) {
 
   for (const [key, value] of Object.entries(props)) {
     if (typeof value === 'string') {
+      // Handle coordinate system constants
+      if (key === 'coordinateSystem' && value.startsWith('COORDINATE_SYSTEM.')) {
+        try {
+          // Convert string like "COORDINATE_SYSTEM.METER_OFFSETS" to actual constant
+          const constantName = value.replace('COORDINATE_SYSTEM.', '');
+          if (window.deck && window.deck.COORDINATE_SYSTEM && window.deck.COORDINATE_SYSTEM[constantName] !== undefined) {
+            processed[key] = window.deck.COORDINATE_SYSTEM[constantName];
+            console.log(`Converted coordinate system: ${value} -> ${window.deck.COORDINATE_SYSTEM[constantName]}`);
+          } else {
+            console.warn(`Unknown coordinate system: ${value}, using as-is`);
+            processed[key] = value;
+          }
+        } catch (e) {
+          console.warn(`Failed to parse coordinate system: ${value}`, e);
+          processed[key] = value;
+        }
+      }
       // Handle different string accessor patterns
-      if (key.startsWith('get') && value !== 'position' && value !== 'color' && !value.startsWith('@@=')) {
+      else if (key.startsWith('get') && !value.startsWith('@@=')) {
         // Convert simple property names to accessor functions
-        processed[key] = d => d[value];
-      } else if (value === 'position') {
-        // Special case for position accessor
-        processed[key] = d => d.position;
+        // Special cases for common property names
+        if (value === 'position') {
+          processed[key] = d => d.position;
+        } else if (value === 'color') {
+          processed[key] = d => d.color;
+        } else if (value === 'normal') {
+          processed[key] = d => d.normal;
+        } else {
+          processed[key] = d => d[value];
+        }
       } else if (value.startsWith('@@=')) {
         // Handle JavaScript expressions (from DeckGL backend pattern)
         try {
