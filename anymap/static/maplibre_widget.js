@@ -689,7 +689,7 @@ function render({ model, el }) {
         if (
           !window.maplibregl &&
           typeof window.define === 'function' &&
-          window.define && window.define.amd &&
+          window.define.amd &&
           typeof window.require === 'function'
         ) {
           // Fallback for environments (e.g. VS Code notebooks) that force AMD loading
