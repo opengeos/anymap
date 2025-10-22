@@ -465,18 +465,38 @@ class LayerControl {
     opacity.title = `Opacity: ${Math.round(state.opacity * 100)}%`;
 
     // Track when user starts interacting with slider
-    opacity.addEventListener('mousedown', () => {
+    const startSliderInteraction = () => {
       this.userInteractingWithSlider = true;
-    });
-    opacity.addEventListener('touchstart', () => {
-      this.userInteractingWithSlider = true;
-    });
 
-    // Track when user stops interacting with slider
+      // Define handlers to end interaction
+      const endInteraction = () => {
+        this.userInteractingWithSlider = false;
+        document.removeEventListener('mouseup', endInteraction);
+        document.removeEventListener('touchend', endInteraction);
+        document.removeEventListener('mouseleave', endInteraction);
+        document.removeEventListener('touchcancel', endInteraction);
+      };
+
+      document.addEventListener('mouseup', endInteraction);
+      document.addEventListener('touchend', endInteraction);
+      document.addEventListener('mouseleave', endInteraction);
+      document.addEventListener('touchcancel', endInteraction);
+    };
+
+    opacity.addEventListener('mousedown', startSliderInteraction);
+    opacity.addEventListener('touchstart', startSliderInteraction);
+
+    // Track when user stops interacting with slider (in case pointer stays on slider)
     opacity.addEventListener('mouseup', () => {
       this.userInteractingWithSlider = false;
     });
     opacity.addEventListener('touchend', () => {
+      this.userInteractingWithSlider = false;
+    });
+    opacity.addEventListener('mouseleave', () => {
+      this.userInteractingWithSlider = false;
+    });
+    opacity.addEventListener('touchcancel', () => {
       this.userInteractingWithSlider = false;
     });
 
