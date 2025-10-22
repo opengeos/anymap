@@ -64,6 +64,16 @@ class LayerControl {
     this.layerStates = options.layerStates || {};
     this.targetLayers = options.layers || Object.keys(this.layerStates);
     this.userInteractingWithSlider = false;
+    this.panelWidth = options.panelWidth || 320;
+    this.minPanelWidth = options.panelMinWidth || 240;
+    this.maxPanelWidth = options.panelMaxWidth || 420;
+    this.styleEditors = new Map();
+    this.originalLayerStyles = new Map();
+    this.activeStyleEditor = null;
+    this.widthFrame = null;
+    this.widthDragRectWidth = null;
+    this.widthDragStartX = null;
+    this.widthDragStartWidth = null;
 
     // Create control container
     this.container = document.createElement('div');
@@ -83,6 +93,7 @@ class LayerControl {
     // Create panel
     this.panel = document.createElement('div');
     this.panel.className = 'layer-control-panel';
+    this.applyPanelWidth(this.panelWidth, true);
     if (!this.collapsed) {
       this.panel.classList.add('expanded');
     }
@@ -90,8 +101,125 @@ class LayerControl {
     // Add header
     const header = document.createElement('div');
     header.className = 'layer-control-panel-header';
-    header.textContent = 'Layers';
+
+    const title = document.createElement('span');
+    title.className = 'layer-control-panel-title';
+    title.textContent = 'Layers';
+    header.appendChild(title);
+
+    const widthControl = document.createElement('label');
+    widthControl.className = 'layer-control-width-control';
+    widthControl.title = 'Adjust layer panel width';
+
+    const widthLabel = document.createElement('span');
+    widthLabel.textContent = 'Width';
+    widthControl.appendChild(widthLabel);
+
+    this.isWidthSliderActive = false;
+
+    const widthSlider = document.createElement('div');
+    widthSlider.className = 'layer-control-width-slider';
+    widthSlider.setAttribute('role', 'slider');
+    widthSlider.setAttribute('aria-valuemin', String(this.minPanelWidth));
+    widthSlider.setAttribute('aria-valuemax', String(this.maxPanelWidth));
+    widthSlider.setAttribute('aria-valuenow', String(this.panelWidth));
+    widthSlider.setAttribute('aria-valuestep', '10');
+    widthSlider.setAttribute('aria-label', 'Layer panel width');
+    widthSlider.tabIndex = 0;
+
+    const widthTrack = document.createElement('div');
+    widthTrack.className = 'layer-control-width-track';
+    const widthThumb = document.createElement('div');
+    widthThumb.className = 'layer-control-width-thumb';
+
+    widthSlider.appendChild(widthTrack);
+    widthSlider.appendChild(widthThumb);
+
+    widthSlider.addEventListener('pointerdown', (event) => {
+      event.preventDefault();
+      const rect = widthSlider.getBoundingClientRect();
+      this.widthDragRectWidth = rect.width || 1;
+      this.widthDragStartX = event.clientX;
+      this.widthDragStartWidth = this.panelWidth;
+      this.isWidthSliderActive = true;
+      widthSlider.setPointerCapture(event.pointerId);
+      this.updateWidthFromPointer(event, true);
+    });
+
+    widthSlider.addEventListener('pointermove', (event) => {
+      if (!this.isWidthSliderActive) {
+        return;
+      }
+      this.updateWidthFromPointer(event);
+    });
+
+    const endPointerDrag = (event) => {
+      if (!this.isWidthSliderActive) {
+        return;
+      }
+      if (event.pointerId !== undefined) {
+        try {
+          widthSlider.releasePointerCapture(event.pointerId);
+        } catch (error) {
+          // Ignore release errors if pointer capture was lost
+        }
+      }
+      this.isWidthSliderActive = false;
+      this.widthDragRectWidth = null;
+      this.widthDragStartX = null;
+      this.widthDragStartWidth = null;
+      this.updateWidthDisplay();
+    };
+
+    widthSlider.addEventListener('pointerup', endPointerDrag);
+    widthSlider.addEventListener('pointercancel', endPointerDrag);
+    widthSlider.addEventListener('lostpointercapture', endPointerDrag);
+
+    const widthValue = document.createElement('span');
+    widthValue.className = 'layer-control-width-value';
+
+    widthControl.appendChild(widthSlider);
+    widthControl.appendChild(widthValue);
+    header.appendChild(widthControl);
+
     this.panel.appendChild(header);
+    this.widthSliderEl = widthSlider;
+    this.widthThumbEl = widthThumb;
+    this.widthValueEl = widthValue;
+    this.updateWidthDisplay();
+
+    widthSlider.addEventListener('keydown', (event) => {
+      let handled = true;
+      const step = event.shiftKey ? 20 : 10;
+      switch (event.key) {
+        case 'ArrowLeft':
+        case 'ArrowDown':
+          this.applyPanelWidth(this.panelWidth - step, true);
+          break;
+        case 'ArrowRight':
+        case 'ArrowUp':
+          this.applyPanelWidth(this.panelWidth + step, true);
+          break;
+        case 'Home':
+          this.applyPanelWidth(this.minPanelWidth, true);
+          break;
+        case 'End':
+          this.applyPanelWidth(this.maxPanelWidth, true);
+          break;
+        case 'PageUp':
+          this.applyPanelWidth(this.panelWidth + 50, true);
+          break;
+        case 'PageDown':
+          this.applyPanelWidth(this.panelWidth - 50, true);
+          break;
+        default:
+          handled = false;
+      }
+      if (handled) {
+        event.preventDefault();
+        this.updateWidthDisplay();
+      }
+    });
 
     // Build layer items
     this.buildLayerItems();
@@ -122,6 +250,7 @@ class LayerControl {
     // Clear existing items first (in case of rebuild)
     const existingItems = this.panel.querySelectorAll('.layer-control-item');
     existingItems.forEach(item => item.remove());
+    this.styleEditors.clear();
 
     // Add items for all layers in our state
     Object.entries(this.layerStates).forEach(([layerId, state]) => {
@@ -336,6 +465,10 @@ class LayerControl {
           opacitySlider.value = opacity;
           opacitySlider.title = `Opacity: ${Math.round(opacity * 100)}%`;
         }
+
+        if (this.styleEditors.has(layerId)) {
+          this.updateStyleEditorValues(layerId);
+        }
       }
     });
   }
@@ -435,6 +568,9 @@ class LayerControl {
     item.className = 'layer-control-item';
     item.setAttribute('data-layer-id', layerId);
 
+    const row = document.createElement('div');
+    row.className = 'layer-control-row';
+
     // Checkbox for visibility
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
@@ -463,6 +599,7 @@ class LayerControl {
     opacity.step = '0.01';
     opacity.value = state.opacity;
     opacity.title = `Opacity: ${Math.round(state.opacity * 100)}%`;
+    opacity.dataset.role = 'opacity-slider';
 
     // Track when user starts interacting with slider
     const startSliderInteraction = () => {
@@ -508,12 +645,639 @@ class LayerControl {
       }
       opacity.title = `Opacity: ${Math.round(opacity.value * 100)}%`;
     });
+    opacity.addEventListener('change', () => {
+      if (layerId !== 'Background') {
+        const payload = { opacity: parseFloat(opacity.value) };
+        this.notifyStyleChange(layerId, payload);
+      }
+    });
 
-    item.appendChild(checkbox);
-    item.appendChild(name);
-    item.appendChild(opacity);
+    row.appendChild(checkbox);
+    row.appendChild(name);
+    row.appendChild(opacity);
+
+    const styleButton = this.createStyleButton(layerId, state);
+    if (styleButton) {
+      row.appendChild(styleButton);
+    }
+
+    item.appendChild(row);
+
+    if (styleButton && !styleButton.disabled) {
+      const styleEditor = this.createStyleEditor(layerId, state);
+      if (styleEditor) {
+        item.appendChild(styleEditor);
+        this.styleEditors.set(layerId, styleEditor);
+        this.updateStyleEditorValues(layerId);
+      }
+    }
 
     this.panel.appendChild(item);
+  }
+
+  hasStyleOptions(layerId) {
+    if (!this.map || layerId === 'Background') {
+      return false;
+    }
+    try {
+      const layer = this.map.getLayer(layerId);
+      if (!layer) {
+        return false;
+      }
+      return ['fill', 'line', 'circle', 'symbol', 'raster'].includes(layer.type);
+    } catch (error) {
+      console.warn(`Could not read layer type for ${layerId}:`, error);
+      return false;
+    }
+  }
+
+  createStyleButton(layerId, state) {
+    const hasOptions = this.hasStyleOptions(layerId);
+    if (!hasOptions && layerId !== 'Background') {
+      return null;
+    }
+
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'layer-control-style-button';
+    button.title = `Style ${state.name || layerId}`;
+    button.setAttribute('aria-label', `Style ${state.name || layerId}`);
+    button.innerHTML = '&#9881;';
+    if (!hasOptions) {
+      button.disabled = true;
+      button.title = 'Styling not available for Background layers';
+    } else {
+      button.addEventListener('click', (event) => {
+        event.stopPropagation();
+        this.toggleStyleEditor(layerId);
+      });
+    }
+    return button;
+  }
+
+  createStyleEditor(layerId, state) {
+    if (!this.hasStyleOptions(layerId)) {
+      return null;
+    }
+
+    const mapLayer = this.map.getLayer(layerId);
+    if (!mapLayer) {
+      return null;
+    }
+
+    this.cacheOriginalLayerStyle(layerId, mapLayer);
+
+    const editor = document.createElement('div');
+    editor.className = 'layer-control-style-editor';
+    editor.dataset.layerId = layerId;
+
+    const header = document.createElement('div');
+    header.className = 'layer-control-style-header';
+
+    const title = document.createElement('span');
+    title.textContent = `Style ${state.name || layerId}`;
+    header.appendChild(title);
+
+    const closeBtn = document.createElement('button');
+    closeBtn.type = 'button';
+    closeBtn.className = 'layer-control-style-close';
+    closeBtn.innerHTML = '&times;';
+    closeBtn.title = 'Close style editor';
+    closeBtn.addEventListener('click', (event) => {
+      event.stopPropagation();
+      this.toggleStyleEditor(layerId, false);
+    });
+    header.appendChild(closeBtn);
+
+    editor.appendChild(header);
+
+    const controlsContainer = document.createElement('div');
+    controlsContainer.className = 'layer-control-style-controls';
+
+    const paint = mapLayer.paint || {};
+    const type = mapLayer.type;
+
+    const appendControl = (control) => {
+      if (control) {
+        controlsContainer.appendChild(control);
+      }
+    };
+
+    switch (type) {
+      case 'fill':
+        appendControl(this.createColorControl('Fill Color', layerId, 'fill-color', paint['fill-color'] || '#3388ff'));
+        appendControl(this.createSliderControl('Fill Opacity', layerId, 'fill-opacity', paint['fill-opacity'] ?? 0.5, 0, 1, 0.05));
+        appendControl(this.createColorControl('Outline Color', layerId, 'fill-outline-color', paint['fill-outline-color'] || '#3388ff'));
+        break;
+      case 'line':
+        appendControl(this.createColorControl('Line Color', layerId, 'line-color', paint['line-color'] || '#3388ff'));
+        appendControl(this.createSliderControl('Line Width', layerId, 'line-width', paint['line-width'] ?? 2, 0, 20, 0.5));
+        appendControl(this.createSliderControl('Line Opacity', layerId, 'line-opacity', paint['line-opacity'] ?? 1, 0, 1, 0.05));
+        appendControl(this.createSliderControl('Line Blur', layerId, 'line-blur', paint['line-blur'] ?? 0, 0, 5, 0.1));
+        break;
+      case 'circle':
+        appendControl(this.createColorControl('Fill Color', layerId, 'circle-color', paint['circle-color'] || '#3388ff'));
+        appendControl(this.createSliderControl('Radius', layerId, 'circle-radius', paint['circle-radius'] ?? 5, 0, 40, 0.5));
+        appendControl(this.createSliderControl('Opacity', layerId, 'circle-opacity', paint['circle-opacity'] ?? 1, 0, 1, 0.05));
+        appendControl(this.createSliderControl('Blur', layerId, 'circle-blur', paint['circle-blur'] ?? 0, 0, 5, 0.1));
+        appendControl(this.createColorControl('Stroke Color', layerId, 'circle-stroke-color', paint['circle-stroke-color'] || '#ffffff'));
+        appendControl(this.createSliderControl('Stroke Width', layerId, 'circle-stroke-width', paint['circle-stroke-width'] ?? 1, 0, 10, 0.1));
+        appendControl(this.createSliderControl('Stroke Opacity', layerId, 'circle-stroke-opacity', paint['circle-stroke-opacity'] ?? 1, 0, 1, 0.05));
+        break;
+      case 'symbol':
+        appendControl(this.createColorControl('Text Color', layerId, 'text-color', paint['text-color'] || '#333333'));
+        appendControl(this.createColorControl('Text Halo', layerId, 'text-halo-color', paint['text-halo-color'] || '#ffffff'));
+        appendControl(this.createSliderControl('Halo Width', layerId, 'text-halo-width', paint['text-halo-width'] ?? 1, 0, 10, 0.25));
+        appendControl(this.createSliderControl('Text Opacity', layerId, 'text-opacity', paint['text-opacity'] ?? 1, 0, 1, 0.05));
+        appendControl(this.createSliderControl('Icon Opacity', layerId, 'icon-opacity', paint['icon-opacity'] ?? 1, 0, 1, 0.05));
+        break;
+      case 'raster':
+        appendControl(this.createSliderControl('Opacity', layerId, 'raster-opacity', paint['raster-opacity'] ?? 1, 0, 1, 0.05));
+        appendControl(this.createSliderControl('Brightness Min', layerId, 'raster-brightness-min', paint['raster-brightness-min'] ?? 0, -1, 1, 0.05));
+        appendControl(this.createSliderControl('Brightness Max', layerId, 'raster-brightness-max', paint['raster-brightness-max'] ?? 1, -1, 1, 0.05));
+        appendControl(this.createSliderControl('Saturation', layerId, 'raster-saturation', paint['raster-saturation'] ?? 0, -1, 1, 0.05));
+        appendControl(this.createSliderControl('Contrast', layerId, 'raster-contrast', paint['raster-contrast'] ?? 0, -1, 1, 0.05));
+        appendControl(this.createSliderControl('Hue Rotate', layerId, 'raster-hue-rotate', paint['raster-hue-rotate'] ?? 0, 0, 360, 5));
+        break;
+    }
+
+    if (!controlsContainer.children.length) {
+      const fallback = document.createElement('p');
+      fallback.className = 'layer-control-style-empty';
+      fallback.textContent = 'No editable style properties detected.';
+      controlsContainer.appendChild(fallback);
+    }
+
+    editor.appendChild(controlsContainer);
+
+    const actions = document.createElement('div');
+    actions.className = 'layer-control-style-actions';
+
+    const applyBtn = document.createElement('button');
+    applyBtn.type = 'button';
+    applyBtn.className = 'layer-control-style-action layer-control-style-apply';
+    applyBtn.textContent = 'Apply';
+    applyBtn.addEventListener('click', (event) => {
+      event.stopPropagation();
+      this.applyStyleFromEditor(layerId);
+    });
+
+    const resetBtn = document.createElement('button');
+    resetBtn.type = 'button';
+    resetBtn.className = 'layer-control-style-action layer-control-style-reset';
+    resetBtn.textContent = 'Reset';
+    resetBtn.addEventListener('click', (event) => {
+      event.stopPropagation();
+      this.resetLayerStyle(layerId);
+    });
+
+    const closeBtnBottom = document.createElement('button');
+    closeBtnBottom.type = 'button';
+    closeBtnBottom.className = 'layer-control-style-action layer-control-style-close-secondary';
+    closeBtnBottom.textContent = 'Close';
+    closeBtnBottom.addEventListener('click', (event) => {
+      event.stopPropagation();
+      this.toggleStyleEditor(layerId, false);
+    });
+
+    actions.appendChild(applyBtn);
+    actions.appendChild(resetBtn);
+    actions.appendChild(closeBtnBottom);
+    editor.appendChild(actions);
+
+    return editor;
+  }
+
+  createColorControl(label, layerId, property, value) {
+    const control = document.createElement('div');
+    control.className = 'layer-style-control layer-style-control-color';
+
+    const labelEl = document.createElement('label');
+    labelEl.textContent = label;
+    control.appendChild(labelEl);
+
+    const inputGroup = document.createElement('div');
+    inputGroup.className = 'layer-style-color-group';
+
+    const liveValue = this.getCurrentPaintValue(layerId, property, value);
+    this.recordOriginalPaintValue(layerId, property, liveValue);
+    const normalized = this.normalizeColor(liveValue);
+
+    const colorInput = document.createElement('input');
+    colorInput.type = 'color';
+    colorInput.className = 'layer-style-color';
+    colorInput.value = normalized;
+    colorInput.dataset.property = property;
+
+    const textInput = document.createElement('input');
+    textInput.type = 'text';
+    textInput.className = 'layer-style-color-text';
+    textInput.value = normalized;
+    textInput.dataset.propertyDisplay = property;
+    textInput.readOnly = true;
+
+    colorInput.addEventListener('input', (event) => {
+      const colorValue = event.target.value;
+      textInput.value = colorValue;
+      try {
+        this.map.setPaintProperty(layerId, property, colorValue);
+      } catch (error) {
+        console.warn(`Failed to set ${property} for ${layerId}:`, error);
+      }
+    });
+
+    colorInput.addEventListener('change', (event) => {
+      this.notifyStyleChange(layerId, { [property]: event.target.value });
+    });
+
+    inputGroup.appendChild(colorInput);
+    inputGroup.appendChild(textInput);
+    control.appendChild(inputGroup);
+    return control;
+  }
+
+  createSliderControl(label, layerId, property, value, min, max, step) {
+    const liveValue = this.getCurrentPaintValue(layerId, property, value, min);
+    this.recordOriginalPaintValue(layerId, property, liveValue);
+    const control = document.createElement('div');
+    control.className = 'layer-style-control layer-style-control-slider';
+
+    const labelEl = document.createElement('label');
+    labelEl.textContent = label;
+    control.appendChild(labelEl);
+
+    const sliderWrapper = document.createElement('div');
+    sliderWrapper.className = 'layer-style-slider-wrapper';
+
+    const slider = document.createElement('input');
+    slider.type = 'range';
+    slider.min = min;
+    slider.max = max;
+    slider.step = step;
+    slider.value = liveValue;
+    slider.dataset.property = property;
+    slider.className = 'layer-style-slider';
+
+    const valueDisplay = document.createElement('span');
+    valueDisplay.className = 'layer-style-value';
+    valueDisplay.dataset.property = property;
+    valueDisplay.textContent = this.formatNumericValue(liveValue, step);
+
+    slider.addEventListener('input', (event) => {
+      const newVal = parseFloat(event.target.value);
+      valueDisplay.textContent = this.formatNumericValue(newVal, step);
+      try {
+        this.map.setPaintProperty(layerId, property, newVal);
+      } catch (error) {
+        console.warn(`Failed to set ${property} for ${layerId}:`, error);
+      }
+    });
+
+    slider.addEventListener('change', (event) => {
+      const newVal = parseFloat(event.target.value);
+      this.notifyStyleChange(layerId, { [property]: newVal });
+    });
+
+    sliderWrapper.appendChild(slider);
+    sliderWrapper.appendChild(valueDisplay);
+    control.appendChild(sliderWrapper);
+    return control;
+  }
+
+  toggleStyleEditor(layerId, forceState) {
+    const editor = this.styleEditors.get(layerId);
+    if (!editor) {
+      return;
+    }
+
+    const shouldOpen = forceState !== undefined ? forceState : !editor.classList.contains('expanded');
+
+    if (shouldOpen) {
+      // Close others
+      this.styleEditors.forEach((panel, id) => {
+        if (id !== layerId) {
+          panel.classList.remove('expanded');
+        }
+      });
+      editor.classList.add('expanded');
+      this.activeStyleEditor = layerId;
+      this.updateStyleEditorValues(layerId);
+    } else {
+      editor.classList.remove('expanded');
+      if (this.activeStyleEditor === layerId) {
+        this.activeStyleEditor = null;
+      }
+    }
+  }
+
+  applyStyleFromEditor(layerId) {
+    const editor = this.styleEditors.get(layerId);
+    if (!editor) {
+      return;
+    }
+
+    const inputs = editor.querySelectorAll('[data-property]');
+    const updates = {};
+    inputs.forEach((input) => {
+      const property = input.dataset.property;
+      if (!property) {
+        return;
+      }
+      let value;
+      if (input.type === 'color') {
+        value = input.value;
+      } else if (input.type === 'range') {
+        value = parseFloat(input.value);
+      } else {
+        return;
+      }
+      try {
+        this.map.setPaintProperty(layerId, property, value);
+        updates[property] = value;
+      } catch (error) {
+        console.warn(`Failed to apply ${property} for ${layerId}:`, error);
+      }
+    });
+
+    if (Object.keys(updates).length > 0) {
+      this.notifyStyleChange(layerId, updates);
+    }
+    this.updateStyleEditorValues(layerId);
+  }
+
+  resetLayerStyle(layerId) {
+    const original = this.originalLayerStyles.get(layerId);
+    if (!original) {
+      return;
+    }
+
+    const { paint } = original;
+    const applied = {};
+
+    Object.entries(paint).forEach(([property, value]) => {
+      try {
+        const restoredValue = this.clonePaintValue(value);
+        this.map.setPaintProperty(layerId, property, restoredValue);
+        applied[property] = restoredValue;
+      } catch (error) {
+        console.warn(`Failed to reset ${property} for ${layerId}:`, error);
+      }
+    });
+
+    if (Object.keys(applied).length > 0) {
+      this.notifyStyleChange(layerId, applied);
+    }
+
+    this.updateStyleEditorValues(layerId);
+  }
+
+  applyPanelWidth(width, immediate = false) {
+    const clamped = Math.round(Math.min(this.maxPanelWidth, Math.max(this.minPanelWidth, width)));
+    const applyWidth = () => {
+      this.panelWidth = clamped;
+      const px = `${clamped}px`;
+      this.panel.style.width = px;
+      this.updateWidthDisplay();
+    };
+
+    if (immediate) {
+      applyWidth();
+      return;
+    }
+
+    if (this.widthFrame) {
+      cancelAnimationFrame(this.widthFrame);
+    }
+    this.widthFrame = requestAnimationFrame(() => {
+      applyWidth();
+      this.widthFrame = null;
+    });
+  }
+
+  updateWidthFromPointer(event, resetBaseline = false) {
+    if (!this.widthSliderEl) {
+      return;
+    }
+
+    const sliderWidth = this.widthDragRectWidth || this.widthSliderEl.getBoundingClientRect().width || 1;
+    const widthRange = this.maxPanelWidth - this.minPanelWidth;
+
+    let width;
+    if (resetBaseline) {
+      const rect = this.widthSliderEl.getBoundingClientRect();
+      const relative = rect.width > 0 ? (event.clientX - rect.left) / rect.width : 0;
+      const clampedRatio = Math.min(1, Math.max(0, relative));
+      width = this.minPanelWidth + clampedRatio * widthRange;
+      this.widthDragStartWidth = width;
+      this.widthDragStartX = event.clientX;
+    } else {
+      const delta = event.clientX - (this.widthDragStartX || event.clientX);
+      width = (this.widthDragStartWidth || this.panelWidth) + (delta / sliderWidth) * widthRange;
+    }
+
+    this.applyPanelWidth(width, this.isWidthSliderActive);
+  }
+
+  updateWidthDisplay() {
+    if (this.widthValueEl) {
+      this.widthValueEl.textContent = `${this.panelWidth}px`;
+    }
+    if (this.widthSliderEl) {
+      this.widthSliderEl.setAttribute('aria-valuenow', String(this.panelWidth));
+      const ratio = (this.panelWidth - this.minPanelWidth) / (this.maxPanelWidth - this.minPanelWidth || 1);
+      if (this.widthThumbEl) {
+        const sliderWidth = this.widthSliderEl.clientWidth || 1;
+        const thumbWidth = this.widthThumbEl.offsetWidth || 14;
+        const padding = 16; // matches CSS left/right padding
+        const available = Math.max(0, sliderWidth - padding - thumbWidth);
+        const clampedRatio = Math.min(1, Math.max(0, ratio));
+        const leftPx = 8 + available * clampedRatio;
+        this.widthThumbEl.style.left = `${leftPx}px`;
+      }
+    }
+  }
+
+  ensureOriginalLayerEntry(layerId) {
+    if (!this.originalLayerStyles.has(layerId)) {
+      this.originalLayerStyles.set(layerId, { paint: {} });
+    }
+    return this.originalLayerStyles.get(layerId);
+  }
+
+  recordOriginalPaintValue(layerId, property, value) {
+    if (value === undefined || value === null) {
+      return;
+    }
+    const original = this.ensureOriginalLayerEntry(layerId);
+    if (property in original.paint) {
+      return;
+    }
+    original.paint[property] = this.clonePaintValue(value);
+  }
+
+  getCurrentPaintValue(layerId, property, fallback, numericDefault) {
+    let value;
+    try {
+      value = this.map.getPaintProperty(layerId, property);
+    } catch (error) {
+      value = undefined;
+    }
+
+    if (value === undefined || value === null) {
+      if (fallback !== undefined) {
+        value = fallback;
+      } else if (numericDefault !== undefined) {
+        value = numericDefault;
+      }
+    }
+
+    if (numericDefault !== undefined && typeof numericDefault === 'number') {
+      if (typeof value !== 'number') {
+        const parsed = Number(value);
+        value = Number.isNaN(parsed) ? numericDefault : parsed;
+      }
+    }
+
+    if (typeof value === 'number' && Number.isNaN(value)) {
+      value = numericDefault !== undefined ? numericDefault : 0;
+    }
+
+    return value;
+  }
+
+  clonePaintValue(value) {
+    if (Array.isArray(value)) {
+      return value.map((item) => this.clonePaintValue(item));
+    }
+    if (value && typeof value === 'object') {
+      try {
+        return JSON.parse(JSON.stringify(value));
+      } catch (error) {
+        return value;
+      }
+    }
+    return value;
+  }
+
+  cacheOriginalLayerStyle(layerId, mapLayer) {
+    if (!mapLayer) {
+      return;
+    }
+    const original = this.ensureOriginalLayerEntry(layerId);
+    const paintKeys = Object.keys(mapLayer.paint || {});
+    paintKeys.forEach((prop) => {
+      const value = this.getCurrentPaintValue(layerId, prop, mapLayer.paint[prop]);
+      this.recordOriginalPaintValue(layerId, prop, value);
+    });
+    // Ensure entry exists even if no paint keys were discovered
+    this.originalLayerStyles.set(layerId, original);
+  }
+
+  updateStyleEditorValues(layerId) {
+    const editor = this.styleEditors.get(layerId);
+    if (!editor || !this.map) {
+      return;
+    }
+    let mapLayer;
+    try {
+      mapLayer = this.map.getLayer(layerId);
+    } catch (error) {
+      console.warn(`Failed to access layer ${layerId} for style sync:`, error);
+      return;
+    }
+    if (!mapLayer) {
+      return;
+    }
+
+    const inputs = editor.querySelectorAll('[data-property]');
+    inputs.forEach((input) => {
+      const property = input.dataset.property;
+      if (!property) {
+        return;
+      }
+
+      let currentValue;
+      try {
+        currentValue = this.map.getPaintProperty(layerId, property);
+      } catch (error) {
+        return;
+      }
+
+      if (currentValue === undefined) {
+        return;
+      }
+
+      if (input.type === 'color') {
+        const normalized = this.normalizeColor(currentValue);
+        input.value = normalized;
+        const textInput = editor.querySelector(`input.layer-style-color-text[data-property-display="${property}"]`);
+        if (textInput) {
+          textInput.value = normalized;
+        }
+      } else if (input.type === 'range' && typeof currentValue === 'number') {
+        input.value = currentValue;
+        const display = editor.querySelector(`span.layer-style-value[data-property="${property}"]`);
+        if (display) {
+          display.textContent = this.formatNumericValue(currentValue, parseFloat(input.step || '1'));
+        }
+      }
+    });
+  }
+
+  normalizeColor(value) {
+    if (typeof value === 'string') {
+      if (value.startsWith('#')) {
+        return value;
+      }
+      if (value.startsWith('rgb')) {
+        const match = value.match(/\d+/g);
+        if (match && match.length >= 3) {
+          const [r, g, b] = match.map((num) => parseInt(num, 10));
+          return this.rgbToHex(r, g, b);
+        }
+      }
+    } else if (Array.isArray(value) && value.length >= 3) {
+      return this.rgbToHex(value[0], value[1], value[2]);
+    }
+    return '#3388ff';
+  }
+
+  rgbToHex(r, g, b) {
+    const clamp = (v) => Math.max(0, Math.min(255, Math.round(v)));
+    const toHex = (v) => {
+      const hex = clamp(v).toString(16);
+      return hex.length === 1 ? `0${hex}` : hex;
+    };
+    return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+  }
+
+  formatNumericValue(value, step) {
+    let decimals = 0;
+    if (step && Number(step) !== 1) {
+      const stepNumber = Number(step);
+      if (stepNumber > 0 && stepNumber < 1) {
+        decimals = Math.min(4, Math.ceil(Math.abs(Math.log10(stepNumber))));
+      }
+    }
+    return value.toFixed(decimals);
+  }
+
+  notifyStyleChange(layerId, styleUpdates) {
+    if (!styleUpdates || Object.keys(styleUpdates).length === 0 || !this.model) {
+      return;
+    }
+    try {
+      const currentEvents = this.model.get('_js_events') || [];
+      const eventPayload = {
+        type: 'layer_style_changed',
+        layerId: layerId,
+        style: styleUpdates
+      };
+      this.model.set('_js_events', [...currentEvents, eventPayload]);
+      this.model.save_changes();
+    } catch (error) {
+      console.warn('Failed to notify layer style change:', error);
+    }
   }
 
   toggleBackgroundVisibility(visible) {
