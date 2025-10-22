@@ -63,6 +63,7 @@ class LayerControl {
     this.collapsed = options.collapsed !== false;
     this.layerStates = options.layerStates || {};
     this.targetLayers = options.layers || Object.keys(this.layerStates);
+    this.userInteractingWithSlider = false;
 
     // Create control container
     this.container = document.createElement('div');
@@ -311,15 +312,20 @@ class LayerControl {
   }
 
   updateUIForLayer(layerId, visible, opacity) {
-    // Find the UI elements for this layer
+    // Skip UI updates if user is currently interacting with a slider
+    if (this.userInteractingWithSlider) {
+      return;
+    }
+
+    // Find the UI elements for this layer using data attribute
     const layerItems = this.panel.querySelectorAll('.layer-control-item');
 
     layerItems.forEach(item => {
-      const checkbox = item.querySelector('.layer-control-checkbox');
-      const opacitySlider = item.querySelector('.layer-control-opacity');
-      const nameSpan = item.querySelector('.layer-control-name');
+      // Use data attribute for exact matching instead of text content
+      if (item.dataset.layerId === layerId) {
+        const checkbox = item.querySelector('.layer-control-checkbox');
+        const opacitySlider = item.querySelector('.layer-control-opacity');
 
-      if (nameSpan && nameSpan.textContent === layerId) {
         // Update checkbox
         if (checkbox) {
           checkbox.checked = visible;
@@ -457,6 +463,23 @@ class LayerControl {
     opacity.step = '0.01';
     opacity.value = state.opacity;
     opacity.title = `Opacity: ${Math.round(state.opacity * 100)}%`;
+
+    // Track when user starts interacting with slider
+    opacity.addEventListener('mousedown', () => {
+      this.userInteractingWithSlider = true;
+    });
+    opacity.addEventListener('touchstart', () => {
+      this.userInteractingWithSlider = true;
+    });
+
+    // Track when user stops interacting with slider
+    opacity.addEventListener('mouseup', () => {
+      this.userInteractingWithSlider = false;
+    });
+    opacity.addEventListener('touchend', () => {
+      this.userInteractingWithSlider = false;
+    });
+
     opacity.addEventListener('input', () => {
       if (layerId === 'Background') {
         this.changeBackgroundOpacity(parseFloat(opacity.value));
