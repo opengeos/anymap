@@ -639,11 +639,78 @@ function render({ model, el }) {
         const maplibreScript = document.createElement('script');
         maplibreScript.src = 'https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js';
 
+        const previousDefine = window.define;
+        const previousModule = window.module;
+        const previousExports = window.exports;
+        const hadAMDDefine = !!(previousDefine && previousDefine.amd);
+        const hadModule = typeof previousModule !== 'undefined';
+        const hadExports = typeof previousExports !== 'undefined';
+
+        const restoreModuleEnv = () => {
+          if (hadAMDDefine) {
+            window.define = previousDefine;
+          } else {
+            delete window.define;
+          }
+          if (hadModule) {
+            window.module = previousModule;
+          } else {
+            delete window.module;
+          }
+          if (hadExports) {
+            window.exports = previousExports;
+          } else {
+            delete window.exports;
+          }
+        };
+
+        if (hadAMDDefine) {
+          window.define = undefined;
+        }
+        if (hadModule) {
+          window.module = undefined;
+        }
+        if (hadExports) {
+          window.exports = undefined;
+        }
+
         await new Promise((resolve, reject) => {
-          maplibreScript.onload = resolve;
-          maplibreScript.onerror = reject;
+          maplibreScript.onload = () => {
+            restoreModuleEnv();
+            resolve();
+          };
+          maplibreScript.onerror = (error) => {
+            restoreModuleEnv();
+            reject(error);
+          };
           document.head.appendChild(maplibreScript);
         });
+
+        if (
+          !window.maplibregl &&
+          typeof window.define === 'function' &&
+          window.define.amd &&
+          typeof window.require === 'function'
+        ) {
+          // Fallback for environments (e.g. VS Code notebooks) that force AMD loading
+          window.maplibregl = await new Promise((resolve, reject) => {
+            try {
+              window.require(['maplibre-gl'], (module) => {
+                if (module && module.default) {
+                  resolve(module.default);
+                } else {
+                  resolve(module);
+                }
+              }, reject);
+            } catch (err) {
+              reject(err);
+            }
+          });
+        }
+
+        if (!window.maplibregl) {
+          throw new Error('MapLibre GL JS failed to load');
+        }
 
         console.log("MapLibre GL JS loaded successfully");
       }
