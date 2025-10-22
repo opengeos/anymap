@@ -111,7 +111,7 @@ class MapLibreMap(MapWidget):
             "fullscreen": "top-right",
             "scale": "bottom-left",
             "globe": "top-right",
-            "layers": "top-right",
+            "layers": "top-left",
         },
         projection: str = "mercator",
         add_sidebar: bool = False,
