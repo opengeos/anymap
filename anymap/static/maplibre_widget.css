@@ -71,11 +71,50 @@
 
 /* Popup styles */
 .maplibregl-popup-content {
-  padding: 10px;
+  padding: 12px 14px;
   border-radius: 4px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-size: 14px;
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13px;
   line-height: 1.4;
+  color: #0f172a;
+}
+
+.anymap-popup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.anymap-popup__title {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.anymap-popup__table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.anymap-popup__table th,
+.anymap-popup__table td {
+  padding: 2px 0;
+  vertical-align: top;
+}
+
+.anymap-popup__table th {
+  font-weight: 500;
+  color: #475569;
+  padding-right: 12px;
+}
+
+.anymap-popup__table td {
+  color: #0f172a;
+  word-break: break-word;
+}
+
+.anymap-popup__empty {
+  color: #64748b;
+  font-style: italic;
 }
 
 /* Marker styles */

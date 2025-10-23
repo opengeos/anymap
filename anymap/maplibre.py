@@ -22,7 +22,7 @@ import pathlib
 import requests
 import sys
 import uuid
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 
 import ipywidgets as widgets
 import traitlets
@@ -93,6 +93,7 @@ class MapLibreMap(MapWidget):
     _layer_dict = traitlets.Dict().tag(sync=True)
     clicked = traitlets.Dict().tag(sync=True)
     _deckgl_layers = traitlets.Dict().tag(sync=True)
+    flatgeobuf_layers = traitlets.Dict({}).tag(sync=True)
 
     # Define the JavaScript module path
     _esm = _esm_maplibre
@@ -234,6 +235,7 @@ class MapLibreMap(MapWidget):
         self.layer_manager = None
         self.container = None
         self._widget_control_widgets: Dict[str, widgets.Widget] = {}
+        self._flatgeobuf_defaults: Dict[str, Any] = {}
         if add_sidebar:
             self._ipython_display_ = self._patched_display
 
@@ -449,6 +451,199 @@ class MapLibreMap(MapWidget):
             host_map=self,
             **kwargs,
         )
+
+    def add_flatgeobuf_layer(
+        self,
+        url: str,
+        layer_id: str,
+        *,
+        layer_type: str = "fill",
+        source_id: Optional[str] = None,
+        paint: Optional[Dict[str, Any]] = None,
+        layout: Optional[Dict[str, Any]] = None,
+        filter: Optional[Any] = None,
+        bbox: Optional[List[float]] = None,
+        promote_id: Optional[Union[str, Dict[str, str]]] = None,
+        minzoom: Optional[float] = None,
+        maxzoom: Optional[float] = None,
+        before_id: Optional[str] = None,
+        metadata: Optional[Dict[str, Any]] = None,
+        name: Optional[str] = None,
+    ) -> str:
+        """
+        Add a vector layer from a FlatGeobuf dataset.
+
+        The FlatGeobuf file is streamed in the browser and converted to GeoJSON
+        before being added to the map. Rendering happens entirely client-side,
+        so very large datasets may still impact browser performance.
+
+        Args:
+            url: URL pointing to the FlatGeobuf resource.
+            layer_id: Unique identifier for the map layer.
+            layer_type: MapLibre layer type (e.g., ``'fill'``, ``'line'``, ``'circle'``).
+            source_id: Optional custom source identifier. Defaults to ``{layer_id}_source``.
+            paint: Optional paint properties dictionary.
+            layout: Optional layout properties dictionary.
+            filter: Optional MapLibre expression used to filter features.
+            bbox: Optional bounding box ``[minX, minY, maxX, maxY]`` used to limit
+                features retrieved from the dataset.
+            promote_id: Optional feature identifier promotion configuration.
+            minzoom: Optional minimum zoom level for the layer.
+            maxzoom: Optional maximum zoom level for the layer.
+            before_id: Optional layer id to insert the new layer before.
+            metadata: Optional metadata dictionary attached to the layer configuration.
+            name: Optional friendly name used in the layer manager. Defaults to ``layer_id``.
+
+        Returns:
+            str: The identifier of the layer that was registered.
+        """
+
+        if source_id is None:
+            source_id = f"{layer_id}_source"
+
+        layer_config: Dict[str, Any] = {
+            "id": layer_id,
+            "type": layer_type,
+            "source": source_id,
+        }
+        if paint:
+            layer_config["paint"] = paint
+        if layout:
+            layer_config["layout"] = layout
+        if filter is not None:
+            layer_config["filter"] = filter
+        if promote_id is not None:
+            layer_config["promoteId"] = promote_id
+        if minzoom is not None:
+            layer_config["minzoom"] = minzoom
+        if maxzoom is not None:
+            layer_config["maxzoom"] = maxzoom
+        if metadata:
+            layer_config["metadata"] = metadata
+
+        # Track the layer locally so the layer manager can interact with it.
+        current_layers = dict(self._layers)
+        current_layers[layer_id] = layer_config
+        self._layers = current_layers
+
+        display_name = name or layer_id
+        self.layer_dict[layer_id] = {
+            "layer": layer_config,
+            "opacity": 1.0,
+            "visible": True,
+            "type": "flatgeobuf",
+            "name": display_name,
+            "url": url,
+        }
+        self._update_layer_controls()
+
+        config: Dict[str, Any] = {
+            "layerId": layer_id,
+            "sourceId": source_id,
+            "url": url,
+            "layerType": layer_type,
+        }
+        if paint:
+            config["paint"] = paint
+        if layout:
+            config["layout"] = layout
+        if filter is not None:
+            config["filter"] = filter
+        if bbox is not None:
+            config["bbox"] = bbox
+        if promote_id is not None:
+            config["promoteId"] = promote_id
+        if minzoom is not None:
+            config["minzoom"] = minzoom
+        if maxzoom is not None:
+            config["maxzoom"] = maxzoom
+        if before_id is not None:
+            config["beforeId"] = before_id
+        if metadata:
+            config["metadata"] = metadata
+        if name:
+            config["name"] = display_name
+
+        flatgeobuf_layers = dict(self.flatgeobuf_layers)
+        flatgeobuf_layers[layer_id] = config
+        self.flatgeobuf_layers = flatgeobuf_layers
+
+        return layer_id
+
+    def enable_feature_popup(
+        self,
+        layer_id: str,
+        *,
+        fields: Optional[Union[Sequence[str], Dict[str, str]]] = None,
+        aliases: Optional[Dict[str, str]] = None,
+        title: Optional[str] = None,
+        title_field: Optional[str] = None,
+        max_properties: int = 25,
+        close_button: bool = True,
+        max_width: str = "320px",
+    ) -> None:
+        """
+        Enable attribute popups for a layer when users click its features.
+
+        Args:
+            layer_id: Identifier of the target layer.
+            fields: Optional ordered list of attribute keys to display. When omitted,
+                up to ``max_properties`` properties are shown.
+            aliases: Optional mapping from attribute key to display label. Only applies
+                when ``fields`` is provided.
+            title: Optional static string rendered above the attribute table.
+            title_field: Optional property key whose value should be used as the popup
+                title. Ignored when ``title`` is provided.
+            max_properties: Maximum number of properties displayed when ``fields`` is
+                not supplied. Defaults to 25.
+            close_button: Whether the popup shows a close button. Defaults to True.
+            max_width: CSS max-width applied to the popup container. Defaults to 320px.
+        """
+
+        alias_lookup: Dict[str, str] = aliases or {}
+
+        field_config: Optional[List[Dict[str, str]]] = None
+        if fields is not None:
+            if isinstance(fields, dict):
+                field_config = [
+                    {"name": str(key), "label": str(value)}
+                    for key, value in fields.items()
+                ]
+            else:
+                field_config = []
+                for name in fields:
+                    field_name = str(name)
+                    label_source = alias_lookup.get(
+                        name, alias_lookup.get(field_name, field_name)
+                    )
+                    field_config.append(
+                        {"name": field_name, "label": str(label_source)}
+                    )
+
+        config: Dict[str, Any] = {
+            "layerId": layer_id,
+            "maxProperties": max_properties,
+            "closeButton": close_button,
+            "maxWidth": max_width,
+        }
+        if field_config is not None:
+            config["fields"] = field_config
+        if title is not None:
+            config["title"] = title
+        if title_field is not None:
+            config["titleField"] = title_field
+
+        self.call_js_method("enableFeaturePopup", config)
+
+    def disable_feature_popup(self, layer_id: str) -> None:
+        """
+        Disable attribute popups for the specified layer.
+
+        Args:
+            layer_id: Identifier of the target layer.
+        """
+
+        self.call_js_method("disableFeaturePopup", {"layerId": layer_id})
 
     def add_widget_control(
         self,
@@ -1309,6 +1504,13 @@ class MapLibreMap(MapWidget):
             current_layers = dict(self._layers)
             del current_layers[layer_id]
             self._layers = current_layers
+
+        # Remove FlatGeobuf metadata if present
+        if layer_id in self.flatgeobuf_layers:
+            self.call_js_method("removeFlatGeobufLayer", layer_id)
+            flatgeobuf_layers = dict(self.flatgeobuf_layers)
+            del flatgeobuf_layers[layer_id]
+            self.flatgeobuf_layers = flatgeobuf_layers
 
         # Remove from layer_dict
         if layer_id in self.layer_dict:
