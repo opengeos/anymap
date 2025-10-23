@@ -1370,6 +1370,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.add_export_control" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_export_control()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.add_flatgeobuf_layer" class="md-nav__link">
     <span class="md-ellipsis">
       add_flatgeobuf_layer()
@@ -2172,6 +2181,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.add_export_control" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_export_control()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.add_flatgeobuf_layer" class="md-nav__link">
     <span class="md-ellipsis">
       add_flatgeobuf_layer()
@@ -2956,6 +2974,9 @@ data sources, custom styling, and interactive features.</p>
         <span class="k">for</span> <span class="n">control</span><span class="p">,</span> <span class="n">position</span> <span class="ow">in</span> <span class="n">controls</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">control</span> <span class="o">==</span> <span class="s2">&quot;layers&quot;</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_layer_control</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">control</span> <span class="o">==</span> <span class="s2">&quot;export&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_export_control</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="n">position</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">controls</span><span class="p">[</span><span class="n">control</span><span class="p">]</span> <span class="o">=</span> <span class="n">position</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_control</span><span class="p">(</span><span class="n">control</span><span class="p">,</span> <span class="n">position</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">controls</span><span class="p">[</span><span class="n">control</span><span class="p">]</span> <span class="o">=</span> <span class="n">position</span>
@@ -4138,6 +4159,102 @@ data sources, custom styling, and interactive features.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">_controls</span> <span class="o">=</span> <span class="n">current_controls</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addControl&quot;</span><span class="p">,</span> <span class="s2">&quot;geocoder&quot;</span><span class="p">,</span> <span class="n">control_options</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_export_control</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">position</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;top-right&quot;</span><span class="p">,</span>
+        <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;map&quot;</span><span class="p">,</span>
+        <span class="n">page_size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">page_orientation</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;landscape&quot;</span><span class="p">,</span>
+        <span class="n">default_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;pdf&quot;</span><span class="p">,</span>
+        <span class="n">dpi</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">300</span><span class="p">,</span>
+        <span class="n">allowed_sizes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">crosshair</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">printable_area</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">locale</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;en&quot;</span><span class="p">,</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">collapsed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add an export control for saving the map as images or PDF.</span>
+
+<span class="sd">        This control leverages the `@watergis/maplibre-gl-export` plugin to provide an</span>
+<span class="sd">        interactive, collapsible button that lets users export the current map view as</span>
+<span class="sd">        PNG, JPEG, PDF, or SVG files. The control appears alongside other MapLibre</span>
+<span class="sd">        controls and opens a small panel when toggled.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            position: Placement of the control on the map container.</span>
+<span class="sd">            filename: Default filename (without extension) suggested for exports.</span>
+<span class="sd">            page_size: Size of the export page in millimetres as [width, height]. If</span>
+<span class="sd">                omitted, the plugin defaults to A4.</span>
+<span class="sd">            page_orientation: Page orientation, either ``&quot;landscape&quot;`` or ``&quot;portrait&quot;``.</span>
+<span class="sd">            default_format: Default export format (``&quot;pdf&quot;``, ``&quot;png&quot;``, ``&quot;jpg&quot;``, ``&quot;svg&quot;``).</span>
+<span class="sd">            dpi: Dots per inch used when rendering the export.</span>
+<span class="sd">            allowed_sizes: Optional whitelist of page sizes (e.g. ``[&quot;A4&quot;, &quot;LETTER&quot;]``).</span>
+<span class="sd">            crosshair: Whether to show the crosshair overlay when the panel is open.</span>
+<span class="sd">            printable_area: Whether to show the printable area overlay when the panel is open.</span>
+<span class="sd">            locale: Two-letter locale code for the control&#39;s UI language.</span>
+<span class="sd">            options: Extra keyword arguments forwarded to the export plugin.</span>
+<span class="sd">            collapsed: Whether the control should start collapsed (button only).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">orientation_value</span> <span class="o">=</span> <span class="n">page_orientation</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">orientation_value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;landscape&quot;</span><span class="p">,</span> <span class="s2">&quot;portrait&quot;</span><span class="p">}:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;page_orientation must be &#39;landscape&#39; or &#39;portrait&#39;&quot;</span><span class="p">)</span>
+
+        <span class="n">format_value</span> <span class="o">=</span> <span class="n">default_format</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">format_value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;png&quot;</span><span class="p">,</span> <span class="s2">&quot;jpg&quot;</span><span class="p">,</span> <span class="s2">&quot;jpeg&quot;</span><span class="p">,</span> <span class="s2">&quot;pdf&quot;</span><span class="p">,</span> <span class="s2">&quot;svg&quot;</span><span class="p">}:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;default_format must be one of {&#39;png&#39;, &#39;jpg&#39;, &#39;jpeg&#39;, &#39;pdf&#39;, &#39;svg&#39;}&quot;</span>
+            <span class="p">)</span>
+        <span class="c1"># Normalise JPEG alias</span>
+        <span class="k">if</span> <span class="n">format_value</span> <span class="o">==</span> <span class="s2">&quot;jpeg&quot;</span><span class="p">:</span>
+            <span class="n">format_value</span> <span class="o">=</span> <span class="s2">&quot;jpg&quot;</span>
+
+        <span class="n">control_options</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">options</span> <span class="ow">or</span> <span class="p">{})</span>
+        <span class="n">clean_filename</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">filename</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">clean_locale</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">locale</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">locale</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">locale</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="p">)</span>
+
+        <span class="n">control_options</span><span class="p">[</span><span class="s2">&quot;position&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">position</span>
+        <span class="n">control_options</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;Filename&quot;</span><span class="p">,</span> <span class="n">clean_filename</span> <span class="ow">or</span> <span class="s2">&quot;map&quot;</span><span class="p">)</span>
+        <span class="n">control_options</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;PageOrientation&quot;</span><span class="p">,</span> <span class="n">orientation_value</span><span class="p">)</span>
+        <span class="n">control_options</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;Format&quot;</span><span class="p">,</span> <span class="n">format_value</span><span class="p">)</span>
+        <span class="n">control_options</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;DPI&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">dpi</span><span class="p">))</span>
+        <span class="n">control_options</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;Crosshair&quot;</span><span class="p">,</span> <span class="nb">bool</span><span class="p">(</span><span class="n">crosshair</span><span class="p">))</span>
+        <span class="n">control_options</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;PrintableArea&quot;</span><span class="p">,</span> <span class="nb">bool</span><span class="p">(</span><span class="n">printable_area</span><span class="p">))</span>
+        <span class="n">control_options</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;Locale&quot;</span><span class="p">,</span> <span class="n">clean_locale</span> <span class="ow">or</span> <span class="s2">&quot;en&quot;</span><span class="p">)</span>
+        <span class="n">control_options</span><span class="p">[</span><span class="s2">&quot;collapsed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">collapsed</span>
+
+        <span class="k">if</span> <span class="n">page_size</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">page_size_values</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">page_size</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">page_size_values</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;page_size must contain exactly two values [width, height]&quot;</span>
+                <span class="p">)</span>
+            <span class="n">control_options</span><span class="p">[</span><span class="s2">&quot;PageSize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="nb">float</span><span class="p">(</span><span class="n">page_size_values</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+                <span class="nb">float</span><span class="p">(</span><span class="n">page_size_values</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+            <span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">allowed_sizes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">control_options</span><span class="p">[</span><span class="s2">&quot;AllowedSizes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">size</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="k">for</span> <span class="n">size</span> <span class="ow">in</span> <span class="n">allowed_sizes</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+            <span class="p">]</span>
+
+        <span class="n">control_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;export_</span><span class="si">{</span><span class="n">position</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">current_controls</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_controls</span><span class="p">)</span>
+        <span class="n">current_controls</span><span class="p">[</span><span class="n">control_key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;export&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
+            <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="n">control_options</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_controls</span> <span class="o">=</span> <span class="n">current_controls</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addControl&quot;</span><span class="p">,</span> <span class="s2">&quot;export&quot;</span><span class="p">,</span> <span class="n">control_options</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">add_google_streetview</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -5750,6 +5867,9 @@ data sources, custom styling, and interactive features.</p>
     <span class="k">for</span> <span class="n">control</span><span class="p">,</span> <span class="n">position</span> <span class="ow">in</span> <span class="n">controls</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">control</span> <span class="o">==</span> <span class="s2">&quot;layers&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_layer_control</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">control</span> <span class="o">==</span> <span class="s2">&quot;export&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_export_control</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="n">position</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">controls</span><span class="p">[</span><span class="n">control</span><span class="p">]</span> <span class="o">=</span> <span class="n">position</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_control</span><span class="p">(</span><span class="n">control</span><span class="p">,</span> <span class="n">position</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">controls</span><span class="p">[</span><span class="n">control</span><span class="p">]</span> <span class="o">=</span> <span class="n">position</span>
@@ -6796,6 +6916,215 @@ existing drawn features, unlike load_draw_data which replaces all data.</p>
 
     <span class="c1"># Send to JavaScript - it will handle adding features and syncing back the data</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addDrawData&quot;</span><span class="p">,</span> <span class="n">geojson_data</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="anymap.maplibre.MapLibreMap.add_export_control" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">add_export_control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s1">&#39;top-right&#39;</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;map&#39;</span><span class="p">,</span> <span class="n">page_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">page_orientation</span><span class="o">=</span><span class="s1">&#39;landscape&#39;</span><span class="p">,</span> <span class="n">default_format</span><span class="o">=</span><span class="s1">&#39;pdf&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">allowed_sizes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">crosshair</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">printable_area</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">locale</span><span class="o">=</span><span class="s1">&#39;en&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">collapsed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code>
+
+
+<a href="#anymap.maplibre.MapLibreMap.add_export_control" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Add an export control for saving the map as images or PDF.</p>
+<p>This control leverages the <code>@watergis/maplibre-gl-export</code> plugin to provide an
+interactive, collapsible button that lets users export the current map view as
+PNG, JPEG, PDF, or SVG files. The control appears alongside other MapLibre
+controls and opens a small panel when toggled.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>position</code></td>
+        <td><code>str</code></td>
+        <td><p>Placement of the control on the map container.</p></td>
+        <td><code>&#39;top-right&#39;</code></td>
+      </tr>
+      <tr>
+        <td><code>filename</code></td>
+        <td><code>str</code></td>
+        <td><p>Default filename (without extension) suggested for exports.</p></td>
+        <td><code>&#39;map&#39;</code></td>
+      </tr>
+      <tr>
+        <td><code>page_size</code></td>
+        <td><code>Optional[Sequence[Union[int, float]]]</code></td>
+        <td><p>Size of the export page in millimetres as [width, height]. If
+omitted, the plugin defaults to A4.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>page_orientation</code></td>
+        <td><code>str</code></td>
+        <td><p>Page orientation, either <code>"landscape"</code> or <code>"portrait"</code>.</p></td>
+        <td><code>&#39;landscape&#39;</code></td>
+      </tr>
+      <tr>
+        <td><code>default_format</code></td>
+        <td><code>str</code></td>
+        <td><p>Default export format (<code>"pdf"</code>, <code>"png"</code>, <code>"jpg"</code>, <code>"svg"</code>).</p></td>
+        <td><code>&#39;pdf&#39;</code></td>
+      </tr>
+      <tr>
+        <td><code>dpi</code></td>
+        <td><code>int</code></td>
+        <td><p>Dots per inch used when rendering the export.</p></td>
+        <td><code>300</code></td>
+      </tr>
+      <tr>
+        <td><code>allowed_sizes</code></td>
+        <td><code>Optional[Sequence[str]]</code></td>
+        <td><p>Optional whitelist of page sizes (e.g. <code>["A4", "LETTER"]</code>).</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>crosshair</code></td>
+        <td><code>bool</code></td>
+        <td><p>Whether to show the crosshair overlay when the panel is open.</p></td>
+        <td><code>False</code></td>
+      </tr>
+      <tr>
+        <td><code>printable_area</code></td>
+        <td><code>bool</code></td>
+        <td><p>Whether to show the printable area overlay when the panel is open.</p></td>
+        <td><code>False</code></td>
+      </tr>
+      <tr>
+        <td><code>locale</code></td>
+        <td><code>str</code></td>
+        <td><p>Two-letter locale code for the control's UI language.</p></td>
+        <td><code>&#39;en&#39;</code></td>
+      </tr>
+      <tr>
+        <td><code>options</code></td>
+        <td><code>Optional[Dict[str, Any]]</code></td>
+        <td><p>Extra keyword arguments forwarded to the export plugin.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>collapsed</code></td>
+        <td><code>bool</code></td>
+        <td><p>Whether the control should start collapsed (button only).</p></td>
+        <td><code>True</code></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>anymap/maplibre.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_export_control</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">position</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;top-right&quot;</span><span class="p">,</span>
+    <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;map&quot;</span><span class="p">,</span>
+    <span class="n">page_size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">page_orientation</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;landscape&quot;</span><span class="p">,</span>
+    <span class="n">default_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;pdf&quot;</span><span class="p">,</span>
+    <span class="n">dpi</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">300</span><span class="p">,</span>
+    <span class="n">allowed_sizes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">crosshair</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">printable_area</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">locale</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;en&quot;</span><span class="p">,</span>
+    <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">collapsed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add an export control for saving the map as images or PDF.</span>
+
+<span class="sd">    This control leverages the `@watergis/maplibre-gl-export` plugin to provide an</span>
+<span class="sd">    interactive, collapsible button that lets users export the current map view as</span>
+<span class="sd">    PNG, JPEG, PDF, or SVG files. The control appears alongside other MapLibre</span>
+<span class="sd">    controls and opens a small panel when toggled.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        position: Placement of the control on the map container.</span>
+<span class="sd">        filename: Default filename (without extension) suggested for exports.</span>
+<span class="sd">        page_size: Size of the export page in millimetres as [width, height]. If</span>
+<span class="sd">            omitted, the plugin defaults to A4.</span>
+<span class="sd">        page_orientation: Page orientation, either ``&quot;landscape&quot;`` or ``&quot;portrait&quot;``.</span>
+<span class="sd">        default_format: Default export format (``&quot;pdf&quot;``, ``&quot;png&quot;``, ``&quot;jpg&quot;``, ``&quot;svg&quot;``).</span>
+<span class="sd">        dpi: Dots per inch used when rendering the export.</span>
+<span class="sd">        allowed_sizes: Optional whitelist of page sizes (e.g. ``[&quot;A4&quot;, &quot;LETTER&quot;]``).</span>
+<span class="sd">        crosshair: Whether to show the crosshair overlay when the panel is open.</span>
+<span class="sd">        printable_area: Whether to show the printable area overlay when the panel is open.</span>
+<span class="sd">        locale: Two-letter locale code for the control&#39;s UI language.</span>
+<span class="sd">        options: Extra keyword arguments forwarded to the export plugin.</span>
+<span class="sd">        collapsed: Whether the control should start collapsed (button only).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">orientation_value</span> <span class="o">=</span> <span class="n">page_orientation</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">orientation_value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;landscape&quot;</span><span class="p">,</span> <span class="s2">&quot;portrait&quot;</span><span class="p">}:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;page_orientation must be &#39;landscape&#39; or &#39;portrait&#39;&quot;</span><span class="p">)</span>
+
+    <span class="n">format_value</span> <span class="o">=</span> <span class="n">default_format</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">format_value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;png&quot;</span><span class="p">,</span> <span class="s2">&quot;jpg&quot;</span><span class="p">,</span> <span class="s2">&quot;jpeg&quot;</span><span class="p">,</span> <span class="s2">&quot;pdf&quot;</span><span class="p">,</span> <span class="s2">&quot;svg&quot;</span><span class="p">}:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;default_format must be one of {&#39;png&#39;, &#39;jpg&#39;, &#39;jpeg&#39;, &#39;pdf&#39;, &#39;svg&#39;}&quot;</span>
+        <span class="p">)</span>
+    <span class="c1"># Normalise JPEG alias</span>
+    <span class="k">if</span> <span class="n">format_value</span> <span class="o">==</span> <span class="s2">&quot;jpeg&quot;</span><span class="p">:</span>
+        <span class="n">format_value</span> <span class="o">=</span> <span class="s2">&quot;jpg&quot;</span>
+
+    <span class="n">control_options</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">options</span> <span class="ow">or</span> <span class="p">{})</span>
+    <span class="n">clean_filename</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">filename</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">clean_locale</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">locale</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">locale</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">locale</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="p">)</span>
+
+    <span class="n">control_options</span><span class="p">[</span><span class="s2">&quot;position&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">position</span>
+    <span class="n">control_options</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;Filename&quot;</span><span class="p">,</span> <span class="n">clean_filename</span> <span class="ow">or</span> <span class="s2">&quot;map&quot;</span><span class="p">)</span>
+    <span class="n">control_options</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;PageOrientation&quot;</span><span class="p">,</span> <span class="n">orientation_value</span><span class="p">)</span>
+    <span class="n">control_options</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;Format&quot;</span><span class="p">,</span> <span class="n">format_value</span><span class="p">)</span>
+    <span class="n">control_options</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;DPI&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">dpi</span><span class="p">))</span>
+    <span class="n">control_options</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;Crosshair&quot;</span><span class="p">,</span> <span class="nb">bool</span><span class="p">(</span><span class="n">crosshair</span><span class="p">))</span>
+    <span class="n">control_options</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;PrintableArea&quot;</span><span class="p">,</span> <span class="nb">bool</span><span class="p">(</span><span class="n">printable_area</span><span class="p">))</span>
+    <span class="n">control_options</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;Locale&quot;</span><span class="p">,</span> <span class="n">clean_locale</span> <span class="ow">or</span> <span class="s2">&quot;en&quot;</span><span class="p">)</span>
+    <span class="n">control_options</span><span class="p">[</span><span class="s2">&quot;collapsed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">collapsed</span>
+
+    <span class="k">if</span> <span class="n">page_size</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">page_size_values</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">page_size</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">page_size_values</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;page_size must contain exactly two values [width, height]&quot;</span>
+            <span class="p">)</span>
+        <span class="n">control_options</span><span class="p">[</span><span class="s2">&quot;PageSize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="nb">float</span><span class="p">(</span><span class="n">page_size_values</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+            <span class="nb">float</span><span class="p">(</span><span class="n">page_size_values</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+        <span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">allowed_sizes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">control_options</span><span class="p">[</span><span class="s2">&quot;AllowedSizes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">size</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="k">for</span> <span class="n">size</span> <span class="ow">in</span> <span class="n">allowed_sizes</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+        <span class="p">]</span>
+
+    <span class="n">control_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;export_</span><span class="si">{</span><span class="n">position</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">current_controls</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_controls</span><span class="p">)</span>
+    <span class="n">current_controls</span><span class="p">[</span><span class="n">control_key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;export&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
+        <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="n">control_options</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_controls</span> <span class="o">=</span> <span class="n">current_controls</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addControl&quot;</span><span class="p">,</span> <span class="s2">&quot;export&quot;</span><span class="p">,</span> <span class="n">control_options</span><span class="p">)</span>
 </code></pre></div>
         </details>
     </div>
