@@ -216,6 +216,9 @@ class MapLibreMap(MapWidget):
         for control, position in controls.items():
             if control == "layers":
                 self.add_layer_control(position)
+            elif control == "export":
+                self.add_export_control(position=position)
+                self.controls[control] = position
             else:
                 self.add_control(control, position)
                 self.controls[control] = position
@@ -1398,6 +1401,102 @@ class MapLibreMap(MapWidget):
         self._controls = current_controls
 
         self.call_js_method("addControl", "geocoder", control_options)
+
+    def add_export_control(
+        self,
+        position: str = "top-right",
+        filename: str = "map",
+        page_size: Optional[Sequence[Union[int, float]]] = None,
+        page_orientation: str = "landscape",
+        default_format: str = "pdf",
+        dpi: int = 300,
+        allowed_sizes: Optional[Sequence[str]] = None,
+        crosshair: bool = False,
+        printable_area: bool = False,
+        locale: str = "en",
+        options: Optional[Dict[str, Any]] = None,
+        collapsed: bool = True,
+    ) -> None:
+        """Add an export control for saving the map as images or PDF.
+
+        This control leverages the `@watergis/maplibre-gl-export` plugin to provide an
+        interactive, collapsible button that lets users export the current map view as
+        PNG, JPEG, PDF, or SVG files. The control appears alongside other MapLibre
+        controls and opens a small panel when toggled.
+
+        Args:
+            position: Placement of the control on the map container.
+            filename: Default filename (without extension) suggested for exports.
+            page_size: Size of the export page in millimetres as [width, height]. If
+                omitted, the plugin defaults to A4.
+            page_orientation: Page orientation, either ``"landscape"`` or ``"portrait"``.
+            default_format: Default export format (``"pdf"``, ``"png"``, ``"jpg"``, ``"svg"``).
+            dpi: Dots per inch used when rendering the export.
+            allowed_sizes: Optional whitelist of page sizes (e.g. ``["A4", "LETTER"]``).
+            crosshair: Whether to show the crosshair overlay when the panel is open.
+            printable_area: Whether to show the printable area overlay when the panel is open.
+            locale: Two-letter locale code for the control's UI language.
+            options: Extra keyword arguments forwarded to the export plugin.
+            collapsed: Whether the control should start collapsed (button only).
+        """
+
+        orientation_value = page_orientation.lower()
+        if orientation_value not in {"landscape", "portrait"}:
+            raise ValueError("page_orientation must be 'landscape' or 'portrait'")
+
+        format_value = default_format.lower()
+        if format_value not in {"png", "jpg", "jpeg", "pdf", "svg"}:
+            raise ValueError(
+                "default_format must be one of {'png', 'jpg', 'jpeg', 'pdf', 'svg'}"
+            )
+        # Normalise JPEG alias
+        if format_value == "jpeg":
+            format_value = "jpg"
+
+        control_options: Dict[str, Any] = dict(options or {})
+        clean_filename = (
+            filename.strip() if isinstance(filename, str) else str(filename)
+        )
+        clean_locale = (
+            locale.strip().lower() if isinstance(locale, str) else str(locale).lower()
+        )
+
+        control_options["position"] = position
+        control_options.setdefault("Filename", clean_filename or "map")
+        control_options.setdefault("PageOrientation", orientation_value)
+        control_options.setdefault("Format", format_value)
+        control_options.setdefault("DPI", int(dpi))
+        control_options.setdefault("Crosshair", bool(crosshair))
+        control_options.setdefault("PrintableArea", bool(printable_area))
+        control_options.setdefault("Locale", clean_locale or "en")
+        control_options["collapsed"] = collapsed
+
+        if page_size is not None:
+            page_size_values = list(page_size)
+            if len(page_size_values) != 2:
+                raise ValueError(
+                    "page_size must contain exactly two values [width, height]"
+                )
+            control_options["PageSize"] = [
+                float(page_size_values[0]),
+                float(page_size_values[1]),
+            ]
+
+        if allowed_sizes is not None:
+            control_options["AllowedSizes"] = [
+                size.upper() for size in allowed_sizes if isinstance(size, str)
+            ]
+
+        control_key = f"export_{position}"
+        current_controls = dict(self._controls)
+        current_controls[control_key] = {
+            "type": "export",
+            "position": position,
+            "options": control_options,
+        }
+        self._controls = current_controls
+
+        self.call_js_method("addControl", "export", control_options)
 
     def add_google_streetview(
         self,
