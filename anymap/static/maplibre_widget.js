@@ -1366,6 +1366,196 @@ class LayerControl {
   }
 }
 
+class WidgetPanelControl {
+  constructor(options = {}, map, model) {
+    this.options = options;
+    this.map = map;
+    this.model = model;
+    this.controlId = options.control_id || `widget-panel-${Math.random().toString(36).slice(2)}`;
+    this.collapsed = options.collapsed !== false;
+    this.position = options.position || 'top-right';
+    this.widgetModelId = options.widget_model_id;
+    this.panelWidth = options.panelWidth || 320;
+    this.panelMinWidth = options.panelMinWidth || 220;
+    this.panelMaxWidth = options.panelMaxWidth || 420;
+
+    this.container = document.createElement('div');
+    this.container.className = 'maplibregl-ctrl maplibregl-ctrl-group maplibregl-ctrl-widget-panel';
+
+    this.button = document.createElement('button');
+    this.button.type = 'button';
+    this.button.className = 'widget-panel-toggle';
+    const buttonLabel = options.description || options.label || 'Widget panel';
+    this.button.title = buttonLabel;
+    this.button.setAttribute('aria-label', buttonLabel);
+    this.button.setAttribute('aria-expanded', (!this.collapsed).toString());
+
+    const iconSpan = document.createElement('span');
+    iconSpan.className = 'widget-panel-toggle-icon';
+    iconSpan.textContent = options.icon || '⋮';
+    this.button.appendChild(iconSpan);
+
+    this.button.addEventListener('click', () => this.toggle());
+    this.container.appendChild(this.button);
+
+    this.panel = document.createElement('div');
+    this.panel.className = 'widget-panel';
+    this.panel.style.minWidth = `${this.panelMinWidth}px`;
+    this.panel.style.maxWidth = `${this.panelMaxWidth}px`;
+    this.panel.style.width = `${this.panelWidth}px`;
+    this.panel.style.maxHeight = options.maxHeight || '70vh';
+
+    if (this.position.startsWith('top')) {
+      this.panel.style.top = '34px';
+      this.panel.style.bottom = 'auto';
+      this.panel.style.marginTop = '4px';
+      this.panel.style.marginBottom = '0';
+    } else {
+      this.panel.style.bottom = '34px';
+      this.panel.style.top = 'auto';
+      this.panel.style.marginTop = '0';
+      this.panel.style.marginBottom = '4px';
+    }
+
+    if (this.position.endsWith('left')) {
+      this.panel.style.left = '0';
+      this.panel.style.right = 'auto';
+    } else {
+      this.panel.style.right = '0';
+      this.panel.style.left = 'auto';
+    }
+
+    if (this.collapsed) {
+      this.panel.style.display = 'none';
+    } else {
+      this.panel.classList.add('expanded');
+    }
+
+    const header = document.createElement('div');
+    header.className = 'widget-panel-header';
+
+    const title = document.createElement('span');
+    title.className = 'widget-panel-title';
+    title.textContent = options.label || 'Widget Panel';
+    header.appendChild(title);
+
+    const closeButton = document.createElement('button');
+    closeButton.type = 'button';
+    closeButton.className = 'widget-panel-close';
+    closeButton.setAttribute('aria-label', 'Collapse widget panel');
+    closeButton.innerHTML = '&times;';
+    closeButton.addEventListener('click', () => this.collapse());
+    header.appendChild(closeButton);
+
+    this.panel.appendChild(header);
+
+    this.content = document.createElement('div');
+    this.content.className = 'widget-panel-content';
+    this.panel.appendChild(this.content);
+
+    this.container.appendChild(this.panel);
+
+    this.widgetView = null;
+    if (this.widgetModelId) {
+      this.attachWidgetView(this.widgetModelId);
+    }
+  }
+
+  async attachWidgetView(modelId) {
+    if (!modelId) {
+      return;
+    }
+
+    if (!this.model || !this.model.widget_manager) {
+      console.warn('Widget manager not available for widget panel');
+      return;
+    }
+
+    try {
+      const widgetModel = await this.model.widget_manager.get_model(modelId);
+      if (!widgetModel) {
+        console.warn(`Widget model ${modelId} not found`);
+        return;
+      }
+
+      const view = await this.model.widget_manager.create_view(widgetModel);
+
+      this.disposeWidgetView();
+      this.widgetView = view;
+
+      this.content.innerHTML = '';
+      if (typeof view.render === 'function') {
+        await view.render();
+      }
+      this.content.appendChild(view.el);
+      if (typeof view.trigger === 'function') {
+        view.trigger('displayed');
+      }
+      this.content.classList.add('widget-panel-content-loaded');
+    } catch (error) {
+      console.error('Failed to attach widget panel view:', error);
+    }
+  }
+
+  disposeWidgetView() {
+    if (this.widgetView) {
+      if (typeof this.widgetView.remove === 'function') {
+        this.widgetView.remove();
+      } else if (this.widgetView.el && this.widgetView.el.parentNode) {
+        this.widgetView.el.parentNode.removeChild(this.widgetView.el);
+      }
+      this.widgetView = null;
+    }
+  }
+
+  toggle() {
+    if (this.collapsed) {
+      this.expand();
+    } else {
+      this.collapse();
+    }
+  }
+
+  expand() {
+    if (!this.collapsed) {
+      return;
+    }
+    this.collapsed = false;
+    this.panel.style.display = 'block';
+    requestAnimationFrame(() => {
+      this.panel.classList.add('expanded');
+    });
+    this.button.setAttribute('aria-expanded', 'true');
+  }
+
+  collapse() {
+    if (this.collapsed) {
+      return;
+    }
+    this.collapsed = true;
+    this.panel.classList.remove('expanded');
+    this.button.setAttribute('aria-expanded', 'false');
+    setTimeout(() => {
+      if (this.collapsed) {
+        this.panel.style.display = 'none';
+      }
+    }, 180);
+  }
+
+  onAdd(map) {
+    this.map = map;
+    return this.container;
+  }
+
+  onRemove() {
+    this.disposeWidgetView();
+    if (this.container && this.container.parentNode) {
+      this.container.parentNode.removeChild(this.container);
+    }
+    this.map = null;
+  }
+}
+
 function render({ model, el }) {
   // Create unique ID for this widget instance
   const widgetId = `anymap-${Math.random().toString(36).substr(2, 9)}`;
@@ -2080,6 +2270,9 @@ function render({ model, el }) {
                 // Handle layer control restoration
                 control = new LayerControl(controlOptions || {}, map, model);
                 break;
+              case 'widget_panel':
+                control = new WidgetPanelControl(controlOptions || {}, map, model);
+                break;
               case 'geocoder':
                 // Handle geocoder control restoration
                 if (window.MaplibreGeocoder) {
@@ -2705,7 +2898,15 @@ function render({ model, el }) {
           case 'addControl':
             const [controlType, controlOptions] = args;
             const position = controlOptions?.position || 'top-right';
-            const controlKey = `${controlType}_${position}`;
+            const controlIdForKey = controlType === 'widget_panel'
+              ? (controlOptions?.control_id || `widget_panel_${Date.now()}`)
+              : null;
+            if (controlType === 'widget_panel' && controlOptions && !controlOptions.control_id) {
+              controlOptions.control_id = controlIdForKey;
+            }
+            const controlKey = controlType === 'widget_panel'
+              ? `widget_panel_${controlIdForKey}`
+              : `${controlType}_${position}`;
 
             // Check if this control is already added
             if (el._controls.has(controlKey)) {
@@ -2735,6 +2936,9 @@ function render({ model, el }) {
                 break;
               case 'layer_control':
                 control = new LayerControl(controlOptions || {}, map, model);
+                break;
+              case 'widget_panel':
+                control = new WidgetPanelControl(controlOptions || {}, map, model);
                 break;
               case 'geocoder':
                 if (window.MaplibreGeocoder) {
@@ -3034,6 +3238,20 @@ function render({ model, el }) {
                 el._controls.delete(removeControlKey);
               } else {
                 console.warn(`Control ${removeControlType} at position ${removePosition} not found`);
+              }
+            }
+            break;
+
+          case 'removeWidgetControl':
+            const [widgetControlId] = args;
+            if (widgetControlId) {
+              const widgetControlKey = `widget_panel_${widgetControlId}`;
+              if (el._controls.has(widgetControlKey)) {
+                const widgetControl = el._controls.get(widgetControlKey);
+                map.removeControl(widgetControl);
+                el._controls.delete(widgetControlKey);
+              } else {
+                console.warn(`Widget control ${widgetControlId} not found`);
               }
             }
             break;

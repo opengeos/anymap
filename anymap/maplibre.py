@@ -21,6 +21,7 @@ import os
 import pathlib
 import requests
 import sys
+import uuid
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 import ipywidgets as widgets
@@ -111,7 +112,7 @@ class MapLibreMap(MapWidget):
             "fullscreen": "top-right",
             "scale": "bottom-left",
             "globe": "top-right",
-            "layers": "top-left",
+            "layers": "top-right",
         },
         projection: str = "mercator",
         add_sidebar: bool = False,
@@ -232,6 +233,7 @@ class MapLibreMap(MapWidget):
         self.sidebar_args = sidebar_args
         self.layer_manager = None
         self.container = None
+        self._widget_control_widgets: Dict[str, widgets.Widget] = {}
         if add_sidebar:
             self._ipython_display_ = self._patched_display
 
@@ -409,7 +411,7 @@ class MapLibreMap(MapWidget):
 
     def add_to_sidebar(
         self,
-        widget: widgets.Widget,
+        widget: Union[widgets.Widget, List[widgets.Widget]],
         add_header: bool = True,
         widget_icon: str = "mdi-tools",
         close_icon: str = "mdi-close",
@@ -431,6 +433,7 @@ class MapLibreMap(MapWidget):
             height (str): Height of the header. Defaults to "40px".
             expanded (bool): Whether the panel is expanded by default. Defaults to True.
             **kwargs (Any): Additional keyword arguments for the parent class.
+
         """
         if self.container is None:
             self.create_container(**self.sidebar_args)
@@ -446,6 +449,123 @@ class MapLibreMap(MapWidget):
             host_map=self,
             **kwargs,
         )
+
+    def add_widget_control(
+        self,
+        widget: widgets.Widget,
+        *,
+        label: str = "Tools",
+        icon: str = "⋮",
+        position: str = "top-right",
+        collapsed: bool = True,
+        panel_width: int = 320,
+        panel_min_width: int = 220,
+        panel_max_width: int = 420,
+        control_id: Optional[str] = None,
+        description: Optional[str] = None,
+    ) -> str:
+        """
+        Add a collapsible widget control anchored to the map viewport.
+
+        The control displays as a button alongside other MapLibre controls. Clicking
+        the button expands a sidebar-style panel that renders the supplied
+        ipywidget content.
+
+        Args:
+            widget: The ipywidget instance to embed inside the collapsible panel.
+            label: Title shown at the top of the expanded panel.
+            icon: Text or icon hint shown on the toggle button. Defaults to a vertical ellipsis.
+            position: Map control corner (``'top-left'``, ``'top-right'``,
+                ``'bottom-left'``, or ``'bottom-right'``).
+            collapsed: Whether the panel starts collapsed.
+            panel_width: Default panel width in pixels.
+            panel_min_width: Minimum panel width in pixels when resized on the front-end.
+            panel_max_width: Maximum panel width in pixels when resized on the front-end.
+            control_id: Optional identifier used for duplicate detection and later removal.
+                If omitted, a unique identifier is generated from the label.
+            description: Optional tooltip description for the toggle button.
+
+        Returns:
+            str: The unique identifier assigned to the widget control.
+
+        Raises:
+            TypeError: If ``widget`` is not an ipywidget instance.
+        """
+        if not isinstance(widget, widgets.Widget):
+            raise TypeError("widget must be an ipywidgets.Widget instance")
+
+        if control_id is None:
+            base_slug = "".join(
+                char.lower() if char.isalnum() else "-" for char in label
+            ).strip("-")
+            if not base_slug:
+                base_slug = "widget"
+            control_id = f"{base_slug}-{uuid.uuid4().hex[:6]}"
+
+        # Ensure uniqueness when callers supply their own identifier
+        if control_id in self._widget_control_widgets:
+            raise ValueError(f"Widget control '{control_id}' already exists")
+
+        widget_id = getattr(widget, "model_id", None)
+        if widget_id is None:
+            raise ValueError(
+                "The supplied widget does not have a model_id. Ensure it is an ipywidget "
+                "instance created within the current notebook session."
+            )
+
+        control_options: Dict[str, Any] = {
+            "position": position,
+            "label": label,
+            "icon": icon,
+            "collapsed": collapsed,
+            "panelWidth": panel_width,
+            "panelMinWidth": panel_min_width,
+            "panelMaxWidth": panel_max_width,
+            "control_id": control_id,
+            "widget_model_id": widget_id,
+        }
+
+        if description:
+            control_options["description"] = description
+
+        control_key = f"widget_panel_{control_id}"
+
+        current_controls = dict(self._controls)
+        current_controls[control_key] = {
+            "type": "widget_panel",
+            "position": position,
+            "options": control_options,
+        }
+        self._controls = current_controls
+
+        self._widget_control_widgets[control_id] = widget
+        self.call_js_method("addControl", "widget_panel", control_options)
+
+        return control_id
+
+    def remove_widget_control(self, control_id: str) -> None:
+        """Remove a previously registered widget control."""
+        if not control_id:
+            raise ValueError("control_id is required")
+
+        current_controls = dict(self._controls)
+        target_key = None
+        for key, config in current_controls.items():
+            if (
+                config.get("type") == "widget_panel"
+                and config.get("options", {}).get("control_id") == control_id
+            ):
+                target_key = key
+                break
+
+        if target_key:
+            current_controls.pop(target_key)
+            self._controls = current_controls
+
+        if control_id in self._widget_control_widgets:
+            del self._widget_control_widgets[control_id]
+
+        self.call_js_method("removeWidgetControl", control_id)
 
     def remove_from_sidebar(
         self, widget: widgets.Widget = None, name: str = None
