@@ -124,8 +124,8 @@ function normalizeExportControlOptions(rawOptions = {}) {
     exportOptions.PrintableArea = Boolean(exportOptions.PrintableArea);
   }
 
-  if (exportOptions.Local !== undefined) {
-    exportOptions.Local = String(exportOptions.Local || '').toLowerCase() || 'en';
+  if (exportOptions.Locale !== undefined) {
+    exportOptions.Locale = String(exportOptions.Locale || '').toLowerCase() || 'en';
   }
 
   if (typeof exportOptions.Filename === 'string') {
