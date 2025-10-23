@@ -199,6 +199,82 @@ class TestMapLibreMap(unittest.TestCase):
         self.assertEqual(calls[0]["args"][0], bounds)
         self.assertEqual(calls[0]["args"][1]["padding"], 100)
 
+    def test_geoman_data_defaults(self):
+        """Geoman data should default to an empty collection."""
+        self.assertEqual(
+            self.map.geoman_data,
+            {"type": "FeatureCollection", "features": []},
+        )
+
+    def test_add_geoman_control_basic(self):
+        """Adding the Geoman control should record state and emit a JS call."""
+        map_widget = MapLibreMap(center=[0, 0], zoom=1, controls={})
+        map_widget.add_geoman_control(position="bottom-left")
+
+        control_key = "geoman_bottom-left"
+        self.assertIn(control_key, map_widget._controls)
+
+        control_config = map_widget._controls[control_key]
+        self.assertEqual(control_config["type"], "geoman")
+        self.assertEqual(control_config["position"], "bottom-left")
+        self.assertIn("geoman_options", control_config["options"])
+        geoman_settings = control_config["options"]["geoman_options"].get(
+            "settings", {}
+        )
+        self.assertTrue(geoman_settings.get("controlsCollapsible"))
+
+        last_call = map_widget._js_calls[-1]
+        self.assertEqual(last_call["method"], "addControl")
+        control_type, payload = last_call["args"]
+        self.assertEqual(control_type, "geoman")
+        self.assertEqual(payload["position"], "bottom-left")
+        self.assertFalse(payload.get("collapsed"))
+
+    def test_add_geoman_control_custom_options(self):
+        """Ensure Geoman configuration merges convenience helpers."""
+        map_widget = MapLibreMap(center=[0, 0], zoom=1, controls={})
+        map_widget.add_geoman_control(
+            position="top-right",
+            geoman_options={"settings": {"controlsCollapsible": False}},
+            settings={"controlsPosition": "top-right"},
+            controls={"draw": {"polygon": {"active": True}}},
+            collapsed=False,
+        )
+
+        control_key = "geoman_top-right"
+        options = map_widget._controls[control_key]["options"]["geoman_options"]
+        settings = options.get("settings", {})
+        self.assertEqual(settings.get("controlsPosition"), "top-right")
+        self.assertFalse(settings.get("controlsCollapsible"))
+        self.assertTrue(settings.get("controlsUiEnabledByDefault"))
+
+        controls_section = options.get("controls", {})
+        self.assertIn("draw", controls_section)
+        self.assertEqual(
+            controls_section["draw"].get("polygon", {}).get("active"),
+            True,
+        )
+
+        last_call = map_widget._js_calls[-1]
+        self.assertEqual(last_call["args"][0], "geoman")
+        self.assertFalse(last_call["args"][1].get("collapsed"))
+
+    def test_set_and_clear_geoman_data(self):
+        """Round-trip Geoman data through helper methods."""
+        map_widget = MapLibreMap(center=[0, 0], zoom=1, controls={})
+        feature = {
+            "type": "Feature",
+            "geometry": {"type": "Point", "coordinates": [0, 0]},
+            "properties": {"id": 1},
+        }
+        collection = {"type": "FeatureCollection", "features": [feature]}
+
+        map_widget.set_geoman_data(collection)
+        self.assertEqual(map_widget.get_geoman_data()["features"], [feature])
+
+        map_widget.clear_geoman_data()
+        self.assertEqual(map_widget.get_geoman_data()["features"], [])
+
 
 class TestMultipleInstances(unittest.TestCase):
     """Test cases for multiple map instances."""
