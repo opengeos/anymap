@@ -1370,6 +1370,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.add_flatgeobuf_layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_flatgeobuf_layer()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.add_geocoder_control" class="md-nav__link">
     <span class="md-ellipsis">
       add_geocoder_control()
@@ -1526,6 +1535,24 @@
   <a href="#anymap.maplibre.MapLibreMap.delete_draw_features" class="md-nav__link">
     <span class="md-ellipsis">
       delete_draw_features()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.disable_feature_popup" class="md-nav__link">
+    <span class="md-ellipsis">
+      disable_feature_popup()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.enable_feature_popup" class="md-nav__link">
+    <span class="md-ellipsis">
+      enable_feature_popup()
     </span>
   </a>
   
@@ -2145,6 +2172,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.add_flatgeobuf_layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_flatgeobuf_layer()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.add_geocoder_control" class="md-nav__link">
     <span class="md-ellipsis">
       add_geocoder_control()
@@ -2301,6 +2337,24 @@
   <a href="#anymap.maplibre.MapLibreMap.delete_draw_features" class="md-nav__link">
     <span class="md-ellipsis">
       delete_draw_features()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.disable_feature_popup" class="md-nav__link">
+    <span class="md-ellipsis">
+      disable_feature_popup()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.enable_feature_popup" class="md-nav__link">
+    <span class="md-ellipsis">
+      enable_feature_popup()
     </span>
   </a>
   
@@ -2779,6 +2833,7 @@ data sources, custom styling, and interactive features.</p>
     <span class="n">_layer_dict</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Dict</span><span class="p">()</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">clicked</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Dict</span><span class="p">()</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">_deckgl_layers</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Dict</span><span class="p">()</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">flatgeobuf_layers</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Dict</span><span class="p">({})</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># Define the JavaScript module path</span>
     <span class="n">_esm</span> <span class="o">=</span> <span class="n">_esm_maplibre</span>
@@ -2920,6 +2975,7 @@ data sources, custom styling, and interactive features.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">layer_manager</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">container</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_widget_control_widgets</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Widget</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_flatgeobuf_defaults</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">if</span> <span class="n">add_sidebar</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_ipython_display_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_patched_display</span>
 
@@ -3135,6 +3191,199 @@ data sources, custom styling, and interactive features.</p>
             <span class="n">host_map</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
         <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_flatgeobuf_layer</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">layer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">layer_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;fill&quot;</span><span class="p">,</span>
+        <span class="n">source_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">paint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">layout</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="nb">filter</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">bbox</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">promote_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">minzoom</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">maxzoom</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">before_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add a vector layer from a FlatGeobuf dataset.</span>
+
+<span class="sd">        The FlatGeobuf file is streamed in the browser and converted to GeoJSON</span>
+<span class="sd">        before being added to the map. Rendering happens entirely client-side,</span>
+<span class="sd">        so very large datasets may still impact browser performance.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            url: URL pointing to the FlatGeobuf resource.</span>
+<span class="sd">            layer_id: Unique identifier for the map layer.</span>
+<span class="sd">            layer_type: MapLibre layer type (e.g., ``&#39;fill&#39;``, ``&#39;line&#39;``, ``&#39;circle&#39;``).</span>
+<span class="sd">            source_id: Optional custom source identifier. Defaults to ``{layer_id}_source``.</span>
+<span class="sd">            paint: Optional paint properties dictionary.</span>
+<span class="sd">            layout: Optional layout properties dictionary.</span>
+<span class="sd">            filter: Optional MapLibre expression used to filter features.</span>
+<span class="sd">            bbox: Optional bounding box ``[minX, minY, maxX, maxY]`` used to limit</span>
+<span class="sd">                features retrieved from the dataset.</span>
+<span class="sd">            promote_id: Optional feature identifier promotion configuration.</span>
+<span class="sd">            minzoom: Optional minimum zoom level for the layer.</span>
+<span class="sd">            maxzoom: Optional maximum zoom level for the layer.</span>
+<span class="sd">            before_id: Optional layer id to insert the new layer before.</span>
+<span class="sd">            metadata: Optional metadata dictionary attached to the layer configuration.</span>
+<span class="sd">            name: Optional friendly name used in the layer manager. Defaults to ``layer_id``.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: The identifier of the layer that was registered.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">source_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">source_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">layer_id</span><span class="si">}</span><span class="s2">_source&quot;</span>
+
+        <span class="n">layer_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">layer_id</span><span class="p">,</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">layer_type</span><span class="p">,</span>
+            <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">source_id</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="n">paint</span><span class="p">:</span>
+            <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;paint&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">paint</span>
+        <span class="k">if</span> <span class="n">layout</span><span class="p">:</span>
+            <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;layout&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">layout</span>
+        <span class="k">if</span> <span class="nb">filter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;filter&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">filter</span>
+        <span class="k">if</span> <span class="n">promote_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;promoteId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">promote_id</span>
+        <span class="k">if</span> <span class="n">minzoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;minzoom&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">minzoom</span>
+        <span class="k">if</span> <span class="n">maxzoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;maxzoom&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">maxzoom</span>
+        <span class="k">if</span> <span class="n">metadata</span><span class="p">:</span>
+            <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">metadata</span>
+
+        <span class="c1"># Track the layer locally so the layer manager can interact with it.</span>
+        <span class="n">current_layers</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_layers</span><span class="p">)</span>
+        <span class="n">current_layers</span><span class="p">[</span><span class="n">layer_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">layer_config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_layers</span> <span class="o">=</span> <span class="n">current_layers</span>
+
+        <span class="n">display_name</span> <span class="o">=</span> <span class="n">name</span> <span class="ow">or</span> <span class="n">layer_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer_dict</span><span class="p">[</span><span class="n">layer_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;layer&quot;</span><span class="p">:</span> <span class="n">layer_config</span><span class="p">,</span>
+            <span class="s2">&quot;opacity&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+            <span class="s2">&quot;visible&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;flatgeobuf&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">display_name</span><span class="p">,</span>
+            <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">url</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_layer_controls</span><span class="p">()</span>
+
+        <span class="n">config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;layerId&quot;</span><span class="p">:</span> <span class="n">layer_id</span><span class="p">,</span>
+            <span class="s2">&quot;sourceId&quot;</span><span class="p">:</span> <span class="n">source_id</span><span class="p">,</span>
+            <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">url</span><span class="p">,</span>
+            <span class="s2">&quot;layerType&quot;</span><span class="p">:</span> <span class="n">layer_type</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="n">paint</span><span class="p">:</span>
+            <span class="n">config</span><span class="p">[</span><span class="s2">&quot;paint&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">paint</span>
+        <span class="k">if</span> <span class="n">layout</span><span class="p">:</span>
+            <span class="n">config</span><span class="p">[</span><span class="s2">&quot;layout&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">layout</span>
+        <span class="k">if</span> <span class="nb">filter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">config</span><span class="p">[</span><span class="s2">&quot;filter&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">filter</span>
+        <span class="k">if</span> <span class="n">bbox</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">config</span><span class="p">[</span><span class="s2">&quot;bbox&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bbox</span>
+        <span class="k">if</span> <span class="n">promote_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">config</span><span class="p">[</span><span class="s2">&quot;promoteId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">promote_id</span>
+        <span class="k">if</span> <span class="n">minzoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">config</span><span class="p">[</span><span class="s2">&quot;minzoom&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">minzoom</span>
+        <span class="k">if</span> <span class="n">maxzoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">config</span><span class="p">[</span><span class="s2">&quot;maxzoom&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">maxzoom</span>
+        <span class="k">if</span> <span class="n">before_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">config</span><span class="p">[</span><span class="s2">&quot;beforeId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">before_id</span>
+        <span class="k">if</span> <span class="n">metadata</span><span class="p">:</span>
+            <span class="n">config</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">metadata</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="n">config</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">display_name</span>
+
+        <span class="n">flatgeobuf_layers</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flatgeobuf_layers</span><span class="p">)</span>
+        <span class="n">flatgeobuf_layers</span><span class="p">[</span><span class="n">layer_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">flatgeobuf_layers</span> <span class="o">=</span> <span class="n">flatgeobuf_layers</span>
+
+        <span class="k">return</span> <span class="n">layer_id</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">enable_feature_popup</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">layer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">fields</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">aliases</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">title</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">title_field</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">max_properties</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span>
+        <span class="n">close_button</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">max_width</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;320px&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Enable attribute popups for a layer when users click its features.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            layer_id: Identifier of the target layer.</span>
+<span class="sd">            fields: Optional ordered list of attribute keys to display. When omitted,</span>
+<span class="sd">                up to ``max_properties`` properties are shown.</span>
+<span class="sd">            aliases: Optional mapping from attribute key to display label. Only applies</span>
+<span class="sd">                when ``fields`` is provided.</span>
+<span class="sd">            title: Optional static string rendered above the attribute table.</span>
+<span class="sd">            title_field: Optional property key whose value should be used as the popup</span>
+<span class="sd">                title. Ignored when ``title`` is provided.</span>
+<span class="sd">            max_properties: Maximum number of properties displayed when ``fields`` is</span>
+<span class="sd">                not supplied. Defaults to 25.</span>
+<span class="sd">            close_button: Whether the popup shows a close button. Defaults to True.</span>
+<span class="sd">            max_width: CSS max-width applied to the popup container. Defaults to 320px.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">alias_lookup</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">aliases</span> <span class="ow">or</span> <span class="p">{}</span>
+
+        <span class="n">field_config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">fields</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="n">field_config</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)}</span>
+                    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">fields</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                <span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">field_config</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+                    <span class="n">field_name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+                    <span class="n">label_source</span> <span class="o">=</span> <span class="n">alias_lookup</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                        <span class="n">name</span><span class="p">,</span> <span class="n">alias_lookup</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">field_name</span><span class="p">,</span> <span class="n">field_name</span><span class="p">)</span>
+                    <span class="p">)</span>
+                    <span class="n">field_config</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">field_name</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">label_source</span><span class="p">)}</span>
+                    <span class="p">)</span>
+
+        <span class="n">config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;layerId&quot;</span><span class="p">:</span> <span class="n">layer_id</span><span class="p">,</span>
+            <span class="s2">&quot;maxProperties&quot;</span><span class="p">:</span> <span class="n">max_properties</span><span class="p">,</span>
+            <span class="s2">&quot;closeButton&quot;</span><span class="p">:</span> <span class="n">close_button</span><span class="p">,</span>
+            <span class="s2">&quot;maxWidth&quot;</span><span class="p">:</span> <span class="n">max_width</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="n">field_config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">config</span><span class="p">[</span><span class="s2">&quot;fields&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">field_config</span>
+        <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">config</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">title</span>
+        <span class="k">if</span> <span class="n">title_field</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">config</span><span class="p">[</span><span class="s2">&quot;titleField&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">title_field</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;enableFeaturePopup&quot;</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">disable_feature_popup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Disable attribute popups for the specified layer.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            layer_id: Identifier of the target layer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;disableFeaturePopup&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;layerId&quot;</span><span class="p">:</span> <span class="n">layer_id</span><span class="p">})</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">add_widget_control</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -3995,6 +4244,13 @@ data sources, custom styling, and interactive features.</p>
             <span class="n">current_layers</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_layers</span><span class="p">)</span>
             <span class="k">del</span> <span class="n">current_layers</span><span class="p">[</span><span class="n">layer_id</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_layers</span> <span class="o">=</span> <span class="n">current_layers</span>
+
+        <span class="c1"># Remove FlatGeobuf metadata if present</span>
+        <span class="k">if</span> <span class="n">layer_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">flatgeobuf_layers</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;removeFlatGeobufLayer&quot;</span><span class="p">,</span> <span class="n">layer_id</span><span class="p">)</span>
+            <span class="n">flatgeobuf_layers</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flatgeobuf_layers</span><span class="p">)</span>
+            <span class="k">del</span> <span class="n">flatgeobuf_layers</span><span class="p">[</span><span class="n">layer_id</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">flatgeobuf_layers</span> <span class="o">=</span> <span class="n">flatgeobuf_layers</span>
 
         <span class="c1"># Remove from layer_dict</span>
         <span class="k">if</span> <span class="n">layer_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_dict</span><span class="p">:</span>
@@ -5184,6 +5440,7 @@ data sources, custom styling, and interactive features.</p>
 
 
 
+
   <div class="doc doc-object doc-attribute">
 
 
@@ -5512,6 +5769,7 @@ data sources, custom styling, and interactive features.</p>
     <span class="bp">self</span><span class="o">.</span><span class="n">layer_manager</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">container</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_widget_control_widgets</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Widget</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_flatgeobuf_defaults</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">if</span> <span class="n">add_sidebar</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ipython_display_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_patched_display</span>
 </code></pre></div>
@@ -6538,6 +6796,263 @@ existing drawn features, unlike load_draw_data which replaces all data.</p>
 
     <span class="c1"># Send to JavaScript - it will handle adding features and syncing back the data</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addDrawData&quot;</span><span class="p">,</span> <span class="n">geojson_data</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="anymap.maplibre.MapLibreMap.add_flatgeobuf_layer" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">add_flatgeobuf_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">layer_id</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">layer_type</span><span class="o">=</span><span class="s1">&#39;fill&#39;</span><span class="p">,</span> <span class="n">source_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">paint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bbox</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">promote_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">minzoom</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">maxzoom</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">before_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+
+<a href="#anymap.maplibre.MapLibreMap.add_flatgeobuf_layer" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Add a vector layer from a FlatGeobuf dataset.</p>
+<p>The FlatGeobuf file is streamed in the browser and converted to GeoJSON
+before being added to the map. Rendering happens entirely client-side,
+so very large datasets may still impact browser performance.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>url</code></td>
+        <td><code>str</code></td>
+        <td><p>URL pointing to the FlatGeobuf resource.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>layer_id</code></td>
+        <td><code>str</code></td>
+        <td><p>Unique identifier for the map layer.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>layer_type</code></td>
+        <td><code>str</code></td>
+        <td><p>MapLibre layer type (e.g., <code>'fill'</code>, <code>'line'</code>, <code>'circle'</code>).</p></td>
+        <td><code>&#39;fill&#39;</code></td>
+      </tr>
+      <tr>
+        <td><code>source_id</code></td>
+        <td><code>Optional[str]</code></td>
+        <td><p>Optional custom source identifier. Defaults to <code>{layer_id}_source</code>.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>paint</code></td>
+        <td><code>Optional[Dict[str, Any]]</code></td>
+        <td><p>Optional paint properties dictionary.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>layout</code></td>
+        <td><code>Optional[Dict[str, Any]]</code></td>
+        <td><p>Optional layout properties dictionary.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>filter</code></td>
+        <td><code>Optional[Any]</code></td>
+        <td><p>Optional MapLibre expression used to filter features.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>bbox</code></td>
+        <td><code>Optional[List[float]]</code></td>
+        <td><p>Optional bounding box <code>[minX, minY, maxX, maxY]</code> used to limit
+features retrieved from the dataset.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>promote_id</code></td>
+        <td><code>Union[str, Dict[str, str]]</code></td>
+        <td><p>Optional feature identifier promotion configuration.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>minzoom</code></td>
+        <td><code>Optional[float]</code></td>
+        <td><p>Optional minimum zoom level for the layer.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>maxzoom</code></td>
+        <td><code>Optional[float]</code></td>
+        <td><p>Optional maximum zoom level for the layer.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>before_id</code></td>
+        <td><code>Optional[str]</code></td>
+        <td><p>Optional layer id to insert the new layer before.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>metadata</code></td>
+        <td><code>Optional[Dict[str, Any]]</code></td>
+        <td><p>Optional metadata dictionary attached to the layer configuration.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>name</code></td>
+        <td><code>Optional[str]</code></td>
+        <td><p>Optional friendly name used in the layer manager. Defaults to <code>layer_id</code>.</p></td>
+        <td><code>None</code></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>str</code></td>
+      <td><p>The identifier of the layer that was registered.</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>anymap/maplibre.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_flatgeobuf_layer</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">layer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">layer_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;fill&quot;</span><span class="p">,</span>
+    <span class="n">source_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">paint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">layout</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="nb">filter</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">bbox</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">promote_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">minzoom</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">maxzoom</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">before_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">metadata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Add a vector layer from a FlatGeobuf dataset.</span>
+
+<span class="sd">    The FlatGeobuf file is streamed in the browser and converted to GeoJSON</span>
+<span class="sd">    before being added to the map. Rendering happens entirely client-side,</span>
+<span class="sd">    so very large datasets may still impact browser performance.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        url: URL pointing to the FlatGeobuf resource.</span>
+<span class="sd">        layer_id: Unique identifier for the map layer.</span>
+<span class="sd">        layer_type: MapLibre layer type (e.g., ``&#39;fill&#39;``, ``&#39;line&#39;``, ``&#39;circle&#39;``).</span>
+<span class="sd">        source_id: Optional custom source identifier. Defaults to ``{layer_id}_source``.</span>
+<span class="sd">        paint: Optional paint properties dictionary.</span>
+<span class="sd">        layout: Optional layout properties dictionary.</span>
+<span class="sd">        filter: Optional MapLibre expression used to filter features.</span>
+<span class="sd">        bbox: Optional bounding box ``[minX, minY, maxX, maxY]`` used to limit</span>
+<span class="sd">            features retrieved from the dataset.</span>
+<span class="sd">        promote_id: Optional feature identifier promotion configuration.</span>
+<span class="sd">        minzoom: Optional minimum zoom level for the layer.</span>
+<span class="sd">        maxzoom: Optional maximum zoom level for the layer.</span>
+<span class="sd">        before_id: Optional layer id to insert the new layer before.</span>
+<span class="sd">        metadata: Optional metadata dictionary attached to the layer configuration.</span>
+<span class="sd">        name: Optional friendly name used in the layer manager. Defaults to ``layer_id``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The identifier of the layer that was registered.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">source_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">source_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">layer_id</span><span class="si">}</span><span class="s2">_source&quot;</span>
+
+    <span class="n">layer_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">layer_id</span><span class="p">,</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">layer_type</span><span class="p">,</span>
+        <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">source_id</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="n">paint</span><span class="p">:</span>
+        <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;paint&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">paint</span>
+    <span class="k">if</span> <span class="n">layout</span><span class="p">:</span>
+        <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;layout&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">layout</span>
+    <span class="k">if</span> <span class="nb">filter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;filter&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">filter</span>
+    <span class="k">if</span> <span class="n">promote_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;promoteId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">promote_id</span>
+    <span class="k">if</span> <span class="n">minzoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;minzoom&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">minzoom</span>
+    <span class="k">if</span> <span class="n">maxzoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;maxzoom&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">maxzoom</span>
+    <span class="k">if</span> <span class="n">metadata</span><span class="p">:</span>
+        <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">metadata</span>
+
+    <span class="c1"># Track the layer locally so the layer manager can interact with it.</span>
+    <span class="n">current_layers</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_layers</span><span class="p">)</span>
+    <span class="n">current_layers</span><span class="p">[</span><span class="n">layer_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">layer_config</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_layers</span> <span class="o">=</span> <span class="n">current_layers</span>
+
+    <span class="n">display_name</span> <span class="o">=</span> <span class="n">name</span> <span class="ow">or</span> <span class="n">layer_id</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">layer_dict</span><span class="p">[</span><span class="n">layer_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;layer&quot;</span><span class="p">:</span> <span class="n">layer_config</span><span class="p">,</span>
+        <span class="s2">&quot;opacity&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+        <span class="s2">&quot;visible&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;flatgeobuf&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">display_name</span><span class="p">,</span>
+        <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">url</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_update_layer_controls</span><span class="p">()</span>
+
+    <span class="n">config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;layerId&quot;</span><span class="p">:</span> <span class="n">layer_id</span><span class="p">,</span>
+        <span class="s2">&quot;sourceId&quot;</span><span class="p">:</span> <span class="n">source_id</span><span class="p">,</span>
+        <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">url</span><span class="p">,</span>
+        <span class="s2">&quot;layerType&quot;</span><span class="p">:</span> <span class="n">layer_type</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="n">paint</span><span class="p">:</span>
+        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;paint&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">paint</span>
+    <span class="k">if</span> <span class="n">layout</span><span class="p">:</span>
+        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;layout&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">layout</span>
+    <span class="k">if</span> <span class="nb">filter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;filter&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">filter</span>
+    <span class="k">if</span> <span class="n">bbox</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;bbox&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bbox</span>
+    <span class="k">if</span> <span class="n">promote_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;promoteId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">promote_id</span>
+    <span class="k">if</span> <span class="n">minzoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;minzoom&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">minzoom</span>
+    <span class="k">if</span> <span class="n">maxzoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;maxzoom&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">maxzoom</span>
+    <span class="k">if</span> <span class="n">before_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;beforeId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">before_id</span>
+    <span class="k">if</span> <span class="n">metadata</span><span class="p">:</span>
+        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">metadata</span>
+    <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">display_name</span>
+
+    <span class="n">flatgeobuf_layers</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flatgeobuf_layers</span><span class="p">)</span>
+    <span class="n">flatgeobuf_layers</span><span class="p">[</span><span class="n">layer_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">flatgeobuf_layers</span> <span class="o">=</span> <span class="n">flatgeobuf_layers</span>
+
+    <span class="k">return</span> <span class="n">layer_id</span>
 </code></pre></div>
         </details>
     </div>
@@ -8453,6 +8968,211 @@ alongside a sidebar. The sidebar can be customized with visibility, width, and a
 
 
 
+<h3 id="anymap.maplibre.MapLibreMap.disable_feature_popup" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">disable_feature_popup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer_id</span><span class="p">)</span></code>
+
+
+<a href="#anymap.maplibre.MapLibreMap.disable_feature_popup" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Disable attribute popups for the specified layer.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>layer_id</code></td>
+        <td><code>str</code></td>
+        <td><p>Identifier of the target layer.</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>anymap/maplibre.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">disable_feature_popup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Disable attribute popups for the specified layer.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        layer_id: Identifier of the target layer.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;disableFeaturePopup&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;layerId&quot;</span><span class="p">:</span> <span class="n">layer_id</span><span class="p">})</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="anymap.maplibre.MapLibreMap.enable_feature_popup" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">enable_feature_popup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer_id</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">aliases</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title_field</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_properties</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">close_button</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_width</span><span class="o">=</span><span class="s1">&#39;320px&#39;</span><span class="p">)</span></code>
+
+
+<a href="#anymap.maplibre.MapLibreMap.enable_feature_popup" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Enable attribute popups for a layer when users click its features.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>layer_id</code></td>
+        <td><code>str</code></td>
+        <td><p>Identifier of the target layer.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>fields</code></td>
+        <td><code>Union[Sequence[str], Dict[str, str]]</code></td>
+        <td><p>Optional ordered list of attribute keys to display. When omitted,
+up to <code>max_properties</code> properties are shown.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>aliases</code></td>
+        <td><code>Optional[Dict[str, str]]</code></td>
+        <td><p>Optional mapping from attribute key to display label. Only applies
+when <code>fields</code> is provided.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>title</code></td>
+        <td><code>Optional[str]</code></td>
+        <td><p>Optional static string rendered above the attribute table.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>title_field</code></td>
+        <td><code>Optional[str]</code></td>
+        <td><p>Optional property key whose value should be used as the popup
+title. Ignored when <code>title</code> is provided.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>max_properties</code></td>
+        <td><code>int</code></td>
+        <td><p>Maximum number of properties displayed when <code>fields</code> is
+not supplied. Defaults to 25.</p></td>
+        <td><code>25</code></td>
+      </tr>
+      <tr>
+        <td><code>close_button</code></td>
+        <td><code>bool</code></td>
+        <td><p>Whether the popup shows a close button. Defaults to True.</p></td>
+        <td><code>True</code></td>
+      </tr>
+      <tr>
+        <td><code>max_width</code></td>
+        <td><code>str</code></td>
+        <td><p>CSS max-width applied to the popup container. Defaults to 320px.</p></td>
+        <td><code>&#39;320px&#39;</code></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>anymap/maplibre.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">enable_feature_popup</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">layer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">fields</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">aliases</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">title</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">title_field</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">max_properties</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span>
+    <span class="n">close_button</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">max_width</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;320px&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Enable attribute popups for a layer when users click its features.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        layer_id: Identifier of the target layer.</span>
+<span class="sd">        fields: Optional ordered list of attribute keys to display. When omitted,</span>
+<span class="sd">            up to ``max_properties`` properties are shown.</span>
+<span class="sd">        aliases: Optional mapping from attribute key to display label. Only applies</span>
+<span class="sd">            when ``fields`` is provided.</span>
+<span class="sd">        title: Optional static string rendered above the attribute table.</span>
+<span class="sd">        title_field: Optional property key whose value should be used as the popup</span>
+<span class="sd">            title. Ignored when ``title`` is provided.</span>
+<span class="sd">        max_properties: Maximum number of properties displayed when ``fields`` is</span>
+<span class="sd">            not supplied. Defaults to 25.</span>
+<span class="sd">        close_button: Whether the popup shows a close button. Defaults to True.</span>
+<span class="sd">        max_width: CSS max-width applied to the popup container. Defaults to 320px.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">alias_lookup</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">aliases</span> <span class="ow">or</span> <span class="p">{}</span>
+
+    <span class="n">field_config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">fields</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">field_config</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)}</span>
+                <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">fields</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">field_config</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+                <span class="n">field_name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+                <span class="n">label_source</span> <span class="o">=</span> <span class="n">alias_lookup</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                    <span class="n">name</span><span class="p">,</span> <span class="n">alias_lookup</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">field_name</span><span class="p">,</span> <span class="n">field_name</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="n">field_config</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">field_name</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">label_source</span><span class="p">)}</span>
+                <span class="p">)</span>
+
+    <span class="n">config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;layerId&quot;</span><span class="p">:</span> <span class="n">layer_id</span><span class="p">,</span>
+        <span class="s2">&quot;maxProperties&quot;</span><span class="p">:</span> <span class="n">max_properties</span><span class="p">,</span>
+        <span class="s2">&quot;closeButton&quot;</span><span class="p">:</span> <span class="n">close_button</span><span class="p">,</span>
+        <span class="s2">&quot;maxWidth&quot;</span><span class="p">:</span> <span class="n">max_width</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="n">field_config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;fields&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">field_config</span>
+    <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">title</span>
+    <span class="k">if</span> <span class="n">title_field</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;titleField&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">title_field</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;enableFeaturePopup&quot;</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
 <h3 id="anymap.maplibre.MapLibreMap.fit_bounds" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">fit_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span></code>
 
@@ -9364,6 +10084,13 @@ Returns None if metadata retrieval fails.</p></td>
         <span class="n">current_layers</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_layers</span><span class="p">)</span>
         <span class="k">del</span> <span class="n">current_layers</span><span class="p">[</span><span class="n">layer_id</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_layers</span> <span class="o">=</span> <span class="n">current_layers</span>
+
+    <span class="c1"># Remove FlatGeobuf metadata if present</span>
+    <span class="k">if</span> <span class="n">layer_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">flatgeobuf_layers</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;removeFlatGeobufLayer&quot;</span><span class="p">,</span> <span class="n">layer_id</span><span class="p">)</span>
+        <span class="n">flatgeobuf_layers</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flatgeobuf_layers</span><span class="p">)</span>
+        <span class="k">del</span> <span class="n">flatgeobuf_layers</span><span class="p">[</span><span class="n">layer_id</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">flatgeobuf_layers</span> <span class="o">=</span> <span class="n">flatgeobuf_layers</span>
 
     <span class="c1"># Remove from layer_dict</span>
     <span class="k">if</span> <span class="n">layer_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_dict</span><span class="p">:</span>
