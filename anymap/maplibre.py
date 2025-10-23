@@ -94,6 +94,9 @@ class MapLibreMap(MapWidget):
     clicked = traitlets.Dict().tag(sync=True)
     _deckgl_layers = traitlets.Dict().tag(sync=True)
     flatgeobuf_layers = traitlets.Dict({}).tag(sync=True)
+    geoman_data = traitlets.Dict({"type": "FeatureCollection", "features": []}).tag(
+        sync=True
+    )
 
     # Define the JavaScript module path
     _esm = _esm_maplibre
@@ -216,6 +219,9 @@ class MapLibreMap(MapWidget):
         for control, position in controls.items():
             if control == "layers":
                 self.add_layer_control(position)
+            elif control == "geoman":
+                self.add_geoman_control(position=position)
+                self.controls[control] = position
             elif control == "export":
                 self.add_export_control(position=position)
                 self.controls[control] = position
@@ -1497,6 +1503,93 @@ class MapLibreMap(MapWidget):
         self._controls = current_controls
 
         self.call_js_method("addControl", "export", control_options)
+
+    def add_geoman_control(
+        self,
+        position: str = "top-left",
+        geoman_options: Optional[Dict[str, Any]] = None,
+        settings: Optional[Dict[str, Any]] = None,
+        controls: Optional[Dict[str, Any]] = None,
+        collapsed: Optional[bool] = False,
+    ) -> None:
+        """Add the MapLibre-Geoman drawing and editing toolkit.
+
+        Args:
+            position: Where to dock the Geoman toolbar on the map.
+            geoman_options: Raw configuration dictionary passed directly to the
+                ``Geoman`` constructor.
+            settings: Optional convenience overrides merged into
+                ``geoman_options['settings']``.
+            controls: Optional overrides for toolbar sections such as ``draw``,
+                ``edit``, or ``helper``. Each key should map to a dictionary of
+                button configuration overrides.
+            collapsed: Whether the toolbar UI should start collapsed. Use
+                ``None`` to defer to the underlying configuration.
+        """
+
+        geoman_config: Dict[str, Any] = dict(geoman_options or {})
+
+        if settings:
+            geoman_settings = geoman_config.setdefault("settings", {})
+            geoman_settings.update(settings)
+
+        if controls:
+            geoman_controls = geoman_config.setdefault("controls", {})
+            for section, section_options in controls.items():
+                if isinstance(section_options, dict):
+                    section_config = geoman_controls.setdefault(section, {})
+                    section_config.update(section_options)
+                else:
+                    geoman_controls[section] = section_options
+
+        if collapsed is not None:
+            geoman_settings = geoman_config.setdefault("settings", {})
+            geoman_settings.setdefault("controlsCollapsible", True)
+            geoman_settings["controlsUiEnabledByDefault"] = False if collapsed else True
+
+        control_options: Dict[str, Any] = {"position": position}
+        if geoman_config:
+            control_options["geoman_options"] = geoman_config
+        if collapsed is not None:
+            control_options["collapsed"] = bool(collapsed)
+
+        control_key = f"geoman_{position}"
+        current_controls = dict(self._controls)
+        current_controls[control_key] = {
+            "type": "geoman",
+            "position": position,
+            "options": control_options,
+        }
+        self._controls = current_controls
+        self.controls["geoman"] = position
+
+        self.call_js_method("addControl", "geoman", control_options)
+
+    def remove_geoman_control(self, position: str = "top-left") -> None:
+        """Remove the Geoman control toolbar."""
+
+        control_key = f"geoman_{position}"
+        current_controls = dict(self._controls)
+        if control_key in current_controls:
+            current_controls.pop(control_key)
+            self._controls = current_controls
+        self.controls.pop("geoman", None)
+        self.call_js_method("removeControl", "geoman", position)
+
+    def set_geoman_data(self, data: Dict[str, Any]) -> None:
+        """Replace the current Geoman feature collection."""
+
+        self.geoman_data = data or {"type": "FeatureCollection", "features": []}
+
+    def clear_geoman_data(self) -> None:
+        """Clear all Geoman-managed features."""
+
+        self.set_geoman_data({"type": "FeatureCollection", "features": []})
+
+    def get_geoman_data(self) -> Dict[str, Any]:
+        """Return the current Geoman feature collection."""
+
+        return self.geoman_data
 
     def add_google_streetview(
         self,

@@ -170,6 +170,95 @@ function applyExportControlCollapsedState(control, shouldCollapse) {
   }
 }
 
+function resolveGeomanNamespace() {
+  if (!window.Geoman || typeof window.Geoman !== 'object') {
+    return null;
+  }
+  return window.Geoman;
+}
+
+function buildGeomanOptions(position, geomanOptions = {}, collapsed) {
+  const options = { ...(geomanOptions || {}) };
+  const settings = { ...(options.settings || {}) };
+
+  if (position && !settings.controlsPosition) {
+    settings.controlsPosition = position;
+  }
+
+  if (typeof settings.controlsCollapsible !== 'boolean') {
+    settings.controlsCollapsible = true;
+  }
+
+  options.settings = settings;
+  return options;
+}
+
+function normalizeGeomanGeoJson(data) {
+  if (!data || typeof data !== 'object') {
+    return { type: 'FeatureCollection', features: [] };
+  }
+
+  if (data.type === 'FeatureCollection') {
+    const features = Array.isArray(data.features) ? data.features.filter(Boolean) : [];
+    return { type: 'FeatureCollection', features };
+  }
+
+  if (data.type && data.geometry) {
+    return { type: 'FeatureCollection', features: [data] };
+  }
+
+  if (Array.isArray(data)) {
+    return { type: 'FeatureCollection', features: data.filter(Boolean) };
+  }
+
+  return { type: 'FeatureCollection', features: [] };
+}
+
+function shouldSyncGeomanEvent(event) {
+  if (!event || typeof event !== 'object') {
+    return false;
+  }
+
+  if (event.name === 'loaded') {
+    return true;
+  }
+
+  const payload = event.payload;
+  if (!payload || typeof payload !== 'object') {
+    return false;
+  }
+
+  return Boolean(
+    payload.feature ||
+      payload.features ||
+      payload.originalFeature ||
+      payload.originalFeatures ||
+      payload.geoJson ||
+      payload.featureId ||
+      payload.sourceId
+  );
+}
+
+function applyGeomanCollapsedState(instance, collapsed) {
+  if (!instance || !instance.control || !instance.control.container) {
+    return;
+  }
+
+  const container = instance.control.container;
+  const isCollapsed = !container.querySelector('.gm-reactive-controls');
+  const toggleButton = container.querySelector('.group-settings .gm-control-button');
+
+  if (!toggleButton) {
+    return;
+  }
+
+  if (collapsed && !isCollapsed) {
+    toggleButton.click();
+  } else if (!collapsed && isCollapsed) {
+    toggleButton.click();
+  }
+}
+
 // Layer Control class
 class LayerControl {
   constructor(options, map, model) {
@@ -1749,6 +1838,22 @@ function render({ model, el }) {
     el._markers.forEach(marker => marker.remove());
     el._markers = [];
   }
+  if (el._geomanInstance && typeof el._geomanInstance.destroy === 'function') {
+    try {
+      el._geomanInstance.destroy({ removeSources: true });
+    } catch (error) {
+      console.warn('Failed to destroy existing Geoman instance:', error);
+    }
+  }
+  el._geomanInstance = null;
+  el._geomanPromise = null;
+  el._geomanEventListener = null;
+  if (el._geomanModelListener) {
+    model.off("change:geoman_data", el._geomanModelListener);
+    el._geomanModelListener = null;
+  }
+  el._geomanSyncFromJs = false;
+  el._pendingGeomanData = normalizeGeomanGeoJson(model.get("geoman_data"));
 
   el.innerHTML = "";
   el.appendChild(container);
@@ -2031,6 +2136,69 @@ function render({ model, el }) {
         exportCSS.rel = 'stylesheet';
         exportCSS.href = 'https://cdn.jsdelivr.net/npm/@watergis/maplibre-gl-export@4.1.0/dist/maplibre-gl-export.css';
         document.head.appendChild(exportCSS);
+      }
+
+      if (!resolveGeomanNamespace()) {
+        const geomanScript = document.createElement('script');
+        geomanScript.src = 'https://cdn.jsdelivr.net/npm/@geoman-io/maplibre-geoman-free@0.4.9/dist/maplibre-geoman.umd.js';
+
+        const previousDefine = window.define;
+        const previousModule = window.module;
+        const previousExports = window.exports;
+        const hadAMDDefine = !!(previousDefine && previousDefine.amd);
+        const hadModule = typeof previousModule !== 'undefined';
+        const hadExports = typeof previousExports !== 'undefined';
+
+        const restoreModuleEnv = () => {
+          if (hadAMDDefine) {
+            window.define = previousDefine;
+          } else {
+            delete window.define;
+          }
+          if (hadModule) {
+            window.module = previousModule;
+          } else {
+            delete window.module;
+          }
+          if (hadExports) {
+            window.exports = previousExports;
+          } else {
+            delete window.exports;
+          }
+        };
+
+        if (hadAMDDefine) {
+          window.define = undefined;
+        }
+        if (hadModule) {
+          window.module = undefined;
+        }
+        if (hadExports) {
+          window.exports = undefined;
+        }
+
+        await new Promise((resolve, reject) => {
+          geomanScript.onload = () => {
+            restoreModuleEnv();
+            resolve();
+          };
+          geomanScript.onerror = (error) => {
+            restoreModuleEnv();
+            reject(error);
+          };
+          document.head.appendChild(geomanScript);
+        });
+
+        if (!resolveGeomanNamespace()) {
+          console.warn('MapLibre Geoman plugin failed to load - geospatial editing unavailable');
+        }
+      }
+
+      if (!document.querySelector('link[href*="maplibre-geoman.css"]')) {
+        const geomanCSS = document.createElement('link');
+        geomanCSS.rel = 'stylesheet';
+        geomanCSS.href = 'https://cdn.jsdelivr.net/npm/@geoman-io/maplibre-geoman-free@0.4.9/dist/maplibre-geoman.css';
+        document.head.appendChild(geomanCSS);
       }
 
       // Load DeckGL for overlay layers
@@ -2331,6 +2499,129 @@ function render({ model, el }) {
     el._featurePopupHandlers = new Map();
     el._featurePopupConfigs = new Map();
     el._featurePopupRetryTimer = null;
+    el._pendingGeomanData = normalizeGeomanGeoJson(model.get("geoman_data"));
+
+    const exportGeomanData = () => {
+      if (!el._geomanInstance) {
+        return;
+      }
+      try {
+        const exported = el._geomanInstance.features.exportGeoJson();
+        el._geomanSyncFromJs = true;
+        model.set("geoman_data", exported);
+        model.save_changes();
+      } catch (error) {
+        console.warn('Failed to export Geoman features:', error);
+      }
+    };
+
+    const importGeomanData = (data) => {
+      el._pendingGeomanData = normalizeGeomanGeoJson(data);
+      if (!el._geomanInstance) {
+        return;
+      }
+      try {
+        const collection = el._pendingGeomanData;
+        el._geomanInstance.features.updateManager.withAtomicSourcesUpdate(() => {
+          const existingFeatures = Array.from(el._geomanInstance.features.featureStore.values());
+          existingFeatures.forEach((feature) => {
+            try {
+              el._geomanInstance.features.delete(feature);
+            } catch (deleteError) {
+              console.warn('Failed to remove Geoman feature during import:', deleteError);
+            }
+          });
+          if (collection.features.length) {
+            el._geomanInstance.features.importGeoJson(collection);
+          }
+        });
+        el._pendingGeomanData = null;
+        exportGeomanData();
+      } catch (error) {
+        console.error('Failed to import Geoman data:', error);
+      }
+    };
+
+    const scheduleGeomanInitialization = (controlKey, controlOptions = {}) => {
+      if (el._geomanInstance || el._geomanPromise) {
+        console.warn('Geoman control is already initialized.');
+        return;
+      }
+
+      const geomanNamespace = resolveGeomanNamespace();
+      if (!geomanNamespace || typeof geomanNamespace.createGeomanInstance !== 'function') {
+        console.warn('MapLibre Geoman namespace is unavailable.');
+        return;
+      }
+
+      const position = controlOptions.position || 'top-left';
+      const geomanOptions = buildGeomanOptions(position, controlOptions.geoman_options || {}, controlOptions.collapsed);
+      const initialCollapsed = Object.prototype.hasOwnProperty.call(controlOptions, 'collapsed')
+        ? controlOptions.collapsed
+        : undefined;
+
+      el._controls.set(controlKey, { type: 'geoman', pending: true });
+
+      el._geomanPromise = geomanNamespace
+        .createGeomanInstance(map, geomanOptions)
+        .then((instance) => {
+          el._geomanInstance = instance;
+          el._controls.set(controlKey, instance);
+
+          const geomanListener = (event) => {
+            try {
+              const currentEvents = model.get("_js_events") || [];
+              const geomanEvent = {
+                type: 'geoman',
+                name: event?.name,
+                eventType: event?.type,
+                payload: event?.payload,
+              };
+              model.set("_js_events", [...currentEvents, geomanEvent]);
+              model.save_changes();
+            } catch (evtError) {
+              console.warn('Failed to forward Geoman event:', evtError);
+            }
+
+            if (shouldSyncGeomanEvent(event)) {
+              exportGeomanData();
+            }
+          };
+
+          instance.setGlobalEventsListener(geomanListener);
+          el._geomanEventListener = geomanListener;
+
+          if (el._pendingGeomanData) {
+            importGeomanData(el._pendingGeomanData);
+          } else {
+            exportGeomanData();
+          }
+
+          if (typeof initialCollapsed === 'boolean') {
+            requestAnimationFrame(() => {
+              applyGeomanCollapsedState(instance, initialCollapsed);
+            });
+          }
+        })
+        .catch((error) => {
+          console.error('Failed to initialize MapLibre Geoman control:', error);
+          el._controls.delete(controlKey);
+        })
+        .finally(() => {
+          el._geomanPromise = null;
+        });
+    };
+
+    const geomanModelListener = () => {
+      if (el._geomanSyncFromJs) {
+        el._geomanSyncFromJs = false;
+        return;
+      }
+      importGeomanData(model.get("geoman_data"));
+    };
+
+    model.on("change:geoman_data", geomanModelListener);
+    el._geomanModelListener = geomanModelListener;
 
     const ensureFlatGeobufLibrary = (() => {
       let loaderPromise = null;
@@ -3015,6 +3306,14 @@ function render({ model, el }) {
                 // Handle layer control restoration
                 control = new LayerControl(controlOptions || {}, map, model);
                 break;
+              case 'geoman': {
+                scheduleGeomanInitialization(controlKey, {
+                  position,
+                  geoman_options: controlOptions?.geoman_options || {},
+                  collapsed: controlOptions?.collapsed,
+                });
+                return;
+              }
               case 'export': {
                 const ExportControlClass = resolveExportControlClass();
                 if (!ExportControlClass) {
@@ -3741,6 +4040,14 @@ function render({ model, el }) {
               case 'layer_control':
                 control = new LayerControl(controlOptions || {}, map, model);
                 break;
+              case 'geoman': {
+                scheduleGeomanInitialization(controlKey, {
+                  position,
+                  geoman_options: controlOptions?.geoman_options || {},
+                  collapsed: controlOptions?.collapsed,
+                });
+                return;
+              }
               case 'export': {
                 const ExportControlClass = resolveExportControlClass();
                 if (!ExportControlClass) {
@@ -4053,6 +4360,22 @@ function render({ model, el }) {
               } else {
                 console.warn(`Google Street View plugin ${removeControlKey} not found`);
               }
+            } else if (removeControlType === 'geoman') {
+              if (el._geomanInstance && typeof el._geomanInstance.destroy === 'function') {
+                try {
+                  el._geomanInstance.destroy({ removeSources: true });
+                } catch (error) {
+                  console.warn('Failed to destroy Geoman instance:', error);
+                }
+              }
+              el._geomanInstance = null;
+              el._geomanPromise = null;
+              el._geomanEventListener = null;
+              el._controls.delete(removeControlKey);
+              el._geomanSyncFromJs = true;
+              model.set('geoman_data', { type: 'FeatureCollection', features: [] });
+              model.save_changes();
+              el._pendingGeomanData = normalizeGeomanGeoJson(model.get('geoman_data'));
             } else {
               // Handle regular controls
               if (el._controls.has(removeControlKey)) {
