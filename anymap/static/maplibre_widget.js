@@ -407,11 +407,11 @@ class LayerControl {
         const layerType = layer.type;
         let opacity = 1.0;
 
-        switch (layerType) {
-          case 'fill':
-            opacity = this.map.getPaintProperty(layerId, 'fill-opacity') || 1.0;
-            break;
-          case 'line':
+      switch (layerType) {
+        case 'fill':
+          opacity = this.map.getPaintProperty(layerId, 'fill-opacity') || 1.0;
+          break;
+        case 'line':
             opacity = this.map.getPaintProperty(layerId, 'line-opacity') || 1.0;
             break;
           case 'circle':
@@ -433,6 +433,8 @@ class LayerControl {
           this.layerStates[layerId].visible = isVisible;
           this.layerStates[layerId].opacity = opacity;
         }
+
+        this.ensureStyleControls(layerId);
 
         // Update UI elements
         this.updateUIForLayer(layerId, isVisible, opacity);
@@ -662,6 +664,7 @@ class LayerControl {
     }
 
     item.appendChild(row);
+    this.ensureStyleControls(layerId);
 
     if (styleButton && !styleButton.disabled) {
       const styleEditor = this.createStyleEditor(layerId, state);
@@ -673,6 +676,55 @@ class LayerControl {
     }
 
     this.panel.appendChild(item);
+  }
+
+  ensureStyleControls(layerId) {
+    const state = this.layerStates[layerId];
+    if (!state || !this.panel) {
+      return;
+    }
+
+    const items = this.panel.querySelectorAll('.layer-control-item');
+    const item = Array.from(items).find((el) => el.dataset.layerId === layerId);
+    if (!item) {
+      return;
+    }
+
+    const row = item.querySelector('.layer-control-row');
+    if (!row) {
+      return;
+    }
+
+    let button = row.querySelector('.layer-control-style-button');
+    const hasOptions = this.hasStyleOptions(layerId);
+
+    if (!button) {
+      button = this.createStyleButton(layerId, state);
+      if (button) {
+        row.appendChild(button);
+      }
+    }
+
+    if (!button) {
+      return;
+    }
+
+    if (hasOptions) {
+      button.disabled = false;
+      button.title = `Style ${state.name || layerId}`;
+
+      if (!this.styleEditors.has(layerId)) {
+        const styleEditor = this.createStyleEditor(layerId, state);
+        if (styleEditor) {
+          item.appendChild(styleEditor);
+          this.styleEditors.set(layerId, styleEditor);
+          this.updateStyleEditorValues(layerId);
+        }
+      }
+    } else if (layerId === 'Background') {
+      button.disabled = true;
+      button.title = 'Styling not available for Background layers';
+    }
   }
 
   hasStyleOptions(layerId) {
@@ -2093,6 +2145,519 @@ function render({ model, el }) {
     el._widgetId = widgetId;
     el._mapReady = false; // Track if map is fully loaded
     el._pendingCalls = []; // Queue for calls before map is ready
+    el._flatgeobufLayers = new Map();
+    el._flatgeobufLayerPromises = new Map();
+    el._pendingFlatGeobufSync = false;
+    el._featurePopupHandlers = new Map();
+    el._featurePopupConfigs = new Map();
+    el._featurePopupRetryTimer = null;
+
+    const ensureFlatGeobufLibrary = (() => {
+      let loaderPromise = null;
+
+      const hasFlatGeobuf = () =>
+        !!(window.flatgeobuf && (window.flatgeobuf.geojson || window.flatgeobuf.deserialize));
+
+      const formatLoadError = (error, src) => {
+        if (!error) {
+          return `Unknown error loading ${src}`;
+        }
+        if (error instanceof Event) {
+          const target = error.target;
+          if (target && target.tagName === 'SCRIPT') {
+            return `Failed to load ${src || target.src || 'external script'}`;
+          }
+          return `Event "${error.type || 'error'}" while loading ${src}`;
+        }
+        if (typeof error === 'object' && 'message' in error && error.message) {
+          return error.message;
+        }
+        return String(error);
+      };
+
+      const loadScript = (src) =>
+        new Promise((resolve, reject) => {
+          const script = document.createElement('script');
+          script.src = src;
+          script.async = true;
+          script.crossOrigin = 'anonymous';
+          script.onload = () => resolve(window.flatgeobuf);
+          script.onerror = (error) => {
+            script.remove();
+            reject(new Error(formatLoadError(error, src)));
+          };
+          document.head.appendChild(script);
+        });
+
+      const tryCdnSources = async () => {
+        const cdnSources = [
+          'https://unpkg.com/flatgeobuf@latest/dist/flatgeobuf-geojson.min.js',
+          'https://cdn.jsdelivr.net/npm/flatgeobuf@latest/dist/flatgeobuf-geojson.min.js',
+        ];
+
+        let lastError = null;
+        for (const src of cdnSources) {
+          try {
+            const module = await loadScript(src);
+            if (hasFlatGeobuf()) {
+              return module || window.flatgeobuf;
+            }
+          } catch (error) {
+            console.warn(`FlatGeobuf loader: ${error.message || error}`);
+            lastError = error;
+          }
+        }
+        throw lastError || new Error('Unable to load FlatGeobuf library from CDN sources.');
+      };
+
+      return () => {
+        if (loaderPromise) {
+          return loaderPromise;
+        }
+
+        if (hasFlatGeobuf()) {
+          loaderPromise = Promise.resolve(window.flatgeobuf);
+          loaderPromise.catch(() => {
+            loaderPromise = null;
+          });
+          return loaderPromise;
+        }
+
+        if (typeof window.require === 'function') {
+          loaderPromise = new Promise((resolve, reject) => {
+            try {
+              window.require(
+                ['flatgeobuf/dist/flatgeobuf-geojson.min'],
+                (module) => {
+                  if (!window.flatgeobuf) {
+                    window.flatgeobuf = module;
+                  }
+                  resolve(module || window.flatgeobuf);
+                },
+                async (err) => {
+                  console.warn('FlatGeobuf AMD loader failed, falling back to CDN.', err);
+                  try {
+                    const module = await tryCdnSources();
+                    resolve(module);
+                  } catch (cdnError) {
+                    reject(cdnError);
+                  }
+                },
+              );
+            } catch (error) {
+              console.warn('FlatGeobuf AMD loader threw synchronously, falling back to CDN.', error);
+              tryCdnSources()
+                .then((module) => resolve(module))
+                .catch((cdnError) => reject(cdnError));
+            }
+          });
+          loaderPromise.catch(() => {
+            loaderPromise = null;
+          });
+          return loaderPromise;
+        }
+
+        loaderPromise = tryCdnSources();
+        loaderPromise.catch(() => {
+          loaderPromise = null;
+        });
+        return loaderPromise;
+      };
+    })();
+
+    async function loadFlatGeobufGeoJSON(url, bbox) {
+      await ensureFlatGeobufLibrary();
+
+      const normalizeBBox = (value) => {
+        if (!value) {
+          return undefined;
+        }
+        if (Array.isArray(value)) {
+          if (value.length !== 4) {
+            console.warn('FlatGeobuf bbox array must have four numbers [minX, minY, maxX, maxY].', value);
+            return undefined;
+          }
+          const [minX, minY, maxX, maxY] = value;
+          if ([minX, minY, maxX, maxY].some((v) => typeof v !== 'number' || Number.isNaN(v))) {
+            console.warn('FlatGeobuf bbox array contains non-numeric values.', value);
+            return undefined;
+          }
+          return { minX, minY, maxX, maxY };
+        }
+        if (typeof value === 'object') {
+          const { minX, minY, maxX, maxY } = value;
+          if ([minX, minY, maxX, maxY].some((v) => typeof v !== 'number' || Number.isNaN(v))) {
+            console.warn('FlatGeobuf bbox object contains invalid values.', value);
+            return undefined;
+          }
+          return { minX, minY, maxX, maxY };
+        }
+        console.warn('FlatGeobuf bbox must be an array or object.', value);
+        return undefined;
+      };
+
+      if (!url || typeof url !== 'string') {
+        throw new Error('FlatGeobuf layer requires a URL string.');
+      }
+
+      const normalizedBBox = normalizeBBox(bbox);
+      const effectiveBBox =
+        normalizedBBox ||
+        {
+          minX: -1e12,
+          minY: -1e12,
+          maxX: 1e12,
+          maxY: 1e12,
+        };
+
+      const module = (window.flatgeobuf && (window.flatgeobuf.geojson || window.flatgeobuf)) || {};
+      const deserialize = module.deserialize || (module.geojson && module.geojson.deserialize);
+      if (!deserialize) {
+        throw new Error('FlatGeobuf deserialize helper is unavailable.');
+      }
+
+      let iterable;
+      try {
+        const options = normalizedBBox || effectiveBBox;
+        iterable = deserialize(url, options);
+      } catch (error) {
+        console.warn('FlatGeobuf deserialize failed, retrying without bbox.', error);
+        iterable = deserialize(url, effectiveBBox);
+      }
+
+      const features = [];
+
+      if (iterable && typeof iterable[Symbol.asyncIterator] === 'function') {
+        try {
+          for await (const feature of iterable) {
+            features.push(feature);
+          }
+        } catch (error) {
+          console.warn('FlatGeobuf streaming failed, retrying without bbox.', error);
+          const retryIterable = deserialize(url, effectiveBBox);
+          for await (const feature of retryIterable) {
+            features.push(feature);
+          }
+        }
+        return { type: 'FeatureCollection', features };
+      }
+
+      const maybeGeoJSON = await iterable;
+      if (maybeGeoJSON && Array.isArray(maybeGeoJSON.features)) {
+        return maybeGeoJSON;
+      }
+
+      throw new Error('Unexpected response from FlatGeobuf deserialize helper.');
+    }
+
+    async function addFlatGeobufLayerFromConfig(layerConfig, { logErrors = true } = {}) {
+      if (!layerConfig || !layerConfig.url) {
+        if (logErrors) {
+          console.warn('FlatGeobuf layer configuration missing url.', layerConfig);
+        }
+        return;
+      }
+
+      const layerId = layerConfig.layerId || layerConfig.id;
+      const sourceId = layerConfig.sourceId || `${layerId}_source`;
+      const layerType = layerConfig.layerType || layerConfig.type || 'fill';
+
+      try {
+        const geojson = await loadFlatGeobufGeoJSON(layerConfig.url, layerConfig.bbox);
+
+        if (map.getSource(sourceId)) {
+          map.getSource(sourceId).setData(geojson);
+        } else {
+          map.addSource(sourceId, {
+            type: 'geojson',
+            data: geojson,
+          });
+        }
+
+        if (map.getLayer(layerId)) {
+          map.removeLayer(layerId);
+        }
+
+        const layerDefinition = {
+          id: layerId,
+          type: layerType,
+          source: sourceId,
+        };
+
+        if (layerConfig.paint) {
+          layerDefinition.paint = layerConfig.paint;
+        }
+        if (layerConfig.layout) {
+          layerDefinition.layout = layerConfig.layout;
+        }
+        if (layerConfig.filter) {
+          layerDefinition.filter = layerConfig.filter;
+        }
+        if (layerConfig.promoteId !== undefined) {
+          layerDefinition.promoteId = layerConfig.promoteId;
+        }
+        if (layerConfig.minzoom !== undefined) {
+          layerDefinition.minzoom = layerConfig.minzoom;
+        }
+        if (layerConfig.maxzoom !== undefined) {
+          layerDefinition.maxzoom = layerConfig.maxzoom;
+        }
+        if (layerConfig.metadata) {
+          layerDefinition.metadata = layerConfig.metadata;
+        }
+
+        map.addLayer(layerDefinition, layerConfig.beforeId || undefined);
+        el._flatgeobufLayers.set(layerId, { sourceId, layerConfig });
+      } catch (error) {
+        if (logErrors) {
+          console.error('Failed to add FlatGeobuf layer:', error);
+        }
+      }
+    }
+
+    function removeFlatGeobufLayer(layerId) {
+      if (map.getLayer(layerId)) {
+        map.removeLayer(layerId);
+      }
+      const current = el._flatgeobufLayers.get(layerId);
+      if (current && current.sourceId && map.getSource(current.sourceId)) {
+        map.removeSource(current.sourceId);
+      }
+      el._flatgeobufLayers.delete(layerId);
+      detachFeaturePopup(layerId);
+    }
+
+    async function syncFlatGeobufLayers() {
+      const configuredLayers = model.get('flatgeobuf_layers') || {};
+      const desiredIds = new Set(Object.keys(configuredLayers));
+
+      for (const layerId of desiredIds) {
+        const layerConfig = configuredLayers[layerId];
+        await addFlatGeobufLayerFromConfig(layerConfig);
+        attachFeaturePopup(layerId);
+      }
+
+      for (const existingId of Array.from(el._flatgeobufLayers.keys())) {
+        if (!desiredIds.has(existingId)) {
+          removeFlatGeobufLayer(existingId);
+        }
+      }
+    }
+
+    model.on('change:flatgeobuf_layers', () => {
+      if (el._mapReady) {
+        syncFlatGeobufLayers();
+      } else {
+        el._pendingFlatGeobufSync = true;
+      }
+    });
+
+    const escapeHtml = (value) => {
+      if (value === null || value === undefined) {
+        return '';
+      }
+      return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    };
+
+    const formatPopupValue = (value) => {
+      if (value === null || value === undefined) {
+        return '';
+      }
+      if (typeof value === 'object') {
+        try {
+          return JSON.stringify(value);
+        } catch (_err) {
+          return String(value);
+        }
+      }
+      return String(value);
+    };
+
+    function renderPopupContent(config, feature) {
+      if (!feature || !feature.properties) {
+        return '';
+      }
+      const properties = feature.properties || {};
+      const fieldDefs = Array.isArray(config.fields) ? config.fields : null;
+      const maxProperties =
+        typeof config.maxProperties === 'number' && config.maxProperties > 0
+          ? config.maxProperties
+          : 25;
+
+      let rows = [];
+      if (fieldDefs && fieldDefs.length > 0) {
+        rows = fieldDefs.map((def) => {
+          const fieldName = def && def.name !== undefined ? def.name : def;
+          const label = (def && def.label !== undefined ? def.label : fieldName);
+          const value = properties[fieldName];
+          return {
+            label: label !== undefined ? label : fieldName,
+            value: formatPopupValue(value),
+          };
+        });
+      } else {
+        rows = Object.keys(properties)
+          .slice(0, maxProperties)
+          .map((key) => ({
+            label: key,
+            value: formatPopupValue(properties[key]),
+          }));
+      }
+
+      const title =
+        config.title !== undefined && config.title !== null
+          ? config.title
+          : config.titleField && properties[config.titleField] !== undefined
+            ? properties[config.titleField]
+            : null;
+
+      let html = '<div class="anymap-popup">';
+      if (title) {
+        html += `<div class="anymap-popup__title">${escapeHtml(title)}</div>`;
+      }
+
+      if (!rows.length) {
+        html += '<div class="anymap-popup__empty">No attributes</div>';
+      } else {
+        html += '<table class="anymap-popup__table">';
+        rows.forEach((row) => {
+          html += `<tr><th>${escapeHtml(row.label)}</th><td>${escapeHtml(row.value)}</td></tr>`;
+        });
+        html += '</table>';
+      }
+
+      html += '</div>';
+      return html;
+    }
+
+    function detachFeaturePopup(layerId, { keepConfig = false } = {}) {
+      const handler = el._featurePopupHandlers.get(layerId);
+      if (handler) {
+        map.off('click', layerId, handler.click);
+        map.off('mouseenter', layerId, handler.enter);
+        map.off('mouseleave', layerId, handler.leave);
+        if (
+          handler.state &&
+          handler.state.popup &&
+          typeof handler.state.popup.remove === 'function'
+        ) {
+          handler.state.popup.remove();
+        }
+        el._featurePopupHandlers.delete(layerId);
+      }
+      if (!keepConfig) {
+        el._featurePopupConfigs.delete(layerId);
+      }
+    }
+
+    function attachFeaturePopup(layerId) {
+      if (!el._featurePopupConfigs.has(layerId)) {
+        return;
+      }
+      const config = el._featurePopupConfigs.get(layerId);
+      if (!map.getLayer(layerId)) {
+        return;
+      }
+
+      detachFeaturePopup(layerId, { keepConfig: true });
+
+      const popupState = { popup: null };
+      const maxWidth = typeof config.maxWidth === 'string' ? config.maxWidth : '320px';
+
+      const clickHandler = (event) => {
+        const feature = event && event.features && event.features[0];
+        if (!feature) {
+          if (popupState.popup) {
+            popupState.popup.remove();
+            popupState.popup = null;
+          }
+          return;
+        }
+
+        const content = renderPopupContent(config, feature);
+        if (!content) {
+          if (popupState.popup) {
+            popupState.popup.remove();
+            popupState.popup = null;
+          }
+          return;
+        }
+
+        if (popupState.popup) {
+          popupState.popup.remove();
+        }
+
+        popupState.popup = new maplibregl.Popup({
+          closeButton: config.closeButton !== false,
+          closeOnClick: true,
+          maxWidth,
+        })
+          .setLngLat(event.lngLat)
+          .setHTML(content)
+          .addTo(map);
+
+        popupState.popup.on('close', () => {
+          popupState.popup = null;
+        });
+      };
+
+      const enterHandler = () => {
+        map.getCanvas().style.cursor = 'pointer';
+      };
+
+      const leaveHandler = () => {
+        map.getCanvas().style.cursor = '';
+        if (popupState.popup) {
+          popupState.popup.remove();
+          popupState.popup = null;
+        }
+      };
+
+      map.on('click', layerId, clickHandler);
+      map.on('mouseenter', layerId, enterHandler);
+      map.on('mouseleave', layerId, leaveHandler);
+
+      el._featurePopupHandlers.set(layerId, {
+        click: clickHandler,
+        enter: enterHandler,
+        leave: leaveHandler,
+        state: popupState,
+      });
+    }
+
+    function refreshFeaturePopups() {
+      if (!el._featurePopupConfigs || el._featurePopupConfigs.size === 0) {
+        return;
+      }
+      el._featurePopupConfigs.forEach((_config, layerId) => {
+        attachFeaturePopup(layerId);
+      });
+    }
+
+    function enableFeaturePopup(config = {}) {
+      const layerId = config.layerId;
+      if (!layerId) {
+        console.warn('enableFeaturePopup requires a layerId.', config);
+        return;
+      }
+
+      el._featurePopupConfigs.set(layerId, {
+        ...config,
+      });
+      attachFeaturePopup(layerId);
+    }
+
+    function disableFeaturePopup(layerId) {
+      if (!layerId) {
+        return;
+      }
+      detachFeaturePopup(layerId, { keepConfig: false });
+    }
 
     // Restore layers, sources, controls, and projection from model state
     const restoreMapState = () => {
@@ -2612,6 +3177,8 @@ function render({ model, el }) {
           console.error('Failed to load initial draw data:', error);
         }
       }
+
+      syncFlatGeobufLayers();
     };
 
     // Setup resize observer to handle container size changes
@@ -2664,6 +3231,11 @@ function render({ model, el }) {
         } else {
           console.log('[DeckGL Debug] No pending calls to process');
         }
+
+        if (el._pendingFlatGeobufSync) {
+          syncFlatGeobufLayers();
+          el._pendingFlatGeobufSync = false;
+        }
       }, 200);
     });
 
@@ -2692,6 +3264,7 @@ function render({ model, el }) {
     // Map event handlers
     map.on('load', () => {
       sendEvent('load', {});
+      refreshFeaturePopups();
     });
 
     map.on('click', (e) => {
@@ -2709,6 +3282,10 @@ function render({ model, el }) {
         lngLat: [e.lngLat.lng, e.lngLat.lat],
         point: [e.point.x, e.point.y]
       });
+    });
+
+    map.on('styledata', () => {
+      refreshFeaturePopups();
     });
 
     map.on('moveend', () => {
@@ -2855,6 +3432,22 @@ function render({ model, el }) {
               currentLayers[actualLayerId] = layerConfig;
               model.set("_layers", currentLayers);
               model.save_changes();
+              attachFeaturePopup(actualLayerId);
+            }
+            break;
+
+          case 'addFlatGeobufLayer':
+            const flatgeobufConfig = args[0] || {};
+            addFlatGeobufLayerFromConfig(flatgeobufConfig);
+            if (flatgeobufConfig && (flatgeobufConfig.layerId || flatgeobufConfig.id)) {
+              attachFeaturePopup(flatgeobufConfig.layerId || flatgeobufConfig.id);
+            }
+            break;
+
+          case 'removeFlatGeobufLayer':
+            const targetFlatLayerId = args[0];
+            if (targetFlatLayerId) {
+              removeFlatGeobufLayer(targetFlatLayerId);
             }
             break;
 
@@ -2867,11 +3460,23 @@ function render({ model, el }) {
               delete currentLayers[removeLayerId];
               model.set("_layers", currentLayers);
               model.save_changes();
+              detachFeaturePopup(removeLayerId);
             }
             break;
 
           case 'setStyle':
             map.setStyle(args[0]);
+            break;
+
+          case 'enableFeaturePopup':
+            enableFeaturePopup(args[0] || {});
+            break;
+
+          case 'disableFeaturePopup':
+            const disableArg = args[0];
+            const targetLayer =
+              disableArg && typeof disableArg === 'object' ? disableArg.layerId : disableArg;
+            disableFeaturePopup(targetLayer);
             break;
 
           case 'addMarker':
