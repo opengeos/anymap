@@ -54,6 +54,122 @@ function processDeckGLProps(props) {
   return processed;
 }
 
+function resolveExportControlClass() {
+  if (!window.MaplibreExportControl) {
+    return null;
+  }
+
+  if (typeof window.MaplibreExportControl === 'function') {
+    return window.MaplibreExportControl;
+  }
+
+  if (typeof window.MaplibreExportControl === 'object' && window.MaplibreExportControl !== null) {
+    if (typeof window.MaplibreExportControl.MaplibreExportControl === 'function') {
+      return window.MaplibreExportControl.MaplibreExportControl;
+    }
+    if (typeof window.MaplibreExportControl.default === 'function') {
+      return window.MaplibreExportControl.default;
+    }
+  }
+
+  return null;
+}
+
+function normalizeExportControlOptions(rawOptions = {}) {
+  const exportOptions = { ...rawOptions };
+  const shouldStartCollapsed = exportOptions.collapsed !== false;
+
+  delete exportOptions.position;
+  delete exportOptions.collapsed;
+
+  if (Array.isArray(exportOptions.PageSize)) {
+    const numericSize = exportOptions.PageSize
+      .map((value) => Number(value))
+      .filter((value) => Number.isFinite(value));
+    if (numericSize.length === 2) {
+      exportOptions.PageSize = numericSize;
+    } else {
+      delete exportOptions.PageSize;
+    }
+  }
+
+  if (typeof exportOptions.PageOrientation === 'string') {
+    exportOptions.PageOrientation = exportOptions.PageOrientation.toLowerCase();
+  }
+
+  if (typeof exportOptions.Format === 'string') {
+    exportOptions.Format = exportOptions.Format.toLowerCase();
+  }
+
+  if (Array.isArray(exportOptions.AllowedSizes)) {
+    exportOptions.AllowedSizes = exportOptions.AllowedSizes.map((value) =>
+      String(value).toUpperCase(),
+    );
+  }
+
+  if (exportOptions.DPI !== undefined) {
+    const dpiNumber = Number(exportOptions.DPI);
+    if (Number.isFinite(dpiNumber)) {
+      exportOptions.DPI = dpiNumber;
+    } else {
+      delete exportOptions.DPI;
+    }
+  }
+
+  if (exportOptions.Crosshair !== undefined) {
+    exportOptions.Crosshair = Boolean(exportOptions.Crosshair);
+  }
+
+  if (exportOptions.PrintableArea !== undefined) {
+    exportOptions.PrintableArea = Boolean(exportOptions.PrintableArea);
+  }
+
+  if (exportOptions.Local !== undefined) {
+    exportOptions.Local = String(exportOptions.Local || '').toLowerCase() || 'en';
+  }
+
+  if (typeof exportOptions.Filename === 'string') {
+    exportOptions.Filename = exportOptions.Filename.trim() || 'map';
+  }
+
+  return {
+    options: exportOptions,
+    startCollapsed: shouldStartCollapsed,
+  };
+}
+
+function applyExportControlCollapsedState(control, shouldCollapse) {
+  if (!control || typeof control !== 'object') {
+    return;
+  }
+  const container = control.exportContainer;
+  const button = control.exportButton;
+
+  if (!container || !button) {
+    return;
+  }
+
+  if (shouldCollapse) {
+    button.style.display = 'block';
+    container.style.display = 'none';
+    if (typeof control.toggleCrosshair === 'function') {
+      control.toggleCrosshair(false);
+    }
+    if (typeof control.togglePrintableArea === 'function') {
+      control.togglePrintableArea(false);
+    }
+  } else {
+    button.style.display = 'none';
+    container.style.display = 'block';
+    if (typeof control.toggleCrosshair === 'function') {
+      control.toggleCrosshair(true);
+    }
+    if (typeof control.togglePrintableArea === 'function') {
+      control.togglePrintableArea(true);
+    }
+  }
+}
+
 // Layer Control class
 class LayerControl {
   constructor(options, map, model) {
@@ -1853,6 +1969,70 @@ function render({ model, el }) {
         }
       }
 
+      // Load MapLibre GL Export Control
+      if (!resolveExportControlClass()) {
+        const exportScript = document.createElement('script');
+        exportScript.src = 'https://cdn.jsdelivr.net/npm/@watergis/maplibre-gl-export@4.1.0/dist/maplibre-gl-export.umd.js';
+
+        const previousDefine = window.define;
+        const previousModule = window.module;
+        const previousExports = window.exports;
+        const hadAMDDefine = !!(previousDefine && previousDefine.amd);
+        const hadModule = typeof previousModule !== 'undefined';
+        const hadExports = typeof previousExports !== 'undefined';
+
+        const restoreModuleEnv = () => {
+          if (hadAMDDefine) {
+            window.define = previousDefine;
+          } else {
+            delete window.define;
+          }
+          if (hadModule) {
+            window.module = previousModule;
+          } else {
+            delete window.module;
+          }
+          if (hadExports) {
+            window.exports = previousExports;
+          } else {
+            delete window.exports;
+          }
+        };
+
+        if (hadAMDDefine) {
+          window.define = undefined;
+        }
+        if (hadModule) {
+          window.module = undefined;
+        }
+        if (hadExports) {
+          window.exports = undefined;
+        }
+
+        await new Promise((resolve, reject) => {
+          exportScript.onload = () => {
+            restoreModuleEnv();
+            resolve();
+          };
+          exportScript.onerror = (error) => {
+            restoreModuleEnv();
+            reject(error);
+          };
+          document.head.appendChild(exportScript);
+        });
+
+        if (!resolveExportControlClass()) {
+          console.warn('MapLibre export control failed to load - export functionality unavailable');
+        }
+      }
+
+      if (!document.querySelector('link[href*="maplibre-gl-export.css"]')) {
+        const exportCSS = document.createElement('link');
+        exportCSS.rel = 'stylesheet';
+        exportCSS.href = 'https://cdn.jsdelivr.net/npm/@watergis/maplibre-gl-export@4.1.0/dist/maplibre-gl-export.css';
+        document.head.appendChild(exportCSS);
+      }
+
       // Load DeckGL for overlay layers
       if (!window.deck) {
         const deckScript = document.createElement('script');
@@ -2835,6 +3015,19 @@ function render({ model, el }) {
                 // Handle layer control restoration
                 control = new LayerControl(controlOptions || {}, map, model);
                 break;
+              case 'export': {
+                const ExportControlClass = resolveExportControlClass();
+                if (!ExportControlClass) {
+                  console.warn('MapLibre export control not available during restore');
+                  return;
+                }
+                const { options: exportOptions, startCollapsed } = normalizeExportControlOptions(
+                  controlOptions || {},
+                );
+                control = new ExportControlClass(exportOptions);
+                control.__anymapStartCollapsed = startCollapsed;
+                break;
+              }
               case 'widget_panel':
                 control = new WidgetPanelControl(controlOptions || {}, map, model);
                 break;
@@ -3140,6 +3333,12 @@ function render({ model, el }) {
             }
 
             map.addControl(control, position);
+            if (controlType === 'export') {
+              applyExportControlCollapsedState(
+                control,
+                control.__anymapStartCollapsed !== false,
+              );
+            }
             el._controls.set(controlKey, control);
           } catch (error) {
             console.warn(`Failed to restore control ${controlKey}:`, error);
@@ -3542,6 +3741,19 @@ function render({ model, el }) {
               case 'layer_control':
                 control = new LayerControl(controlOptions || {}, map, model);
                 break;
+              case 'export': {
+                const ExportControlClass = resolveExportControlClass();
+                if (!ExportControlClass) {
+                  console.warn('MapLibre export control not available');
+                  return;
+                }
+                const { options: exportOptions, startCollapsed } = normalizeExportControlOptions(
+                  controlOptions || {},
+                );
+                control = new ExportControlClass(exportOptions);
+                control.__anymapStartCollapsed = startCollapsed;
+                break;
+              }
               case 'widget_panel':
                 control = new WidgetPanelControl(controlOptions || {}, map, model);
                 break;
@@ -3806,6 +4018,12 @@ function render({ model, el }) {
             }
 
             map.addControl(control, position);
+            if (controlType === 'export') {
+              applyExportControlCollapsedState(
+                control,
+                control.__anymapStartCollapsed !== false,
+              );
+            }
             el._controls.set(controlKey, control);
             break;
 
