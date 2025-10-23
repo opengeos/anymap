@@ -1483,7 +1483,7 @@ class MapLibreMap(MapWidget):
             ]
 
         if allowed_sizes is not None:
-            control_options["AllowedSizes"] = [size.upper() for size in allowed_sizes]
+            control_options["AllowedSizes"] = [size.upper() for size in allowed_sizes if isinstance(size, str)]
 
         control_key = f"export_{position}"
         current_controls = dict(self._controls)
