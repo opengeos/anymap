@@ -1468,7 +1468,7 @@ class MapLibreMap(MapWidget):
         control_options.setdefault("DPI", int(dpi))
         control_options.setdefault("Crosshair", bool(crosshair))
         control_options.setdefault("PrintableArea", bool(printable_area))
-        control_options.setdefault("Local", clean_locale or "en")
+        control_options.setdefault("Locale", clean_locale or "en")
         control_options["collapsed"] = collapsed
 
         if page_size is not None:
