@@ -220,6 +220,90 @@
   display: block;
 }
 
+.maplibregl-ctrl-widget-panel {
+  position: relative;
+}
+
+.maplibregl-ctrl-widget-panel .widget-panel-toggle {
+  background: #ffffff;
+  border: 1px solid rgba(31, 42, 55, 0.18);
+  border-radius: 4px;
+  color: #1f2a37;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 29px;
+  height: 29px;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.maplibregl-ctrl-widget-panel .widget-panel-toggle:hover,
+.maplibregl-ctrl-widget-panel .widget-panel-toggle:focus {
+  border-color: rgba(31, 42, 55, 0.28);
+  box-shadow: 0 2px 6px rgba(31, 42, 55, 0.18);
+  outline: none;
+}
+
+.maplibregl-ctrl-widget-panel .widget-panel-toggle-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.maplibregl-ctrl-widget-panel .widget-panel {
+  position: absolute;
+  z-index: 1100;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 12px 32px rgba(13, 38, 59, 0.35);
+  border: 1px solid rgba(12, 42, 64, 0.08);
+  overflow: hidden;
+  display: none;
+}
+
+.maplibregl-ctrl-widget-panel .widget-panel.expanded {
+  display: block;
+}
+
+.maplibregl-ctrl-widget-panel .widget-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  background: linear-gradient(135deg, #0f4c75, #3282b8);
+  color: #ffffff;
+}
+
+.maplibregl-ctrl-widget-panel .widget-panel-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.15px;
+}
+
+.maplibregl-ctrl-widget-panel .widget-panel-close {
+  background: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  padding: 0 2px;
+  transition: color 0.15s ease;
+}
+
+.maplibregl-ctrl-widget-panel .widget-panel-close:hover,
+.maplibregl-ctrl-widget-panel .widget-panel-close:focus {
+  color: #ffd166;
+  outline: none;
+}
+
+.maplibregl-ctrl-widget-panel .widget-panel-content {
+  padding: 8px 10px;
+  max-height: 60vh;
+  overflow-y: auto;
+  background: #f9fbfd;
+}
+
 .layer-control-item {
   display: flex;
   flex-direction: column;

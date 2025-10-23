@@ -58,7 +58,6 @@ class CustomWidget(v.ExpansionPanels):
             label (str): Text label for the header. Defaults to "My Tools".
             height (str): Height of the header. Defaults to "40px".
             expanded (bool): Whether the panel is expanded by default. Defaults to True.
-            *args (Any): Additional positional arguments for the parent class.
             **kwargs (Any): Additional keyword arguments for the parent class.
         """
         # Wrap content in a mutable VBox
@@ -334,7 +333,7 @@ class Container(v.Container):
 
     def add_to_sidebar(
         self,
-        widget: widgets.Widget,
+        widget: Union[widgets.Widget, List[widgets.Widget]],
         add_header: bool = True,
         widget_icon: str = "mdi-tools",
         close_icon: str = "mdi-close",
@@ -356,7 +355,6 @@ class Container(v.Container):
             label (str): Text label for the header. Defaults to "My Tools".
             height (str): Height of the header. Defaults to "40px".
             expanded (bool): Whether the panel is expanded by default. Defaults to True.
-            *args (Any): Additional positional arguments for the parent class.
             **kwargs (Any): Additional keyword arguments for the parent class.
         """
 
