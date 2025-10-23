@@ -2164,7 +2164,7 @@ The sidebar can be toggled on or off and can display additional content.</p>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">add_to_sidebar</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">widget</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Widget</span><span class="p">,</span>
+        <span class="n">widget</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">widgets</span><span class="o">.</span><span class="n">Widget</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">widgets</span><span class="o">.</span><span class="n">Widget</span><span class="p">]],</span>
         <span class="n">add_header</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">widget_icon</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;mdi-tools&quot;</span><span class="p">,</span>
         <span class="n">close_icon</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;mdi-close&quot;</span><span class="p">,</span>
@@ -2186,7 +2186,6 @@ The sidebar can be toggled on or off and can display additional content.</p>
 <span class="sd">            label (str): Text label for the header. Defaults to &quot;My Tools&quot;.</span>
 <span class="sd">            height (str): Height of the header. Defaults to &quot;40px&quot;.</span>
 <span class="sd">            expanded (bool): Whether the panel is expanded by default. Defaults to True.</span>
-<span class="sd">            *args (Any): Additional positional arguments for the parent class.</span>
 <span class="sd">            **kwargs (Any): Additional keyword arguments for the parent class.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -2519,12 +2518,6 @@ The sidebar can be toggled on or off and can display additional content.</p>
         <td><code>True</code></td>
       </tr>
       <tr>
-        <td><code>*args</code></td>
-        <td><code>Any</code></td>
-        <td><p>Additional positional arguments for the parent class.</p></td>
-        <td><em>required</em></td>
-      </tr>
-      <tr>
         <td><code>**kwargs</code></td>
         <td><code>Any</code></td>
         <td><p>Additional keyword arguments for the parent class.</p></td>
@@ -2536,7 +2529,7 @@ The sidebar can be toggled on or off and can display additional content.</p>
           <summary>Source code in <code>anymap/maplibre_widgets.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_to_sidebar</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
-    <span class="n">widget</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Widget</span><span class="p">,</span>
+    <span class="n">widget</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">widgets</span><span class="o">.</span><span class="n">Widget</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">widgets</span><span class="o">.</span><span class="n">Widget</span><span class="p">]],</span>
     <span class="n">add_header</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">widget_icon</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;mdi-tools&quot;</span><span class="p">,</span>
     <span class="n">close_icon</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;mdi-close&quot;</span><span class="p">,</span>
@@ -2558,7 +2551,6 @@ The sidebar can be toggled on or off and can display additional content.</p>
 <span class="sd">        label (str): Text label for the header. Defaults to &quot;My Tools&quot;.</span>
 <span class="sd">        height (str): Height of the header. Defaults to &quot;40px&quot;.</span>
 <span class="sd">        expanded (bool): Whether the panel is expanded by default. Defaults to True.</span>
-<span class="sd">        *args (Any): Additional positional arguments for the parent class.</span>
 <span class="sd">        **kwargs (Any): Additional keyword arguments for the parent class.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -3035,7 +3027,6 @@ and dynamic content. Widgets can be added, removed, or replaced in the content b
 <span class="sd">            label (str): Text label for the header. Defaults to &quot;My Tools&quot;.</span>
 <span class="sd">            height (str): Height of the header. Defaults to &quot;40px&quot;.</span>
 <span class="sd">            expanded (bool): Whether the panel is expanded by default. Defaults to True.</span>
-<span class="sd">            *args (Any): Additional positional arguments for the parent class.</span>
 <span class="sd">            **kwargs (Any): Additional keyword arguments for the parent class.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Wrap content in a mutable VBox</span>
@@ -3211,12 +3202,6 @@ and dynamic content. Widgets can be added, removed, or replaced in the content b
         <td><code>True</code></td>
       </tr>
       <tr>
-        <td><code>*args</code></td>
-        <td><code>Any</code></td>
-        <td><p>Additional positional arguments for the parent class.</p></td>
-        <td><code>()</code></td>
-      </tr>
-      <tr>
         <td><code>**kwargs</code></td>
         <td><code>Any</code></td>
         <td><p>Additional keyword arguments for the parent class.</p></td>
@@ -3250,7 +3235,6 @@ and dynamic content. Widgets can be added, removed, or replaced in the content b
 <span class="sd">        label (str): Text label for the header. Defaults to &quot;My Tools&quot;.</span>
 <span class="sd">        height (str): Height of the header. Defaults to &quot;40px&quot;.</span>
 <span class="sd">        expanded (bool): Whether the panel is expanded by default. Defaults to True.</span>
-<span class="sd">        *args (Any): Additional positional arguments for the parent class.</span>
 <span class="sd">        **kwargs (Any): Additional keyword arguments for the parent class.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Wrap content in a mutable VBox</span>

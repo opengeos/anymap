@@ -1478,6 +1478,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.add_widget_control" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_widget_control()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.clear_deckgl_layers" class="md-nav__link">
     <span class="md-ellipsis">
       clear_deckgl_layers()
@@ -1643,6 +1652,15 @@
   <a href="#anymap.maplibre.MapLibreMap.remove_layer" class="md-nav__link">
     <span class="md-ellipsis">
       remove_layer()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.remove_widget_control" class="md-nav__link">
+    <span class="md-ellipsis">
+      remove_widget_control()
     </span>
   </a>
   
@@ -2235,6 +2253,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.add_widget_control" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_widget_control()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.clear_deckgl_layers" class="md-nav__link">
     <span class="md-ellipsis">
       clear_deckgl_layers()
@@ -2400,6 +2427,15 @@
   <a href="#anymap.maplibre.MapLibreMap.remove_layer" class="md-nav__link">
     <span class="md-ellipsis">
       remove_layer()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.remove_widget_control" class="md-nav__link">
+    <span class="md-ellipsis">
+      remove_widget_control()
     </span>
   </a>
   
@@ -2762,7 +2798,7 @@ data sources, custom styling, and interactive features.</p>
             <span class="s2">&quot;fullscreen&quot;</span><span class="p">:</span> <span class="s2">&quot;top-right&quot;</span><span class="p">,</span>
             <span class="s2">&quot;scale&quot;</span><span class="p">:</span> <span class="s2">&quot;bottom-left&quot;</span><span class="p">,</span>
             <span class="s2">&quot;globe&quot;</span><span class="p">:</span> <span class="s2">&quot;top-right&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;layers&quot;</span><span class="p">:</span> <span class="s2">&quot;top-left&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;layers&quot;</span><span class="p">:</span> <span class="s2">&quot;top-right&quot;</span><span class="p">,</span>
         <span class="p">},</span>
         <span class="n">projection</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;mercator&quot;</span><span class="p">,</span>
         <span class="n">add_sidebar</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -2883,6 +2919,7 @@ data sources, custom styling, and interactive features.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">sidebar_args</span> <span class="o">=</span> <span class="n">sidebar_args</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">layer_manager</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">container</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_widget_control_widgets</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Widget</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">if</span> <span class="n">add_sidebar</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_ipython_display_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_patched_display</span>
 
@@ -3060,7 +3097,7 @@ data sources, custom styling, and interactive features.</p>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">add_to_sidebar</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">widget</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Widget</span><span class="p">,</span>
+        <span class="n">widget</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">widgets</span><span class="o">.</span><span class="n">Widget</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">widgets</span><span class="o">.</span><span class="n">Widget</span><span class="p">]],</span>
         <span class="n">add_header</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">widget_icon</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;mdi-tools&quot;</span><span class="p">,</span>
         <span class="n">close_icon</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;mdi-close&quot;</span><span class="p">,</span>
@@ -3082,6 +3119,7 @@ data sources, custom styling, and interactive features.</p>
 <span class="sd">            height (str): Height of the header. Defaults to &quot;40px&quot;.</span>
 <span class="sd">            expanded (bool): Whether the panel is expanded by default. Defaults to True.</span>
 <span class="sd">            **kwargs (Any): Additional keyword arguments for the parent class.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">container</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">create_container</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">sidebar_args</span><span class="p">)</span>
@@ -3097,6 +3135,123 @@ data sources, custom styling, and interactive features.</p>
             <span class="n">host_map</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
         <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_widget_control</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">widget</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Widget</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Tools&quot;</span><span class="p">,</span>
+        <span class="n">icon</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;⋮&quot;</span><span class="p">,</span>
+        <span class="n">position</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;top-right&quot;</span><span class="p">,</span>
+        <span class="n">collapsed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">panel_width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">320</span><span class="p">,</span>
+        <span class="n">panel_min_width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">220</span><span class="p">,</span>
+        <span class="n">panel_max_width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">420</span><span class="p">,</span>
+        <span class="n">control_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add a collapsible widget control anchored to the map viewport.</span>
+
+<span class="sd">        The control displays as a button alongside other MapLibre controls. Clicking</span>
+<span class="sd">        the button expands a sidebar-style panel that renders the supplied</span>
+<span class="sd">        ipywidget content.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            widget: The ipywidget instance to embed inside the collapsible panel.</span>
+<span class="sd">            label: Title shown at the top of the expanded panel.</span>
+<span class="sd">            icon: Text or icon hint shown on the toggle button. Defaults to a vertical ellipsis.</span>
+<span class="sd">            position: Map control corner (``&#39;top-left&#39;``, ``&#39;top-right&#39;``,</span>
+<span class="sd">                ``&#39;bottom-left&#39;``, or ``&#39;bottom-right&#39;``).</span>
+<span class="sd">            collapsed: Whether the panel starts collapsed.</span>
+<span class="sd">            panel_width: Default panel width in pixels.</span>
+<span class="sd">            panel_min_width: Minimum panel width in pixels when resized on the front-end.</span>
+<span class="sd">            panel_max_width: Maximum panel width in pixels when resized on the front-end.</span>
+<span class="sd">            control_id: Optional identifier used for duplicate detection and later removal.</span>
+<span class="sd">                If omitted, a unique identifier is generated from the label.</span>
+<span class="sd">            description: Optional tooltip description for the toggle button.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: The unique identifier assigned to the widget control.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TypeError: If ``widget`` is not an ipywidget instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Widget</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;widget must be an ipywidgets.Widget instance&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">control_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">base_slug</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">char</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">if</span> <span class="n">char</span><span class="o">.</span><span class="n">isalnum</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;-&quot;</span> <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">label</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">base_slug</span><span class="p">:</span>
+                <span class="n">base_slug</span> <span class="o">=</span> <span class="s2">&quot;widget&quot;</span>
+            <span class="n">control_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_slug</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="p">[:</span><span class="mi">6</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="c1"># Ensure uniqueness when callers supply their own identifier</span>
+        <span class="k">if</span> <span class="n">control_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_widget_control_widgets</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Widget control &#39;</span><span class="si">{</span><span class="n">control_id</span><span class="si">}</span><span class="s2">&#39; already exists&quot;</span><span class="p">)</span>
+
+        <span class="n">widget_id</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="s2">&quot;model_id&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">widget_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;The supplied widget does not have a model_id. Ensure it is an ipywidget &quot;</span>
+                <span class="s2">&quot;instance created within the current notebook session.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">control_options</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
+            <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="n">label</span><span class="p">,</span>
+            <span class="s2">&quot;icon&quot;</span><span class="p">:</span> <span class="n">icon</span><span class="p">,</span>
+            <span class="s2">&quot;collapsed&quot;</span><span class="p">:</span> <span class="n">collapsed</span><span class="p">,</span>
+            <span class="s2">&quot;panelWidth&quot;</span><span class="p">:</span> <span class="n">panel_width</span><span class="p">,</span>
+            <span class="s2">&quot;panelMinWidth&quot;</span><span class="p">:</span> <span class="n">panel_min_width</span><span class="p">,</span>
+            <span class="s2">&quot;panelMaxWidth&quot;</span><span class="p">:</span> <span class="n">panel_max_width</span><span class="p">,</span>
+            <span class="s2">&quot;control_id&quot;</span><span class="p">:</span> <span class="n">control_id</span><span class="p">,</span>
+            <span class="s2">&quot;widget_model_id&quot;</span><span class="p">:</span> <span class="n">widget_id</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">description</span><span class="p">:</span>
+            <span class="n">control_options</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">description</span>
+
+        <span class="n">control_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;widget_panel_</span><span class="si">{</span><span class="n">control_id</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="n">current_controls</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_controls</span><span class="p">)</span>
+        <span class="n">current_controls</span><span class="p">[</span><span class="n">control_key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;widget_panel&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
+            <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="n">control_options</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_controls</span> <span class="o">=</span> <span class="n">current_controls</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_widget_control_widgets</span><span class="p">[</span><span class="n">control_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">widget</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addControl&quot;</span><span class="p">,</span> <span class="s2">&quot;widget_panel&quot;</span><span class="p">,</span> <span class="n">control_options</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">control_id</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_widget_control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">control_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove a previously registered widget control.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">control_id</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;control_id is required&quot;</span><span class="p">)</span>
+
+        <span class="n">current_controls</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_controls</span><span class="p">)</span>
+        <span class="n">target_key</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">current_controls</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;widget_panel&quot;</span>
+                <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;options&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;control_id&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">control_id</span>
+            <span class="p">):</span>
+                <span class="n">target_key</span> <span class="o">=</span> <span class="n">key</span>
+                <span class="k">break</span>
+
+        <span class="k">if</span> <span class="n">target_key</span><span class="p">:</span>
+            <span class="n">current_controls</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">target_key</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_controls</span> <span class="o">=</span> <span class="n">current_controls</span>
+
+        <span class="k">if</span> <span class="n">control_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_widget_control_widgets</span><span class="p">:</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_widget_control_widgets</span><span class="p">[</span><span class="n">control_id</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;removeWidgetControl&quot;</span><span class="p">,</span> <span class="n">control_id</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">remove_from_sidebar</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">widget</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Widget</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
@@ -5099,7 +5254,7 @@ data sources, custom styling, and interactive features.</p>
 
 
 <h3 id="anymap.maplibre.MapLibreMap.__init__" class="doc doc-heading">
-<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;dark-matter&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="s1">&#39;100%&#39;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s1">&#39;600px&#39;</span><span class="p">,</span> <span class="n">bearing</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">pitch</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">controls</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;navigation&#39;</span><span class="p">:</span> <span class="s1">&#39;top-right&#39;</span><span class="p">,</span> <span class="s1">&#39;fullscreen&#39;</span><span class="p">:</span> <span class="s1">&#39;top-right&#39;</span><span class="p">,</span> <span class="s1">&#39;scale&#39;</span><span class="p">:</span> <span class="s1">&#39;bottom-left&#39;</span><span class="p">,</span> <span class="s1">&#39;globe&#39;</span><span class="p">:</span> <span class="s1">&#39;top-right&#39;</span><span class="p">,</span> <span class="s1">&#39;layers&#39;</span><span class="p">:</span> <span class="s1">&#39;top-left&#39;</span><span class="p">},</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;mercator&#39;</span><span class="p">,</span> <span class="n">add_sidebar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sidebar_visible</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sidebar_width</span><span class="o">=</span><span class="mi">360</span><span class="p">,</span> <span class="n">sidebar_args</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layer_manager_expanded</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;dark-matter&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="s1">&#39;100%&#39;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s1">&#39;600px&#39;</span><span class="p">,</span> <span class="n">bearing</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">pitch</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">controls</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;navigation&#39;</span><span class="p">:</span> <span class="s1">&#39;top-right&#39;</span><span class="p">,</span> <span class="s1">&#39;fullscreen&#39;</span><span class="p">:</span> <span class="s1">&#39;top-right&#39;</span><span class="p">,</span> <span class="s1">&#39;scale&#39;</span><span class="p">:</span> <span class="s1">&#39;bottom-left&#39;</span><span class="p">,</span> <span class="s1">&#39;globe&#39;</span><span class="p">:</span> <span class="s1">&#39;top-right&#39;</span><span class="p">,</span> <span class="s1">&#39;layers&#39;</span><span class="p">:</span> <span class="s1">&#39;top-right&#39;</span><span class="p">},</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;mercator&#39;</span><span class="p">,</span> <span class="n">add_sidebar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sidebar_visible</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sidebar_width</span><span class="o">=</span><span class="mi">360</span><span class="p">,</span> <span class="n">sidebar_args</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layer_manager_expanded</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-special"><code>special</code></small>
@@ -5173,7 +5328,7 @@ data sources, custom styling, and interactive features.</p>
 "scale": "bottom-left",
 "globe": "top-right",
 "layers": "top-right",</p></td>
-        <td><code>{&#39;navigation&#39;: &#39;top-right&#39;, &#39;fullscreen&#39;: &#39;top-right&#39;, &#39;scale&#39;: &#39;bottom-left&#39;, &#39;globe&#39;: &#39;top-right&#39;, &#39;layers&#39;: &#39;top-left&#39;}</code></td>
+        <td><code>{&#39;navigation&#39;: &#39;top-right&#39;, &#39;fullscreen&#39;: &#39;top-right&#39;, &#39;scale&#39;: &#39;bottom-left&#39;, &#39;globe&#39;: &#39;top-right&#39;, &#39;layers&#39;: &#39;top-right&#39;}</code></td>
       </tr>
       <tr>
         <td><code>projection</code></td>
@@ -5235,7 +5390,7 @@ data sources, custom styling, and interactive features.</p>
         <span class="s2">&quot;fullscreen&quot;</span><span class="p">:</span> <span class="s2">&quot;top-right&quot;</span><span class="p">,</span>
         <span class="s2">&quot;scale&quot;</span><span class="p">:</span> <span class="s2">&quot;bottom-left&quot;</span><span class="p">,</span>
         <span class="s2">&quot;globe&quot;</span><span class="p">:</span> <span class="s2">&quot;top-right&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;layers&quot;</span><span class="p">:</span> <span class="s2">&quot;top-left&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;layers&quot;</span><span class="p">:</span> <span class="s2">&quot;top-right&quot;</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="n">projection</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;mercator&quot;</span><span class="p">,</span>
     <span class="n">add_sidebar</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -5356,6 +5511,7 @@ data sources, custom styling, and interactive features.</p>
     <span class="bp">self</span><span class="o">.</span><span class="n">sidebar_args</span> <span class="o">=</span> <span class="n">sidebar_args</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">layer_manager</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">container</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_widget_control_widgets</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Widget</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">if</span> <span class="n">add_sidebar</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ipython_display_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_patched_display</span>
 </code></pre></div>
@@ -7630,7 +7786,7 @@ similar to other controls, and expands when clicked.</p>
           <summary>Source code in <code>anymap/maplibre.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_to_sidebar</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
-    <span class="n">widget</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Widget</span><span class="p">,</span>
+    <span class="n">widget</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">widgets</span><span class="o">.</span><span class="n">Widget</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">widgets</span><span class="o">.</span><span class="n">Widget</span><span class="p">]],</span>
     <span class="n">add_header</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">widget_icon</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;mdi-tools&quot;</span><span class="p">,</span>
     <span class="n">close_icon</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;mdi-close&quot;</span><span class="p">,</span>
@@ -7652,6 +7808,7 @@ similar to other controls, and expands when clicked.</p>
 <span class="sd">        height (str): Height of the header. Defaults to &quot;40px&quot;.</span>
 <span class="sd">        expanded (bool): Whether the panel is expanded by default. Defaults to True.</span>
 <span class="sd">        **kwargs (Any): Additional keyword arguments for the parent class.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">container</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">create_container</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">sidebar_args</span><span class="p">)</span>
@@ -7786,6 +7943,230 @@ similar to other controls, and expands when clicked.</p>
         <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;layout&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">layout</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">layer</span><span class="o">=</span><span class="n">layer_config</span><span class="p">,</span> <span class="n">before_id</span><span class="o">=</span><span class="n">before_id</span><span class="p">,</span> <span class="n">layer_id</span><span class="o">=</span><span class="n">layer_id</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="anymap.maplibre.MapLibreMap.add_widget_control" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">add_widget_control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">widget</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Tools&#39;</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="s1">&#39;⋮&#39;</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s1">&#39;top-right&#39;</span><span class="p">,</span> <span class="n">collapsed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">panel_width</span><span class="o">=</span><span class="mi">320</span><span class="p">,</span> <span class="n">panel_min_width</span><span class="o">=</span><span class="mi">220</span><span class="p">,</span> <span class="n">panel_max_width</span><span class="o">=</span><span class="mi">420</span><span class="p">,</span> <span class="n">control_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+
+<a href="#anymap.maplibre.MapLibreMap.add_widget_control" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Add a collapsible widget control anchored to the map viewport.</p>
+<p>The control displays as a button alongside other MapLibre controls. Clicking
+the button expands a sidebar-style panel that renders the supplied
+ipywidget content.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>widget</code></td>
+        <td><code>Widget</code></td>
+        <td><p>The ipywidget instance to embed inside the collapsible panel.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>label</code></td>
+        <td><code>str</code></td>
+        <td><p>Title shown at the top of the expanded panel.</p></td>
+        <td><code>&#39;Tools&#39;</code></td>
+      </tr>
+      <tr>
+        <td><code>icon</code></td>
+        <td><code>str</code></td>
+        <td><p>Text or icon hint shown on the toggle button. Defaults to a vertical ellipsis.</p></td>
+        <td><code>&#39;⋮&#39;</code></td>
+      </tr>
+      <tr>
+        <td><code>position</code></td>
+        <td><code>str</code></td>
+        <td><p>Map control corner (<code>'top-left'</code>, <code>'top-right'</code>,
+<code>'bottom-left'</code>, or <code>'bottom-right'</code>).</p></td>
+        <td><code>&#39;top-right&#39;</code></td>
+      </tr>
+      <tr>
+        <td><code>collapsed</code></td>
+        <td><code>bool</code></td>
+        <td><p>Whether the panel starts collapsed.</p></td>
+        <td><code>True</code></td>
+      </tr>
+      <tr>
+        <td><code>panel_width</code></td>
+        <td><code>int</code></td>
+        <td><p>Default panel width in pixels.</p></td>
+        <td><code>320</code></td>
+      </tr>
+      <tr>
+        <td><code>panel_min_width</code></td>
+        <td><code>int</code></td>
+        <td><p>Minimum panel width in pixels when resized on the front-end.</p></td>
+        <td><code>220</code></td>
+      </tr>
+      <tr>
+        <td><code>panel_max_width</code></td>
+        <td><code>int</code></td>
+        <td><p>Maximum panel width in pixels when resized on the front-end.</p></td>
+        <td><code>420</code></td>
+      </tr>
+      <tr>
+        <td><code>control_id</code></td>
+        <td><code>Optional[str]</code></td>
+        <td><p>Optional identifier used for duplicate detection and later removal.
+If omitted, a unique identifier is generated from the label.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>description</code></td>
+        <td><code>Optional[str]</code></td>
+        <td><p>Optional tooltip description for the toggle button.</p></td>
+        <td><code>None</code></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>str</code></td>
+      <td><p>The unique identifier assigned to the widget control.</p></td>
+    </tr>
+  </tbody>
+</table>
+<p><strong>Exceptions:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>TypeError</code></td>
+        <td><p>If <code>widget</code> is not an ipywidget instance.</p></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>anymap/maplibre.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_widget_control</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">widget</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Widget</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Tools&quot;</span><span class="p">,</span>
+    <span class="n">icon</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;⋮&quot;</span><span class="p">,</span>
+    <span class="n">position</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;top-right&quot;</span><span class="p">,</span>
+    <span class="n">collapsed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">panel_width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">320</span><span class="p">,</span>
+    <span class="n">panel_min_width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">220</span><span class="p">,</span>
+    <span class="n">panel_max_width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">420</span><span class="p">,</span>
+    <span class="n">control_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Add a collapsible widget control anchored to the map viewport.</span>
+
+<span class="sd">    The control displays as a button alongside other MapLibre controls. Clicking</span>
+<span class="sd">    the button expands a sidebar-style panel that renders the supplied</span>
+<span class="sd">    ipywidget content.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        widget: The ipywidget instance to embed inside the collapsible panel.</span>
+<span class="sd">        label: Title shown at the top of the expanded panel.</span>
+<span class="sd">        icon: Text or icon hint shown on the toggle button. Defaults to a vertical ellipsis.</span>
+<span class="sd">        position: Map control corner (``&#39;top-left&#39;``, ``&#39;top-right&#39;``,</span>
+<span class="sd">            ``&#39;bottom-left&#39;``, or ``&#39;bottom-right&#39;``).</span>
+<span class="sd">        collapsed: Whether the panel starts collapsed.</span>
+<span class="sd">        panel_width: Default panel width in pixels.</span>
+<span class="sd">        panel_min_width: Minimum panel width in pixels when resized on the front-end.</span>
+<span class="sd">        panel_max_width: Maximum panel width in pixels when resized on the front-end.</span>
+<span class="sd">        control_id: Optional identifier used for duplicate detection and later removal.</span>
+<span class="sd">            If omitted, a unique identifier is generated from the label.</span>
+<span class="sd">        description: Optional tooltip description for the toggle button.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The unique identifier assigned to the widget control.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        TypeError: If ``widget`` is not an ipywidget instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Widget</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;widget must be an ipywidgets.Widget instance&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">control_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">base_slug</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">char</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">if</span> <span class="n">char</span><span class="o">.</span><span class="n">isalnum</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;-&quot;</span> <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">label</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">base_slug</span><span class="p">:</span>
+            <span class="n">base_slug</span> <span class="o">=</span> <span class="s2">&quot;widget&quot;</span>
+        <span class="n">control_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_slug</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="p">[:</span><span class="mi">6</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="c1"># Ensure uniqueness when callers supply their own identifier</span>
+    <span class="k">if</span> <span class="n">control_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_widget_control_widgets</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Widget control &#39;</span><span class="si">{</span><span class="n">control_id</span><span class="si">}</span><span class="s2">&#39; already exists&quot;</span><span class="p">)</span>
+
+    <span class="n">widget_id</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="s2">&quot;model_id&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">widget_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;The supplied widget does not have a model_id. Ensure it is an ipywidget &quot;</span>
+            <span class="s2">&quot;instance created within the current notebook session.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="n">control_options</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
+        <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="n">label</span><span class="p">,</span>
+        <span class="s2">&quot;icon&quot;</span><span class="p">:</span> <span class="n">icon</span><span class="p">,</span>
+        <span class="s2">&quot;collapsed&quot;</span><span class="p">:</span> <span class="n">collapsed</span><span class="p">,</span>
+        <span class="s2">&quot;panelWidth&quot;</span><span class="p">:</span> <span class="n">panel_width</span><span class="p">,</span>
+        <span class="s2">&quot;panelMinWidth&quot;</span><span class="p">:</span> <span class="n">panel_min_width</span><span class="p">,</span>
+        <span class="s2">&quot;panelMaxWidth&quot;</span><span class="p">:</span> <span class="n">panel_max_width</span><span class="p">,</span>
+        <span class="s2">&quot;control_id&quot;</span><span class="p">:</span> <span class="n">control_id</span><span class="p">,</span>
+        <span class="s2">&quot;widget_model_id&quot;</span><span class="p">:</span> <span class="n">widget_id</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">description</span><span class="p">:</span>
+        <span class="n">control_options</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">description</span>
+
+    <span class="n">control_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;widget_panel_</span><span class="si">{</span><span class="n">control_id</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="n">current_controls</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_controls</span><span class="p">)</span>
+    <span class="n">current_controls</span><span class="p">[</span><span class="n">control_key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;widget_panel&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
+        <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="n">control_options</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_controls</span> <span class="o">=</span> <span class="n">current_controls</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">_widget_control_widgets</span><span class="p">[</span><span class="n">control_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">widget</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addControl&quot;</span><span class="p">,</span> <span class="s2">&quot;widget_panel&quot;</span><span class="p">,</span> <span class="n">control_options</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">control_id</span>
 </code></pre></div>
         </details>
     </div>
@@ -8990,6 +9371,53 @@ Returns None if metadata retrieval fails.</p></td>
 
     <span class="c1"># Update layer controls if they exist</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_update_layer_controls</span><span class="p">()</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="anymap.maplibre.MapLibreMap.remove_widget_control" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">remove_widget_control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">control_id</span><span class="p">)</span></code>
+
+
+<a href="#anymap.maplibre.MapLibreMap.remove_widget_control" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Remove a previously registered widget control.</p>
+
+        <details class="quote">
+          <summary>Source code in <code>anymap/maplibre.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">remove_widget_control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">control_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove a previously registered widget control.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">control_id</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;control_id is required&quot;</span><span class="p">)</span>
+
+    <span class="n">current_controls</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_controls</span><span class="p">)</span>
+    <span class="n">target_key</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">current_controls</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;widget_panel&quot;</span>
+            <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;options&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;control_id&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">control_id</span>
+        <span class="p">):</span>
+            <span class="n">target_key</span> <span class="o">=</span> <span class="n">key</span>
+            <span class="k">break</span>
+
+    <span class="k">if</span> <span class="n">target_key</span><span class="p">:</span>
+        <span class="n">current_controls</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">target_key</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_controls</span> <span class="o">=</span> <span class="n">current_controls</span>
+
+    <span class="k">if</span> <span class="n">control_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_widget_control_widgets</span><span class="p">:</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_widget_control_widgets</span><span class="p">[</span><span class="n">control_id</span><span class="p">]</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;removeWidgetControl&quot;</span><span class="p">,</span> <span class="n">control_id</span><span class="p">)</span>
 </code></pre></div>
         </details>
     </div>
