@@ -2515,16 +2515,19 @@ function render({ model, el }) {
     const exportGeomanData = () => {
       // Try map.gm first (v0.5.0+ API), then fallback to el._geomanInstance
       const geomanInstance = map.gm || el._geomanInstance;
+
       if (!geomanInstance) {
+        console.warn('[Geoman Export] No Geoman instance found');
         return;
       }
+
       try {
         const exported = geomanInstance.features.exportGeoJson();
         el._geomanSyncFromJs = true;
         model.set("geoman_data", exported);
         model.save_changes();
       } catch (error) {
-        console.warn('Failed to export Geoman features:', error);
+        console.error('[Geoman Export] Failed to export Geoman features:', error);
       }
     };
 
@@ -2593,6 +2596,19 @@ function render({ model, el }) {
             el._geomanInstance = instance;
             el._controls.set(controlKey, instance);
 
+            // Debounced exporter to avoid excessive trait churn while drawing
+            let geomanExportTimer = null;
+            const scheduleGeomanExport = () => {
+              if (geomanExportTimer) {
+                clearTimeout(geomanExportTimer);
+              }
+              // Small debounce to batch rapid event bursts
+              geomanExportTimer = setTimeout(() => {
+                geomanExportTimer = null;
+                exportGeomanData();
+              }, 50);
+            };
+
             const geomanListener = (event) => {
               try {
                 const currentEvents = model.get("_js_events") || [];
@@ -2608,9 +2624,8 @@ function render({ model, el }) {
                 console.warn('Failed to forward Geoman event:', evtError);
               }
 
-              if (shouldSyncGeomanEvent(event)) {
-                exportGeomanData();
-              }
+              // Always schedule an export on any Geoman event; debounced above
+              scheduleGeomanExport();
             };
 
             instance.setGlobalEventsListener(geomanListener);
@@ -5075,6 +5090,11 @@ function render({ model, el }) {
             } catch (error) {
               console.error('Failed to clear DeckGL layers:', error);
             }
+            break;
+
+          case 'exportGeomanData':
+            // Export current Geoman features and sync to Python
+            exportGeomanData();
             break;
 
           default:
