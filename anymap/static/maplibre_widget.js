@@ -2256,7 +2256,7 @@ function render({ model, el }) {
           debugLog("COG protocol already registered");
         }
       } else {
-        debugLog("MaplibreCOGProtocol not available");
+        console.warn("MaplibreCOGProtocol not available");
       }
 
       // Register the PMTiles protocol
