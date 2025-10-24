@@ -2265,7 +2265,7 @@ function render({ model, el }) {
         maplibregl.addProtocol("pmtiles", pmtilesProtocol.tile);
         debugLog("PMTiles protocol registered successfully");
       } else {
-        debugLog("PMTiles not available");
+        console.warn("PMTiles not available");
       }
 
       // Configure MapboxDraw for MapLibre compatibility
