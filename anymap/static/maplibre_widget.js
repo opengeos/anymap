@@ -2513,11 +2513,13 @@ function render({ model, el }) {
     el._pendingGeomanData = normalizeGeomanGeoJson(model.get("geoman_data"));
 
     const exportGeomanData = () => {
-      if (!el._geomanInstance) {
+      // Try map.gm first (v0.5.0+ API), then fallback to el._geomanInstance
+      const geomanInstance = map.gm || el._geomanInstance;
+      if (!geomanInstance) {
         return;
       }
       try {
-        const exported = el._geomanInstance.features.exportGeoJson();
+        const exported = geomanInstance.features.exportGeoJson();
         el._geomanSyncFromJs = true;
         model.set("geoman_data", exported);
         model.save_changes();
@@ -2555,13 +2557,21 @@ function render({ model, el }) {
 
     const scheduleGeomanInitialization = (controlKey, controlOptions = {}) => {
       if (el._geomanInstance || el._geomanPromise) {
-        console.warn('Geoman control is already initialized.');
+        console.warn('Geoman control is already initialized or initialization is in progress.');
         return;
       }
 
       const geomanNamespace = resolveGeomanNamespace();
-      if (!geomanNamespace || typeof geomanNamespace.createGeomanInstance !== 'function') {
+      if (!geomanNamespace) {
         console.warn('MapLibre Geoman namespace is unavailable.');
+        return;
+      }
+
+      // In v0.5.0+, window.Geoman should be the Geoman class/constructor
+      // It might be accessed as Geoman.Geoman or just Geoman depending on the build
+      const GeomanConstructor = geomanNamespace.Geoman || geomanNamespace;
+      if (typeof GeomanConstructor !== 'function') {
+        console.warn('MapLibre Geoman constructor is unavailable.');
         return;
       }
 
@@ -2573,54 +2583,59 @@ function render({ model, el }) {
 
       el._controls.set(controlKey, { type: 'geoman', pending: true });
 
-      el._geomanPromise = geomanNamespace
-        .createGeomanInstance(map, geomanOptions)
-        .then((instance) => {
-          el._geomanInstance = instance;
-          el._controls.set(controlKey, instance);
+      try {
+        // Use v0.5.0 synchronous constructor API
+        const instance = new GeomanConstructor(map, geomanOptions);
 
-          const geomanListener = (event) => {
-            try {
-              const currentEvents = model.get("_js_events") || [];
-              const geomanEvent = {
-                type: 'geoman',
-                name: event?.name,
-                eventType: event?.type,
-                payload: event?.payload,
-              };
-              model.set("_js_events", [...currentEvents, geomanEvent]);
-              model.save_changes();
-            } catch (evtError) {
-              console.warn('Failed to forward Geoman event:', evtError);
-            }
+        // Wait for gm:loaded event to ensure adapter is fully initialized
+        map.once('gm:loaded', () => {
+          try {
+            el._geomanInstance = instance;
+            el._controls.set(controlKey, instance);
 
-            if (shouldSyncGeomanEvent(event)) {
+            const geomanListener = (event) => {
+              try {
+                const currentEvents = model.get("_js_events") || [];
+                const geomanEvent = {
+                  type: 'geoman',
+                  name: event?.name,
+                  eventType: event?.type,
+                  payload: event?.payload,
+                };
+                model.set("_js_events", [...currentEvents, geomanEvent]);
+                model.save_changes();
+              } catch (evtError) {
+                console.warn('Failed to forward Geoman event:', evtError);
+              }
+
+              if (shouldSyncGeomanEvent(event)) {
+                exportGeomanData();
+              }
+            };
+
+            instance.setGlobalEventsListener(geomanListener);
+            el._geomanEventListener = geomanListener;
+
+            if (el._pendingGeomanData) {
+              importGeomanData(el._pendingGeomanData);
+            } else {
               exportGeomanData();
             }
-          };
 
-          instance.setGlobalEventsListener(geomanListener);
-          el._geomanEventListener = geomanListener;
-
-          if (el._pendingGeomanData) {
-            importGeomanData(el._pendingGeomanData);
-          } else {
-            exportGeomanData();
+            if (typeof initialCollapsed === 'boolean') {
+              requestAnimationFrame(() => {
+                applyGeomanCollapsedState(instance, initialCollapsed);
+              });
+            }
+          } catch (error) {
+            console.error('Failed to initialize MapLibre Geoman control after load:', error);
+            el._controls.delete(controlKey);
           }
-
-          if (typeof initialCollapsed === 'boolean') {
-            requestAnimationFrame(() => {
-              applyGeomanCollapsedState(instance, initialCollapsed);
-            });
-          }
-        })
-        .catch((error) => {
-          console.error('Failed to initialize MapLibre Geoman control:', error);
-          el._controls.delete(controlKey);
-        })
-        .finally(() => {
-          el._geomanPromise = null;
         });
+      } catch (error) {
+        console.error('Failed to create MapLibre Geoman instance:', error);
+        el._controls.delete(controlKey);
+      }
     };
 
     const geomanModelListener = () => {
