@@ -1814,6 +1814,15 @@ class WidgetPanelControl {
 }
 
 function render({ model, el }) {
+  const debugEnabled =
+    (typeof window !== 'undefined' && Boolean(window.ANYMAP_DEBUG)) ||
+    Boolean(model.get('_debug_logging'));
+  const debugLog = (...args) => {
+    if (debugEnabled) {
+      console.log(...args);
+    }
+  };
+
   // Create unique ID for this widget instance
   const widgetId = `anymap-${Math.random().toString(36).substr(2, 9)}`;
 
@@ -2140,7 +2149,7 @@ function render({ model, el }) {
 
       if (!resolveGeomanNamespace()) {
         const geomanScript = document.createElement('script');
-        geomanScript.src = 'https://cdn.jsdelivr.net/npm/@geoman-io/maplibre-geoman-free@0.4.9/dist/maplibre-geoman.umd.js';
+        geomanScript.src = 'https://cdn.jsdelivr.net/npm/@geoman-io/maplibre-geoman-free@latest/dist/maplibre-geoman.umd.js';
 
         const previousDefine = window.define;
         const previousModule = window.module;
@@ -2197,7 +2206,7 @@ function render({ model, el }) {
       if (!document.querySelector('link[href*="maplibre-geoman.css"]')) {
         const geomanCSS = document.createElement('link');
         geomanCSS.rel = 'stylesheet';
-        geomanCSS.href = 'https://cdn.jsdelivr.net/npm/@geoman-io/maplibre-geoman-free@0.4.9/dist/maplibre-geoman.css';
+        geomanCSS.href = 'https://cdn.jsdelivr.net/npm/@geoman-io/maplibre-geoman-free@latest/dist/maplibre-geoman.css';
         document.head.appendChild(geomanCSS);
       }
 
@@ -2212,7 +2221,7 @@ function render({ model, el }) {
           document.head.appendChild(deckScript);
         });
 
-        console.log("DeckGL loaded successfully");
+        debugLog("DeckGL loaded successfully");
       }
 
       // Load loaders.gl LASLoader using ESM CDN
@@ -2242,21 +2251,21 @@ function render({ model, el }) {
         if (!window._cogProtocolRegistered) {
           maplibregl.addProtocol("cog", window.MaplibreCOGProtocol.cogProtocol);
           window._cogProtocolRegistered = true;
-          console.log("COG protocol registered successfully");
+          debugLog("COG protocol registered successfully");
         } else {
-          console.log("COG protocol already registered");
+          debugLog("COG protocol already registered");
         }
       } else {
-        console.warn("MaplibreCOGProtocol not available");
+        debugLog("MaplibreCOGProtocol not available");
       }
 
       // Register the PMTiles protocol
       if (window.pmtiles) {
         const pmtilesProtocol = new window.pmtiles.Protocol();
         maplibregl.addProtocol("pmtiles", pmtilesProtocol.tile);
-        console.log("PMTiles protocol registered successfully");
+        debugLog("PMTiles protocol registered successfully");
       } else {
-        console.warn("PMTiles not available");
+        debugLog("PMTiles not available");
       }
 
       // Configure MapboxDraw for MapLibre compatibility
@@ -2453,7 +2462,7 @@ function render({ model, el }) {
           }
         ];
 
-        console.log("MapboxDraw configured for MapLibre compatibility with custom styles");
+        debugLog("MapboxDraw configured for MapLibre compatibility with custom styles");
       } else {
         console.warn("MapboxDraw not available");
       }
@@ -2463,11 +2472,13 @@ function render({ model, el }) {
   };
 
   // Load protocols before initializing map
-  loadProtocols().then(() => {
-    // Initialize MapLibre map after protocols are loaded
-    const map = new maplibregl.Map({
-      container: container,
-      style: model.get("style"),
+  Promise.resolve()
+    .then(() => loadProtocols())
+    .then(() => {
+      // Initialize MapLibre map after protocols are loaded
+      const map = new maplibregl.Map({
+        container: container,
+        style: model.get("style"),
       center: model.get("center"), // [lng, lat] format
       zoom: model.get("zoom"),
       bearing: model.get("bearing"),
@@ -3297,7 +3308,7 @@ function render({ model, el }) {
                     sendEvent('draw.selectionchange', { features: e.features });
                   });
 
-                  console.log('Draw control restored successfully with custom styles');
+                  debugLog('Draw control restored successfully with custom styles');
                 } else {
                   console.warn('MapboxDraw not available or already added during restore');
                 }
@@ -3703,14 +3714,11 @@ function render({ model, el }) {
 
         // Mark map as ready
         el._mapReady = true;
-        console.log('[DeckGL Debug] Map is now ready!');
 
         // Check if there are already calls in _js_calls that haven't been processed
         const existingCalls = model.get("_js_calls") || [];
         if (existingCalls.length > 0) {
-          console.log(`[DeckGL Debug] Found ${existingCalls.length} existing calls in _js_calls, processing now`);
           existingCalls.forEach(call => {
-            console.log(`[DeckGL Debug] Processing existing call: ${call.method}`);
             executeMapMethod(map, call, el);
           });
           // Clear them
@@ -3720,14 +3728,11 @@ function render({ model, el }) {
 
         // Process any pending calls that came in before map was ready
         if (el._pendingCalls && el._pendingCalls.length > 0) {
-          console.log(`[DeckGL Debug] Processing ${el._pendingCalls.length} pending calls after map load`);
           el._pendingCalls.forEach(call => {
-            console.log(`[DeckGL Debug] Processing pending call: ${call.method}`);
             executeMapMethod(map, call, el);
           });
           el._pendingCalls = [];
         } else {
-          console.log('[DeckGL Debug] No pending calls to process');
         }
 
         if (el._pendingFlatGeobufSync) {
@@ -3863,20 +3868,15 @@ function render({ model, el }) {
     // Handle JavaScript method calls from Python
     model.on("change:_js_calls", () => {
       const calls = model.get("_js_calls") || [];
-      console.log(`[DeckGL Debug] Received ${calls.length} calls from Python. Map ready: ${el._mapReady}`);
 
       if (el._mapReady) {
         // Map is ready, execute calls immediately
-        console.log('[DeckGL Debug] Map is ready, executing calls immediately');
         calls.forEach(call => {
-          console.log(`[DeckGL Debug] Executing call: ${call.method}`);
           executeMapMethod(map, call, el);
         });
       } else {
         // Map not ready yet, queue the calls
-        console.log(`[DeckGL Debug] Map not ready, queuing ${calls.length} calls`);
         el._pendingCalls.push(...calls);
-        console.log(`[DeckGL Debug] Total pending calls: ${el._pendingCalls.length}`);
       }
 
       // Clear the calls after processing
@@ -4013,7 +4013,22 @@ function render({ model, el }) {
 
             // Check if this control is already added
             if (el._controls.has(controlKey)) {
-              console.warn(`Control ${controlType} at position ${position} already exists`);
+              const existingControl = el._controls.get(controlKey);
+              if (
+                existingControl &&
+                typeof existingControl.updateOptions === 'function' &&
+                controlOptions &&
+                Object.keys(controlOptions).length > 0
+              ) {
+                try {
+                  existingControl.updateOptions(controlOptions);
+                } catch (updateError) {
+                  console.debug(
+                    `Failed to refresh options for existing ${controlType} control:`,
+                    updateError,
+                  );
+                }
+              }
               return;
             }
 
@@ -4498,12 +4513,12 @@ function render({ model, el }) {
                   sendEvent('draw.selectionchange', { features: e.features });
                 });
 
-                console.log('Draw control added successfully with custom styles');
+                debugLog('Draw control added successfully with custom styles');
               } else {
-                console.warn('MapboxDraw not available or already added');
+                debugLog('MapboxDraw not available or already added');
               }
             } catch (error) {
-              console.error('Failed to add draw control:', error);
+              debugLog('Failed to add draw control:', error);
             }
             break;
 
@@ -5107,7 +5122,10 @@ function render({ model, el }) {
       }
     };
 
-  }); // End of loadProtocols().then()
+    })
+    .catch((error) => {
+      console.error('Failed to initialize MapLibre widget:', error);
+    });
 }
 
 export default { render };
