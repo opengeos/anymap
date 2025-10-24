@@ -4518,7 +4518,7 @@ function render({ model, el }) {
                 debugLog('MapboxDraw not available or already added');
               }
             } catch (error) {
-              debugLog('Failed to add draw control:', error);
+              console.error('Failed to add draw control:', error);
             }
             break;
 
