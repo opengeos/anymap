@@ -2214,6 +2214,36 @@ function render({ model, el }) {
         document.head.appendChild(geomanCSS);
       }
 
+      // Load MapLibre GL Measures plugin
+      if (!window.MeasuresControl) {
+        const measuresScript = document.createElement('script');
+        measuresScript.src = 'https://cdn.jsdelivr.net/npm/maplibre-gl-measures@latest/dist/maplibre-gl-measures.min.js';
+
+        await new Promise((resolve, reject) => {
+          measuresScript.onload = () => {
+            resolve();
+          };
+          measuresScript.onerror = (error) => {
+            console.warn('MapLibre GL Measures plugin failed to load:', error);
+            resolve(); // Don't reject to allow the map to continue loading
+          };
+          document.head.appendChild(measuresScript);
+        });
+
+        if (window.MeasuresControl) {
+          debugLog("MapLibre GL Measures loaded successfully");
+        } else {
+          console.warn('MapLibre GL Measures plugin failed to load - measurement tools unavailable');
+        }
+      }
+
+      if (!document.querySelector('link[href*="maplibre-gl-measures.css"]')) {
+        const measuresCSS = document.createElement('link');
+        measuresCSS.rel = 'stylesheet';
+        measuresCSS.href = 'https://cdn.jsdelivr.net/npm/maplibre-gl-measures@latest/dist/maplibre-gl-measures.css';
+        document.head.appendChild(measuresCSS);
+      }
+
       // Load DeckGL for overlay layers
       if (!window.deck) {
         const deckScript = document.createElement('script');
@@ -3438,6 +3468,22 @@ function render({ model, el }) {
                   return;
                 }
                 break;
+              case 'measures':
+                // Handle measures control restoration
+                if (window.MeasuresControl) {
+                  try {
+                    const measuresOptions = controlOptions.measures_options || {};
+                    control = new window.MeasuresControl(measuresOptions);
+                    console.log('Measures control restored successfully');
+                  } catch (error) {
+                    console.error('Failed to restore Measures control:', error);
+                    return;
+                  }
+                } else {
+                  console.warn('MeasuresControl not available during restore');
+                  return;
+                }
+                break;
               case 'terra_draw':
                 // Handle Terra Draw control restoration
                 if (window.MaplibreTerradrawControl && !el._terraDrawControl) {
@@ -4172,6 +4218,21 @@ function render({ model, el }) {
                   console.log('Geocoder control added successfully');
                 } else {
                   console.warn('MaplibreGeocoder not available');
+                  return;
+                }
+                break;
+              case 'measures':
+                if (window.MeasuresControl) {
+                  try {
+                    const measuresOptions = controlOptions.measures_options || {};
+                    control = new window.MeasuresControl(measuresOptions);
+                    console.log('Measures control added successfully');
+                  } catch (error) {
+                    console.error('Failed to create Measures control:', error);
+                    return;
+                  }
+                } else {
+                  console.warn('MeasuresControl not available');
                   return;
                 }
                 break;
