@@ -2556,8 +2556,8 @@ function render({ model, el }) {
     };
 
     const scheduleGeomanInitialization = (controlKey, controlOptions = {}) => {
-      if (el._geomanInstance) {
-        console.warn('Geoman control is already initialized.');
+      if (el._geomanInstance || el._geomanPromise) {
+        console.warn('Geoman control is already initialized or initialization is in progress.');
         return;
       }
 
