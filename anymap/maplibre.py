@@ -1645,6 +1645,110 @@ class MapLibreMap(MapWidget):
 
         self.call_js_method("addControl", "google_streetview", control_options)
 
+    def add_infobox_control(
+        self,
+        position: str = "top-right",
+        layer_id: Optional[str] = None,
+        formatter: Optional[str] = None,
+        options: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        """Add an infobox control to display feature information on hover.
+
+        This control displays information about map features when you hover over them.
+        It uses the mapbox-gl-infobox plugin to show formatted feature properties.
+
+        Args:
+            position: Position on map ('top-left', 'top-right', 'bottom-left', 'bottom-right')
+            layer_id: The layer ID to show information from. If None, will work with any layer.
+            formatter: JavaScript function as string to format feature properties.
+                      Example: "properties => properties ? `<b>Name:</b> ${properties['name']}` : ''"
+                      If None, displays all properties as key-value pairs.
+            options: Additional options for the infobox control
+
+        Example:
+            >>> m = MapLibreMap()
+            >>> m.add_infobox_control(
+            ...     position="top-right",
+            ...     layer_id="my-layer",
+            ...     formatter="properties => `<b>Name:</b> ${properties.name}<br><b>Value:</b> ${properties.value}`"
+            ... )
+        """
+        control_options = options or {}
+        control_options.update(
+            {
+                "position": position,
+                "layerId": layer_id,
+                "formatter": formatter,
+            }
+        )
+
+        # Store control in persistent state
+        control_key = f"infobox_{position}"
+        current_controls = dict(self._controls)
+        current_controls[control_key] = {
+            "type": "infobox",
+            "position": position,
+            "options": control_options,
+        }
+        self._controls = current_controls
+
+        self.call_js_method("addControl", "infobox", control_options)
+
+    def add_gradient_control(
+        self,
+        position: str = "top-right",
+        layer_id: Optional[str] = None,
+        min_value: float = 0,
+        max_value: float = 100,
+        weight_property: Optional[str] = None,
+        options: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        """Add a gradient legend control to show color scale for data values.
+
+        This control displays a gradient legend that shows the color scale for
+        numerical data values in a layer. It uses the mapbox-gl-infobox plugin.
+
+        Args:
+            position: Position on map ('top-left', 'top-right', 'bottom-left', 'bottom-right')
+            layer_id: The layer ID to create gradient from. If None, will work with any layer.
+            min_value: Minimum value for the gradient scale
+            max_value: Maximum value for the gradient scale
+            weight_property: Property name to use for weight values.
+                           Example: "population" to use feature.properties.population
+            options: Additional options for the gradient control
+
+        Example:
+            >>> m = MapLibreMap()
+            >>> m.add_gradient_control(
+            ...     position="bottom-right",
+            ...     layer_id="population-layer",
+            ...     min_value=0,
+            ...     max_value=1000000,
+            ...     weight_property="population"
+            ... )
+        """
+        control_options = options or {}
+        control_options.update(
+            {
+                "position": position,
+                "layerId": layer_id,
+                "minMaxValues": {"minValue": min_value, "maxValue": max_value},
+                "weightProperty": weight_property,
+            }
+        )
+
+        # Store control in persistent state
+        control_key = f"gradient_{position}"
+        current_controls = dict(self._controls)
+        current_controls[control_key] = {
+            "type": "gradient",
+            "position": position,
+            "options": control_options,
+        }
+        self._controls = current_controls
+
+        self.call_js_method("addControl", "gradient", control_options)
+
     def _update_layer_controls(self) -> None:
         """Update all existing layer controls with the current layer state."""
         # Find all layer controls in the _controls dictionary

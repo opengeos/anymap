@@ -2067,6 +2067,28 @@ function render({ model, el }) {
         }
       }
 
+      // Load Mapbox GL Infobox Plugin
+      if (!window.MapboxInfoBoxControl && !window.MapboxGradientBoxControl) {
+        const infoboxScript = document.createElement('script');
+        infoboxScript.src = 'https://cdn.jsdelivr.net/npm/mapbox-gl-infobox@1.0.9/dist/mapbox-gl-infobox.umd.js';
+
+        await new Promise((resolve, reject) => {
+          infoboxScript.onload = resolve;
+          infoboxScript.onerror = reject;
+          document.head.appendChild(infoboxScript);
+        });
+
+        // Load CSS for Infobox Plugin
+        if (!document.querySelector('link[href*="mapbox-gl-infobox.css"]')) {
+          const infoboxCSS = document.createElement('link');
+          infoboxCSS.rel = 'stylesheet';
+          infoboxCSS.href = 'https://cdn.jsdelivr.net/npm/mapbox-gl-infobox@1.0.9/dist/mapbox-gl-infobox.css';
+          document.head.appendChild(infoboxCSS);
+        }
+
+        console.log('Mapbox GL Infobox Plugin loaded successfully');
+      }
+
       // Load MapLibre GL Basemaps Control
       if (!window.MaplibreGLBasemapsControl) {
         const basemapsScript = document.createElement('script');
@@ -3676,6 +3698,76 @@ function render({ model, el }) {
                   return;
                 }
                 break;
+              case 'infobox':
+                if (window.MapboxInfoBoxControl) {
+                  const infoboxOptions = {};
+
+                  // Add layerId if specified
+                  if (controlOptions.layerId) {
+                    infoboxOptions.layerId = controlOptions.layerId;
+                  }
+
+                  // Add formatter function if specified
+                  if (controlOptions.formatter) {
+                    try {
+                      // Create formatter function from string
+                      infoboxOptions.formatter = new Function('return ' + controlOptions.formatter)();
+                    } catch (error) {
+                      console.warn('Invalid formatter function for infobox:', error);
+                      // Use default formatter
+                      infoboxOptions.formatter = (properties) => {
+                        if (!properties) return '';
+                        return Object.entries(properties)
+                          .map(([key, value]) => `<b>${key}:</b> ${value}`)
+                          .join('<br>');
+                      };
+                    }
+                  } else {
+                    // Default formatter displays all properties
+                    infoboxOptions.formatter = (properties) => {
+                      if (!properties) return '';
+                      return Object.entries(properties)
+                        .map(([key, value]) => `<b>${key}:</b> ${value}`)
+                        .join('<br>');
+                    };
+                  }
+
+                  control = new window.MapboxInfoBoxControl(infoboxOptions);
+                  console.log('Infobox control restored successfully');
+                } else {
+                  console.warn('MapboxInfoBoxControl not available during restore');
+                  return;
+                }
+                break;
+              case 'gradient':
+                if (window.MapboxGradientBoxControl) {
+                  const gradientOptions = {};
+
+                  // Add layerId if specified
+                  if (controlOptions.layerId) {
+                    gradientOptions.layerId = controlOptions.layerId;
+                  }
+
+                  // Add min/max values if specified
+                  if (controlOptions.minMaxValues) {
+                    gradientOptions.minMaxValues = controlOptions.minMaxValues;
+                  }
+
+                  // Add weight getter function if weight property is specified
+                  if (controlOptions.weightProperty) {
+                    const weightProp = controlOptions.weightProperty;
+                    gradientOptions.weightGetter = (properties) => {
+                      return properties ? (properties[weightProp] || 0) : 0;
+                    };
+                  }
+
+                  control = new window.MapboxGradientBoxControl(gradientOptions);
+                  console.log('Gradient control restored successfully');
+                } else {
+                  console.warn('MapboxGradientBoxControl not available during restore');
+                  return;
+                }
+                break;
               default:
                 console.warn(`Unknown control type during restore: ${controlType}`);
                 return;
@@ -4370,6 +4462,76 @@ function render({ model, el }) {
                   console.log('Basemap control added successfully');
                 } else {
                   console.warn('MaplibreGLBasemapsControl not available');
+                  return;
+                }
+                break;
+              case 'infobox':
+                if (window.MapboxInfoBoxControl) {
+                  const infoboxOptions = {};
+
+                  // Add layerId if specified
+                  if (controlOptions.layerId) {
+                    infoboxOptions.layerId = controlOptions.layerId;
+                  }
+
+                  // Add formatter function if specified
+                  if (controlOptions.formatter) {
+                    try {
+                      // Create formatter function from string
+                      infoboxOptions.formatter = new Function('return ' + controlOptions.formatter)();
+                    } catch (error) {
+                      console.warn('Invalid formatter function for infobox:', error);
+                      // Use default formatter
+                      infoboxOptions.formatter = (properties) => {
+                        if (!properties) return '';
+                        return Object.entries(properties)
+                          .map(([key, value]) => `<b>${key}:</b> ${value}`)
+                          .join('<br>');
+                      };
+                    }
+                  } else {
+                    // Default formatter displays all properties
+                    infoboxOptions.formatter = (properties) => {
+                      if (!properties) return '';
+                      return Object.entries(properties)
+                        .map(([key, value]) => `<b>${key}:</b> ${value}`)
+                        .join('<br>');
+                    };
+                  }
+
+                  control = new window.MapboxInfoBoxControl(infoboxOptions);
+                  console.log('Infobox control added successfully');
+                } else {
+                  console.warn('MapboxInfoBoxControl not available');
+                  return;
+                }
+                break;
+              case 'gradient':
+                if (window.MapboxGradientBoxControl) {
+                  const gradientOptions = {};
+
+                  // Add layerId if specified
+                  if (controlOptions.layerId) {
+                    gradientOptions.layerId = controlOptions.layerId;
+                  }
+
+                  // Add min/max values if specified
+                  if (controlOptions.minMaxValues) {
+                    gradientOptions.minMaxValues = controlOptions.minMaxValues;
+                  }
+
+                  // Add weight getter function if weight property is specified
+                  if (controlOptions.weightProperty) {
+                    const weightProp = controlOptions.weightProperty;
+                    gradientOptions.weightGetter = (properties) => {
+                      return properties ? (properties[weightProp] || 0) : 0;
+                    };
+                  }
+
+                  control = new window.MapboxGradientBoxControl(gradientOptions);
+                  console.log('Gradient control added successfully');
+                } else {
+                  console.warn('MapboxGradientBoxControl not available');
                   return;
                 }
                 break;
