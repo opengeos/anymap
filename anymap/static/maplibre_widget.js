@@ -3676,6 +3676,28 @@ function render({ model, el }) {
                   return;
                 }
                 break;
+              case 'legend':
+                // Handle legend control restoration
+                if (window.MaplibreLegendControl) {
+                  const legendTargets = controlOptions.targets || {};
+                  const legendOptions = {
+                    showDefault: controlOptions.showDefault !== false,
+                    showCheckbox: controlOptions.showCheckbox !== false,
+                    reverseOrder: controlOptions.reverseOrder !== false,
+                    onlyRendered: controlOptions.onlyRendered !== false,
+                    title: controlOptions.title || 'Legend'
+                  };
+                  if (controlOptions.accesstoken) {
+                    legendOptions.accesstoken = controlOptions.accesstoken;
+                  }
+
+                  control = new window.MaplibreLegendControl.MaplibreLegendControl(legendTargets, legendOptions);
+                  console.log('Legend control restored successfully');
+                } else {
+                  console.warn('MaplibreLegendControl not available during restore');
+                  return;
+                }
+                break;
               default:
                 console.warn(`Unknown control type during restore: ${controlType}`);
                 return;
@@ -4370,6 +4392,28 @@ function render({ model, el }) {
                   console.log('Basemap control added successfully');
                 } else {
                   console.warn('MaplibreGLBasemapsControl not available');
+                  return;
+                }
+                break;
+              case 'legend':
+                // Handle legend control
+                if (window.MaplibreLegendControl) {
+                  const legendTargets = controlOptions.targets || {};
+                  const legendOptions = {
+                    showDefault: controlOptions.showDefault !== false,
+                    showCheckbox: controlOptions.showCheckbox !== false,
+                    reverseOrder: controlOptions.reverseOrder !== false,
+                    onlyRendered: controlOptions.onlyRendered !== false,
+                    title: controlOptions.title || 'Legend'
+                  };
+                  if (controlOptions.accesstoken) {
+                    legendOptions.accesstoken = controlOptions.accesstoken;
+                  }
+
+                  control = new window.MaplibreLegendControl.MaplibreLegendControl(legendTargets, legendOptions);
+                  console.log('Legend control added successfully');
+                } else {
+                  console.warn('MaplibreLegendControl not available');
                   return;
                 }
                 break;

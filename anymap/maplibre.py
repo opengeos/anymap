@@ -1504,6 +1504,77 @@ class MapLibreMap(MapWidget):
 
         self.call_js_method("addControl", "export", control_options)
 
+    def add_legend_control(
+        self,
+        position: str = "top-right",
+        targets: Optional[Dict[str, str]] = None,
+        show_default: bool = True,
+        show_checkbox: bool = True,
+        reverse_order: bool = True,
+        only_rendered: bool = True,
+        title: str = "Legend",
+        accesstoken: Optional[str] = None,
+        options: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        """Add a legend control to the map.
+
+        The legend control displays layer styling information in a legend panel.
+        It can automatically generate legends from MapLibre layer styles or use
+        custom layer definitions.
+
+        Args:
+            position: Position on map ('top-left', 'top-right', 'bottom-left', 'bottom-right')
+            targets: Dictionary mapping layer IDs to display names for the legend.
+                     Use {} to include all layers automatically. Use specific layer IDs
+                     to only include certain layers. Example: {'layer-id': 'Display Name'}
+            show_default: Whether to show the legend panel by default (True) or start hidden
+            show_checkbox: Whether to show checkboxes for toggling layer visibility
+            reverse_order: Whether to reverse the order of layers in the legend
+            only_rendered: Whether to only show currently rendered/visible layers
+            title: Title text displayed in the legend header
+            accesstoken: Mapbox access token (required for Mapbox v2 basemaps)
+            options: Additional options for the legend control
+
+        Example:
+            >>> m = MapLibreMap(center=[-100, 40], zoom=3)
+            >>> m.add_geojson_layer('cities', geojson_data, 'circle',
+            ...                     paint={'circle-color': 'red', 'circle-radius': 5})
+            >>> # Add legend for specific layers
+            >>> m.add_legend_control(targets={'cities': 'US Cities'})
+            >>> # Or add legend for all layers
+            >>> m.add_legend_control(targets={})
+        """
+        if targets is None:
+            targets = {}
+
+        control_options = options or {}
+        control_options.update(
+            {
+                "position": position,
+                "targets": targets,
+                "showDefault": show_default,
+                "showCheckbox": show_checkbox,
+                "reverseOrder": reverse_order,
+                "onlyRendered": only_rendered,
+                "title": title,
+            }
+        )
+
+        if accesstoken:
+            control_options["accesstoken"] = accesstoken
+
+        # Store control in persistent state
+        control_key = f"legend_{position}"
+        current_controls = dict(self._controls)
+        current_controls[control_key] = {
+            "type": "legend",
+            "position": position,
+            "options": control_options,
+        }
+        self._controls = current_controls
+
+        self.call_js_method("addControl", "legend", control_options)
+
     def add_geoman_control(
         self,
         position: str = "top-left",

@@ -241,6 +241,12 @@
             rel="stylesheet"
             href="https://unpkg.com/maplibre-gl-basemaps@0.1.3/lib/basemaps.css"
         />
+        <!-- MapLibre GL Legend Control -->
+        <script src="https://unpkg.com/@watergis/maplibre-gl-legend@2.0.5/dist/maplibre-gl-legend.umd.js"></script>
+        <link
+            rel="stylesheet"
+            href="https://unpkg.com/@watergis/maplibre-gl-legend@2.0.5/dist/maplibre-gl-legend.css"
+        />
         <script>
             // Register COG protocol
             maplibregl.addProtocol("cog", MaplibreCOGProtocol.cogProtocol);
@@ -937,6 +943,28 @@
                                 console.log('Basemap control restored successfully');
                             }} else {{
                                 console.warn('MaplibreGLBasemapsControl not available during restore');
+                                return;
+                            }}
+                            break;
+                        case 'legend':
+                            // Handle legend control restoration
+                            if (typeof MaplibreLegendControl !== 'undefined') {{
+                                const legendTargets = controlOptions.targets || {{}};
+                                const legendOptions = {{
+                                    showDefault: controlOptions.showDefault !== false,
+                                    showCheckbox: controlOptions.showCheckbox !== false,
+                                    reverseOrder: controlOptions.reverseOrder !== false,
+                                    onlyRendered: controlOptions.onlyRendered !== false,
+                                    title: controlOptions.title || 'Legend'
+                                }};
+                                if (controlOptions.accesstoken) {{
+                                    legendOptions.accesstoken = controlOptions.accesstoken;
+                                }}
+
+                                control = new MaplibreLegendControl.MaplibreLegendControl(legendTargets, legendOptions);
+                                console.log('Legend control restored successfully');
+                            }} else {{
+                                console.warn('MaplibreLegendControl not available during restore');
                                 return;
                             }}
                             break;
