@@ -1591,7 +1591,6 @@ class MapLibreMap(MapWidget):
     ) -> Dict[str, Any]:
         """Return the current Geoman feature collection.
 
-
         Returns:
             A GeoJSON FeatureCollection containing all Geoman-managed features.
 
