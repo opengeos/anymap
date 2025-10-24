@@ -2732,6 +2732,134 @@ class MapLibreMap(MapWidget):
         # Send to JavaScript
         self.call_js_method("clearDeckGLLayers")
 
+    # Three.js / MapLibre Three Plugin methods
+
+    def init_three_scene(self) -> None:
+        """Initialize the MapLibre Three.js scene.
+
+        This must be called before adding any 3D models or lights.
+        It initializes the MapScene object that connects MapLibre GL JS with Three.js.
+
+        Example:
+            >>> m = MapLibreMap(center=[148.9819, -35.3981], zoom=18, pitch=60)
+            >>> m.init_three_scene()
+            >>> m.add_three_light(type='ambient')
+        """
+        self.call_js_method("initMapScene")
+
+    def add_three_model(
+        self,
+        model_id: str,
+        url: str,
+        coordinates: List[float],
+        scale: Union[float, List[float]] = 1.0,
+        rotation: Optional[List[float]] = None,
+        **kwargs: Any,
+    ) -> None:
+        """Add a 3D GLTF model to the map using Three.js.
+
+        Args:
+            model_id: Unique identifier for the 3D model.
+            url: URL to the GLTF/GLB model file.
+            coordinates: Geographic coordinates [longitude, latitude] where the model should be placed.
+            scale: Scale factor for the model. Can be a single number or [x, y, z] list.
+            rotation: Optional rotation in radians as [x, y, z].
+            **kwargs: Additional options for the model.
+
+        Example:
+            >>> m = MapLibreMap(center=[148.9819, -35.3981], zoom=18, pitch=60)
+            >>> m.init_three_scene()
+            >>> m.add_three_light(type='ambient')
+            >>> m.add_three_model(
+            ...     model_id='my_model',
+            ...     url='https://example.com/model.gltf',
+            ...     coordinates=[148.9819, -35.3981],
+            ...     scale=100,
+            ...     rotation=[0, 0, 0]
+            ... )
+        """
+        model_config = {
+            "id": model_id,
+            "url": url,
+            "coordinates": coordinates,
+            "scale": scale,
+            "options": kwargs,
+        }
+
+        if rotation is not None:
+            model_config["rotation"] = rotation
+
+        self.call_js_method("addThreeModel", model_config)
+
+    def add_three_light(
+        self,
+        light_type: str = "ambient",
+        color: int = 0xFFFFFF,
+        intensity: float = 1.0,
+        position: Optional[List[float]] = None,
+    ) -> None:
+        """Add a light to the Three.js scene.
+
+        Args:
+            light_type: Type of light ('ambient', 'directional', or 'sun').
+            color: Hexadecimal color value for the light (e.g., 0xffffff for white).
+            intensity: Light intensity value.
+            position: Optional position for directional lights as [x, y, z].
+
+        Example:
+            >>> m = MapLibreMap(center=[148.9819, -35.3981], zoom=18, pitch=60)
+            >>> m.init_three_scene()
+            >>> m.add_three_light(type='ambient', intensity=0.5)
+            >>> m.add_three_light(type='directional', position=[1, 1, 1])
+            >>> m.add_three_light(type='sun')
+        """
+        light_config = {"type": light_type, "color": color, "intensity": intensity}
+
+        if position is not None:
+            light_config["position"] = position
+
+        self.call_js_method("addThreeLight", light_config)
+
+    def remove_three_model(self, model_id: str) -> None:
+        """Remove a 3D model from the scene.
+
+        Args:
+            model_id: Unique identifier of the model to remove.
+
+        Example:
+            >>> m.remove_three_model('my_model')
+        """
+        self.call_js_method("removeThreeModel", model_id)
+
+    def update_three_model(
+        self,
+        model_id: str,
+        position: Optional[List[float]] = None,
+        scale: Optional[Union[float, List[float]]] = None,
+        rotation: Optional[List[float]] = None,
+    ) -> None:
+        """Update properties of an existing 3D model.
+
+        Args:
+            model_id: Unique identifier of the model to update.
+            position: Optional new position as [x, y, z].
+            scale: Optional new scale. Can be a single number or [x, y, z] list.
+            rotation: Optional new rotation in radians as [x, y, z].
+
+        Example:
+            >>> m.update_three_model('my_model', scale=200, rotation=[0, 1.57, 0])
+        """
+        update_config = {"id": model_id}
+
+        if position is not None:
+            update_config["position"] = position
+        if scale is not None:
+            update_config["scale"] = scale
+        if rotation is not None:
+            update_config["rotation"] = rotation
+
+        self.call_js_method("updateThreeModel", update_config)
+
     def to_html(
         self,
         filename: Optional[str] = None,

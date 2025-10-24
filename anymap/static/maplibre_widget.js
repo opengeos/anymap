@@ -2228,6 +2228,45 @@ function render({ model, el }) {
         debugLog("DeckGL loaded successfully");
       }
 
+      // Load Three.js for 3D rendering
+      if (!window.THREE) {
+        const threeScript = document.createElement('script');
+        threeScript.src = 'https://cdn.jsdelivr.net/npm/three@0.172.0/build/three.min.js';
+
+        await new Promise((resolve, reject) => {
+          threeScript.onload = resolve;
+          threeScript.onerror = reject;
+          document.head.appendChild(threeScript);
+        });
+
+        debugLog("Three.js loaded successfully");
+      }
+
+      // Load GLTFLoader for Three.js
+      if (window.THREE && !window.GLTFLoader) {
+        try {
+          // Load GLTFLoader as ESM module
+          const gltfModule = await import('https://cdn.jsdelivr.net/npm/three@0.172.0/examples/jsm/loaders/GLTFLoader.js');
+          window.GLTFLoader = gltfModule.GLTFLoader;
+          debugLog("GLTFLoader loaded successfully");
+        } catch (error) {
+          console.warn("Failed to load GLTFLoader:", error);
+        }
+      }
+
+      // Load MapLibre Three Plugin
+      if (window.THREE && !window.MaplibreThreePlugin) {
+        try {
+          // Try loading from jsdelivr
+          const mtpModule = await import('https://cdn.jsdelivr.net/npm/@dvt3d/maplibre-three-plugin@latest/dist/index.esm.js');
+          window.MaplibreThreePlugin = mtpModule;
+          debugLog("MapLibre Three Plugin loaded successfully");
+        } catch (error) {
+          console.warn("Failed to load MapLibre Three Plugin:", error);
+          console.warn("3D model support may be limited");
+        }
+      }
+
       // Load loaders.gl LASLoader using ESM CDN
       if (!window._loadersGLLASLoader) {
         try {
@@ -5104,6 +5143,165 @@ function render({ model, el }) {
           case 'exportGeomanData':
             // Export current Geoman features and sync to Python
             exportGeomanData();
+            break;
+
+          case 'initMapScene':
+            // Initialize MapLibre Three Plugin scene
+            if (window.MaplibreThreePlugin && window.THREE) {
+              try {
+                if (!el._mapScene) {
+                  el._mapScene = new window.MaplibreThreePlugin.MapScene(map);
+                  el._threeObjects = new Map(); // Store references to 3D objects
+                  console.log('MapScene initialized');
+                }
+              } catch (error) {
+                console.error('Failed to initialize MapScene:', error);
+              }
+            } else {
+              console.warn('MapLibre Three Plugin or Three.js not loaded');
+            }
+            break;
+
+          case 'addThreeModel':
+            // Add a 3D GLTF model to the scene
+            if (el._mapScene && window.GLTFLoader) {
+              try {
+                const modelConfig = args[0] || {};
+                const { id, url, coordinates, scale, rotation, options } = modelConfig;
+
+                const loader = new window.GLTFLoader();
+                loader.load(
+                  url,
+                  (gltf) => {
+                    // Create RTC group for georeferencing
+                    const rtcGroup = window.MaplibreThreePlugin.Creator.createRTCGroup(coordinates);
+
+                    // Apply scale if provided
+                    if (scale) {
+                      if (Array.isArray(scale)) {
+                        gltf.scene.scale.set(scale[0], scale[1], scale[2]);
+                      } else {
+                        gltf.scene.scale.set(scale, scale, scale);
+                      }
+                    }
+
+                    // Apply rotation if provided
+                    if (rotation) {
+                      if (Array.isArray(rotation)) {
+                        gltf.scene.rotation.set(rotation[0], rotation[1], rotation[2]);
+                      }
+                    }
+
+                    rtcGroup.add(gltf.scene);
+                    el._mapScene.addObject(rtcGroup);
+
+                    // Store reference
+                    el._threeObjects.set(id, { group: rtcGroup, model: gltf.scene });
+
+                    console.log(`3D model "${id}" loaded successfully`);
+                  },
+                  (progress) => {
+                    console.log(`Loading model "${id}": ${(progress.loaded / progress.total * 100).toFixed(2)}%`);
+                  },
+                  (error) => {
+                    console.error(`Failed to load model "${id}":`, error);
+                  }
+                );
+              } catch (error) {
+                console.error('Failed to add 3D model:', error);
+              }
+            } else {
+              console.warn('MapScene not initialized or GLTFLoader not available');
+            }
+            break;
+
+          case 'addThreeLight':
+            // Add light to the Three.js scene
+            if (el._mapScene && window.THREE) {
+              try {
+                const lightConfig = args[0] || {};
+                const { type, color, intensity, position } = lightConfig;
+
+                let light;
+                switch (type) {
+                  case 'ambient':
+                    light = new window.THREE.AmbientLight(color || 0xffffff, intensity || 1);
+                    break;
+                  case 'directional':
+                    light = new window.THREE.DirectionalLight(color || 0xffffff, intensity || 1);
+                    if (position) {
+                      light.position.set(position[0], position[1], position[2]);
+                    }
+                    break;
+                  case 'sun':
+                    light = new window.MaplibreThreePlugin.Sun();
+                    break;
+                  default:
+                    console.warn(`Unknown light type: ${type}`);
+                    return;
+                }
+
+                if (light) {
+                  el._mapScene.addLight(light);
+                  console.log(`Added ${type} light to scene`);
+                }
+              } catch (error) {
+                console.error('Failed to add light:', error);
+              }
+            } else {
+              console.warn('MapScene not initialized or Three.js not loaded');
+            }
+            break;
+
+          case 'removeThreeModel':
+            // Remove a 3D model from the scene
+            if (el._mapScene && el._threeObjects) {
+              try {
+                const modelId = args[0];
+                const obj = el._threeObjects.get(modelId);
+                if (obj) {
+                  el._mapScene.removeObject(obj.group);
+                  el._threeObjects.delete(modelId);
+                  console.log(`Removed 3D model "${modelId}"`);
+                } else {
+                  console.warn(`3D model "${modelId}" not found`);
+                }
+              } catch (error) {
+                console.error('Failed to remove 3D model:', error);
+              }
+            }
+            break;
+
+          case 'updateThreeModel':
+            // Update properties of a 3D model
+            if (el._threeObjects) {
+              try {
+                const updateConfig = args[0] || {};
+                const { id, position, scale, rotation } = updateConfig;
+
+                const obj = el._threeObjects.get(id);
+                if (obj) {
+                  if (position && Array.isArray(position)) {
+                    obj.group.position.set(position[0], position[1], position[2]);
+                  }
+                  if (scale) {
+                    if (Array.isArray(scale)) {
+                      obj.model.scale.set(scale[0], scale[1], scale[2]);
+                    } else {
+                      obj.model.scale.set(scale, scale, scale);
+                    }
+                  }
+                  if (rotation && Array.isArray(rotation)) {
+                    obj.model.rotation.set(rotation[0], rotation[1], rotation[2]);
+                  }
+                  console.log(`Updated 3D model "${id}"`);
+                } else {
+                  console.warn(`3D model "${id}" not found`);
+                }
+              } catch (error) {
+                console.error('Failed to update 3D model:', error);
+              }
+            }
             break;
 
           default:
