@@ -1836,7 +1836,11 @@ function render({ model, el }) {
 
   // Ensure parent element has proper styling
   el.style.width = "100%";
+  el.style.height = model.get("height");
   el.style.display = "block";
+  el.style.margin = "0";
+  el.style.padding = "0";
+  el.style.overflow = "hidden";
 
   // Clear any existing content and cleanup
   if (el._map) {
@@ -2656,6 +2660,12 @@ function render({ model, el }) {
     };
 
     const geomanModelListener = () => {
+      // If this change originated from a JS export, skip importing to avoid
+      // destroying interaction state (e.g., active drag selection)
+      if (el._geomanSyncFromJs) {
+        el._geomanSyncFromJs = false;
+        return;
+      }
       // Import data set from Python without re-exporting to avoid feedback loops
       importGeomanData(model.get("geoman_data"), true);
     };
