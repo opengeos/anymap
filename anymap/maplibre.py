@@ -1408,6 +1408,123 @@ class MapLibreMap(MapWidget):
 
         self.call_js_method("addControl", "geocoder", control_options)
 
+    def add_maplibre_geocoder(
+        self,
+        position: str = "top-left",
+        api_key: Optional[str] = None,
+        maplibre_api: str = "maptiler",
+        language: Optional[str] = None,
+        placeholder: str = "Search",
+        proximity: Optional[List[float]] = None,
+        bbox: Optional[List[float]] = None,
+        country: Optional[str] = None,
+        types: Optional[str] = None,
+        limit: int = 5,
+        marker: bool = True,
+        show_result_markers: bool = True,
+        collapsed: bool = False,
+        clear_on_blur: bool = False,
+        clear_and_blur_on_esc: bool = False,
+        enable_event_logging: bool = False,
+        min_length: int = 2,
+        options: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        """Add MapLibre GL Geocoder control to the map.
+
+        The MapLibre GL Geocoder is a geocoder control for MapLibre GL that supports
+        various geocoding APIs including Maptiler, Mapbox, and others. It provides a
+        search interface for finding locations and can display markers for search results.
+
+        See: https://github.com/maplibre/maplibre-gl-geocoder
+
+        Args:
+            position: Position on map ('top-left', 'top-right', 'bottom-left', 'bottom-right')
+            api_key: API key for the geocoding service (required for most services)
+            maplibre_api: Geocoding API to use ('maptiler', 'mapbox', or custom)
+            language: Language code for results (e.g., 'en', 'es', 'fr')
+            placeholder: Placeholder text in the search input
+            proximity: [lng, lat] to bias results towards this location
+            bbox: [minLng, minLat, maxLng, maxLat] to limit results to this bounding box
+            country: Country code(s) to limit results (e.g., 'us' or 'us,ca')
+            types: Comma-separated types to filter results (e.g., 'country,region,place')
+            limit: Maximum number of results to return
+            marker: Whether to add a marker at the geocoded location
+            show_result_markers: Whether to show markers for all search results
+            collapsed: Whether the control should start collapsed
+            clear_on_blur: Clear the input when it loses focus
+            clear_and_blur_on_esc: Clear input and remove focus when ESC is pressed
+            enable_event_logging: Enable console logging of geocoder events
+            min_length: Minimum number of characters to trigger search
+            options: Additional options passed to the MaplibreGeocoder constructor
+
+        Example:
+            ```python
+            m = MapLibreMap(center=[-87.61694, 41.86625], zoom=10)
+            m.add_maplibre_geocoder(
+                position="top-left",
+                api_key="your_api_key",
+                maplibre_api="maptiler",
+                language="en",
+                country="us"
+            )
+            ```
+        """
+        geocoder_config: Dict[str, Any] = options or {}
+
+        # Build configuration
+        geocoder_config.update(
+            {
+                "position": position,
+                "maplibregl": True,  # Signal to use maplibregl
+                "placeholder": placeholder,
+                "limit": limit,
+                "marker": marker,
+                "showResultMarkers": show_result_markers,
+                "collapsed": collapsed,
+                "clearOnBlur": clear_on_blur,
+                "clearAndBlurOnEsc": clear_and_blur_on_esc,
+                "enableEventLogging": enable_event_logging,
+                "minLength": min_length,
+            }
+        )
+
+        if api_key:
+            geocoder_config["apiKey"] = api_key
+
+        if maplibre_api:
+            geocoder_config["maplibreApi"] = maplibre_api
+
+        if language:
+            geocoder_config["language"] = language
+
+        if proximity:
+            if len(proximity) != 2:
+                raise ValueError("proximity must be [lng, lat]")
+            geocoder_config["proximity"] = proximity
+
+        if bbox:
+            if len(bbox) != 4:
+                raise ValueError("bbox must be [minLng, minLat, maxLng, maxLat]")
+            geocoder_config["bbox"] = bbox
+
+        if country:
+            geocoder_config["country"] = country
+
+        if types:
+            geocoder_config["types"] = types
+
+        # Store control state
+        control_key = f"maplibre_geocoder_{position}"
+        current_controls = dict(self._controls)
+        current_controls[control_key] = {
+            "type": "maplibre_geocoder",
+            "position": position,
+            "options": geocoder_config,
+        }
+        self._controls = current_controls
+
+        self.call_js_method("addControl", "maplibre_geocoder", geocoder_config)
+
     def add_export_control(
         self,
         position: str = "top-right",
