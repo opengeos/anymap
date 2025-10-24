@@ -1586,8 +1586,15 @@ class MapLibreMap(MapWidget):
 
         self.set_geoman_data({"type": "FeatureCollection", "features": []})
 
-    def get_geoman_data(self) -> Dict[str, Any]:
-        """Return the current Geoman feature collection."""
+    def get_geoman_data(
+        self,
+    ) -> Dict[str, Any]:
+        """Return the current Geoman feature collection.
+
+        Returns:
+            A GeoJSON FeatureCollection containing all Geoman-managed features.
+
+        """
 
         return self.geoman_data
 
