@@ -2531,7 +2531,7 @@ function render({ model, el }) {
       }
     };
 
-    const importGeomanData = (data) => {
+    const importGeomanData = (data, skipExport = false) => {
       el._pendingGeomanData = normalizeGeomanGeoJson(data);
       if (!el._geomanInstance) {
         return;
@@ -2552,7 +2552,9 @@ function render({ model, el }) {
           }
         });
         el._pendingGeomanData = null;
-        exportGeomanData();
+        if (!skipExport) {
+          exportGeomanData();
+        }
       } catch (error) {
         console.error('Failed to import Geoman data:', error);
       }
@@ -2654,11 +2656,8 @@ function render({ model, el }) {
     };
 
     const geomanModelListener = () => {
-      if (el._geomanSyncFromJs) {
-        el._geomanSyncFromJs = false;
-        return;
-      }
-      importGeomanData(model.get("geoman_data"));
+      // Import data set from Python without re-exporting to avoid feedback loops
+      importGeomanData(model.get("geoman_data"), true);
     };
 
     model.on("change:geoman_data", geomanModelListener);
