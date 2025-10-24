@@ -2214,6 +2214,42 @@ function render({ model, el }) {
         document.head.appendChild(geomanCSS);
       }
 
+      // Load MapLibre GL Temporal Control
+      if (!window.TemporalControl) {
+        const temporalScript = document.createElement('script');
+        temporalScript.type = 'module';
+        temporalScript.textContent = `
+          import TemporalControl from 'https://www.unpkg.com/maplibre-gl-temporal-control@1.2.0/build/index.js';
+          window.TemporalControl = TemporalControl;
+        `;
+        document.head.appendChild(temporalScript);
+
+        // Wait for the module to load
+        await new Promise((resolve) => {
+          const checkLoaded = setInterval(() => {
+            if (window.TemporalControl) {
+              clearInterval(checkLoaded);
+              resolve();
+            }
+          }, 50);
+          // Timeout after 5 seconds
+          setTimeout(() => {
+            clearInterval(checkLoaded);
+            if (!window.TemporalControl) {
+              console.warn('MapLibre Temporal Control failed to load - temporal animation unavailable');
+            }
+            resolve();
+          }, 5000);
+        });
+      }
+
+      if (!document.querySelector('link[href*="maplibre-gl-temporal-control"]')) {
+        const temporalCSS = document.createElement('link');
+        temporalCSS.rel = 'stylesheet';
+        temporalCSS.href = 'https://www.unpkg.com/maplibre-gl-temporal-control@1.2.0/build/style.css';
+        document.head.appendChild(temporalCSS);
+      }
+
       // Load DeckGL for overlay layers
       if (!window.deck) {
         const deckScript = document.createElement('script');
@@ -3676,6 +3712,24 @@ function render({ model, el }) {
                   return;
                 }
                 break;
+              case 'temporal':
+                // Handle temporal control restoration
+                if (window.TemporalControl) {
+                  const temporalOptions = {
+                    frames: controlOptions.frames || [],
+                    interval: controlOptions.interval || 1000,
+                    performance: controlOptions.performance || false,
+                    ...controlOptions
+                  };
+                  delete temporalOptions.position; // Remove position from options passed to control
+
+                  control = new window.TemporalControl(temporalOptions);
+                  console.log('Temporal control restored successfully');
+                } else {
+                  console.warn('TemporalControl not available during restore');
+                  return;
+                }
+                break;
               default:
                 console.warn(`Unknown control type during restore: ${controlType}`);
                 return;
@@ -4370,6 +4424,23 @@ function render({ model, el }) {
                   console.log('Basemap control added successfully');
                 } else {
                   console.warn('MaplibreGLBasemapsControl not available');
+                  return;
+                }
+                break;
+              case 'temporal':
+                if (window.TemporalControl) {
+                  const temporalOptions = {
+                    frames: controlOptions.frames || [],
+                    interval: controlOptions.interval || 1000,
+                    performance: controlOptions.performance || false,
+                    ...controlOptions
+                  };
+                  delete temporalOptions.position; // Remove position from options passed to control
+
+                  control = new window.TemporalControl(temporalOptions);
+                  console.log('Temporal control added successfully');
+                } else {
+                  console.warn('TemporalControl not available');
                   return;
                 }
                 break;
