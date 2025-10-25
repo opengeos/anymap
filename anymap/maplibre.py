@@ -1506,7 +1506,7 @@ class MapLibreMap(MapWidget):
 
         if bbox:
             if len(bbox) != 4:
-                raise ValueError("bbox must be [minLng, minLat, maxLng, maxLat]")
+                raise ValueError("bbox must be a list of four floats: [minLng, minLat, maxLng, maxLat]")
             geocoder_config["bbox"] = bbox
 
         if country:
