@@ -2819,9 +2819,9 @@ class MapLibreMap(MapWidget):
         Example:
             >>> m = MapLibreMap(center=[148.9819, -35.3981], zoom=18, pitch=60)
             >>> m.init_three_scene()
-            >>> m.add_three_light(type='ambient', intensity=0.5)
-            >>> m.add_three_light(type='directional', position=[1, 1, 1])
-            >>> m.add_three_light(type='sun')
+            >>> m.add_three_light(light_type='ambient', intensity=0.5)
+            >>> m.add_three_light(light_type='directional', position=[1, 1, 1])
+            >>> m.add_three_light(light_type='sun')
         """
         light_config: Dict[str, Any] = {
             "type": light_type,
