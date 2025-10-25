@@ -1499,7 +1499,7 @@ class MapLibreMap(MapWidget):
 
         if proximity:
             if len(proximity) != 2:
-                raise ValueError("proximity must be [lng, lat]")
+                raise ValueError("proximity must be a list of two floats: [longitude, latitude]")
             geocoder_config["proximity"] = proximity
 
         if bbox:
