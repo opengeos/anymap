@@ -2067,14 +2067,27 @@ function render({ model, el }) {
         }
       }
 
+      // Ensure plugins expecting `mapboxgl` can work with MapLibre
+      if (typeof window !== 'undefined' && !window.mapboxgl && typeof maplibregl !== 'undefined') {
+        window.mapboxgl = maplibregl;
+      }
+
       // Load MapLibre GL Basemaps Control
       if (!window.MaplibreGLBasemapsControl) {
+        console.log('Loading MapLibre GL Basemaps Control...');
         const basemapsScript = document.createElement('script');
         basemapsScript.src = 'https://unpkg.com/maplibre-gl-basemaps@0.1.3/lib/index.js';
 
         await new Promise((resolve, reject) => {
-          basemapsScript.onload = resolve;
-          basemapsScript.onerror = reject;
+          basemapsScript.onload = () => {
+            console.log('MapLibre GL Basemaps Control loaded successfully');
+            console.log('window.MaplibreGLBasemapsControl:', window.MaplibreGLBasemapsControl);
+            resolve();
+          };
+          basemapsScript.onerror = (err) => {
+            console.error('Failed to load MapLibre GL Basemaps Control:', err);
+            reject(err);
+          };
           document.head.appendChild(basemapsScript);
         });
 
@@ -2084,7 +2097,10 @@ function render({ model, el }) {
           basemapsCSS.rel = 'stylesheet';
           basemapsCSS.href = 'https://unpkg.com/maplibre-gl-basemaps@0.1.3/lib/basemaps.css';
           document.head.appendChild(basemapsCSS);
+          console.log('MapLibre GL Basemaps CSS loaded');
         }
+      } else {
+        console.log('MapLibre GL Basemaps Control already available');
       }
 
       // Load MapLibre GL Export Control
@@ -3661,16 +3677,48 @@ function render({ model, el }) {
               case 'basemap_control':
                 // Handle basemap control restoration
                 if (window.MaplibreGLBasemapsControl) {
+                  // Clean basemap configurations to remove null values
+                  const cleanedBasemaps = (controlOptions.basemaps || []).map(basemap => {
+                    const cleaned = { ...basemap };
+                    if (cleaned.sourceExtraParams) {
+                      // Remove null/undefined values from sourceExtraParams and ensure numbers
+                      const cleanParams = {};
+                      for (const [key, value] of Object.entries(cleaned.sourceExtraParams)) {
+                        if (value != null) {
+                          // For zoom parameters, ensure they are numbers
+                          if (key === 'minzoom' || key === 'maxzoom') {
+                            cleanParams[key] = Number(value);
+                          } else {
+                            cleanParams[key] = value;
+                          }
+                        }
+                      }
+                      cleaned.sourceExtraParams = cleanParams;
+                    }
+                    return cleaned;
+                  });
+
+                  console.log('Basemap configurations:', JSON.stringify(cleanedBasemaps, null, 2));
+
                   const basemapsOptions = {
-                    basemaps: controlOptions.basemaps || [],
+                    basemaps: cleanedBasemaps,
                     initialBasemap: controlOptions.initialBasemap,
                     expandDirection: controlOptions.expandDirection || 'down',
                     ...controlOptions
                   };
                   delete basemapsOptions.position; // Remove position from options passed to control
+                  delete basemapsOptions.basemaps; // Remove duplicate to avoid override
+
+                  // Rebuild with cleaned basemaps
+                  basemapsOptions.basemaps = cleanedBasemaps;
+
+                  console.log('Final basemaps options being passed to control:', basemapsOptions);
 
                   control = new window.MaplibreGLBasemapsControl(basemapsOptions);
-                  console.log('Basemap control restored successfully');
+                  console.log('Basemap control created successfully');
+                  console.log('Control object:', control);
+                  console.log('Control._options:', control._options);
+                  console.log('Position:', position);
                 } else {
                   console.warn('MaplibreGLBasemapsControl not available during restore');
                   return;
@@ -3681,7 +3729,103 @@ function render({ model, el }) {
                 return;
             }
 
-            map.addControl(control, position);
+            console.log('About to add control to map:', controlType, 'at position:', position);
+            console.log('Map instance:', map);
+            console.log('Map loaded:', map.loaded());
+            console.log('Control has onAdd method:', typeof control.onAdd === 'function');
+
+            // For basemap control, ensure it initializes even if map is already loaded
+            if (controlType === 'basemap_control') {
+              const wasLoaded = map.loaded();
+              map.addControl(control, position);
+              console.log('Control added to map successfully');
+
+              // If map was already loaded, the control might have missed the load event
+              // Trigger a load event so the control can initialize
+              if (wasLoaded) {
+                setTimeout(() => {
+                  console.log('Map was already loaded, triggering load event for basemap control');
+                  map.fire('load');
+                }, 100);
+              }
+            } else {
+              map.addControl(control, position);
+              console.log('Control added to map successfully');
+            }
+
+            // Check control immediately after adding
+            if (controlType === 'basemap_control') {
+              console.log('Control container after adding:', control._container);
+              console.log('Control container HTML after adding:', control._container?.innerHTML?.substring(0, 300));
+
+              // Attach fallback interactivity similar to live add path
+              try {
+                const container = control && control._container ? control._container : null;
+                if (container && container.dataset.anymapFallbackReady !== '1') {
+                  container.dataset.anymapFallbackReady = '1';
+                  const btn = container.querySelector('button');
+                  if (btn) {
+                    try { btn.style.cursor = 'pointer'; } catch (_) {}
+                    const toggle = () => {
+                      if (container.classList.contains('open')) {
+                        container.classList.remove('open');
+                        container.classList.add('closed');
+                      } else {
+                        container.classList.add('open');
+                        container.classList.remove('closed');
+                      }
+                    };
+                    btn.addEventListener('click', toggle);
+                    container.addEventListener('mouseenter', () => container.classList.add('open'));
+                    container.addEventListener('mouseleave', () => container.classList.remove('open'));
+                  }
+                }
+              } catch (e) {
+                console.debug('Basemap fallback interactivity attach failed (restore)', e);
+              }
+            }
+
+            // Debug: Check if control is in DOM
+            if (controlType === 'basemap_control') {
+              setTimeout(() => {
+                const basemapControls = document.querySelectorAll('.maplibregl-ctrl-basemaps');
+                console.log('Basemap controls in DOM:', basemapControls.length);
+                basemapControls.forEach((ctrl, idx) => {
+                  const styles = window.getComputedStyle(ctrl);
+                  const rect = ctrl.getBoundingClientRect();
+                  console.log(`Basemap control ${idx}:`, {
+                    visible: ctrl.offsetParent !== null,
+                    display: styles.display,
+                    visibility: styles.visibility,
+                    opacity: styles.opacity,
+                    zIndex: styles.zIndex,
+                    width: styles.width,
+                    height: styles.height,
+                    position: styles.position,
+                    boundingRect: { x: rect.x, y: rect.y, width: rect.width, height: rect.height },
+                    classes: ctrl.className,
+                    innerHTML: ctrl.innerHTML.substring(0, 200)
+                  });
+
+              // Ensure pointer cursor on the toggle button
+              const btn = ctrl.querySelector('button');
+              if (btn) { try { btn.style.cursor = 'pointer'; } catch (_) {} }
+
+                  // Test clicking the control
+                  const button = ctrl.querySelector('button');
+                  console.log('Control button:', button);
+                  if (button) {
+                    console.log('Button event listeners:', getEventListeners ? getEventListeners(button) : 'getEventListeners not available');
+                    console.log('Simulating click on button...');
+                    button.click();
+                  }
+
+                  // Log control structure
+                  console.log('Control HTML structure:', ctrl.innerHTML);
+                });
+              }, 100);
+            }
+
             if (controlType === 'export') {
               applyExportControlCollapsedState(
                 control,
@@ -3691,6 +3835,7 @@ function render({ model, el }) {
             el._controls.set(controlKey, control);
           } catch (error) {
             console.warn(`Failed to restore control ${controlKey}:`, error);
+            console.error(error);
           }
         }
       });
@@ -4358,8 +4503,31 @@ function render({ model, el }) {
                 break;
               case 'basemap_control':
                 if (window.MaplibreGLBasemapsControl) {
+                  // Clean basemap configurations to remove null values
+                  const cleanedBasemaps = (controlOptions.basemaps || []).map(basemap => {
+                    const cleaned = { ...basemap };
+                    if (cleaned.sourceExtraParams) {
+                      // Remove null/undefined values from sourceExtraParams and ensure numbers
+                      const cleanParams = {};
+                      for (const [key, value] of Object.entries(cleaned.sourceExtraParams)) {
+                        if (value != null) {
+                          // For zoom parameters, ensure they are numbers
+                          if (key === 'minzoom' || key === 'maxzoom') {
+                            cleanParams[key] = Number(value);
+                          } else {
+                            cleanParams[key] = value;
+                          }
+                        }
+                      }
+                      cleaned.sourceExtraParams = cleanParams;
+                    }
+                    return cleaned;
+                  });
+
+                  console.log('Basemap configurations:', JSON.stringify(cleanedBasemaps, null, 2));
+
                   const basemapsOptions = {
-                    basemaps: controlOptions.basemaps || [],
+                    basemaps: cleanedBasemaps,
                     initialBasemap: controlOptions.initialBasemap,
                     expandDirection: controlOptions.expandDirection || 'down',
                     ...controlOptions
@@ -4367,7 +4535,9 @@ function render({ model, el }) {
                   delete basemapsOptions.position; // Remove position from options passed to control
 
                   control = new window.MaplibreGLBasemapsControl(basemapsOptions);
-                  console.log('Basemap control added successfully');
+                  console.log('Basemap control created successfully');
+                  console.log('Control object:', control);
+                  console.log('Position:', position);
                 } else {
                   console.warn('MaplibreGLBasemapsControl not available');
                   return;
@@ -4378,7 +4548,59 @@ function render({ model, el }) {
                 return;
             }
 
+            console.log('About to add control to map:', controlType, 'at position:', position);
             map.addControl(control, position);
+            console.log('Control added to map successfully');
+
+            // Add fallback interactivity for basemap control (in case plugin listeners fail)
+            if (controlType === 'basemap_control') {
+              try {
+                const container = control && control._container ? control._container : null;
+                if (container && container.dataset.anymapFallbackReady !== '1') {
+                  container.dataset.anymapFallbackReady = '1';
+                  const btn = container.querySelector('button');
+                  if (btn) {
+                    // Ensure visible pointer cursor
+                    try { btn.style.cursor = 'pointer'; } catch (_) {}
+                    const toggle = () => {
+                      if (container.classList.contains('open')) {
+                        container.classList.remove('open');
+                        container.classList.add('closed');
+                      } else {
+                        container.classList.add('open');
+                        container.classList.remove('closed');
+                      }
+                    };
+                    btn.addEventListener('click', toggle);
+                    container.addEventListener('mouseenter', () => container.classList.add('open'));
+                    container.addEventListener('mouseleave', () => container.classList.remove('open'));
+                  }
+                }
+              } catch (e) {
+                console.debug('Basemap fallback interactivity attach failed', e);
+              }
+            }
+
+            // Debug: Check if control is in DOM
+            if (controlType === 'basemap_control') {
+              setTimeout(() => {
+                const basemapControls = document.querySelectorAll('.maplibregl-ctrl-basemaps');
+                console.log('Basemap controls in DOM:', basemapControls.length);
+                basemapControls.forEach((ctrl, idx) => {
+                  const styles = window.getComputedStyle(ctrl);
+                  console.log(`Basemap control ${idx}:`, {
+                    visible: ctrl.offsetParent !== null,
+                    display: styles.display,
+                    visibility: styles.visibility,
+                    opacity: styles.opacity,
+                    zIndex: styles.zIndex,
+                    width: styles.width,
+                    height: styles.height
+                  });
+                });
+              }, 100);
+            }
+
             if (controlType === 'export') {
               applyExportControlCollapsedState(
                 control,

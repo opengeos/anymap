@@ -673,3 +673,34 @@
 .layer-control-panel::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
 }
+
+/* Basemap control styling */
+.maplibregl-ctrl-basemaps {
+  min-width: 36px !important;
+  min-height: 36px !important;
+}
+
+.maplibregl-ctrl-basemaps.closed {
+  width: 36px !important;
+  height: 36px !important;
+}
+
+.maplibregl-ctrl-basemaps button {
+  width: 36px !important;
+  height: 36px !important;
+  background-size: 20px 20px !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+}
+
+/* Make the basemap options visible when expanded */
+.maplibregl-ctrl-basemaps.open {
+  min-width: 200px !important;
+  background: white !important;
+  border-radius: 4px !important;
+  box-shadow: 0 0 0 2px rgba(0,0,0,.1) !important;
+}
+
+.maplibregl-ctrl-basemaps .basemaps-container {
+  min-width: 180px !important;
+}

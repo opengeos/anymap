@@ -2506,22 +2506,35 @@ class MapLibreMap(MapWidget):
         for basemap_name in valid_basemaps:
             basemap_provider = available_basemaps[basemap_name]
             tile_url = basemap_provider.build_url()
-            attribution = basemap_provider.get("attribution", "")
+            attribution = basemap_provider.get("attribution", "") or ""
 
             # Use custom label if provided, otherwise use basemap name
             display_label = (
                 labels.get(basemap_name, basemap_name) if labels else basemap_name
             )
 
+            # Build source extra params with default zoom levels
+            # Set defaults: minzoom=0, maxzoom=22 (matching MapLibre defaults)
+            min_zoom = basemap_provider.get("min_zoom")
+            max_zoom = basemap_provider.get("max_zoom")
+
+            # Use defaults if not specified
+            if min_zoom is None:
+                min_zoom = 0
+            if max_zoom is None:
+                max_zoom = 22
+
+            source_params = {
+                "tileSize": 256,
+                "attribution": attribution,
+                "minzoom": min_zoom,
+                "maxzoom": max_zoom,
+            }
+
             basemap_config = {
                 "id": basemap_name,
                 "tiles": [tile_url],
-                "sourceExtraParams": {
-                    "tileSize": 256,
-                    "attribution": attribution,
-                    "minzoom": basemap_provider.get("min_zoom", 0),
-                    "maxzoom": basemap_provider.get("max_zoom", 22),
-                },
+                "sourceExtraParams": source_params,
                 "label": display_label,
             }
             basemap_configs.append(basemap_config)
