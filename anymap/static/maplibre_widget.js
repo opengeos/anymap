@@ -4521,6 +4521,148 @@ function render({ model, el }) {
                   return;
                 }
                 break;
+              case 'maplibre_geocoder': {
+                if (!window.MaplibreGeocoder) {
+                  console.warn('MapLibre GL Geocoder library not available. Please include the library.');
+                  return;
+                }
+
+                try {
+                  const geocoderConfig = { ...controlOptions };
+                  const position = geocoderConfig.position || 'top-left';
+
+                  // Remove position from config as it's handled separately
+                  delete geocoderConfig.position;
+
+                  // Create geocoding API configuration
+                  const apiKey = geocoderConfig.apiKey;
+                  const maplibreApi = geocoderConfig.maplibreApi || 'maptiler';
+                  const language = geocoderConfig.language;
+                  const proximity = geocoderConfig.proximity;
+                  const bbox = geocoderConfig.bbox;
+                  const country = geocoderConfig.country;
+                  const types = geocoderConfig.types;
+                  const limit = geocoderConfig.limit || 5;
+
+                  // Build the geocoding API configuration
+                  let geocoderApi;
+
+                  if (maplibreApi === 'maptiler') {
+                    // Maptiler geocoding API
+                    geocoderApi = {
+                      forwardGeocode: async (config) => {
+                        const features = [];
+                        try {
+                          let url = `https://api.maptiler.com/geocoding/${encodeURIComponent(config.query)}.json?key=${apiKey}&limit=${limit}`;
+
+                          if (language) url += `&language=${language}`;
+                          if (proximity) url += `&proximity=${proximity.join(',')}`;
+                          if (bbox) url += `&bbox=${bbox.join(',')}`;
+                          if (country) url += `&country=${country}`;
+                          if (types) url += `&types=${types}`;
+
+                          const response = await fetch(url);
+                          const data = await response.json();
+
+                          for (const feature of data.features || []) {
+                            features.push({
+                              type: 'Feature',
+                              geometry: feature.geometry,
+                              place_name: feature.place_name || feature.text,
+                              properties: feature.properties || {},
+                              text: feature.text,
+                              place_type: feature.place_type,
+                              center: feature.center
+                            });
+                          }
+                        } catch (e) {
+                          console.error('Maptiler geocoding error:', e);
+                        }
+                        return { features };
+                      }
+                    };
+                  } else if (maplibreApi === 'mapbox') {
+                    // Mapbox geocoding API
+                    geocoderApi = {
+                      forwardGeocode: async (config) => {
+                        const features = [];
+                        try {
+                          let url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(config.query)}.json?access_token=${apiKey}&limit=${limit}`;
+
+                          if (language) url += `&language=${language}`;
+                          if (proximity) url += `&proximity=${proximity.join(',')}`;
+                          if (bbox) url += `&bbox=${bbox.join(',')}`;
+                          if (country) url += `&country=${country}`;
+                          if (types) url += `&types=${types}`;
+
+                          const response = await fetch(url);
+                          const data = await response.json();
+
+                          for (const feature of data.features || []) {
+                            features.push({
+                              type: 'Feature',
+                              geometry: feature.geometry,
+                              place_name: feature.place_name,
+                              properties: feature.properties || {},
+                              text: feature.text,
+                              place_type: feature.place_type,
+                              center: feature.center
+                            });
+                          }
+                        } catch (e) {
+                          console.error('Mapbox geocoding error:', e);
+                        }
+                        return { features };
+                      }
+                    };
+                  } else {
+                    console.error(`Unsupported geocoding API: ${maplibreApi}`);
+                    return;
+                  }
+
+                  // Clean up config before passing to MaplibreGeocoder
+                  delete geocoderConfig.apiKey;
+                  delete geocoderConfig.maplibreApi;
+                  delete geocoderConfig.language;
+                  delete geocoderConfig.proximity;
+                  delete geocoderConfig.bbox;
+                  delete geocoderConfig.country;
+                  delete geocoderConfig.types;
+                  delete geocoderConfig.limit;
+
+                  // Set required maplibregl reference
+                  geocoderConfig.maplibregl = maplibregl;
+
+                  // Create the geocoder control
+                  control = new window.MaplibreGeocoder(geocoderApi, geocoderConfig);
+
+                  // Set up event handlers
+                  control.on('result', (e) => {
+                    if (geocoderConfig.enableEventLogging) {
+                      console.log('Geocoder result:', e.result);
+                    }
+                    sendEvent('geocoder.result', { result: e.result });
+                  });
+
+                  control.on('results', (e) => {
+                    if (geocoderConfig.enableEventLogging) {
+                      console.log('Geocoder results:', e.results);
+                    }
+                    sendEvent('geocoder.results', { results: e.results });
+                  });
+
+                  control.on('error', (e) => {
+                    console.error('Geocoder error:', e.error);
+                    sendEvent('geocoder.error', { error: e.error });
+                  });
+
+                  console.log('MapLibre GL Geocoder control added successfully');
+                } catch (error) {
+                  console.error('Failed to initialize MapLibre GL Geocoder:', error);
+                  return;
+                }
+                break;
+              }
               case 'google_streetview':
                 if (window.MaplibreGoogleStreetView) {
                   const apiKey = controlOptions.api_key;
