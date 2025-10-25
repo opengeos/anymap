@@ -1496,6 +1496,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.add_temporal_control" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_temporal_control()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.add_terra_draw" class="md-nav__link">
     <span class="md-ellipsis">
       add_terra_draw()
@@ -2490,6 +2499,15 @@
   <a href="#anymap.maplibre.MapLibreMap.add_pmtiles" class="md-nav__link">
     <span class="md-ellipsis">
       add_pmtiles()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.add_temporal_control" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_temporal_control()
     </span>
   </a>
   
@@ -5954,6 +5972,75 @@ data sources, custom styling, and interactive features.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">_controls</span> <span class="o">=</span> <span class="n">current_controls</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addControl&quot;</span><span class="p">,</span> <span class="s2">&quot;basemap_control&quot;</span><span class="p">,</span> <span class="n">control_options</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_temporal_control</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">frames</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
+        <span class="n">position</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;top-right&quot;</span><span class="p">,</span>
+        <span class="n">interval</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+        <span class="n">performance</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a temporal control to the map for animating time-series data.</span>
+
+<span class="sd">        The temporal control enables animation of map layers across time, allowing</span>
+<span class="sd">        users to visualize changes over time with playback controls. It uses the</span>
+<span class="sd">        maplibre-gl-temporal-control plugin.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            frames: List of frame configurations. Each frame is a dictionary with:</span>
+<span class="sd">                - title: Display name for the frame (e.g., &quot;2020-01-01&quot;)</span>
+<span class="sd">                - layers: List of layer IDs to show in this frame</span>
+<span class="sd">            position: Position on map (&#39;top-left&#39;, &#39;top-right&#39;, &#39;bottom-left&#39;, &#39;bottom-right&#39;)</span>
+<span class="sd">            interval: Duration to display each frame in milliseconds. Default is 1000 (1 second).</span>
+<span class="sd">            performance: Enable performance mode for slower systems. Default is False.</span>
+<span class="sd">            options: Additional options for the temporal control</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; m = MapLibreMap()</span>
+<span class="sd">            &gt;&gt;&gt; # Add layers for different time periods</span>
+<span class="sd">            &gt;&gt;&gt; m.add_geojson_layer(&quot;data-2020&quot;, geojson_2020, &quot;circle&quot;, paint={&quot;circle-color&quot;: &quot;red&quot;})</span>
+<span class="sd">            &gt;&gt;&gt; m.add_geojson_layer(&quot;data-2021&quot;, geojson_2021, &quot;circle&quot;, paint={&quot;circle-color&quot;: &quot;blue&quot;})</span>
+<span class="sd">            &gt;&gt;&gt; m.add_geojson_layer(&quot;data-2022&quot;, geojson_2022, &quot;circle&quot;, paint={&quot;circle-color&quot;: &quot;green&quot;})</span>
+<span class="sd">            &gt;&gt;&gt;</span>
+<span class="sd">            &gt;&gt;&gt; # Configure temporal frames</span>
+<span class="sd">            &gt;&gt;&gt; frames = [</span>
+<span class="sd">            ...     {&quot;title&quot;: &quot;2020&quot;, &quot;layers&quot;: [&quot;data-2020&quot;]},</span>
+<span class="sd">            ...     {&quot;title&quot;: &quot;2021&quot;, &quot;layers&quot;: [&quot;data-2021&quot;]},</span>
+<span class="sd">            ...     {&quot;title&quot;: &quot;2022&quot;, &quot;layers&quot;: [&quot;data-2022&quot;]},</span>
+<span class="sd">            ... ]</span>
+<span class="sd">            &gt;&gt;&gt;</span>
+<span class="sd">            &gt;&gt;&gt; # Add temporal control</span>
+<span class="sd">            &gt;&gt;&gt; m.add_temporal_control(</span>
+<span class="sd">            ...     frames=frames,</span>
+<span class="sd">            ...     position=&quot;top-right&quot;,</span>
+<span class="sd">            ...     interval=2000  # 2 seconds per frame</span>
+<span class="sd">            ... )</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">frames</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;At least one frame must be provided&quot;</span><span class="p">)</span>
+
+        <span class="n">control_options</span> <span class="o">=</span> <span class="n">options</span> <span class="ow">or</span> <span class="p">{}</span>
+        <span class="n">control_options</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
+                <span class="s2">&quot;frames&quot;</span><span class="p">:</span> <span class="n">frames</span><span class="p">,</span>
+                <span class="s2">&quot;interval&quot;</span><span class="p">:</span> <span class="n">interval</span><span class="p">,</span>
+                <span class="s2">&quot;performance&quot;</span><span class="p">:</span> <span class="n">performance</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Store control in persistent state</span>
+        <span class="n">control_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;temporal_</span><span class="si">{</span><span class="n">position</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">current_controls</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_controls</span><span class="p">)</span>
+        <span class="n">current_controls</span><span class="p">[</span><span class="n">control_key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;temporal&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
+            <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="n">control_options</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_controls</span> <span class="o">=</span> <span class="n">current_controls</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addControl&quot;</span><span class="p">,</span> <span class="s2">&quot;temporal&quot;</span><span class="p">,</span> <span class="n">control_options</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_process_deckgl_props</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">props</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Process DeckGL properties to handle lambda functions and other non-serializable objects.</span>
@@ -9997,6 +10084,168 @@ within polygons on the map.</p>
             <span class="n">opacity</span><span class="o">=</span><span class="n">opacity</span><span class="p">,</span>
             <span class="n">visible</span><span class="o">=</span><span class="n">visible</span><span class="p">,</span>
         <span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="anymap.maplibre.MapLibreMap.add_temporal_control" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">add_temporal_control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s1">&#39;top-right&#39;</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">performance</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+
+<a href="#anymap.maplibre.MapLibreMap.add_temporal_control" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Add a temporal control to the map for animating time-series data.</p>
+<p>The temporal control enables animation of map layers across time, allowing
+users to visualize changes over time with playback controls. It uses the
+maplibre-gl-temporal-control plugin.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>frames</code></td>
+        <td><code>List[Dict[str, Any]]</code></td>
+        <td><p>List of frame configurations. Each frame is a dictionary with:
+- title: Display name for the frame (e.g., "2020-01-01")
+- layers: List of layer IDs to show in this frame</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>position</code></td>
+        <td><code>str</code></td>
+        <td><p>Position on map ('top-left', 'top-right', 'bottom-left', 'bottom-right')</p></td>
+        <td><code>&#39;top-right&#39;</code></td>
+      </tr>
+      <tr>
+        <td><code>interval</code></td>
+        <td><code>int</code></td>
+        <td><p>Duration to display each frame in milliseconds. Default is 1000 (1 second).</p></td>
+        <td><code>1000</code></td>
+      </tr>
+      <tr>
+        <td><code>performance</code></td>
+        <td><code>bool</code></td>
+        <td><p>Enable performance mode for slower systems. Default is False.</p></td>
+        <td><code>False</code></td>
+      </tr>
+      <tr>
+        <td><code>options</code></td>
+        <td><code>Optional[Dict[str, Any]]</code></td>
+        <td><p>Additional options for the temporal control</p></td>
+        <td><code>None</code></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">m</span> <span class="o">=</span> <span class="n">MapLibreMap</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="c1"># Add layers for different time periods</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">m</span><span class="o">.</span><span class="n">add_geojson_layer</span><span class="p">(</span><span class="s2">&quot;data-2020&quot;</span><span class="p">,</span> <span class="n">geojson_2020</span><span class="p">,</span> <span class="s2">&quot;circle&quot;</span><span class="p">,</span> <span class="n">paint</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;circle-color&quot;</span><span class="p">:</span> <span class="s2">&quot;red&quot;</span><span class="p">})</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">m</span><span class="o">.</span><span class="n">add_geojson_layer</span><span class="p">(</span><span class="s2">&quot;data-2021&quot;</span><span class="p">,</span> <span class="n">geojson_2021</span><span class="p">,</span> <span class="s2">&quot;circle&quot;</span><span class="p">,</span> <span class="n">paint</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;circle-color&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">})</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">m</span><span class="o">.</span><span class="n">add_geojson_layer</span><span class="p">(</span><span class="s2">&quot;data-2022&quot;</span><span class="p">,</span> <span class="n">geojson_2022</span><span class="p">,</span> <span class="s2">&quot;circle&quot;</span><span class="p">,</span> <span class="n">paint</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;circle-color&quot;</span><span class="p">:</span> <span class="s2">&quot;green&quot;</span><span class="p">})</span>
+<span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="c1"># Configure temporal frames</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">frames</span> <span class="o">=</span> <span class="p">[</span>
+<span class="o">...</span>     <span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;2020&quot;</span><span class="p">,</span> <span class="s2">&quot;layers&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;data-2020&quot;</span><span class="p">]},</span>
+<span class="o">...</span>     <span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;2021&quot;</span><span class="p">,</span> <span class="s2">&quot;layers&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;data-2021&quot;</span><span class="p">]},</span>
+<span class="o">...</span>     <span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;2022&quot;</span><span class="p">,</span> <span class="s2">&quot;layers&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;data-2022&quot;</span><span class="p">]},</span>
+<span class="o">...</span> <span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="c1"># Add temporal control</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">m</span><span class="o">.</span><span class="n">add_temporal_control</span><span class="p">(</span>
+<span class="o">...</span>     <span class="n">frames</span><span class="o">=</span><span class="n">frames</span><span class="p">,</span>
+<span class="o">...</span>     <span class="n">position</span><span class="o">=</span><span class="s2">&quot;top-right&quot;</span><span class="p">,</span>
+<span class="o">...</span>     <span class="n">interval</span><span class="o">=</span><span class="mi">2000</span>  <span class="c1"># 2 seconds per frame</span>
+<span class="o">...</span> <span class="p">)</span>
+</code></pre></div>
+
+        <details class="quote">
+          <summary>Source code in <code>anymap/maplibre.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_temporal_control</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">frames</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
+    <span class="n">position</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;top-right&quot;</span><span class="p">,</span>
+    <span class="n">interval</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+    <span class="n">performance</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a temporal control to the map for animating time-series data.</span>
+
+<span class="sd">    The temporal control enables animation of map layers across time, allowing</span>
+<span class="sd">    users to visualize changes over time with playback controls. It uses the</span>
+<span class="sd">    maplibre-gl-temporal-control plugin.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        frames: List of frame configurations. Each frame is a dictionary with:</span>
+<span class="sd">            - title: Display name for the frame (e.g., &quot;2020-01-01&quot;)</span>
+<span class="sd">            - layers: List of layer IDs to show in this frame</span>
+<span class="sd">        position: Position on map (&#39;top-left&#39;, &#39;top-right&#39;, &#39;bottom-left&#39;, &#39;bottom-right&#39;)</span>
+<span class="sd">        interval: Duration to display each frame in milliseconds. Default is 1000 (1 second).</span>
+<span class="sd">        performance: Enable performance mode for slower systems. Default is False.</span>
+<span class="sd">        options: Additional options for the temporal control</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; m = MapLibreMap()</span>
+<span class="sd">        &gt;&gt;&gt; # Add layers for different time periods</span>
+<span class="sd">        &gt;&gt;&gt; m.add_geojson_layer(&quot;data-2020&quot;, geojson_2020, &quot;circle&quot;, paint={&quot;circle-color&quot;: &quot;red&quot;})</span>
+<span class="sd">        &gt;&gt;&gt; m.add_geojson_layer(&quot;data-2021&quot;, geojson_2021, &quot;circle&quot;, paint={&quot;circle-color&quot;: &quot;blue&quot;})</span>
+<span class="sd">        &gt;&gt;&gt; m.add_geojson_layer(&quot;data-2022&quot;, geojson_2022, &quot;circle&quot;, paint={&quot;circle-color&quot;: &quot;green&quot;})</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; # Configure temporal frames</span>
+<span class="sd">        &gt;&gt;&gt; frames = [</span>
+<span class="sd">        ...     {&quot;title&quot;: &quot;2020&quot;, &quot;layers&quot;: [&quot;data-2020&quot;]},</span>
+<span class="sd">        ...     {&quot;title&quot;: &quot;2021&quot;, &quot;layers&quot;: [&quot;data-2021&quot;]},</span>
+<span class="sd">        ...     {&quot;title&quot;: &quot;2022&quot;, &quot;layers&quot;: [&quot;data-2022&quot;]},</span>
+<span class="sd">        ... ]</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; # Add temporal control</span>
+<span class="sd">        &gt;&gt;&gt; m.add_temporal_control(</span>
+<span class="sd">        ...     frames=frames,</span>
+<span class="sd">        ...     position=&quot;top-right&quot;,</span>
+<span class="sd">        ...     interval=2000  # 2 seconds per frame</span>
+<span class="sd">        ... )</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">frames</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;At least one frame must be provided&quot;</span><span class="p">)</span>
+
+    <span class="n">control_options</span> <span class="o">=</span> <span class="n">options</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">control_options</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
+            <span class="s2">&quot;frames&quot;</span><span class="p">:</span> <span class="n">frames</span><span class="p">,</span>
+            <span class="s2">&quot;interval&quot;</span><span class="p">:</span> <span class="n">interval</span><span class="p">,</span>
+            <span class="s2">&quot;performance&quot;</span><span class="p">:</span> <span class="n">performance</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Store control in persistent state</span>
+    <span class="n">control_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;temporal_</span><span class="si">{</span><span class="n">position</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">current_controls</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_controls</span><span class="p">)</span>
+    <span class="n">current_controls</span><span class="p">[</span><span class="n">control_key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;temporal&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
+        <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="n">control_options</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_controls</span> <span class="o">=</span> <span class="n">current_controls</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addControl&quot;</span><span class="p">,</span> <span class="s2">&quot;temporal&quot;</span><span class="p">,</span> <span class="n">control_options</span><span class="p">)</span>
 </code></pre></div>
         </details>
     </div>
