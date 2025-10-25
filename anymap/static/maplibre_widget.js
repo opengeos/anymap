@@ -179,6 +179,53 @@ function resolveGeomanNamespace() {
   return window.Geoman;
 }
 
+function resolveGeoGridClass() {
+  if (!window.GeoGrid) {
+    return null;
+  }
+
+  // Handle different module export formats
+  if (typeof window.GeoGrid === 'function') {
+    return window.GeoGrid;
+  }
+
+  if (typeof window.GeoGrid === 'object' && window.GeoGrid !== null) {
+    if (typeof window.GeoGrid.GeoGrid === 'function') {
+      return window.GeoGrid.GeoGrid;
+    }
+    if (typeof window.GeoGrid.default === 'function') {
+      return window.GeoGrid.default;
+    }
+  }
+
+  return null;
+}
+
+// Map MapLibre paint properties to GeoGrid style properties
+function mapToGeoGridStyle(styleOptions) {
+  if (!styleOptions) return styleOptions;
+
+  const mapped = {};
+
+  // Map line properties (gridStyle)
+  if (styleOptions['line-color']) mapped.color = styleOptions['line-color'];
+  if (styleOptions['line-width']) mapped.width = styleOptions['line-width'];
+  if (styleOptions['line-dasharray']) mapped.dasharray = styleOptions['line-dasharray'];
+  if (styleOptions['line-opacity']) mapped.opacity = styleOptions['line-opacity'];
+
+  // If using GeoGrid native properties, preserve them
+  if (styleOptions.color) mapped.color = styleOptions.color;
+  if (styleOptions.width) mapped.width = styleOptions.width;
+  if (styleOptions.dasharray) mapped.dasharray = styleOptions.dasharray;
+  if (styleOptions.opacity) mapped.opacity = styleOptions.opacity;
+
+  // Label style properties (already in correct format)
+  if (styleOptions.fontSize) mapped.fontSize = styleOptions.fontSize;
+  if (styleOptions.textShadow) mapped.textShadow = styleOptions.textShadow;
+
+  return mapped;
+}
+
 function buildGeomanOptions(position, geomanOptions = {}, collapsed) {
   const options = { ...(geomanOptions || {}) };
   const settings = { ...(options.settings || {}) };
@@ -2353,6 +2400,28 @@ function render({ model, el }) {
         document.head.appendChild(geomanCSS);
       }
 
+      // Load GeoGrid plugin
+      if (!resolveGeoGridClass()) {
+        try {
+          // Load GeoGrid as ES module via dynamic import
+          const geoGridModule = await import('https://unpkg.com/geogrid-maplibre-gl@latest');
+          window.GeoGrid = geoGridModule.GeoGrid || geoGridModule.default || geoGridModule;
+
+          if (!resolveGeoGridClass()) {
+            console.warn('GeoGrid plugin loaded but class not found - grid functionality unavailable');
+          }
+        } catch (error) {
+          console.warn('Failed to load GeoGrid plugin:', error);
+        }
+      }
+
+      if (!document.querySelector('link[href*="geogrid.css"]')) {
+        const geogridCSS = document.createElement('link');
+        geogridCSS.rel = 'stylesheet';
+        geogridCSS.href = 'https://unpkg.com/geogrid-maplibre-gl@latest/dist/geogrid.css';
+        document.head.appendChild(geogridCSS);
+      }
+
       // Load DeckGL for overlay layers
       if (!window.deck) {
         const deckScript = document.createElement('script');
@@ -3590,6 +3659,38 @@ function render({ model, el }) {
                 control.__anymapStartCollapsed = startCollapsed;
                 break;
               }
+              case 'geogrid': {
+                const GeoGridClass = resolveGeoGridClass();
+                if (!GeoGridClass) {
+                  console.warn('GeoGrid plugin not available during restore');
+                  return;
+                }
+                // Remove position from options as GeoGrid doesn't use it
+                const { position: _, gridStyle, labelStyle, ...otherConfig } = controlOptions || {};
+
+                // Map MapLibre paint properties to GeoGrid style properties
+                const geogridOptions = {
+                  map,
+                  ...otherConfig,
+                  ...(gridStyle && { gridStyle: mapToGeoGridStyle(gridStyle) }),
+                  ...(labelStyle && { labelStyle: mapToGeoGridStyle(labelStyle) })
+                };
+
+                try {
+                  const geogridInstance = new GeoGridClass(geogridOptions);
+
+                  // Explicitly call add() to render the grid on the map
+                  if (typeof geogridInstance.add === 'function') {
+                    geogridInstance.add();
+                  }
+
+                  el._geogridInstance = geogridInstance;
+                  el._controls.set(controlKey, { type: 'geogrid', instance: geogridInstance });
+                } catch (error) {
+                  console.error('Failed to restore GeoGrid instance:', error);
+                }
+                return;
+              }
               case 'widget_panel':
                 control = new WidgetPanelControl(controlOptions || {}, map, model);
                 break;
@@ -4328,6 +4429,38 @@ function render({ model, el }) {
                 control.__anymapStartCollapsed = startCollapsed;
                 break;
               }
+              case 'geogrid': {
+                const GeoGridClass = resolveGeoGridClass();
+                if (!GeoGridClass) {
+                  console.warn('GeoGrid plugin not available');
+                  return;
+                }
+                // Remove position from options as GeoGrid doesn't use it
+                const { position: _, gridStyle, labelStyle, ...otherConfig } = controlOptions || {};
+
+                // Map MapLibre paint properties to GeoGrid style properties
+                const geogridOptions = {
+                  map,
+                  ...otherConfig,
+                  ...(gridStyle && { gridStyle: mapToGeoGridStyle(gridStyle) }),
+                  ...(labelStyle && { labelStyle: mapToGeoGridStyle(labelStyle) })
+                };
+
+                try {
+                  const geogridInstance = new GeoGridClass(geogridOptions);
+
+                  // Explicitly call add() to render the grid on the map
+                  if (typeof geogridInstance.add === 'function') {
+                    geogridInstance.add();
+                  }
+
+                  el._geogridInstance = geogridInstance;
+                  el._controls.set(controlKey, { type: 'geogrid', instance: geogridInstance });
+                } catch (error) {
+                  console.error('Failed to create GeoGrid instance:', error);
+                }
+                return;
+              }
               case 'widget_panel':
                 control = new WidgetPanelControl(controlOptions || {}, map, model);
                 break;
@@ -4643,6 +4776,17 @@ function render({ model, el }) {
               model.set('geoman_data', { type: 'FeatureCollection', features: [] });
               model.save_changes();
               el._pendingGeomanData = normalizeGeomanGeoJson(model.get('geoman_data'));
+            } else if (removeControlType === 'geogrid') {
+              if (el._geogridInstance && typeof el._geogridInstance.remove === 'function') {
+                try {
+                  el._geogridInstance.remove();
+                } catch (error) {
+                  console.warn('Failed to remove GeoGrid instance:', error);
+                }
+              }
+              el._geogridInstance = null;
+              el._controls.delete(removeControlKey);
+              console.log(`GeoGrid control ${removeControlKey} removed`);
             } else {
               // Handle regular controls
               if (el._controls.has(removeControlKey)) {

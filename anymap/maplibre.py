@@ -1504,6 +1504,90 @@ class MapLibreMap(MapWidget):
 
         self.call_js_method("addControl", "export", control_options)
 
+    def add_geogrid_control(
+        self,
+        position: str = "top-left",
+        before_layer_id: Optional[str] = None,
+        zoom_level_range: Optional[Sequence[Union[int, float]]] = None,
+        grid_style: Optional[Dict[str, Any]] = None,
+        label_style: Optional[Dict[str, Any]] = None,
+        options: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        """Add a geographic grid (graticule) with labeled coordinates to the map.
+
+        This control uses the `geogrid-maplibre-gl` plugin to display latitude/longitude
+        grid lines with customizable styling and formatting. The grid dynamically adjusts
+        based on zoom level and supports globe projection (MapLibre GL 5.x).
+
+        Args:
+            position: Placement of the control on the map container (not applicable
+                for this plugin, but kept for API consistency).
+            before_layer_id: ID of the layer to insert the grid beneath. If None,
+                the grid is added as the top layer.
+            zoom_level_range: Tuple of [min_zoom, max_zoom] defining visibility range.
+                If None, the grid is visible at all zoom levels.
+            grid_style: Styling options for grid lines. Supports both MapLibre paint
+                properties (``line-color``, ``line-width``, ``line-dasharray``,
+                ``line-opacity``) and GeoGrid native properties (``color``, ``width``,
+                ``dasharray``, ``opacity``). MapLibre properties are automatically
+                converted to GeoGrid format.
+            label_style: Styling options for coordinate labels. Supports CSS properties
+                like ``color``, ``fontSize``, ``textShadow``, etc.
+            options: Additional configuration options passed directly to the GeoGrid
+                constructor. Can include custom ``gridDensity`` or ``formatLabels`` functions.
+
+        Example:
+            >>> m = MapLibreMap(center=[0, 20], zoom=2)
+            >>> # Using MapLibre paint properties
+            >>> m.add_geogrid_control(grid_style={'line-color': '#ff0000', 'line-width': 2})
+            >>> # Using GeoGrid native properties
+            >>> m.add_geogrid_control(grid_style={'color': 'red', 'width': 2})
+        """
+
+        control_options: Dict[str, Any] = dict(options or {})
+        control_options["position"] = position
+
+        if before_layer_id is not None:
+            control_options["beforeLayerId"] = before_layer_id
+
+        if zoom_level_range is not None:
+            zoom_range = list(zoom_level_range)
+            if len(zoom_range) != 2:
+                raise ValueError(
+                    "zoom_level_range must contain exactly two values [min_zoom, max_zoom]"
+                )
+            control_options["zoomLevelRange"] = [
+                float(zoom_range[0]),
+                float(zoom_range[1]),
+            ]
+
+        if grid_style is not None:
+            control_options["gridStyle"] = dict(grid_style)
+
+        if label_style is not None:
+            control_options["labelStyle"] = dict(label_style)
+
+        control_key = f"geogrid_{position}"
+        current_controls = dict(self._controls)
+        current_controls[control_key] = {
+            "type": "geogrid",
+            "position": position,
+            "options": control_options,
+        }
+        self._controls = current_controls
+
+        self.call_js_method("addControl", "geogrid", control_options)
+
+    def remove_geogrid_control(self, position: str = "top-left") -> None:
+        """Remove the GeoGrid control from the map."""
+
+        control_key = f"geogrid_{position}"
+        current_controls = dict(self._controls)
+        if control_key in current_controls:
+            current_controls.pop(control_key)
+            self._controls = current_controls
+        self.call_js_method("removeControl", "geogrid", position)
+
     def add_geoman_control(
         self,
         position: str = "top-left",
