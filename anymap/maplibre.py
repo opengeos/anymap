@@ -2797,6 +2797,11 @@ class MapLibreMap(MapWidget):
         color: int = 0xFFFFFF,
         intensity: float = 1.0,
         position: Optional[List[float]] = None,
+        light_id: Optional[str] = None,
+        target: Optional[List[float]] = None,
+        cast_shadow: Optional[bool] = None,
+        shadow_options: Optional[Dict[str, Any]] = None,
+        sun_options: Optional[Dict[str, Any]] = None,
     ) -> None:
         """Add a light to the Three.js scene.
 
@@ -2805,6 +2810,11 @@ class MapLibreMap(MapWidget):
             color: Hexadecimal color value for the light (e.g., 0xffffff for white).
             intensity: Light intensity value.
             position: Optional position for directional lights as [x, y, z].
+            light_id: Optional identifier for the light so it can be updated or removed later.
+            target: Optional target position for directional lights as [x, y, z].
+            cast_shadow: Whether the light should cast shadows (if supported by the light type).
+            shadow_options: Additional shadow configuration such as map size or clipping planes.
+            sun_options: Additional options when using the `sun` light type (e.g., ``{"current_time": "2024-01-01T12:00:00Z"}``).
 
         Example:
             >>> m = MapLibreMap(center=[148.9819, -35.3981], zoom=18, pitch=60)
@@ -2813,12 +2823,64 @@ class MapLibreMap(MapWidget):
             >>> m.add_three_light(type='directional', position=[1, 1, 1])
             >>> m.add_three_light(type='sun')
         """
-        light_config = {"type": light_type, "color": color, "intensity": intensity}
+        light_config: Dict[str, Any] = {
+            "type": light_type,
+            "color": color,
+            "intensity": intensity,
+        }
 
         if position is not None:
             light_config["position"] = position
+        if light_id is not None:
+            light_config["id"] = light_id
+        if target is not None:
+            light_config["target"] = target
+        if cast_shadow is not None:
+            light_config["castShadow"] = cast_shadow
+        if shadow_options:
+            light_config["shadowOptions"] = shadow_options
+        if sun_options:
+            light_config["sunOptions"] = sun_options
 
         self.call_js_method("addThreeLight", light_config)
+
+    def update_three_light(
+        self,
+        light_id: str,
+        *,
+        color: Optional[int] = None,
+        intensity: Optional[float] = None,
+        position: Optional[List[float]] = None,
+        target: Optional[List[float]] = None,
+        cast_shadow: Optional[bool] = None,
+        shadow_options: Optional[Dict[str, Any]] = None,
+        sun_options: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        """Update properties of an existing Three.js light."""
+
+        update_config: Dict[str, Any] = {"id": light_id}
+
+        if color is not None:
+            update_config["color"] = color
+        if intensity is not None:
+            update_config["intensity"] = intensity
+        if position is not None:
+            update_config["position"] = position
+        if target is not None:
+            update_config["target"] = target
+        if cast_shadow is not None:
+            update_config["castShadow"] = cast_shadow
+        if shadow_options:
+            update_config["shadowOptions"] = shadow_options
+        if sun_options:
+            update_config["sunOptions"] = sun_options
+
+        self.call_js_method("updateThreeLight", update_config)
+
+    def remove_three_light(self, light_id: str) -> None:
+        """Remove a Three.js light from the scene."""
+
+        self.call_js_method("removeThreeLight", light_id)
 
     def remove_three_model(self, model_id: str) -> None:
         """Remove a 3D model from the scene.
@@ -2859,6 +2921,75 @@ class MapLibreMap(MapWidget):
             update_config["rotation"] = rotation
 
         self.call_js_method("updateThreeModel", update_config)
+
+    # 3D Tiles helpers
+
+    def add_three_tileset(
+        self,
+        tileset_id: str,
+        *,
+        asset_id: Optional[Union[int, str]] = None,
+        url: Optional[str] = None,
+        ion_token: Optional[str] = None,
+        auto_refresh_token: bool = True,
+        auto_disable_renderer_culling: bool = True,
+        fetch_options: Optional[Dict[str, Any]] = None,
+        lru_cache: Optional[Dict[str, Any]] = None,
+        draco_decoder_path: Optional[str] = None,
+        ktx2_transcoder_path: Optional[str] = None,
+        use_debug: bool = False,
+        use_fade: bool = False,
+        use_unload: bool = False,
+        use_update: bool = False,
+        height_offset: float = 0.0,
+        fly_to: bool = True,
+    ) -> None:
+        """Add a 3D Tiles dataset to the scene using TilesRenderer."""
+
+        if asset_id is None and url is None:
+            raise ValueError(
+                "Either asset_id or url must be provided for add_three_tileset"
+            )
+
+        config: Dict[str, Any] = {
+            "id": tileset_id,
+            "assetId": asset_id,
+            "url": url,
+            "ionToken": ion_token,
+            "autoRefreshToken": auto_refresh_token,
+            "autoDisableRendererCulling": auto_disable_renderer_culling,
+            "fetchOptions": fetch_options,
+            "lruCache": lru_cache,
+            "dracoDecoderPath": draco_decoder_path,
+            "ktx2TranscoderPath": ktx2_transcoder_path,
+            "useDebug": use_debug,
+            "useFade": use_fade,
+            "useUnload": use_unload,
+            "useUpdate": use_update,
+            "heightOffset": height_offset,
+            "flyTo": fly_to,
+        }
+
+        # Remove None values to keep payload minimal
+        payload = {key: value for key, value in config.items() if value is not None}
+        self.call_js_method("addThreeTileset", payload)
+
+    def remove_three_tileset(self, tileset_id: str) -> None:
+        """Remove a 3D Tiles dataset from the scene."""
+
+        self.call_js_method("removeThreeTileset", tileset_id)
+
+    def set_three_tileset_height(self, tileset_id: str, height: float) -> None:
+        """Adjust the height offset applied to a 3D Tiles dataset."""
+
+        self.call_js_method(
+            "setThreeTilesetHeight", {"id": tileset_id, "height": height}
+        )
+
+    def fly_to_three_tileset(self, tileset_id: str) -> None:
+        """Animate the camera to frame a 3D Tiles dataset."""
+
+        self.call_js_method("flyToThreeTileset", tileset_id)
 
     def to_html(
         self,
