@@ -2400,6 +2400,42 @@ function render({ model, el }) {
         document.head.appendChild(geomanCSS);
       }
 
+      // Load MapLibre GL Temporal Control
+      if (!window.TemporalControl) {
+        const temporalScript = document.createElement('script');
+        temporalScript.type = 'module';
+        temporalScript.textContent = `
+          import TemporalControl from 'https://www.unpkg.com/maplibre-gl-temporal-control@1.2.0/build/index.js';
+          window.TemporalControl = TemporalControl;
+        `;
+        document.head.appendChild(temporalScript);
+
+        // Wait for the module to load
+        await new Promise((resolve) => {
+          const checkLoaded = setInterval(() => {
+            if (window.TemporalControl) {
+              clearInterval(checkLoaded);
+              resolve();
+            }
+          }, 50);
+          // Timeout after 5 seconds
+          setTimeout(() => {
+            clearInterval(checkLoaded);
+            if (!window.TemporalControl) {
+              console.warn('MapLibre Temporal Control failed to load - temporal animation unavailable');
+            }
+            resolve();
+          }, 5000);
+        });
+      }
+
+      if (!document.querySelector('link[href*="maplibre-gl-temporal-control"]')) {
+        const temporalCSS = document.createElement('link');
+        temporalCSS.rel = 'stylesheet';
+        temporalCSS.href = 'https://www.unpkg.com/maplibre-gl-temporal-control@1.2.0/build/style.css';
+        document.head.appendChild(temporalCSS);
+      }
+
       // Load MapLibre GL Measures plugin
       if (!window.MeasuresControl) {
         // Temporarily disable AMD/CommonJS globals to encourage UMD builds to attach to window
@@ -2838,7 +2874,7 @@ function render({ model, el }) {
         console.warn("MapboxDraw not available");
       }
     } catch (error) {
-      console.warn("Failed to load protocols:", error);
+      console.error("Failed to initialize map protocols and libraries:", error);
     }
   };
 
@@ -4091,6 +4127,46 @@ function render({ model, el }) {
                   return;
                 }
                 break;
+              case 'temporal':
+                // Handle temporal control restoration
+                if (window.TemporalControl) {
+                  // Separate frames from options and resolve layer ids to layer objects
+                  const framesInput = (controlOptions && Array.isArray(controlOptions.frames)) ? controlOptions.frames : [];
+                  const { position: _ignoredPosition, frames: _ignoredFrames, ...restTemporalOpts } = controlOptions || {};
+
+                  const temporalFrames = framesInput.map((frame, idx) => {
+                    const frameLayers = (frame && Array.isArray(frame.layers)) ? frame.layers : [];
+                    const resolvedLayers = frameLayers.map((layerOrId) => {
+                      if (typeof layerOrId === 'string') {
+                        const style = map.getStyle && map.getStyle();
+                        const layerObj = (style && Array.isArray(style.layers)) ? style.layers.find((ly) => ly.id === layerOrId) : undefined;
+                        if (!layerObj) {
+                          console.warn(`Temporal control restore: layer id not found: ${layerOrId}`);
+                        }
+                        return layerObj || null;
+                      }
+                      return layerOrId;
+                    }).filter(Boolean);
+
+                    return {
+                      title: frame && frame.title !== undefined ? frame.title : `Frame ${idx + 1}`,
+                      layers: resolvedLayers,
+                    };
+                  });
+
+                  const temporalOptions = {
+                    interval: restTemporalOpts.interval || 1000,
+                    performance: restTemporalOpts.performance || false,
+                    ...restTemporalOpts,
+                  };
+
+                  control = new window.TemporalControl(temporalFrames, temporalOptions);
+                  console.log('Temporal control restored successfully');
+                } else {
+                  console.warn('TemporalControl not available during restore');
+                  return;
+                }
+                break;
               default:
                 console.warn(`Unknown control type during restore: ${controlType}`);
                 return;
@@ -4976,6 +5052,45 @@ function render({ model, el }) {
                   console.log('Basemap control added successfully');
                 } else {
                   console.warn('MaplibreGLBasemapsControl not available');
+                  return;
+                }
+                break;
+              case 'temporal':
+                if (window.TemporalControl) {
+                  // Separate frames from options and resolve layer ids to layer objects
+                  const framesInput = (controlOptions && Array.isArray(controlOptions.frames)) ? controlOptions.frames : [];
+                  const { position: _ignoredPosition, frames: _ignoredFrames, ...restTemporalOpts } = controlOptions || {};
+
+                  const temporalFrames = framesInput.map((frame, idx) => {
+                    const frameLayers = (frame && Array.isArray(frame.layers)) ? frame.layers : [];
+                    const resolvedLayers = frameLayers.map((layerOrId) => {
+                      if (typeof layerOrId === 'string') {
+                        const style = map.getStyle && map.getStyle();
+                        const layerObj = (style && Array.isArray(style.layers)) ? style.layers.find((ly) => ly.id === layerOrId) : undefined;
+                        if (!layerObj) {
+                          console.warn(`Temporal control add: layer id not found: ${layerOrId}`);
+                        }
+                        return layerObj || null;
+                      }
+                      return layerOrId;
+                    }).filter(Boolean);
+
+                    return {
+                      title: frame && frame.title !== undefined ? frame.title : `Frame ${idx + 1}`,
+                      layers: resolvedLayers,
+                    };
+                  });
+
+                  const temporalOptions = {
+                    interval: restTemporalOpts.interval || 1000,
+                    performance: restTemporalOpts.performance || false,
+                    ...restTemporalOpts,
+                  };
+
+                  control = new window.TemporalControl(temporalFrames, temporalOptions);
+                  console.log('Temporal control added successfully');
+                } else {
+                  console.warn('TemporalControl not available');
                   return;
                 }
                 break;

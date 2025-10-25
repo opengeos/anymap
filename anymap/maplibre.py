@@ -2819,6 +2819,75 @@ class MapLibreMap(MapWidget):
 
         self.call_js_method("addControl", "basemap_control", control_options)
 
+    def add_temporal_control(
+        self,
+        frames: List[Dict[str, Any]],
+        position: str = "top-right",
+        interval: int = 1000,
+        performance: bool = False,
+        options: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        """Add a temporal control to the map for animating time-series data.
+
+        The temporal control enables animation of map layers across time, allowing
+        users to visualize changes over time with playback controls. It uses the
+        maplibre-gl-temporal-control plugin.
+
+        Args:
+            frames: List of frame configurations. Each frame is a dictionary with:
+                - title: Display name for the frame (e.g., "2020-01-01")
+                - layers: List of layer IDs to show in this frame
+            position: Position on map ('top-left', 'top-right', 'bottom-left', 'bottom-right')
+            interval: Duration to display each frame in milliseconds. Default is 1000 (1 second).
+            performance: Enable performance mode for slower systems. Default is False.
+            options: Additional options for the temporal control
+
+        Example:
+            >>> m = MapLibreMap()
+            >>> # Add layers for different time periods
+            >>> m.add_geojson_layer("data-2020", geojson_2020, "circle", paint={"circle-color": "red"})
+            >>> m.add_geojson_layer("data-2021", geojson_2021, "circle", paint={"circle-color": "blue"})
+            >>> m.add_geojson_layer("data-2022", geojson_2022, "circle", paint={"circle-color": "green"})
+            >>>
+            >>> # Configure temporal frames
+            >>> frames = [
+            ...     {"title": "2020", "layers": ["data-2020"]},
+            ...     {"title": "2021", "layers": ["data-2021"]},
+            ...     {"title": "2022", "layers": ["data-2022"]},
+            ... ]
+            >>>
+            >>> # Add temporal control
+            >>> m.add_temporal_control(
+            ...     frames=frames,
+            ...     position="top-right",
+            ...     interval=2000  # 2 seconds per frame
+            ... )
+        """
+        if not frames:
+            raise ValueError("At least one frame must be provided")
+
+        control_options = options or {}
+        control_options.update(
+            {
+                "position": position,
+                "frames": frames,
+                "interval": interval,
+                "performance": performance,
+            }
+        )
+
+        # Store control in persistent state
+        control_key = f"temporal_{position}"
+        current_controls = dict(self._controls)
+        current_controls[control_key] = {
+            "type": "temporal",
+            "position": position,
+            "options": control_options,
+        }
+        self._controls = current_controls
+
+        self.call_js_method("addControl", "temporal", control_options)
+
     def _process_deckgl_props(self, props: Dict[str, Any]) -> Dict[str, Any]:
         """Process DeckGL properties to handle lambda functions and other non-serializable objects.
 
