@@ -3715,15 +3715,37 @@ function render({ model, el }) {
               case 'temporal':
                 // Handle temporal control restoration
                 if (window.TemporalControl) {
-                  const temporalOptions = {
-                    frames: controlOptions.frames || [],
-                    interval: controlOptions.interval || 1000,
-                    performance: controlOptions.performance || false,
-                    ...controlOptions
-                  };
-                  delete temporalOptions.position; // Remove position from options passed to control
+                  // Separate frames from options and resolve layer ids to layer objects
+                  const framesInput = (controlOptions && Array.isArray(controlOptions.frames)) ? controlOptions.frames : [];
+                  const { position: _ignoredPosition, frames: _ignoredFrames, ...restTemporalOpts } = controlOptions || {};
 
-                  control = new window.TemporalControl(temporalOptions);
+                  const temporalFrames = framesInput.map((frame, idx) => {
+                    const frameLayers = (frame && Array.isArray(frame.layers)) ? frame.layers : [];
+                    const resolvedLayers = frameLayers.map((layerOrId) => {
+                      if (typeof layerOrId === 'string') {
+                        const style = map.getStyle && map.getStyle();
+                        const layerObj = (style && Array.isArray(style.layers)) ? style.layers.find((ly) => ly.id === layerOrId) : undefined;
+                        if (!layerObj) {
+                          console.warn(`Temporal control restore: layer id not found: ${layerOrId}`);
+                        }
+                        return layerObj || null;
+                      }
+                      return layerOrId;
+                    }).filter(Boolean);
+
+                    return {
+                      title: frame && frame.title !== undefined ? frame.title : `Frame ${idx + 1}`,
+                      layers: resolvedLayers,
+                    };
+                  });
+
+                  const temporalOptions = {
+                    interval: restTemporalOpts.interval || 1000,
+                    performance: restTemporalOpts.performance || false,
+                    ...restTemporalOpts,
+                  };
+
+                  control = new window.TemporalControl(temporalFrames, temporalOptions);
                   console.log('Temporal control restored successfully');
                 } else {
                   console.warn('TemporalControl not available during restore');
@@ -4429,15 +4451,37 @@ function render({ model, el }) {
                 break;
               case 'temporal':
                 if (window.TemporalControl) {
-                  const temporalOptions = {
-                    frames: controlOptions.frames || [],
-                    interval: controlOptions.interval || 1000,
-                    performance: controlOptions.performance || false,
-                    ...controlOptions
-                  };
-                  delete temporalOptions.position; // Remove position from options passed to control
+                  // Separate frames from options and resolve layer ids to layer objects
+                  const framesInput = (controlOptions && Array.isArray(controlOptions.frames)) ? controlOptions.frames : [];
+                  const { position: _ignoredPosition, frames: _ignoredFrames, ...restTemporalOpts } = controlOptions || {};
 
-                  control = new window.TemporalControl(temporalOptions);
+                  const temporalFrames = framesInput.map((frame, idx) => {
+                    const frameLayers = (frame && Array.isArray(frame.layers)) ? frame.layers : [];
+                    const resolvedLayers = frameLayers.map((layerOrId) => {
+                      if (typeof layerOrId === 'string') {
+                        const style = map.getStyle && map.getStyle();
+                        const layerObj = (style && Array.isArray(style.layers)) ? style.layers.find((ly) => ly.id === layerOrId) : undefined;
+                        if (!layerObj) {
+                          console.warn(`Temporal control add: layer id not found: ${layerOrId}`);
+                        }
+                        return layerObj || null;
+                      }
+                      return layerOrId;
+                    }).filter(Boolean);
+
+                    return {
+                      title: frame && frame.title !== undefined ? frame.title : `Frame ${idx + 1}`,
+                      layers: resolvedLayers,
+                    };
+                  });
+
+                  const temporalOptions = {
+                    interval: restTemporalOpts.interval || 1000,
+                    performance: restTemporalOpts.performance || false,
+                    ...restTemporalOpts,
+                  };
+
+                  control = new window.TemporalControl(temporalFrames, temporalOptions);
                   console.log('Temporal control added successfully');
                 } else {
                   console.warn('TemporalControl not available');
