@@ -1803,6 +1803,72 @@ class MapLibreMap(MapWidget):
 
         return self.geoman_data
 
+    def add_measures_control(
+        self,
+        position: str = "top-left",
+        units: str = "metric",
+        area_button_title: Optional[str] = None,
+        length_button_title: Optional[str] = None,
+        clear_button_title: Optional[str] = None,
+        options: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        """Add the MapLibre GL Measures control for distance and area measurement.
+
+        This control allows users to measure distances along lines and calculate areas
+        within polygons on the map.
+
+        Args:
+            position: Position on map ('top-left', 'top-right', 'bottom-left', 'bottom-right')
+            units: Unit system for measurements, either 'metric' or 'imperial'
+            area_button_title: Custom title for the area measurement button
+            length_button_title: Custom title for the length measurement button
+            clear_button_title: Custom title for the clear measurements button
+            options: Additional options for the measures control (styling, callbacks, etc.)
+        """
+        if units not in {"metric", "imperial"}:
+            raise ValueError("units must be either 'metric' or 'imperial'")
+
+        measures_config: Dict[str, Any] = dict(options or {})
+
+        # Set unit system
+        measures_config["units"] = units
+
+        # Set custom button titles if provided
+        if area_button_title is not None:
+            measures_config["areaMeasurementButtonTitle"] = area_button_title
+        if length_button_title is not None:
+            measures_config["lengthMeasurementButtonTitle"] = length_button_title
+        if clear_button_title is not None:
+            measures_config["clearMeasurementsButtonTitle"] = clear_button_title
+
+        control_options: Dict[str, Any] = {
+            "position": position,
+            "measures_options": measures_config,
+        }
+
+        control_key = f"measures_{position}"
+        current_controls = dict(self._controls)
+        current_controls[control_key] = {
+            "type": "measures",
+            "position": position,
+            "options": control_options,
+        }
+        self._controls = current_controls
+        self.controls["measures"] = position
+
+        self.call_js_method("addControl", "measures", control_options)
+
+    def remove_measures_control(self, position: str = "top-left") -> None:
+        """Remove the Measures control."""
+
+        control_key = f"measures_{position}"
+        current_controls = dict(self._controls)
+        if control_key in current_controls:
+            current_controls.pop(control_key)
+            self._controls = current_controls
+        self.controls.pop("measures", None)
+        self.call_js_method("removeControl", "measures", position)
+
     def add_google_streetview(
         self,
         position: str = "top-left",

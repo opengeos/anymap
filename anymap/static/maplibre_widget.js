@@ -2400,6 +2400,90 @@ function render({ model, el }) {
         document.head.appendChild(geomanCSS);
       }
 
+      // Load MapLibre GL Measures plugin
+      if (!window.MeasuresControl) {
+        // Temporarily disable AMD/CommonJS globals to encourage UMD builds to attach to window
+        const previousDefine = window.define;
+        const previousModule = window.module;
+        const previousExports = window.exports;
+        const hadAMDDefine = typeof previousDefine === 'function' && previousDefine.amd;
+        const hadModule = typeof previousModule !== 'undefined';
+        const hadExports = typeof previousExports !== 'undefined';
+
+        const restoreModuleEnv = () => {
+          if (hadAMDDefine) window.define = previousDefine;
+          if (hadModule) window.module = previousModule;
+          else delete window.module;
+          if (hadExports) window.exports = previousExports;
+          else delete window.exports;
+        };
+
+        const tryLoadScript = (src) => new Promise((resolve) => {
+          const s = document.createElement('script');
+          s.src = src;
+          s.onload = () => resolve({ ok: true, src });
+          s.onerror = () => resolve({ ok: false, src });
+          document.head.appendChild(s);
+        });
+
+        const candidateScripts = [
+          'https://cdn.jsdelivr.net/npm/maplibre-gl-measures@latest/dist/maplibre-gl-measures.min.js',
+          'https://unpkg.com/maplibre-gl-measures@latest/dist/maplibre-gl-measures.min.js',
+          'https://unpkg.com/maplibre-gl-measures@latest/dist/maplibre-gl-measures.js',
+          'https://unpkg.com/maplibre-gl-measures@latest/dist/index.umd.js',
+        ];
+
+        let loaded = false;
+        for (const src of candidateScripts) {
+          // Disable AMD before injecting each attempt
+          if (hadAMDDefine) window.define = undefined;
+          if (hadModule) window.module = undefined;
+          if (hadExports) window.exports = undefined;
+
+          const result = await tryLoadScript(src);
+          restoreModuleEnv();
+          if (result.ok && (window.MeasuresControl || (window.maplibregl && window.maplibregl.MeasuresControl))) {
+            if (!window.MeasuresControl && window.maplibregl?.MeasuresControl) {
+              window.MeasuresControl = window.maplibregl.MeasuresControl;
+            }
+            loaded = true;
+            break;
+          }
+        }
+
+        // Disable AMD before injecting script
+        if (hadAMDDefine) window.define = undefined;
+        if (hadModule) window.module = undefined;
+        if (hadExports) window.exports = undefined;
+
+        // ESM fallback via dynamic import if still unavailable
+        if (!loaded && !window.MeasuresControl) {
+          try {
+            const measuresModule = await import('https://esm.sh/maplibre-gl-measures@latest');
+            const ctor = measuresModule?.default || measuresModule?.MeasuresControl || measuresModule?.Measures;
+            if (ctor) {
+              window.MeasuresControl = ctor;
+              loaded = true;
+            }
+          } catch (e) {
+            // ignore, will warn below
+          }
+        }
+
+        if (window.MeasuresControl) {
+          debugLog("MapLibre GL Measures loaded successfully");
+        } else {
+          console.warn('MapLibre GL Measures plugin failed to load - measurement tools unavailable');
+        }
+      }
+
+      if (!document.querySelector('link[href*="maplibre-gl-measures.css"]')) {
+        const measuresCSS = document.createElement('link');
+        measuresCSS.rel = 'stylesheet';
+        measuresCSS.href = 'https://cdn.jsdelivr.net/npm/maplibre-gl-measures@latest/dist/maplibre-gl-measures.css';
+        document.head.appendChild(measuresCSS);
+      }
+
       // Load GeoGrid plugin
       if (!resolveGeoGridClass()) {
         try {
@@ -2420,6 +2504,7 @@ function render({ model, el }) {
         geogridCSS.rel = 'stylesheet';
         geogridCSS.href = 'https://unpkg.com/geogrid-maplibre-gl@latest/dist/geogrid.css';
         document.head.appendChild(geogridCSS);
+
       }
 
       // Load DeckGL for overlay layers
@@ -3752,6 +3837,22 @@ function render({ model, el }) {
                   return;
                 }
                 break;
+              case 'measures':
+                // Handle measures control restoration
+                if (window.MeasuresControl) {
+                  try {
+                    const measuresOptions = controlOptions.measures_options || {};
+                    control = new window.MeasuresControl(measuresOptions);
+                    console.log('Measures control restored successfully');
+                  } catch (error) {
+                    console.error('Failed to restore Measures control:', error);
+                    return;
+                  }
+                } else {
+                  console.warn('MeasuresControl not available during restore');
+                  return;
+                }
+                break;
               case 'terra_draw':
                 // Handle Terra Draw control restoration
                 if (window.MaplibreTerradrawControl && !el._terraDrawControl) {
@@ -4521,6 +4622,23 @@ function render({ model, el }) {
                   return;
                 }
                 break;
+
+              case 'measures':
+                if (window.MeasuresControl) {
+                  try {
+                    const measuresOptions = controlOptions.measures_options || {};
+                    control = new window.MeasuresControl(measuresOptions);
+                    console.log('Measures control added successfully');
+                  } catch (error) {
+                    console.error('Failed to create Measures control:', error);
+                    return;
+                  }
+                } else {
+                  console.warn('MeasuresControl not available');
+                  return;
+                }
+                break;
+
               case 'maplibre_geocoder': {
                 if (!window.MaplibreGeocoder) {
                   console.warn('MapLibre GL Geocoder library not available. Please include the library.');
