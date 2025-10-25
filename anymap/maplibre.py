@@ -1526,12 +1526,22 @@ class MapLibreMap(MapWidget):
                 the grid is added as the top layer.
             zoom_level_range: Tuple of [min_zoom, max_zoom] defining visibility range.
                 If None, the grid is visible at all zoom levels.
-            grid_style: Styling options for grid lines. Supports MapLibre paint properties
-                like ``line-color``, ``line-width``, ``line-dasharray``, etc.
-            label_style: Styling options for coordinate labels. Supports properties
+            grid_style: Styling options for grid lines. Supports both MapLibre paint
+                properties (``line-color``, ``line-width``, ``line-dasharray``,
+                ``line-opacity``) and GeoGrid native properties (``color``, ``width``,
+                ``dasharray``, ``opacity``). MapLibre properties are automatically
+                converted to GeoGrid format.
+            label_style: Styling options for coordinate labels. Supports CSS properties
                 like ``color``, ``fontSize``, ``textShadow``, etc.
             options: Additional configuration options passed directly to the GeoGrid
                 constructor. Can include custom ``gridDensity`` or ``formatLabels`` functions.
+
+        Example:
+            >>> m = MapLibreMap(center=[0, 20], zoom=2)
+            >>> # Using MapLibre paint properties
+            >>> m.add_geogrid_control(grid_style={'line-color': '#ff0000', 'line-width': 2})
+            >>> # Using GeoGrid native properties
+            >>> m.add_geogrid_control(grid_style={'color': 'red', 'width': 2})
         """
 
         control_options: Dict[str, Any] = dict(options or {})
@@ -1546,7 +1556,10 @@ class MapLibreMap(MapWidget):
                 raise ValueError(
                     "zoom_level_range must contain exactly two values [min_zoom, max_zoom]"
                 )
-            control_options["zoomLevelRange"] = [float(zoom_range[0]), float(zoom_range[1])]
+            control_options["zoomLevelRange"] = [
+                float(zoom_range[0]),
+                float(zoom_range[1]),
+            ]
 
         if grid_style is not None:
             control_options["gridStyle"] = dict(grid_style)

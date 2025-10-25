@@ -199,6 +199,31 @@ function resolveGeoGridClass() {
   return null;
 }
 
+// Map MapLibre paint properties to GeoGrid style properties
+function mapToGeoGridStyle(styleOptions) {
+  if (!styleOptions) return styleOptions;
+
+  const mapped = {};
+
+  // Map line properties (gridStyle)
+  if (styleOptions['line-color']) mapped.color = styleOptions['line-color'];
+  if (styleOptions['line-width']) mapped.width = styleOptions['line-width'];
+  if (styleOptions['line-dasharray']) mapped.dasharray = styleOptions['line-dasharray'];
+  if (styleOptions['line-opacity']) mapped.opacity = styleOptions['line-opacity'];
+
+  // If using GeoGrid native properties, preserve them
+  if (styleOptions.color) mapped.color = styleOptions.color;
+  if (styleOptions.width) mapped.width = styleOptions.width;
+  if (styleOptions.dasharray) mapped.dasharray = styleOptions.dasharray;
+  if (styleOptions.opacity) mapped.opacity = styleOptions.opacity;
+
+  // Label style properties (already in correct format)
+  if (styleOptions.fontSize) mapped.fontSize = styleOptions.fontSize;
+  if (styleOptions.textShadow) mapped.textShadow = styleOptions.textShadow;
+
+  return mapped;
+}
+
 function buildGeomanOptions(position, geomanOptions = {}, collapsed) {
   const options = { ...(geomanOptions || {}) };
   const settings = { ...(options.settings || {}) };
@@ -3427,11 +3452,30 @@ function render({ model, el }) {
                   console.warn('GeoGrid plugin not available during restore');
                   return;
                 }
-                const geogridOptions = { map, ...(controlOptions || {}) };
-                const geogridInstance = new GeoGridClass(geogridOptions);
-                el._geogridInstance = geogridInstance;
-                // GeoGrid doesn't use the standard MapLibre control API, so we skip adding it
-                el._controls.set(controlKey, { type: 'geogrid', instance: geogridInstance });
+                // Remove position from options as GeoGrid doesn't use it
+                const { position: _, gridStyle, labelStyle, ...otherConfig } = controlOptions || {};
+
+                // Map MapLibre paint properties to GeoGrid style properties
+                const geogridOptions = {
+                  map,
+                  ...otherConfig,
+                  ...(gridStyle && { gridStyle: mapToGeoGridStyle(gridStyle) }),
+                  ...(labelStyle && { labelStyle: mapToGeoGridStyle(labelStyle) })
+                };
+
+                try {
+                  const geogridInstance = new GeoGridClass(geogridOptions);
+
+                  // Explicitly call add() to render the grid on the map
+                  if (typeof geogridInstance.add === 'function') {
+                    geogridInstance.add();
+                  }
+
+                  el._geogridInstance = geogridInstance;
+                  el._controls.set(controlKey, { type: 'geogrid', instance: geogridInstance });
+                } catch (error) {
+                  console.error('Failed to restore GeoGrid instance:', error);
+                }
                 return;
               }
               case 'widget_panel':
@@ -4178,11 +4222,30 @@ function render({ model, el }) {
                   console.warn('GeoGrid plugin not available');
                   return;
                 }
-                const geogridOptions = { map, ...(controlOptions || {}) };
-                const geogridInstance = new GeoGridClass(geogridOptions);
-                el._geogridInstance = geogridInstance;
-                // GeoGrid doesn't use the standard MapLibre control API, so we skip adding it
-                el._controls.set(controlKey, { type: 'geogrid', instance: geogridInstance });
+                // Remove position from options as GeoGrid doesn't use it
+                const { position: _, gridStyle, labelStyle, ...otherConfig } = controlOptions || {};
+
+                // Map MapLibre paint properties to GeoGrid style properties
+                const geogridOptions = {
+                  map,
+                  ...otherConfig,
+                  ...(gridStyle && { gridStyle: mapToGeoGridStyle(gridStyle) }),
+                  ...(labelStyle && { labelStyle: mapToGeoGridStyle(labelStyle) })
+                };
+
+                try {
+                  const geogridInstance = new GeoGridClass(geogridOptions);
+
+                  // Explicitly call add() to render the grid on the map
+                  if (typeof geogridInstance.add === 'function') {
+                    geogridInstance.add();
+                  }
+
+                  el._geogridInstance = geogridInstance;
+                  el._controls.set(controlKey, { type: 'geogrid', instance: geogridInstance });
+                } catch (error) {
+                  console.error('Failed to create GeoGrid instance:', error);
+                }
                 return;
               }
               case 'widget_panel':
