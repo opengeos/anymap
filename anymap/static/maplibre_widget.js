@@ -2482,6 +2482,7 @@ function render({ model, el }) {
         measuresCSS.rel = 'stylesheet';
         measuresCSS.href = 'https://cdn.jsdelivr.net/npm/maplibre-gl-measures@latest/dist/maplibre-gl-measures.css';
         document.head.appendChild(measuresCSS);
+      }
 
       // Load GeoGrid plugin
       if (!resolveGeoGridClass()) {
