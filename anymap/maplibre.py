@@ -2743,7 +2743,7 @@ class MapLibreMap(MapWidget):
         Example:
             >>> m = MapLibreMap(center=[148.9819, -35.3981], zoom=18, pitch=60)
             >>> m.init_three_scene()
-            >>> m.add_three_light(type='ambient')
+            >>> m.add_three_light(light_type='ambient')
         """
         self.call_js_method("initMapScene")
 
