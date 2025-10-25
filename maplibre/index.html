@@ -1460,6 +1460,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.add_maplibre_geocoder" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_maplibre_geocoder()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.add_marker" class="md-nav__link">
     <span class="md-ellipsis">
       add_marker()
@@ -2427,6 +2436,15 @@
   <a href="#anymap.maplibre.MapLibreMap.add_layer_control" class="md-nav__link">
     <span class="md-ellipsis">
       add_layer_control()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.add_maplibre_geocoder" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_maplibre_geocoder()
     </span>
   </a>
   
@@ -4489,6 +4507,127 @@ data sources, custom styling, and interactive features.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">_controls</span> <span class="o">=</span> <span class="n">current_controls</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addControl&quot;</span><span class="p">,</span> <span class="s2">&quot;geocoder&quot;</span><span class="p">,</span> <span class="n">control_options</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_maplibre_geocoder</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">position</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;top-left&quot;</span><span class="p">,</span>
+        <span class="n">api_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">maplibre_api</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;maptiler&quot;</span><span class="p">,</span>
+        <span class="n">language</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">placeholder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Search&quot;</span><span class="p">,</span>
+        <span class="n">proximity</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">bbox</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">country</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">types</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="n">marker</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">show_result_markers</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">collapsed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">clear_on_blur</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">clear_and_blur_on_esc</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">enable_event_logging</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">min_length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add MapLibre GL Geocoder control to the map.</span>
+
+<span class="sd">        The MapLibre GL Geocoder is a geocoder control for MapLibre GL that supports</span>
+<span class="sd">        various geocoding APIs including Maptiler, Mapbox, and others. It provides a</span>
+<span class="sd">        search interface for finding locations and can display markers for search results.</span>
+
+<span class="sd">        See: https://github.com/maplibre/maplibre-gl-geocoder</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            position: Position on map (&#39;top-left&#39;, &#39;top-right&#39;, &#39;bottom-left&#39;, &#39;bottom-right&#39;)</span>
+<span class="sd">            api_key: API key for the geocoding service (required for most services)</span>
+<span class="sd">            maplibre_api: Geocoding API to use (&#39;maptiler&#39;, &#39;mapbox&#39;, or custom)</span>
+<span class="sd">            language: Language code for results (e.g., &#39;en&#39;, &#39;es&#39;, &#39;fr&#39;)</span>
+<span class="sd">            placeholder: Placeholder text in the search input</span>
+<span class="sd">            proximity: [lng, lat] to bias results towards this location</span>
+<span class="sd">            bbox: [minLng, minLat, maxLng, maxLat] to limit results to this bounding box</span>
+<span class="sd">            country: Country code(s) to limit results (e.g., &#39;us&#39; or &#39;us,ca&#39;)</span>
+<span class="sd">            types: Comma-separated types to filter results (e.g., &#39;country,region,place&#39;)</span>
+<span class="sd">            limit: Maximum number of results to return</span>
+<span class="sd">            marker: Whether to add a marker at the geocoded location</span>
+<span class="sd">            show_result_markers: Whether to show markers for all search results</span>
+<span class="sd">            collapsed: Whether the control should start collapsed</span>
+<span class="sd">            clear_on_blur: Clear the input when it loses focus</span>
+<span class="sd">            clear_and_blur_on_esc: Clear input and remove focus when ESC is pressed</span>
+<span class="sd">            enable_event_logging: Enable console logging of geocoder events</span>
+<span class="sd">            min_length: Minimum number of characters to trigger search</span>
+<span class="sd">            options: Additional options passed to the MaplibreGeocoder constructor</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            ```python</span>
+<span class="sd">            m = MapLibreMap(center=[-87.61694, 41.86625], zoom=10)</span>
+<span class="sd">            m.add_maplibre_geocoder(</span>
+<span class="sd">                position=&quot;top-left&quot;,</span>
+<span class="sd">                api_key=&quot;your_api_key&quot;,</span>
+<span class="sd">                maplibre_api=&quot;maptiler&quot;,</span>
+<span class="sd">                language=&quot;en&quot;,</span>
+<span class="sd">                country=&quot;us&quot;</span>
+<span class="sd">            )</span>
+<span class="sd">            ```</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">geocoder_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">options</span> <span class="ow">or</span> <span class="p">{}</span>
+
+        <span class="c1"># Build configuration</span>
+        <span class="n">geocoder_config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
+                <span class="s2">&quot;maplibregl&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># Signal to use maplibregl</span>
+                <span class="s2">&quot;placeholder&quot;</span><span class="p">:</span> <span class="n">placeholder</span><span class="p">,</span>
+                <span class="s2">&quot;limit&quot;</span><span class="p">:</span> <span class="n">limit</span><span class="p">,</span>
+                <span class="s2">&quot;marker&quot;</span><span class="p">:</span> <span class="n">marker</span><span class="p">,</span>
+                <span class="s2">&quot;showResultMarkers&quot;</span><span class="p">:</span> <span class="n">show_result_markers</span><span class="p">,</span>
+                <span class="s2">&quot;collapsed&quot;</span><span class="p">:</span> <span class="n">collapsed</span><span class="p">,</span>
+                <span class="s2">&quot;clearOnBlur&quot;</span><span class="p">:</span> <span class="n">clear_on_blur</span><span class="p">,</span>
+                <span class="s2">&quot;clearAndBlurOnEsc&quot;</span><span class="p">:</span> <span class="n">clear_and_blur_on_esc</span><span class="p">,</span>
+                <span class="s2">&quot;enableEventLogging&quot;</span><span class="p">:</span> <span class="n">enable_event_logging</span><span class="p">,</span>
+                <span class="s2">&quot;minLength&quot;</span><span class="p">:</span> <span class="n">min_length</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">api_key</span><span class="p">:</span>
+            <span class="n">geocoder_config</span><span class="p">[</span><span class="s2">&quot;apiKey&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">api_key</span>
+
+        <span class="k">if</span> <span class="n">maplibre_api</span><span class="p">:</span>
+            <span class="n">geocoder_config</span><span class="p">[</span><span class="s2">&quot;maplibreApi&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">maplibre_api</span>
+
+        <span class="k">if</span> <span class="n">language</span><span class="p">:</span>
+            <span class="n">geocoder_config</span><span class="p">[</span><span class="s2">&quot;language&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">language</span>
+
+        <span class="k">if</span> <span class="n">proximity</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">proximity</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;proximity must be a list of two floats: [longitude, latitude]&quot;</span>
+                <span class="p">)</span>
+            <span class="n">geocoder_config</span><span class="p">[</span><span class="s2">&quot;proximity&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">proximity</span>
+
+        <span class="k">if</span> <span class="n">bbox</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">bbox</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;bbox must be a list of four floats: [minLng, minLat, maxLng, maxLat]&quot;</span>
+                <span class="p">)</span>
+            <span class="n">geocoder_config</span><span class="p">[</span><span class="s2">&quot;bbox&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bbox</span>
+
+        <span class="k">if</span> <span class="n">country</span><span class="p">:</span>
+            <span class="n">geocoder_config</span><span class="p">[</span><span class="s2">&quot;country&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">country</span>
+
+        <span class="k">if</span> <span class="n">types</span><span class="p">:</span>
+            <span class="n">geocoder_config</span><span class="p">[</span><span class="s2">&quot;types&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">types</span>
+
+        <span class="c1"># Store control state</span>
+        <span class="n">control_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;maplibre_geocoder_</span><span class="si">{</span><span class="n">position</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">current_controls</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_controls</span><span class="p">)</span>
+        <span class="n">current_controls</span><span class="p">[</span><span class="n">control_key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;maplibre_geocoder&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
+            <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="n">geocoder_config</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_controls</span> <span class="o">=</span> <span class="n">current_controls</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addControl&quot;</span><span class="p">,</span> <span class="s2">&quot;maplibre_geocoder&quot;</span><span class="p">,</span> <span class="n">geocoder_config</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">add_export_control</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -9129,6 +9268,293 @@ similar to other controls, and expands when clicked.</p>
 
   </div>
 
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="anymap.maplibre.MapLibreMap.add_maplibre_geocoder" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">add_maplibre_geocoder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s1">&#39;top-left&#39;</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">maplibre_api</span><span class="o">=</span><span class="s1">&#39;maptiler&#39;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">placeholder</span><span class="o">=</span><span class="s1">&#39;Search&#39;</span><span class="p">,</span> <span class="n">proximity</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bbox</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">country</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">types</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">show_result_markers</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">collapsed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">clear_on_blur</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">clear_and_blur_on_esc</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">enable_event_logging</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">min_length</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+
+<a href="#anymap.maplibre.MapLibreMap.add_maplibre_geocoder" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Add MapLibre GL Geocoder control to the map.</p>
+<p>The MapLibre GL Geocoder is a geocoder control for MapLibre GL that supports
+various geocoding APIs including Maptiler, Mapbox, and others. It provides a
+search interface for finding locations and can display markers for search results.</p>
+<p>See: https://github.com/maplibre/maplibre-gl-geocoder</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>position</code></td>
+        <td><code>str</code></td>
+        <td><p>Position on map ('top-left', 'top-right', 'bottom-left', 'bottom-right')</p></td>
+        <td><code>&#39;top-left&#39;</code></td>
+      </tr>
+      <tr>
+        <td><code>api_key</code></td>
+        <td><code>Optional[str]</code></td>
+        <td><p>API key for the geocoding service (required for most services)</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>maplibre_api</code></td>
+        <td><code>str</code></td>
+        <td><p>Geocoding API to use ('maptiler', 'mapbox', or custom)</p></td>
+        <td><code>&#39;maptiler&#39;</code></td>
+      </tr>
+      <tr>
+        <td><code>language</code></td>
+        <td><code>Optional[str]</code></td>
+        <td><p>Language code for results (e.g., 'en', 'es', 'fr')</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>placeholder</code></td>
+        <td><code>str</code></td>
+        <td><p>Placeholder text in the search input</p></td>
+        <td><code>&#39;Search&#39;</code></td>
+      </tr>
+      <tr>
+        <td><code>proximity</code></td>
+        <td><code>Optional[List[float]]</code></td>
+        <td><p>[lng, lat] to bias results towards this location</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>bbox</code></td>
+        <td><code>Optional[List[float]]</code></td>
+        <td><p>[minLng, minLat, maxLng, maxLat] to limit results to this bounding box</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>country</code></td>
+        <td><code>Optional[str]</code></td>
+        <td><p>Country code(s) to limit results (e.g., 'us' or 'us,ca')</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>types</code></td>
+        <td><code>Optional[str]</code></td>
+        <td><p>Comma-separated types to filter results (e.g., 'country,region,place')</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>limit</code></td>
+        <td><code>int</code></td>
+        <td><p>Maximum number of results to return</p></td>
+        <td><code>5</code></td>
+      </tr>
+      <tr>
+        <td><code>marker</code></td>
+        <td><code>bool</code></td>
+        <td><p>Whether to add a marker at the geocoded location</p></td>
+        <td><code>True</code></td>
+      </tr>
+      <tr>
+        <td><code>show_result_markers</code></td>
+        <td><code>bool</code></td>
+        <td><p>Whether to show markers for all search results</p></td>
+        <td><code>True</code></td>
+      </tr>
+      <tr>
+        <td><code>collapsed</code></td>
+        <td><code>bool</code></td>
+        <td><p>Whether the control should start collapsed</p></td>
+        <td><code>False</code></td>
+      </tr>
+      <tr>
+        <td><code>clear_on_blur</code></td>
+        <td><code>bool</code></td>
+        <td><p>Clear the input when it loses focus</p></td>
+        <td><code>False</code></td>
+      </tr>
+      <tr>
+        <td><code>clear_and_blur_on_esc</code></td>
+        <td><code>bool</code></td>
+        <td><p>Clear input and remove focus when ESC is pressed</p></td>
+        <td><code>False</code></td>
+      </tr>
+      <tr>
+        <td><code>enable_event_logging</code></td>
+        <td><code>bool</code></td>
+        <td><p>Enable console logging of geocoder events</p></td>
+        <td><code>False</code></td>
+      </tr>
+      <tr>
+        <td><code>min_length</code></td>
+        <td><code>int</code></td>
+        <td><p>Minimum number of characters to trigger search</p></td>
+        <td><code>2</code></td>
+      </tr>
+      <tr>
+        <td><code>options</code></td>
+        <td><code>Optional[Dict[str, Any]]</code></td>
+        <td><p>Additional options passed to the MaplibreGeocoder constructor</p></td>
+        <td><code>None</code></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="n">m</span> <span class="o">=</span> <span class="n">MapLibreMap</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">87.61694</span><span class="p">,</span> <span class="mf">41.86625</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">add_maplibre_geocoder</span><span class="p">(</span>
+    <span class="n">position</span><span class="o">=</span><span class="s2">&quot;top-left&quot;</span><span class="p">,</span>
+    <span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;your_api_key&quot;</span><span class="p">,</span>
+    <span class="n">maplibre_api</span><span class="o">=</span><span class="s2">&quot;maptiler&quot;</span><span class="p">,</span>
+    <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">,</span>
+    <span class="n">country</span><span class="o">=</span><span class="s2">&quot;us&quot;</span>
+<span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+
+        <details class="quote">
+          <summary>Source code in <code>anymap/maplibre.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_maplibre_geocoder</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">position</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;top-left&quot;</span><span class="p">,</span>
+    <span class="n">api_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">maplibre_api</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;maptiler&quot;</span><span class="p">,</span>
+    <span class="n">language</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">placeholder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Search&quot;</span><span class="p">,</span>
+    <span class="n">proximity</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">bbox</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">country</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">types</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="n">marker</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">show_result_markers</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">collapsed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">clear_on_blur</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">clear_and_blur_on_esc</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">enable_event_logging</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">min_length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add MapLibre GL Geocoder control to the map.</span>
+
+<span class="sd">    The MapLibre GL Geocoder is a geocoder control for MapLibre GL that supports</span>
+<span class="sd">    various geocoding APIs including Maptiler, Mapbox, and others. It provides a</span>
+<span class="sd">    search interface for finding locations and can display markers for search results.</span>
+
+<span class="sd">    See: https://github.com/maplibre/maplibre-gl-geocoder</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        position: Position on map (&#39;top-left&#39;, &#39;top-right&#39;, &#39;bottom-left&#39;, &#39;bottom-right&#39;)</span>
+<span class="sd">        api_key: API key for the geocoding service (required for most services)</span>
+<span class="sd">        maplibre_api: Geocoding API to use (&#39;maptiler&#39;, &#39;mapbox&#39;, or custom)</span>
+<span class="sd">        language: Language code for results (e.g., &#39;en&#39;, &#39;es&#39;, &#39;fr&#39;)</span>
+<span class="sd">        placeholder: Placeholder text in the search input</span>
+<span class="sd">        proximity: [lng, lat] to bias results towards this location</span>
+<span class="sd">        bbox: [minLng, minLat, maxLng, maxLat] to limit results to this bounding box</span>
+<span class="sd">        country: Country code(s) to limit results (e.g., &#39;us&#39; or &#39;us,ca&#39;)</span>
+<span class="sd">        types: Comma-separated types to filter results (e.g., &#39;country,region,place&#39;)</span>
+<span class="sd">        limit: Maximum number of results to return</span>
+<span class="sd">        marker: Whether to add a marker at the geocoded location</span>
+<span class="sd">        show_result_markers: Whether to show markers for all search results</span>
+<span class="sd">        collapsed: Whether the control should start collapsed</span>
+<span class="sd">        clear_on_blur: Clear the input when it loses focus</span>
+<span class="sd">        clear_and_blur_on_esc: Clear input and remove focus when ESC is pressed</span>
+<span class="sd">        enable_event_logging: Enable console logging of geocoder events</span>
+<span class="sd">        min_length: Minimum number of characters to trigger search</span>
+<span class="sd">        options: Additional options passed to the MaplibreGeocoder constructor</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        ```python</span>
+<span class="sd">        m = MapLibreMap(center=[-87.61694, 41.86625], zoom=10)</span>
+<span class="sd">        m.add_maplibre_geocoder(</span>
+<span class="sd">            position=&quot;top-left&quot;,</span>
+<span class="sd">            api_key=&quot;your_api_key&quot;,</span>
+<span class="sd">            maplibre_api=&quot;maptiler&quot;,</span>
+<span class="sd">            language=&quot;en&quot;,</span>
+<span class="sd">            country=&quot;us&quot;</span>
+<span class="sd">        )</span>
+<span class="sd">        ```</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">geocoder_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">options</span> <span class="ow">or</span> <span class="p">{}</span>
+
+    <span class="c1"># Build configuration</span>
+    <span class="n">geocoder_config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
+            <span class="s2">&quot;maplibregl&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># Signal to use maplibregl</span>
+            <span class="s2">&quot;placeholder&quot;</span><span class="p">:</span> <span class="n">placeholder</span><span class="p">,</span>
+            <span class="s2">&quot;limit&quot;</span><span class="p">:</span> <span class="n">limit</span><span class="p">,</span>
+            <span class="s2">&quot;marker&quot;</span><span class="p">:</span> <span class="n">marker</span><span class="p">,</span>
+            <span class="s2">&quot;showResultMarkers&quot;</span><span class="p">:</span> <span class="n">show_result_markers</span><span class="p">,</span>
+            <span class="s2">&quot;collapsed&quot;</span><span class="p">:</span> <span class="n">collapsed</span><span class="p">,</span>
+            <span class="s2">&quot;clearOnBlur&quot;</span><span class="p">:</span> <span class="n">clear_on_blur</span><span class="p">,</span>
+            <span class="s2">&quot;clearAndBlurOnEsc&quot;</span><span class="p">:</span> <span class="n">clear_and_blur_on_esc</span><span class="p">,</span>
+            <span class="s2">&quot;enableEventLogging&quot;</span><span class="p">:</span> <span class="n">enable_event_logging</span><span class="p">,</span>
+            <span class="s2">&quot;minLength&quot;</span><span class="p">:</span> <span class="n">min_length</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">api_key</span><span class="p">:</span>
+        <span class="n">geocoder_config</span><span class="p">[</span><span class="s2">&quot;apiKey&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">api_key</span>
+
+    <span class="k">if</span> <span class="n">maplibre_api</span><span class="p">:</span>
+        <span class="n">geocoder_config</span><span class="p">[</span><span class="s2">&quot;maplibreApi&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">maplibre_api</span>
+
+    <span class="k">if</span> <span class="n">language</span><span class="p">:</span>
+        <span class="n">geocoder_config</span><span class="p">[</span><span class="s2">&quot;language&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">language</span>
+
+    <span class="k">if</span> <span class="n">proximity</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">proximity</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;proximity must be a list of two floats: [longitude, latitude]&quot;</span>
+            <span class="p">)</span>
+        <span class="n">geocoder_config</span><span class="p">[</span><span class="s2">&quot;proximity&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">proximity</span>
+
+    <span class="k">if</span> <span class="n">bbox</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">bbox</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;bbox must be a list of four floats: [minLng, minLat, maxLng, maxLat]&quot;</span>
+            <span class="p">)</span>
+        <span class="n">geocoder_config</span><span class="p">[</span><span class="s2">&quot;bbox&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bbox</span>
+
+    <span class="k">if</span> <span class="n">country</span><span class="p">:</span>
+        <span class="n">geocoder_config</span><span class="p">[</span><span class="s2">&quot;country&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">country</span>
+
+    <span class="k">if</span> <span class="n">types</span><span class="p">:</span>
+        <span class="n">geocoder_config</span><span class="p">[</span><span class="s2">&quot;types&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">types</span>
+
+    <span class="c1"># Store control state</span>
+    <span class="n">control_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;maplibre_geocoder_</span><span class="si">{</span><span class="n">position</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">current_controls</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_controls</span><span class="p">)</span>
+    <span class="n">current_controls</span><span class="p">[</span><span class="n">control_key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;maplibre_geocoder&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
+        <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="n">geocoder_config</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_controls</span> <span class="o">=</span> <span class="n">current_controls</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addControl&quot;</span><span class="p">,</span> <span class="s2">&quot;maplibre_geocoder&quot;</span><span class="p">,</span> <span class="n">geocoder_config</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
 
 
 
