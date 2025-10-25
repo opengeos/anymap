@@ -2216,19 +2216,73 @@ function render({ model, el }) {
 
       // Load MapLibre GL Measures plugin
       if (!window.MeasuresControl) {
-        const measuresScript = document.createElement('script');
-        measuresScript.src = 'https://cdn.jsdelivr.net/npm/maplibre-gl-measures@latest/dist/maplibre-gl-measures.min.js';
+        // Temporarily disable AMD/CommonJS globals to encourage UMD builds to attach to window
+        const previousDefine = window.define;
+        const previousModule = window.module;
+        const previousExports = window.exports;
+        const hadAMDDefine = typeof previousDefine === 'function' && previousDefine.amd;
+        const hadModule = typeof previousModule !== 'undefined';
+        const hadExports = typeof previousExports !== 'undefined';
 
-        await new Promise((resolve, reject) => {
-          measuresScript.onload = () => {
-            resolve();
-          };
-          measuresScript.onerror = (error) => {
-            console.warn('MapLibre GL Measures plugin failed to load:', error);
-            resolve(); // Don't reject to allow the map to continue loading
-          };
-          document.head.appendChild(measuresScript);
+        const restoreModuleEnv = () => {
+          if (hadAMDDefine) window.define = previousDefine;
+          if (hadModule) window.module = previousModule;
+          else delete window.module;
+          if (hadExports) window.exports = previousExports;
+          else delete window.exports;
+        };
+
+        const tryLoadScript = (src) => new Promise((resolve) => {
+          const s = document.createElement('script');
+          s.src = src;
+          s.onload = () => resolve({ ok: true, src });
+          s.onerror = () => resolve({ ok: false, src });
+          document.head.appendChild(s);
         });
+
+        const candidateScripts = [
+          'https://cdn.jsdelivr.net/npm/maplibre-gl-measures@latest/dist/maplibre-gl-measures.min.js',
+          'https://unpkg.com/maplibre-gl-measures@latest/dist/maplibre-gl-measures.min.js',
+          'https://unpkg.com/maplibre-gl-measures@latest/dist/maplibre-gl-measures.js',
+          'https://unpkg.com/maplibre-gl-measures@latest/dist/index.umd.js',
+        ];
+
+        let loaded = false;
+        for (const src of candidateScripts) {
+          // Disable AMD before injecting each attempt
+          if (hadAMDDefine) window.define = undefined;
+          if (hadModule) window.module = undefined;
+          if (hadExports) window.exports = undefined;
+
+          const result = await tryLoadScript(src);
+          restoreModuleEnv();
+          if (result.ok && (window.MeasuresControl || (window.maplibregl && window.maplibregl.MeasuresControl))) {
+            if (!window.MeasuresControl && window.maplibregl?.MeasuresControl) {
+              window.MeasuresControl = window.maplibregl.MeasuresControl;
+            }
+            loaded = true;
+            break;
+          }
+        }
+
+        // Disable AMD before injecting script
+        if (hadAMDDefine) window.define = undefined;
+        if (hadModule) window.module = undefined;
+        if (hadExports) window.exports = undefined;
+
+        // ESM fallback via dynamic import if still unavailable
+        if (!loaded && !window.MeasuresControl) {
+          try {
+            const measuresModule = await import('https://esm.sh/maplibre-gl-measures@latest');
+            const ctor = measuresModule?.default || measuresModule?.MeasuresControl || measuresModule?.Measures;
+            if (ctor) {
+              window.MeasuresControl = ctor;
+              loaded = true;
+            }
+          } catch (e) {
+            // ignore, will warn below
+          }
+        }
 
         if (window.MeasuresControl) {
           debugLog("MapLibre GL Measures loaded successfully");
