@@ -2434,6 +2434,7 @@ function render({ model, el }) {
         temporalCSS.rel = 'stylesheet';
         temporalCSS.href = 'https://www.unpkg.com/maplibre-gl-temporal-control@1.2.0/build/style.css';
         document.head.appendChild(temporalCSS);
+      }
 
       // Load MapLibre GL Measures plugin
       if (!window.MeasuresControl) {
@@ -2873,7 +2874,7 @@ function render({ model, el }) {
         console.warn("MapboxDraw not available");
       }
     } catch (error) {
-      console.warn("Failed to load protocols:", error);
+      console.error("Failed to initialize map protocols and libraries:", error);
     }
   };
 
