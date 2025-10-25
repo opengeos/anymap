@@ -1953,6 +1953,12 @@ function render({ model, el }) {
         }
 
         console.log("MapLibre GL JS loaded successfully");
+
+        // Ensure Mapbox GL plugins can attach in MapLibre environments
+        // Some plugins expect window.mapboxgl to exist; alias it to maplibregl
+        if (!window.mapboxgl && window.maplibregl) {
+          window.mapboxgl = window.maplibregl;
+        }
       }
 
       // Load MapLibre GL CSS
@@ -2067,14 +2073,61 @@ function render({ model, el }) {
         }
       }
 
+      // Ensure alias exists even if MapLibre was preloaded by the page
+      if (!window.mapboxgl && window.maplibregl) {
+        window.mapboxgl = window.maplibregl;
+      }
+
       // Load Mapbox GL Infobox Plugin
       if (!window.MapboxInfoBoxControl && !window.MapboxGradientBoxControl) {
         const infoboxScript = document.createElement('script');
         infoboxScript.src = 'https://cdn.jsdelivr.net/npm/mapbox-gl-infobox@1.0.9/dist/mapbox-gl-infobox.umd.js';
 
+        // Temporarily disable AMD/CJS globals so UMD attaches to window
+        const previousDefine = window.define;
+        const previousModule = window.module;
+        const previousExports = window.exports;
+        const hadAMDDefine = !!(previousDefine && previousDefine.amd);
+        const hadModule = typeof previousModule !== 'undefined';
+        const hadExports = typeof previousExports !== 'undefined';
+
+        const restoreModuleEnv = () => {
+          if (hadAMDDefine) {
+            window.define = previousDefine;
+          } else {
+            delete window.define;
+          }
+          if (hadModule) {
+            window.module = previousModule;
+          } else {
+            delete window.module;
+          }
+          if (hadExports) {
+            window.exports = previousExports;
+          } else {
+            delete window.exports;
+          }
+        };
+
+        if (hadAMDDefine) {
+          window.define = undefined;
+        }
+        if (hadModule) {
+          window.module = undefined;
+        }
+        if (hadExports) {
+          window.exports = undefined;
+        }
+
         await new Promise((resolve, reject) => {
-          infoboxScript.onload = resolve;
-          infoboxScript.onerror = reject;
+          infoboxScript.onload = () => {
+            restoreModuleEnv();
+            resolve();
+          };
+          infoboxScript.onerror = (error) => {
+            restoreModuleEnv();
+            reject(error);
+          };
           document.head.appendChild(infoboxScript);
         });
 
@@ -3735,7 +3788,77 @@ function render({ model, el }) {
                   control = new window.MapboxInfoBoxControl(infoboxOptions);
                   console.log('Infobox control restored successfully');
                 } else {
-                  console.warn('MapboxInfoBoxControl not available during restore');
+                  // Try to load plugin on-demand during restore
+                  (async () => {
+                    try {
+                      if (!window.mapboxgl && window.maplibregl) {
+                        window.mapboxgl = window.maplibregl;
+                      }
+
+                      const previousDefine = window.define;
+                      const previousModule = window.module;
+                      const previousExports = window.exports;
+                      const hadAMDDefine = !!(previousDefine && previousDefine.amd);
+                      const hadModule = typeof previousModule !== 'undefined';
+                      const hadExports = typeof previousExports !== 'undefined';
+
+                      const restoreModuleEnv = () => {
+                        if (hadAMDDefine) { window.define = previousDefine; } else { delete window.define; }
+                        if (hadModule) { window.module = previousModule; } else { delete window.module; }
+                        if (hadExports) { window.exports = previousExports; } else { delete window.exports; }
+                      };
+
+                      if (hadAMDDefine) { window.define = undefined; }
+                      if (hadModule) { window.module = undefined; }
+                      if (hadExports) { window.exports = undefined; }
+
+                      await new Promise((resolve, reject) => {
+                        const s = document.createElement('script');
+                        s.src = 'https://cdn.jsdelivr.net/npm/mapbox-gl-infobox@1.0.9/dist/mapbox-gl-infobox.umd.js';
+                        s.onload = () => { restoreModuleEnv(); resolve(); };
+                        s.onerror = (e) => { restoreModuleEnv(); reject(e); };
+                        document.head.appendChild(s);
+                      });
+
+                      if (!document.querySelector('link[href*="mapbox-gl-infobox.css"]')) {
+                        const link = document.createElement('link');
+                        link.rel = 'stylesheet';
+                        link.href = 'https://cdn.jsdelivr.net/npm/mapbox-gl-infobox@1.0.9/dist/mapbox-gl-infobox.css';
+                        document.head.appendChild(link);
+                      }
+
+                      if (window.MapboxInfoBoxControl) {
+                        const infoboxOptions = {};
+                        if (controlOptions.layerId) { infoboxOptions.layerId = controlOptions.layerId; }
+                        if (controlOptions.formatter) {
+                          try { infoboxOptions.formatter = new Function('return ' + controlOptions.formatter)(); }
+                          catch (error) {
+                            console.warn('Invalid formatter function for infobox:', error);
+                            infoboxOptions.formatter = (properties) => {
+                              if (!properties) return '';
+                              return Object.entries(properties).map(([key, value]) => `<b>${key}:</b> ${value}`).join('<br>');
+                            };
+                          }
+                        } else {
+                          infoboxOptions.formatter = (properties) => {
+                            if (!properties) return '';
+                            return Object.entries(properties).map(([key, value]) => `<b>${key}:</b> ${value}`).join('<br>');
+                          };
+                        }
+
+                        const pluginControl = new window.MapboxInfoBoxControl(infoboxOptions);
+                        map.addControl(pluginControl, position);
+                        if (el._controls) {
+                          el._controls.set(controlKey, pluginControl);
+                        }
+                        console.log('Infobox control restored successfully (after dynamic load)');
+                      } else {
+                        console.warn('MapboxInfoBoxControl not available during restore after dynamic load');
+                      }
+                    } catch (err) {
+                      console.warn('Failed to dynamically load MapboxInfoBoxControl during restore:', err);
+                    }
+                  })();
                   return;
                 }
                 break;
@@ -4502,7 +4625,77 @@ function render({ model, el }) {
                   control = new window.MapboxInfoBoxControl(infoboxOptions);
                   console.log('Infobox control added successfully');
                 } else {
-                  console.warn('MapboxInfoBoxControl not available');
+                  // Try to load plugin on-demand, then add the control
+                  (async () => {
+                    try {
+                      if (!window.mapboxgl && window.maplibregl) {
+                        window.mapboxgl = window.maplibregl;
+                      }
+
+                      const previousDefine = window.define;
+                      const previousModule = window.module;
+                      const previousExports = window.exports;
+                      const hadAMDDefine = !!(previousDefine && previousDefine.amd);
+                      const hadModule = typeof previousModule !== 'undefined';
+                      const hadExports = typeof previousExports !== 'undefined';
+
+                      const restoreModuleEnv = () => {
+                        if (hadAMDDefine) { window.define = previousDefine; } else { delete window.define; }
+                        if (hadModule) { window.module = previousModule; } else { delete window.module; }
+                        if (hadExports) { window.exports = previousExports; } else { delete window.exports; }
+                      };
+
+                      if (hadAMDDefine) { window.define = undefined; }
+                      if (hadModule) { window.module = undefined; }
+                      if (hadExports) { window.exports = undefined; }
+
+                      await new Promise((resolve, reject) => {
+                        const s = document.createElement('script');
+                        s.src = 'https://cdn.jsdelivr.net/npm/mapbox-gl-infobox@1.0.9/dist/mapbox-gl-infobox.umd.js';
+                        s.onload = () => { restoreModuleEnv(); resolve(); };
+                        s.onerror = (e) => { restoreModuleEnv(); reject(e); };
+                        document.head.appendChild(s);
+                      });
+
+                      if (!document.querySelector('link[href*="mapbox-gl-infobox.css"]')) {
+                        const link = document.createElement('link');
+                        link.rel = 'stylesheet';
+                        link.href = 'https://cdn.jsdelivr.net/npm/mapbox-gl-infobox@1.0.9/dist/mapbox-gl-infobox.css';
+                        document.head.appendChild(link);
+                      }
+
+                      if (window.MapboxInfoBoxControl) {
+                        const infoboxOptions = {};
+                        if (controlOptions.layerId) { infoboxOptions.layerId = controlOptions.layerId; }
+                        if (controlOptions.formatter) {
+                          try { infoboxOptions.formatter = new Function('return ' + controlOptions.formatter)(); }
+                          catch (error) {
+                            console.warn('Invalid formatter function for infobox:', error);
+                            infoboxOptions.formatter = (properties) => {
+                              if (!properties) return '';
+                              return Object.entries(properties).map(([key, value]) => `<b>${key}:</b> ${value}`).join('<br>');
+                            };
+                          }
+                        } else {
+                          infoboxOptions.formatter = (properties) => {
+                            if (!properties) return '';
+                            return Object.entries(properties).map(([key, value]) => `<b>${key}:</b> ${value}`).join('<br>');
+                          };
+                        }
+
+                        const pluginControl = new window.MapboxInfoBoxControl(infoboxOptions);
+                        map.addControl(pluginControl, position);
+                        if (el._controls) {
+                          el._controls.set(controlKey, pluginControl);
+                        }
+                        console.log('Infobox control added successfully (after dynamic load)');
+                      } else {
+                        console.warn('MapboxInfoBoxControl not available after dynamic load');
+                      }
+                    } catch (err) {
+                      console.warn('Failed to dynamically load MapboxInfoBoxControl:', err);
+                    }
+                  })();
                   return;
                 }
                 break;
