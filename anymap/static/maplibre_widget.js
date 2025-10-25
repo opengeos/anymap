@@ -1,4 +1,6 @@
 // Helper function to process DeckGL properties
+const THREE_VERSION = '0.178.0';
+
 function processDeckGLProps(props) {
   const processed = {};
 
@@ -177,6 +179,53 @@ function resolveGeomanNamespace() {
   return window.Geoman;
 }
 
+function resolveGeoGridClass() {
+  if (!window.GeoGrid) {
+    return null;
+  }
+
+  // Handle different module export formats
+  if (typeof window.GeoGrid === 'function') {
+    return window.GeoGrid;
+  }
+
+  if (typeof window.GeoGrid === 'object' && window.GeoGrid !== null) {
+    if (typeof window.GeoGrid.GeoGrid === 'function') {
+      return window.GeoGrid.GeoGrid;
+    }
+    if (typeof window.GeoGrid.default === 'function') {
+      return window.GeoGrid.default;
+    }
+  }
+
+  return null;
+}
+
+// Map MapLibre paint properties to GeoGrid style properties
+function mapToGeoGridStyle(styleOptions) {
+  if (!styleOptions) return styleOptions;
+
+  const mapped = {};
+
+  // Map line properties (gridStyle)
+  if (styleOptions['line-color']) mapped.color = styleOptions['line-color'];
+  if (styleOptions['line-width']) mapped.width = styleOptions['line-width'];
+  if (styleOptions['line-dasharray']) mapped.dasharray = styleOptions['line-dasharray'];
+  if (styleOptions['line-opacity']) mapped.opacity = styleOptions['line-opacity'];
+
+  // If using GeoGrid native properties, preserve them
+  if (styleOptions.color) mapped.color = styleOptions.color;
+  if (styleOptions.width) mapped.width = styleOptions.width;
+  if (styleOptions.dasharray) mapped.dasharray = styleOptions.dasharray;
+  if (styleOptions.opacity) mapped.opacity = styleOptions.opacity;
+
+  // Label style properties (already in correct format)
+  if (styleOptions.fontSize) mapped.fontSize = styleOptions.fontSize;
+  if (styleOptions.textShadow) mapped.textShadow = styleOptions.textShadow;
+
+  return mapped;
+}
+
 function buildGeomanOptions(position, geomanOptions = {}, collapsed) {
   const options = { ...(geomanOptions || {}) };
   const settings = { ...(options.settings || {}) };
@@ -212,6 +261,143 @@ function normalizeGeomanGeoJson(data) {
   }
 
   return { type: 'FeatureCollection', features: [] };
+}
+
+function ensureThreeImportMap() {
+  if (document.querySelector('script[data-source="anymap-three-importmap"]')) {
+    return;
+  }
+
+  const importMap = {
+    imports: {
+      three: `https://cdn.jsdelivr.net/npm/three@${THREE_VERSION}/build/three.module.min.js`,
+      'three/': `https://cdn.jsdelivr.net/npm/three@${THREE_VERSION}/`,
+    },
+  };
+
+  const script = document.createElement('script');
+  script.type = 'importmap';
+  script.dataset.source = 'anymap-three-importmap';
+  script.textContent = JSON.stringify(importMap);
+  document.head.appendChild(script);
+}
+
+let _tilesSupportPromise = null;
+
+async function ensureThreeTilesSupport(mapScene) {
+  if (!_tilesSupportPromise) {
+    _tilesSupportPromise = (async () => {
+      ensureThreeImportMap();
+
+      const [rendererModule, pluginModule, dracoModule, ktxModule] = await Promise.all([
+        import('https://cdn.jsdelivr.net/npm/3d-tiles-renderer@0.4.17/build/index.three.js'),
+        import('https://cdn.jsdelivr.net/npm/3d-tiles-renderer@0.4.17/build/index.three-plugins.js'),
+        import(`https://cdn.jsdelivr.net/npm/three@${THREE_VERSION}/examples/jsm/loaders/DRACOLoader.js`),
+        import(`https://cdn.jsdelivr.net/npm/three@${THREE_VERSION}/examples/jsm/loaders/KTX2Loader.js`),
+      ]);
+
+      return {
+        TilesRenderer: rendererModule.TilesRenderer,
+        GLTFExtensionsPlugin: pluginModule.GLTFExtensionsPlugin,
+        CesiumIonAuthPlugin: pluginModule.CesiumIonAuthPlugin,
+        DebugTilesPlugin: pluginModule.DebugTilesPlugin,
+        TilesFadePlugin: pluginModule.TilesFadePlugin,
+        UnloadTilesPlugin: pluginModule.UnloadTilesPlugin,
+        UpdateOnChangePlugin: pluginModule.UpdateOnChangePlugin,
+        DRACOLoader: dracoModule.DRACOLoader,
+        KTX2Loader: ktxModule.KTX2Loader,
+      };
+    })();
+  }
+
+  return _tilesSupportPromise;
+}
+
+function createUniqueId(prefix) {
+  if (window.crypto && window.crypto.randomUUID) {
+    return `${prefix}-${window.crypto.randomUUID()}`;
+  }
+  return `${prefix}-${Date.now()}-${Math.floor(Math.random() * 1e6)}`;
+}
+
+function georeferenceTileset(renderer, group) {
+  const center = new window.THREE.Vector3();
+  const size = new window.THREE.Vector3();
+  const box = new window.THREE.Box3();
+  const sphere = new window.THREE.Sphere();
+
+  if (renderer.getBoundingBox(box)) {
+    box.getCenter(center);
+    box.getSize(size);
+  } else if (renderer.getBoundingSphere(sphere)) {
+    center.copy(sphere.center);
+    size.set(sphere.radius, sphere.radius, sphere.radius);
+  } else {
+    return null;
+  }
+
+  const cartographic = { lon: 0, lat: 0, height: 0 };
+  renderer.ellipsoid.getPositionToCartographic(center, cartographic);
+
+  const lng = (cartographic.lon * 180) / Math.PI;
+  const lat = (cartographic.lat * 180) / Math.PI;
+  const height = cartographic.height;
+
+  const positionVector = window.MaplibreThreePlugin.SceneTransform.lngLatToVector3(
+    lng,
+    lat,
+    height,
+  );
+
+  group.position.copy(positionVector);
+
+  const projectedUnits = window.MaplibreThreePlugin.SceneTransform.projectedUnitsPerMeter(lat);
+  group.scale.set(projectedUnits, projectedUnits, projectedUnits);
+
+  if (
+    !renderer.rootTileSet.asset.gltfUpAxis ||
+    renderer.rootTileSet.asset.gltfUpAxis === 'Z'
+  ) {
+    group.rotation.x = Math.PI;
+  }
+  group.rotation.y = Math.PI;
+  group.updateMatrixWorld();
+
+  const enuMatrix = renderer.ellipsoid.getEastNorthUpFrame(
+    cartographic.lat,
+    cartographic.lon,
+    cartographic.height,
+    new window.THREE.Matrix4(),
+  );
+
+  const modelMatrix = enuMatrix.clone().invert();
+  renderer.group.applyMatrix4(modelMatrix);
+  renderer.group.updateMatrixWorld();
+
+  group.add(renderer.group);
+
+  return {
+    lng,
+    lat,
+    height,
+    size,
+  };
+}
+
+function applyTilesetHeight(entry, heightOffset) {
+  if (!entry || !entry.positionDegrees) {
+    return;
+  }
+
+  const [lng, lat, baseHeight] = entry.positionDegrees;
+  const targetVector = window.MaplibreThreePlugin.SceneTransform.lngLatToVector3(
+    lng,
+    lat,
+    baseHeight + heightOffset,
+  );
+
+  entry.group.position.copy(targetVector);
+  entry.heightOffset = heightOffset;
 }
 
 function shouldSyncGeomanEvent(event) {
@@ -2296,6 +2482,28 @@ function render({ model, el }) {
         measuresCSS.rel = 'stylesheet';
         measuresCSS.href = 'https://cdn.jsdelivr.net/npm/maplibre-gl-measures@latest/dist/maplibre-gl-measures.css';
         document.head.appendChild(measuresCSS);
+
+      // Load GeoGrid plugin
+      if (!resolveGeoGridClass()) {
+        try {
+          // Load GeoGrid as ES module via dynamic import
+          const geoGridModule = await import('https://unpkg.com/geogrid-maplibre-gl@latest');
+          window.GeoGrid = geoGridModule.GeoGrid || geoGridModule.default || geoGridModule;
+
+          if (!resolveGeoGridClass()) {
+            console.warn('GeoGrid plugin loaded but class not found - grid functionality unavailable');
+          }
+        } catch (error) {
+          console.warn('Failed to load GeoGrid plugin:', error);
+        }
+      }
+
+      if (!document.querySelector('link[href*="geogrid.css"]')) {
+        const geogridCSS = document.createElement('link');
+        geogridCSS.rel = 'stylesheet';
+        geogridCSS.href = 'https://unpkg.com/geogrid-maplibre-gl@latest/dist/geogrid.css';
+        document.head.appendChild(geogridCSS);
+
       }
 
       // Load DeckGL for overlay layers
@@ -2310,6 +2518,80 @@ function render({ model, el }) {
         });
 
         debugLog("DeckGL loaded successfully");
+      }
+
+      // Load Three.js for 3D rendering
+      if (!window.THREE) {
+        try {
+          const threeModule = await import(`https://cdn.jsdelivr.net/npm/three@${THREE_VERSION}/build/three.module.min.js`);
+          const namespace = { ...threeModule };
+          if (threeModule.default && typeof threeModule.default === 'object') {
+            Object.assign(namespace, threeModule.default);
+          }
+          window.THREE = Object.assign({}, window.THREE || {}, namespace); // Expose module exports on global THREE namespace
+          debugLog("Three.js module loaded successfully");
+        } catch (error) {
+          console.error("Failed to load Three.js module:", error);
+        }
+      }
+
+      // Load GLTFLoader for Three.js via bundled ESM helper while suppressing duplicate import warnings
+      if (window.THREE && !window.GLTFLoader) {
+        try {
+          const originalWarn = console.warn;
+          let suppressedDuplicateWarning = false;
+          console.warn = (...args) => {
+            if (
+              args.length > 0 &&
+              typeof args[0] === 'string' &&
+              args[0].includes('Multiple instances of Three.js being imported')
+            ) {
+              suppressedDuplicateWarning = true;
+              return;
+            }
+            originalWarn.apply(console, args);
+          };
+          try {
+            const gltfModule = await import(`https://esm.sh/three@${THREE_VERSION}/examples/jsm/loaders/GLTFLoader?bundle`);
+            window.GLTFLoader = gltfModule.GLTFLoader || gltfModule.default || null;
+            if (window.GLTFLoader) {
+              debugLog("GLTFLoader loaded successfully");
+              if (suppressedDuplicateWarning) {
+                debugLog("Suppressed duplicate Three.js warning emitted during GLTFLoader import");
+              }
+            } else {
+              console.warn("GLTFLoader module loaded but no loader was exported");
+            }
+          } finally {
+            console.warn = originalWarn;
+          }
+        } catch (error) {
+          console.warn("Failed to load GLTFLoader:", error);
+        }
+      }
+
+      // Load MapLibre Three Plugin using UMD bundle that exposes global MTP namespace
+      if (window.THREE && !window.MaplibreThreePlugin) {
+        if (!document.querySelector('script[data-source="maplibre-three-plugin"]')) {
+          await new Promise((resolve, reject) => {
+            const pluginScript = document.createElement('script');
+            pluginScript.src = 'https://cdn.jsdelivr.net/npm/@dvt3d/maplibre-three-plugin@latest/dist/mtp.min.js';
+            pluginScript.async = true;
+            pluginScript.dataset.source = 'maplibre-three-plugin';
+            pluginScript.onload = resolve;
+            pluginScript.onerror = reject;
+            document.head.appendChild(pluginScript);
+          }).catch((error) => {
+            console.warn("Failed to load MapLibre Three Plugin:", error);
+          });
+        }
+
+        if (window.MTP && window.MTP.MapScene) {
+          window.MaplibreThreePlugin = window.MTP;
+          debugLog("MapLibre Three Plugin registered successfully");
+        } else if (!window.MaplibreThreePlugin) {
+          console.warn("MapLibre Three Plugin script loaded but MapScene not available");
+        }
       }
 
       // Load loaders.gl LASLoader using ESM CDN
@@ -3461,6 +3743,38 @@ function render({ model, el }) {
                 control.__anymapStartCollapsed = startCollapsed;
                 break;
               }
+              case 'geogrid': {
+                const GeoGridClass = resolveGeoGridClass();
+                if (!GeoGridClass) {
+                  console.warn('GeoGrid plugin not available during restore');
+                  return;
+                }
+                // Remove position from options as GeoGrid doesn't use it
+                const { position: _, gridStyle, labelStyle, ...otherConfig } = controlOptions || {};
+
+                // Map MapLibre paint properties to GeoGrid style properties
+                const geogridOptions = {
+                  map,
+                  ...otherConfig,
+                  ...(gridStyle && { gridStyle: mapToGeoGridStyle(gridStyle) }),
+                  ...(labelStyle && { labelStyle: mapToGeoGridStyle(labelStyle) })
+                };
+
+                try {
+                  const geogridInstance = new GeoGridClass(geogridOptions);
+
+                  // Explicitly call add() to render the grid on the map
+                  if (typeof geogridInstance.add === 'function') {
+                    geogridInstance.add();
+                  }
+
+                  el._geogridInstance = geogridInstance;
+                  el._controls.set(controlKey, { type: 'geogrid', instance: geogridInstance });
+                } catch (error) {
+                  console.error('Failed to restore GeoGrid instance:', error);
+                }
+                return;
+              }
               case 'widget_panel':
                 control = new WidgetPanelControl(controlOptions || {}, map, model);
                 break;
@@ -4215,6 +4529,38 @@ function render({ model, el }) {
                 control.__anymapStartCollapsed = startCollapsed;
                 break;
               }
+              case 'geogrid': {
+                const GeoGridClass = resolveGeoGridClass();
+                if (!GeoGridClass) {
+                  console.warn('GeoGrid plugin not available');
+                  return;
+                }
+                // Remove position from options as GeoGrid doesn't use it
+                const { position: _, gridStyle, labelStyle, ...otherConfig } = controlOptions || {};
+
+                // Map MapLibre paint properties to GeoGrid style properties
+                const geogridOptions = {
+                  map,
+                  ...otherConfig,
+                  ...(gridStyle && { gridStyle: mapToGeoGridStyle(gridStyle) }),
+                  ...(labelStyle && { labelStyle: mapToGeoGridStyle(labelStyle) })
+                };
+
+                try {
+                  const geogridInstance = new GeoGridClass(geogridOptions);
+
+                  // Explicitly call add() to render the grid on the map
+                  if (typeof geogridInstance.add === 'function') {
+                    geogridInstance.add();
+                  }
+
+                  el._geogridInstance = geogridInstance;
+                  el._controls.set(controlKey, { type: 'geogrid', instance: geogridInstance });
+                } catch (error) {
+                  console.error('Failed to create GeoGrid instance:', error);
+                }
+                return;
+              }
               case 'widget_panel':
                 control = new WidgetPanelControl(controlOptions || {}, map, model);
                 break;
@@ -4275,6 +4621,7 @@ function render({ model, el }) {
                   return;
                 }
                 break;
+
               case 'measures':
                 if (window.MeasuresControl) {
                   try {
@@ -4290,6 +4637,149 @@ function render({ model, el }) {
                   return;
                 }
                 break;
+
+              case 'maplibre_geocoder': {
+                if (!window.MaplibreGeocoder) {
+                  console.warn('MapLibre GL Geocoder library not available. Please include the library.');
+                  return;
+                }
+
+                try {
+                  const geocoderConfig = { ...controlOptions };
+                  const position = geocoderConfig.position || 'top-left';
+
+                  // Remove position from config as it's handled separately
+                  delete geocoderConfig.position;
+
+                  // Create geocoding API configuration
+                  const apiKey = geocoderConfig.apiKey;
+                  const maplibreApi = geocoderConfig.maplibreApi || 'maptiler';
+                  const language = geocoderConfig.language;
+                  const proximity = geocoderConfig.proximity;
+                  const bbox = geocoderConfig.bbox;
+                  const country = geocoderConfig.country;
+                  const types = geocoderConfig.types;
+                  const limit = geocoderConfig.limit || 5;
+
+                  // Build the geocoding API configuration
+                  let geocoderApi;
+
+                  if (maplibreApi === 'maptiler') {
+                    // Maptiler geocoding API
+                    geocoderApi = {
+                      forwardGeocode: async (config) => {
+                        const features = [];
+                        try {
+                          let url = `https://api.maptiler.com/geocoding/${encodeURIComponent(config.query)}.json?key=${apiKey}&limit=${limit}`;
+
+                          if (language) url += `&language=${language}`;
+                          if (proximity) url += `&proximity=${proximity.join(',')}`;
+                          if (bbox) url += `&bbox=${bbox.join(',')}`;
+                          if (country) url += `&country=${country}`;
+                          if (types) url += `&types=${types}`;
+
+                          const response = await fetch(url);
+                          const data = await response.json();
+
+                          for (const feature of data.features || []) {
+                            features.push({
+                              type: 'Feature',
+                              geometry: feature.geometry,
+                              place_name: feature.place_name || feature.text,
+                              properties: feature.properties || {},
+                              text: feature.text,
+                              place_type: feature.place_type,
+                              center: feature.center
+                            });
+                          }
+                        } catch (e) {
+                          console.error('Maptiler geocoding error:', e);
+                        }
+                        return { features };
+                      }
+                    };
+                  } else if (maplibreApi === 'mapbox') {
+                    // Mapbox geocoding API
+                    geocoderApi = {
+                      forwardGeocode: async (config) => {
+                        const features = [];
+                        try {
+                          let url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(config.query)}.json?access_token=${apiKey}&limit=${limit}`;
+
+                          if (language) url += `&language=${language}`;
+                          if (proximity) url += `&proximity=${proximity.join(',')}`;
+                          if (bbox) url += `&bbox=${bbox.join(',')}`;
+                          if (country) url += `&country=${country}`;
+                          if (types) url += `&types=${types}`;
+
+                          const response = await fetch(url);
+                          const data = await response.json();
+
+                          for (const feature of data.features || []) {
+                            features.push({
+                              type: 'Feature',
+                              geometry: feature.geometry,
+                              place_name: feature.place_name,
+                              properties: feature.properties || {},
+                              text: feature.text,
+                              place_type: feature.place_type,
+                              center: feature.center
+                            });
+                          }
+                        } catch (e) {
+                          console.error('Mapbox geocoding error:', e);
+                        }
+                        return { features };
+                      }
+                    };
+                  } else {
+                    console.error(`Unsupported geocoding API: ${maplibreApi}`);
+                    return;
+                  }
+
+                  // Clean up config before passing to MaplibreGeocoder
+                  delete geocoderConfig.apiKey;
+                  delete geocoderConfig.maplibreApi;
+                  delete geocoderConfig.language;
+                  delete geocoderConfig.proximity;
+                  delete geocoderConfig.bbox;
+                  delete geocoderConfig.country;
+                  delete geocoderConfig.types;
+                  delete geocoderConfig.limit;
+
+                  // Set required maplibregl reference
+                  geocoderConfig.maplibregl = maplibregl;
+
+                  // Create the geocoder control
+                  control = new window.MaplibreGeocoder(geocoderApi, geocoderConfig);
+
+                  // Set up event handlers
+                  control.on('result', (e) => {
+                    if (geocoderConfig.enableEventLogging) {
+                      console.log('Geocoder result:', e.result);
+                    }
+                    sendEvent('geocoder.result', { result: e.result });
+                  });
+
+                  control.on('results', (e) => {
+                    if (geocoderConfig.enableEventLogging) {
+                      console.log('Geocoder results:', e.results);
+                    }
+                    sendEvent('geocoder.results', { results: e.results });
+                  });
+
+                  control.on('error', (e) => {
+                    console.error('Geocoder error:', e.error);
+                    sendEvent('geocoder.error', { error: e.error });
+                  });
+
+                  console.log('MapLibre GL Geocoder control added successfully');
+                } catch (error) {
+                  console.error('Failed to initialize MapLibre GL Geocoder:', error);
+                  return;
+                }
+                break;
+              }
               case 'google_streetview':
                 if (window.MaplibreGoogleStreetView) {
                   const apiKey = controlOptions.api_key;
@@ -4545,6 +5035,17 @@ function render({ model, el }) {
               model.set('geoman_data', { type: 'FeatureCollection', features: [] });
               model.save_changes();
               el._pendingGeomanData = normalizeGeomanGeoJson(model.get('geoman_data'));
+            } else if (removeControlType === 'geogrid') {
+              if (el._geogridInstance && typeof el._geogridInstance.remove === 'function') {
+                try {
+                  el._geogridInstance.remove();
+                } catch (error) {
+                  console.warn('Failed to remove GeoGrid instance:', error);
+                }
+              }
+              el._geogridInstance = null;
+              el._controls.delete(removeControlKey);
+              console.log(`GeoGrid control ${removeControlKey} removed`);
             } else {
               // Handle regular controls
               if (el._controls.has(removeControlKey)) {
@@ -5219,6 +5720,623 @@ function render({ model, el }) {
           case 'exportGeomanData':
             // Export current Geoman features and sync to Python
             exportGeomanData();
+            break;
+
+          case 'initMapScene':
+            // Initialize MapLibre Three Plugin scene
+            if (window.MaplibreThreePlugin && window.THREE) {
+              try {
+                if (!el._mapScene) {
+                  el._mapScene = new window.MaplibreThreePlugin.MapScene(map);
+                  el._threeObjects = new Map(); // Store references to 3D objects
+                  el._threeLights = new Map(); // Store references to lights
+                  el._threeTilesets = new Map(); // Store references to 3D tilesets
+                  console.log('MapScene initialized');
+                }
+              } catch (error) {
+                console.error('Failed to initialize MapScene:', error);
+              }
+            } else {
+              console.warn('MapLibre Three Plugin or Three.js not loaded');
+            }
+            break;
+
+          case 'addThreeModel':
+            // Add a 3D GLTF model to the scene
+            if (el._mapScene && window.GLTFLoader) {
+              try {
+                const modelConfig = args[0] || {};
+                const { id, url, coordinates, scale, rotation, options } = modelConfig;
+
+                const loader = new window.GLTFLoader();
+                loader.load(
+                  url,
+                  (gltf) => {
+                    // Create RTC group for georeferencing
+                    const rtcGroup = window.MaplibreThreePlugin.Creator.createRTCGroup(coordinates);
+
+                    // Apply scale if provided
+                    if (scale) {
+                      if (Array.isArray(scale)) {
+                        gltf.scene.scale.set(scale[0], scale[1], scale[2]);
+                      } else {
+                        gltf.scene.scale.set(scale, scale, scale);
+                      }
+                    }
+
+                    // Apply rotation if provided
+                    if (rotation) {
+                      if (Array.isArray(rotation)) {
+                        gltf.scene.rotation.set(rotation[0], rotation[1], rotation[2]);
+                      }
+                    }
+
+                    rtcGroup.add(gltf.scene);
+                    el._mapScene.addObject(rtcGroup);
+
+                    // Store reference
+                    el._threeObjects.set(id, { group: rtcGroup, model: gltf.scene });
+
+                    console.log(`3D model "${id}" loaded successfully`);
+                  },
+                  (progress) => {
+                    console.log(`Loading model "${id}": ${(progress.loaded / progress.total * 100).toFixed(2)}%`);
+                  },
+                  (error) => {
+                    console.error(`Failed to load model "${id}":`, error);
+                  }
+                );
+              } catch (error) {
+                console.error('Failed to add 3D model:', error);
+              }
+            } else {
+              console.warn('MapScene not initialized or GLTFLoader not available');
+            }
+            break;
+
+          case 'addThreeLight': {
+            // Add light to the Three.js scene
+            if (el._mapScene && window.THREE) {
+              try {
+                const lightConfig = args[0] || {};
+                const {
+                  id,
+                  type = 'ambient',
+                  color = 0xffffff,
+                  intensity = 1,
+                  position,
+                  target,
+                  castShadow,
+                  shadowOptions,
+                  sunOptions,
+                } = lightConfig;
+
+                if (!el._threeLights) {
+                  el._threeLights = new Map();
+                }
+
+                const lightId =
+                  id ||
+                  (window.crypto && window.crypto.randomUUID
+                    ? `light-${window.crypto.randomUUID()}`
+                    : `light-${Date.now()}-${Math.floor(Math.random() * 1e6)}`);
+
+                let light;
+                const colorInstance = new window.THREE.Color(color);
+
+                switch (type) {
+                  case 'ambient':
+                    light = new window.THREE.AmbientLight(colorInstance, intensity);
+                    break;
+                  case 'directional': {
+                    light = new window.THREE.DirectionalLight(colorInstance, intensity);
+                    if (position && Array.isArray(position)) {
+                      light.position.set(position[0], position[1], position[2]);
+                    }
+                    if (target && Array.isArray(target)) {
+                      const targetObject = new window.THREE.Object3D();
+                      targetObject.position.set(target[0], target[1], target[2]);
+                      light.target = targetObject;
+                      el._mapScene.scene.add(targetObject);
+                    }
+                    break;
+                  }
+                  case 'sun':
+                    light = new window.MaplibreThreePlugin.Sun();
+                    break;
+                  default:
+                    console.warn(`Unknown light type: ${type}`);
+                    return;
+                }
+
+                if (!light) {
+                  console.warn('Failed to instantiate light');
+                  return;
+                }
+
+                light.userData = light.userData || {};
+                light.userData.anymapLightId = lightId;
+                light.userData.type = type;
+
+                if (castShadow !== undefined) {
+                  if (type === 'sun') {
+                    light.castShadow = Boolean(castShadow);
+                    if (light.sunLight) {
+                      light.sunLight.castShadow = Boolean(castShadow);
+                    }
+                  } else if ('castShadow' in light) {
+                    light.castShadow = Boolean(castShadow);
+                  }
+                }
+
+                if (shadowOptions && light.shadow) {
+                  const { radius, mapSize, topRight, bottomLeft, near, far } = shadowOptions;
+                  if (radius !== undefined) {
+                    light.shadow.radius = radius;
+                  }
+                  if (Array.isArray(mapSize) && mapSize.length === 2) {
+                    light.shadow.mapSize.set(mapSize[0], mapSize[1]);
+                  }
+                  if (light.shadow.camera) {
+                    if (topRight !== undefined) {
+                      light.shadow.camera.top = topRight;
+                      light.shadow.camera.right = topRight;
+                    }
+                    if (bottomLeft !== undefined) {
+                      light.shadow.camera.bottom = bottomLeft;
+                      light.shadow.camera.left = bottomLeft;
+                    }
+                    if (near !== undefined) {
+                      light.shadow.camera.near = near;
+                    }
+                    if (far !== undefined) {
+                      light.shadow.camera.far = far;
+                    }
+                    if (light.shadow.camera.updateProjectionMatrix) {
+                      light.shadow.camera.updateProjectionMatrix();
+                    }
+                  }
+                }
+
+                if (type === 'sun' && sunOptions && typeof light.setShadow === 'function') {
+                  if (sunOptions.shadow) {
+                    light.setShadow(sunOptions.shadow);
+                  }
+                  if (sunOptions.castShadow !== undefined) {
+                    light.castShadow = Boolean(sunOptions.castShadow);
+                  }
+                  if (sunOptions.currentTime !== undefined) {
+                    light.currentTime = sunOptions.currentTime;
+                  }
+                }
+
+                el._mapScene.addLight(light);
+                el._threeLights.set(lightId, { id: lightId, type, light });
+                el._mapScene.map.triggerRepaint();
+                console.log(`Added ${type} light "${lightId}" to scene`);
+              } catch (error) {
+                console.error('Failed to add light:', error);
+              }
+            } else {
+              console.warn('MapScene not initialized or Three.js not loaded');
+            }
+            break;
+          }
+
+          case 'updateThreeLight': {
+            if (el._mapScene && el._threeLights && window.THREE) {
+              try {
+                const updateConfig = args[0] || {};
+                const {
+                  id,
+                  color,
+                  intensity,
+                  position,
+                  target,
+                  castShadow,
+                  shadowOptions,
+                  sunOptions,
+                } = updateConfig;
+
+                if (!id || !el._threeLights.has(id)) {
+                  console.warn(`Three.js light "${id}" not found for update`);
+                  break;
+                }
+
+                const entry = el._threeLights.get(id);
+                const storedLight = entry.light;
+                const actualLight = storedLight.delegate || storedLight;
+
+                if (color !== undefined && actualLight.color) {
+                  actualLight.color = new window.THREE.Color(color);
+                }
+                if (intensity !== undefined && actualLight.intensity !== undefined) {
+                  actualLight.intensity = intensity;
+                }
+                if (position && Array.isArray(position) && actualLight.position) {
+                  actualLight.position.set(position[0], position[1], position[2]);
+                }
+                if (target && Array.isArray(target) && actualLight.target) {
+                  actualLight.target.position.set(target[0], target[1], target[2]);
+                  el._mapScene.scene.add(actualLight.target);
+                }
+                if (castShadow !== undefined && 'castShadow' in actualLight) {
+                  actualLight.castShadow = Boolean(castShadow);
+                }
+                if (shadowOptions && actualLight.shadow) {
+                  const { radius, mapSize, topRight, bottomLeft, near, far } = shadowOptions;
+                  if (radius !== undefined) {
+                    actualLight.shadow.radius = radius;
+                  }
+                  if (Array.isArray(mapSize) && mapSize.length === 2) {
+                    actualLight.shadow.mapSize.set(mapSize[0], mapSize[1]);
+                  }
+                  if (actualLight.shadow.camera) {
+                    if (topRight !== undefined) {
+                      actualLight.shadow.camera.top = topRight;
+                      actualLight.shadow.camera.right = topRight;
+                    }
+                    if (bottomLeft !== undefined) {
+                      actualLight.shadow.camera.bottom = bottomLeft;
+                      actualLight.shadow.camera.left = bottomLeft;
+                    }
+                    if (near !== undefined) {
+                      actualLight.shadow.camera.near = near;
+                    }
+                    if (far !== undefined) {
+                      actualLight.shadow.camera.far = far;
+                    }
+                    if (actualLight.shadow.camera.updateProjectionMatrix) {
+                      actualLight.shadow.camera.updateProjectionMatrix();
+                    }
+                  }
+                }
+
+                if (entry.type === 'sun' && storedLight) {
+                  if (sunOptions && typeof storedLight.setShadow === 'function') {
+                    if (sunOptions.shadow) {
+                      storedLight.setShadow(sunOptions.shadow);
+                    }
+                    if (sunOptions.castShadow !== undefined) {
+                      storedLight.castShadow = Boolean(sunOptions.castShadow);
+                    }
+                    if (sunOptions.currentTime !== undefined) {
+                      storedLight.currentTime = sunOptions.currentTime;
+                    }
+                  }
+                }
+
+                el._mapScene.map.triggerRepaint();
+                console.log(`Updated light "${id}"`);
+              } catch (error) {
+                console.error('Failed to update light:', error);
+              }
+            }
+            break;
+          }
+
+          case 'removeThreeLight': {
+            if (el._mapScene && el._threeLights) {
+              try {
+                const lightId = args[0];
+                if (!lightId || !el._threeLights.has(lightId)) {
+                  console.warn(`Three.js light "${lightId}" not found for removal`);
+                  break;
+                }
+                const entry = el._threeLights.get(lightId);
+                const storedLight = entry.light;
+                const actualLight = storedLight.delegate || storedLight;
+                el._mapScene.removeLight(storedLight);
+                if (actualLight && actualLight.target && actualLight.target.parent) {
+                  actualLight.target.parent.remove(actualLight.target);
+                }
+                el._threeLights.delete(lightId);
+                el._mapScene.map.triggerRepaint();
+                console.log(`Removed light "${lightId}"`);
+              } catch (error) {
+                console.error('Failed to remove light:', error);
+              }
+            }
+            break;
+          }
+
+          case 'addThreeTileset': {
+            if (!el._mapScene) {
+              console.warn('MapScene not initialized - call init_three_scene() before adding tilesets');
+              break;
+            }
+
+            const config = args[0] || {};
+            const {
+              id,
+              assetId = null,
+              url = null,
+              ionToken = null,
+              autoRefreshToken = true,
+              autoDisableRendererCulling = true,
+              fetchOptions = null,
+              lruCache = null,
+              dracoDecoderPath = `https://cdn.jsdelivr.net/npm/three@${THREE_VERSION}/examples/jsm/libs/draco/`,
+              ktx2TranscoderPath = `https://cdn.jsdelivr.net/npm/three@${THREE_VERSION}/examples/jsm/libs/basis/`,
+              useDebug = false,
+              useFade = false,
+              useUnload = false,
+              useUpdate = false,
+              heightOffset = 0,
+              flyTo = true,
+            } = config;
+
+            const source = assetId ?? url;
+            if (!source) {
+              console.warn('addThreeTileset requires either assetId or url');
+              break;
+            }
+
+            if (!el._threeTilesets) {
+              el._threeTilesets = new Map();
+            }
+
+            const tilesetId = id || createUniqueId('tileset');
+            if (el._threeTilesets.has(tilesetId)) {
+              console.warn(`Tileset "${tilesetId}" already exists`);
+              break;
+            }
+
+            (async () => {
+              try {
+                const support = await ensureThreeTilesSupport(el._mapScene);
+                const renderer = new support.TilesRenderer(source);
+                renderer.autoDisableRendererCulling = autoDisableRendererCulling;
+
+                if (fetchOptions && typeof fetchOptions === 'object') {
+                  Object.assign(renderer.fetchOptions, fetchOptions);
+                }
+
+                if (lruCache && typeof lruCache === 'object') {
+                  Object.assign(renderer.lruCache, lruCache);
+                }
+
+                const dracoLoader = new support.DRACOLoader();
+                dracoLoader.setDecoderPath(dracoDecoderPath);
+
+                const ktxLoader = new support.KTX2Loader();
+                ktxLoader.setTranscoderPath(ktx2TranscoderPath);
+                ktxLoader.detectSupport(el._mapScene.renderer);
+
+                renderer.manager.addHandler(/\.ktx2$/i, ktxLoader);
+
+                renderer.registerPlugin(
+                  new support.GLTFExtensionsPlugin({
+                    dracoLoader,
+                    ktxLoader,
+                  }),
+                );
+
+                if (ionToken) {
+                  renderer.registerPlugin(
+                    new support.CesiumIonAuthPlugin({
+                      apiToken: ionToken,
+                      assetId: typeof assetId === 'number' || typeof assetId === 'string' ? assetId : null,
+                      autoRefreshToken,
+                    }),
+                  );
+                }
+
+                if (useDebug) {
+                  renderer.registerPlugin(new support.DebugTilesPlugin());
+                }
+                if (useFade) {
+                  renderer.registerPlugin(new support.TilesFadePlugin());
+                }
+                if (useUnload) {
+                  renderer.registerPlugin(new support.UnloadTilesPlugin());
+                }
+                if (useUpdate) {
+                  renderer.registerPlugin(new support.UpdateOnChangePlugin());
+                }
+
+                const group = new window.THREE.Group();
+                group.name = `tileset-${tilesetId}`;
+
+                const entry = {
+                  id: tilesetId,
+                  renderer,
+                  group,
+                  positionDegrees: null,
+                  heightOffset,
+                  isLoaded: false,
+                  onPreRender: null,
+                  onPostRender: null,
+                  onInitialLoad: null,
+                };
+
+                entry.onInitialLoad = () => {
+                  if (entry.isLoaded) {
+                    return;
+                  }
+
+                  const geoResult = georeferenceTileset(renderer, group);
+                  if (!geoResult) {
+                    console.warn('Unable to georeference tileset');
+                    return;
+                  }
+
+                  entry.isLoaded = true;
+                  entry.positionDegrees = [geoResult.lng, geoResult.lat, geoResult.height];
+                  entry.size = geoResult.size;
+
+                  el._mapScene.addObject(group);
+
+                  if (heightOffset) {
+                    applyTilesetHeight(entry, heightOffset);
+                  }
+
+                  if (flyTo) {
+                    try {
+                      el._mapScene.flyTo(group);
+                    } catch (flyError) {
+                      console.warn('Failed to fly to tileset:', flyError);
+                    }
+                  }
+
+                  el._mapScene.map.triggerRepaint();
+                  console.log(`3D tileset "${tilesetId}" loaded`);
+
+                  renderer.removeEventListener('load-tile-set', entry.onInitialLoad);
+                };
+
+                renderer.addEventListener('load-tile-set', entry.onInitialLoad);
+
+                entry.onPreRender = (event) => {
+                  try {
+                    renderer.setCamera(event.frameState.camera);
+                    renderer.setResolutionFromRenderer(
+                      event.frameState.camera,
+                      event.frameState.renderer,
+                    );
+                    renderer.update();
+                  } catch (updateError) {
+                    console.error('Failed to update tileset during preRender:', updateError);
+                  }
+                };
+
+                entry.onPostRender = () => {
+                  map.triggerRepaint();
+                };
+
+                el._mapScene.on('preRender', entry.onPreRender);
+                el._mapScene.on('postRender', entry.onPostRender);
+
+                el._threeTilesets.set(tilesetId, entry);
+                console.log(`Started loading 3D tileset "${tilesetId}"`);
+              } catch (error) {
+                console.error('Failed to add 3D tileset:', error);
+              }
+            })();
+
+            break;
+          }
+
+          case 'removeThreeTileset': {
+            if (el._threeTilesets && el._mapScene) {
+              try {
+                const tilesetId = args[0];
+                if (!tilesetId || !el._threeTilesets.has(tilesetId)) {
+                  console.warn(`Tileset "${tilesetId}" not found`);
+                  break;
+                }
+
+                const entry = el._threeTilesets.get(tilesetId);
+                if (entry.onInitialLoad) {
+                  entry.renderer.removeEventListener('load-tile-set', entry.onInitialLoad);
+                }
+                if (entry.onPreRender) {
+                  el._mapScene.off('preRender', entry.onPreRender);
+                }
+                if (entry.onPostRender) {
+                  el._mapScene.off('postRender', entry.onPostRender);
+                }
+                if (entry.group && entry.group.parent) {
+                  entry.group.parent.remove(entry.group);
+                }
+                if (entry.renderer && typeof entry.renderer.dispose === 'function') {
+                  entry.renderer.dispose();
+                }
+
+                el._threeTilesets.delete(tilesetId);
+                el._mapScene.map.triggerRepaint();
+                console.log(`Removed 3D tileset "${tilesetId}"`);
+              } catch (error) {
+                console.error('Failed to remove 3D tileset:', error);
+              }
+            }
+            break;
+          }
+
+          case 'setThreeTilesetHeight': {
+            if (el._threeTilesets) {
+              try {
+                const { id: tilesetId, height = 0 } = args[0] || {};
+                if (!tilesetId || !el._threeTilesets.has(tilesetId)) {
+                  console.warn(`Tileset "${tilesetId}" not found for height update`);
+                  break;
+                }
+                const entry = el._threeTilesets.get(tilesetId);
+                applyTilesetHeight(entry, height);
+                el._mapScene.map.triggerRepaint();
+              } catch (error) {
+                console.error('Failed to update tileset height:', error);
+              }
+            }
+            break;
+          }
+
+          case 'flyToThreeTileset': {
+            if (el._mapScene && el._threeTilesets) {
+              try {
+                const tilesetId = args[0];
+                if (!tilesetId || !el._threeTilesets.has(tilesetId)) {
+                  console.warn(`Tileset "${tilesetId}" not found for flyTo`);
+                  break;
+                }
+                const entry = el._threeTilesets.get(tilesetId);
+                el._mapScene.flyTo(entry.group);
+              } catch (error) {
+                console.error('Failed to fly to tileset:', error);
+              }
+            }
+            break;
+          }
+
+          case 'removeThreeModel':
+            // Remove a 3D model from the scene
+            if (el._mapScene && el._threeObjects) {
+              try {
+                const modelId = args[0];
+                const obj = el._threeObjects.get(modelId);
+                if (obj) {
+                  el._mapScene.removeObject(obj.group);
+                  el._threeObjects.delete(modelId);
+                  console.log(`Removed 3D model "${modelId}"`);
+                } else {
+                  console.warn(`3D model "${modelId}" not found`);
+                }
+              } catch (error) {
+                console.error('Failed to remove 3D model:', error);
+              }
+            }
+            break;
+
+          case 'updateThreeModel':
+            // Update properties of a 3D model
+            if (el._threeObjects) {
+              try {
+                const updateConfig = args[0] || {};
+                const { id, position, scale, rotation } = updateConfig;
+
+                const obj = el._threeObjects.get(id);
+                if (obj) {
+                  if (position && Array.isArray(position)) {
+                    obj.group.position.set(position[0], position[1], position[2]);
+                  }
+                  if (scale) {
+                    if (Array.isArray(scale)) {
+                      obj.model.scale.set(scale[0], scale[1], scale[2]);
+                    } else {
+                      obj.model.scale.set(scale, scale, scale);
+                    }
+                  }
+                  if (rotation && Array.isArray(rotation)) {
+                    obj.model.rotation.set(rotation[0], rotation[1], rotation[2]);
+                  }
+                  console.log(`Updated 3D model "${id}"`);
+                } else {
+                  console.warn(`3D model "${id}" not found`);
+                }
+              } catch (error) {
+                console.error('Failed to update 3D model:', error);
+              }
+            }
             break;
 
           default:

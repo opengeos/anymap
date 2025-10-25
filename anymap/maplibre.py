@@ -1408,6 +1408,127 @@ class MapLibreMap(MapWidget):
 
         self.call_js_method("addControl", "geocoder", control_options)
 
+    def add_maplibre_geocoder(
+        self,
+        position: str = "top-left",
+        api_key: Optional[str] = None,
+        maplibre_api: str = "maptiler",
+        language: Optional[str] = None,
+        placeholder: str = "Search",
+        proximity: Optional[List[float]] = None,
+        bbox: Optional[List[float]] = None,
+        country: Optional[str] = None,
+        types: Optional[str] = None,
+        limit: int = 5,
+        marker: bool = True,
+        show_result_markers: bool = True,
+        collapsed: bool = False,
+        clear_on_blur: bool = False,
+        clear_and_blur_on_esc: bool = False,
+        enable_event_logging: bool = False,
+        min_length: int = 2,
+        options: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        """Add MapLibre GL Geocoder control to the map.
+
+        The MapLibre GL Geocoder is a geocoder control for MapLibre GL that supports
+        various geocoding APIs including Maptiler, Mapbox, and others. It provides a
+        search interface for finding locations and can display markers for search results.
+
+        See: https://github.com/maplibre/maplibre-gl-geocoder
+
+        Args:
+            position: Position on map ('top-left', 'top-right', 'bottom-left', 'bottom-right')
+            api_key: API key for the geocoding service (required for most services)
+            maplibre_api: Geocoding API to use ('maptiler', 'mapbox', or custom)
+            language: Language code for results (e.g., 'en', 'es', 'fr')
+            placeholder: Placeholder text in the search input
+            proximity: [lng, lat] to bias results towards this location
+            bbox: [minLng, minLat, maxLng, maxLat] to limit results to this bounding box
+            country: Country code(s) to limit results (e.g., 'us' or 'us,ca')
+            types: Comma-separated types to filter results (e.g., 'country,region,place')
+            limit: Maximum number of results to return
+            marker: Whether to add a marker at the geocoded location
+            show_result_markers: Whether to show markers for all search results
+            collapsed: Whether the control should start collapsed
+            clear_on_blur: Clear the input when it loses focus
+            clear_and_blur_on_esc: Clear input and remove focus when ESC is pressed
+            enable_event_logging: Enable console logging of geocoder events
+            min_length: Minimum number of characters to trigger search
+            options: Additional options passed to the MaplibreGeocoder constructor
+
+        Example:
+            ```python
+            m = MapLibreMap(center=[-87.61694, 41.86625], zoom=10)
+            m.add_maplibre_geocoder(
+                position="top-left",
+                api_key="your_api_key",
+                maplibre_api="maptiler",
+                language="en",
+                country="us"
+            )
+            ```
+        """
+        geocoder_config: Dict[str, Any] = options or {}
+
+        # Build configuration
+        geocoder_config.update(
+            {
+                "position": position,
+                "maplibregl": True,  # Signal to use maplibregl
+                "placeholder": placeholder,
+                "limit": limit,
+                "marker": marker,
+                "showResultMarkers": show_result_markers,
+                "collapsed": collapsed,
+                "clearOnBlur": clear_on_blur,
+                "clearAndBlurOnEsc": clear_and_blur_on_esc,
+                "enableEventLogging": enable_event_logging,
+                "minLength": min_length,
+            }
+        )
+
+        if api_key:
+            geocoder_config["apiKey"] = api_key
+
+        if maplibre_api:
+            geocoder_config["maplibreApi"] = maplibre_api
+
+        if language:
+            geocoder_config["language"] = language
+
+        if proximity:
+            if len(proximity) != 2:
+                raise ValueError(
+                    "proximity must be a list of two floats: [longitude, latitude]"
+                )
+            geocoder_config["proximity"] = proximity
+
+        if bbox:
+            if len(bbox) != 4:
+                raise ValueError(
+                    "bbox must be a list of four floats: [minLng, minLat, maxLng, maxLat]"
+                )
+            geocoder_config["bbox"] = bbox
+
+        if country:
+            geocoder_config["country"] = country
+
+        if types:
+            geocoder_config["types"] = types
+
+        # Store control state
+        control_key = f"maplibre_geocoder_{position}"
+        current_controls = dict(self._controls)
+        current_controls[control_key] = {
+            "type": "maplibre_geocoder",
+            "position": position,
+            "options": geocoder_config,
+        }
+        self._controls = current_controls
+
+        self.call_js_method("addControl", "maplibre_geocoder", geocoder_config)
+
     def add_export_control(
         self,
         position: str = "top-right",
@@ -1503,6 +1624,90 @@ class MapLibreMap(MapWidget):
         self._controls = current_controls
 
         self.call_js_method("addControl", "export", control_options)
+
+    def add_geogrid_control(
+        self,
+        position: str = "top-left",
+        before_layer_id: Optional[str] = None,
+        zoom_level_range: Optional[Sequence[Union[int, float]]] = None,
+        grid_style: Optional[Dict[str, Any]] = None,
+        label_style: Optional[Dict[str, Any]] = None,
+        options: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        """Add a geographic grid (graticule) with labeled coordinates to the map.
+
+        This control uses the `geogrid-maplibre-gl` plugin to display latitude/longitude
+        grid lines with customizable styling and formatting. The grid dynamically adjusts
+        based on zoom level and supports globe projection (MapLibre GL 5.x).
+
+        Args:
+            position: Placement of the control on the map container (not applicable
+                for this plugin, but kept for API consistency).
+            before_layer_id: ID of the layer to insert the grid beneath. If None,
+                the grid is added as the top layer.
+            zoom_level_range: Tuple of [min_zoom, max_zoom] defining visibility range.
+                If None, the grid is visible at all zoom levels.
+            grid_style: Styling options for grid lines. Supports both MapLibre paint
+                properties (``line-color``, ``line-width``, ``line-dasharray``,
+                ``line-opacity``) and GeoGrid native properties (``color``, ``width``,
+                ``dasharray``, ``opacity``). MapLibre properties are automatically
+                converted to GeoGrid format.
+            label_style: Styling options for coordinate labels. Supports CSS properties
+                like ``color``, ``fontSize``, ``textShadow``, etc.
+            options: Additional configuration options passed directly to the GeoGrid
+                constructor. Can include custom ``gridDensity`` or ``formatLabels`` functions.
+
+        Example:
+            >>> m = MapLibreMap(center=[0, 20], zoom=2)
+            >>> # Using MapLibre paint properties
+            >>> m.add_geogrid_control(grid_style={'line-color': '#ff0000', 'line-width': 2})
+            >>> # Using GeoGrid native properties
+            >>> m.add_geogrid_control(grid_style={'color': 'red', 'width': 2})
+        """
+
+        control_options: Dict[str, Any] = dict(options or {})
+        control_options["position"] = position
+
+        if before_layer_id is not None:
+            control_options["beforeLayerId"] = before_layer_id
+
+        if zoom_level_range is not None:
+            zoom_range = list(zoom_level_range)
+            if len(zoom_range) != 2:
+                raise ValueError(
+                    "zoom_level_range must contain exactly two values [min_zoom, max_zoom]"
+                )
+            control_options["zoomLevelRange"] = [
+                float(zoom_range[0]),
+                float(zoom_range[1]),
+            ]
+
+        if grid_style is not None:
+            control_options["gridStyle"] = dict(grid_style)
+
+        if label_style is not None:
+            control_options["labelStyle"] = dict(label_style)
+
+        control_key = f"geogrid_{position}"
+        current_controls = dict(self._controls)
+        current_controls[control_key] = {
+            "type": "geogrid",
+            "position": position,
+            "options": control_options,
+        }
+        self._controls = current_controls
+
+        self.call_js_method("addControl", "geogrid", control_options)
+
+    def remove_geogrid_control(self, position: str = "top-left") -> None:
+        """Remove the GeoGrid control from the map."""
+
+        control_key = f"geogrid_{position}"
+        current_controls = dict(self._controls)
+        if control_key in current_controls:
+            current_controls.pop(control_key)
+            self._controls = current_controls
+        self.call_js_method("removeControl", "geogrid", position)
 
     def add_geoman_control(
         self,
@@ -2797,6 +3002,265 @@ class MapLibreMap(MapWidget):
 
         # Send to JavaScript
         self.call_js_method("clearDeckGLLayers")
+
+    # Three.js / MapLibre Three Plugin methods
+
+    def init_three_scene(self) -> None:
+        """Initialize the MapLibre Three.js scene.
+
+        This must be called before adding any 3D models or lights.
+        It initializes the MapScene object that connects MapLibre GL JS with Three.js.
+
+        Example:
+            >>> m = MapLibreMap(center=[148.9819, -35.3981], zoom=18, pitch=60)
+            >>> m.init_three_scene()
+            >>> m.add_three_light(light_type='ambient')
+        """
+        self.call_js_method("initMapScene")
+
+    def add_three_model(
+        self,
+        model_id: str,
+        url: str,
+        coordinates: List[float],
+        scale: Union[float, List[float]] = 1.0,
+        rotation: Optional[List[float]] = None,
+        **kwargs: Any,
+    ) -> None:
+        """Add a 3D GLTF model to the map using Three.js.
+
+        Args:
+            model_id: Unique identifier for the 3D model.
+            url: URL to the GLTF/GLB model file.
+            coordinates: Geographic coordinates [longitude, latitude] where the model should be placed.
+            scale: Scale factor for the model. Can be a single number or [x, y, z] list.
+            rotation: Optional rotation in radians as [x, y, z].
+            **kwargs: Additional options for the model.
+
+        Example:
+            >>> m = MapLibreMap(center=[148.9819, -35.3981], zoom=18, pitch=60)
+            >>> m.init_three_scene()
+            >>> m.add_three_light(type='ambient')
+            >>> m.add_three_model(
+            ...     model_id='my_model',
+            ...     url='https://example.com/model.gltf',
+            ...     coordinates=[148.9819, -35.3981],
+            ...     scale=100,
+            ...     rotation=[0, 0, 0]
+            ... )
+        """
+        model_config = {
+            "id": model_id,
+            "url": url,
+            "coordinates": coordinates,
+            "scale": scale,
+            "options": kwargs,
+        }
+
+        if rotation is not None:
+            model_config["rotation"] = rotation
+
+        self.call_js_method("addThreeModel", model_config)
+
+    def add_three_light(
+        self,
+        light_type: str = "ambient",
+        color: int = 0xFFFFFF,
+        intensity: float = 1.0,
+        position: Optional[List[float]] = None,
+        light_id: Optional[str] = None,
+        target: Optional[List[float]] = None,
+        cast_shadow: Optional[bool] = None,
+        shadow_options: Optional[Dict[str, Any]] = None,
+        sun_options: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        """Add a light to the Three.js scene.
+
+        Args:
+            light_type: Type of light ('ambient', 'directional', or 'sun').
+            color: Hexadecimal color value for the light (e.g., 0xffffff for white).
+            intensity: Light intensity value.
+            position: Optional position for directional lights as [x, y, z].
+            light_id: Optional identifier for the light so it can be updated or removed later.
+            target: Optional target position for directional lights as [x, y, z].
+            cast_shadow: Whether the light should cast shadows (if supported by the light type).
+            shadow_options: Additional shadow configuration such as map size or clipping planes.
+            sun_options: Additional options when using the `sun` light type (e.g., ``{"current_time": "2024-01-01T12:00:00Z"}``).
+
+        Example:
+            >>> m = MapLibreMap(center=[148.9819, -35.3981], zoom=18, pitch=60)
+            >>> m.init_three_scene()
+            >>> m.add_three_light(light_type='ambient', intensity=0.5)
+            >>> m.add_three_light(light_type='directional', position=[1, 1, 1])
+            >>> m.add_three_light(light_type='sun')
+        """
+        light_config: Dict[str, Any] = {
+            "type": light_type,
+            "color": color,
+            "intensity": intensity,
+        }
+
+        if position is not None:
+            light_config["position"] = position
+        if light_id is not None:
+            light_config["id"] = light_id
+        if target is not None:
+            light_config["target"] = target
+        if cast_shadow is not None:
+            light_config["castShadow"] = cast_shadow
+        if shadow_options:
+            light_config["shadowOptions"] = shadow_options
+        if sun_options:
+            light_config["sunOptions"] = sun_options
+
+        self.call_js_method("addThreeLight", light_config)
+
+    def update_three_light(
+        self,
+        light_id: str,
+        *,
+        color: Optional[int] = None,
+        intensity: Optional[float] = None,
+        position: Optional[List[float]] = None,
+        target: Optional[List[float]] = None,
+        cast_shadow: Optional[bool] = None,
+        shadow_options: Optional[Dict[str, Any]] = None,
+        sun_options: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        """Update properties of an existing Three.js light."""
+
+        update_config: Dict[str, Any] = {"id": light_id}
+
+        if color is not None:
+            update_config["color"] = color
+        if intensity is not None:
+            update_config["intensity"] = intensity
+        if position is not None:
+            update_config["position"] = position
+        if target is not None:
+            update_config["target"] = target
+        if cast_shadow is not None:
+            update_config["castShadow"] = cast_shadow
+        if shadow_options:
+            update_config["shadowOptions"] = shadow_options
+        if sun_options:
+            update_config["sunOptions"] = sun_options
+
+        self.call_js_method("updateThreeLight", update_config)
+
+    def remove_three_light(self, light_id: str) -> None:
+        """Remove a Three.js light from the scene."""
+
+        self.call_js_method("removeThreeLight", light_id)
+
+    def remove_three_model(self, model_id: str) -> None:
+        """Remove a 3D model from the scene.
+
+        Args:
+            model_id: Unique identifier of the model to remove.
+
+        Example:
+            >>> m.remove_three_model('my_model')
+        """
+        self.call_js_method("removeThreeModel", model_id)
+
+    def update_three_model(
+        self,
+        model_id: str,
+        position: Optional[List[float]] = None,
+        scale: Optional[Union[float, List[float]]] = None,
+        rotation: Optional[List[float]] = None,
+    ) -> None:
+        """Update properties of an existing 3D model.
+
+        Args:
+            model_id: Unique identifier of the model to update.
+            position: Optional new position as [x, y, z].
+            scale: Optional new scale. Can be a single number or [x, y, z] list.
+            rotation: Optional new rotation in radians as [x, y, z].
+
+        Example:
+            >>> m.update_three_model('my_model', scale=200, rotation=[0, 1.57, 0])
+        """
+        update_config = {"id": model_id}
+
+        if position is not None:
+            update_config["position"] = position
+        if scale is not None:
+            update_config["scale"] = scale
+        if rotation is not None:
+            update_config["rotation"] = rotation
+
+        self.call_js_method("updateThreeModel", update_config)
+
+    # 3D Tiles helpers
+
+    def add_three_tileset(
+        self,
+        tileset_id: str,
+        *,
+        asset_id: Optional[Union[int, str]] = None,
+        url: Optional[str] = None,
+        ion_token: Optional[str] = None,
+        auto_refresh_token: bool = True,
+        auto_disable_renderer_culling: bool = True,
+        fetch_options: Optional[Dict[str, Any]] = None,
+        lru_cache: Optional[Dict[str, Any]] = None,
+        draco_decoder_path: Optional[str] = None,
+        ktx2_transcoder_path: Optional[str] = None,
+        use_debug: bool = False,
+        use_fade: bool = False,
+        use_unload: bool = False,
+        use_update: bool = False,
+        height_offset: float = 0.0,
+        fly_to: bool = True,
+    ) -> None:
+        """Add a 3D Tiles dataset to the scene using TilesRenderer."""
+
+        if asset_id is None and url is None:
+            raise ValueError(
+                "Either asset_id or url must be provided for add_three_tileset"
+            )
+
+        config: Dict[str, Any] = {
+            "id": tileset_id,
+            "assetId": asset_id,
+            "url": url,
+            "ionToken": ion_token,
+            "autoRefreshToken": auto_refresh_token,
+            "autoDisableRendererCulling": auto_disable_renderer_culling,
+            "fetchOptions": fetch_options,
+            "lruCache": lru_cache,
+            "dracoDecoderPath": draco_decoder_path,
+            "ktx2TranscoderPath": ktx2_transcoder_path,
+            "useDebug": use_debug,
+            "useFade": use_fade,
+            "useUnload": use_unload,
+            "useUpdate": use_update,
+            "heightOffset": height_offset,
+            "flyTo": fly_to,
+        }
+
+        # Remove None values to keep payload minimal
+        payload = {key: value for key, value in config.items() if value is not None}
+        self.call_js_method("addThreeTileset", payload)
+
+    def remove_three_tileset(self, tileset_id: str) -> None:
+        """Remove a 3D Tiles dataset from the scene."""
+
+        self.call_js_method("removeThreeTileset", tileset_id)
+
+    def set_three_tileset_height(self, tileset_id: str, height: float) -> None:
+        """Adjust the height offset applied to a 3D Tiles dataset."""
+
+        self.call_js_method(
+            "setThreeTilesetHeight", {"id": tileset_id, "height": height}
+        )
+
+    def fly_to_three_tileset(self, tileset_id: str) -> None:
+        """Animate the camera to frame a 3D Tiles dataset."""
+
+        self.call_js_method("flyToThreeTileset", tileset_id)
 
     def to_html(
         self,
