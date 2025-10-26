@@ -199,6 +199,54 @@ class TestMapLibreMap(unittest.TestCase):
         self.assertEqual(calls[0]["args"][0], bounds)
         self.assertEqual(calls[0]["args"][1]["padding"], 100)
 
+    def test_add_infobox_control(self):
+        """Adding InfoBox control should record state and emit JS call."""
+        m = MapLibreMap(center=[0, 0], zoom=2, controls={})
+        m.add_infobox_control(
+            position="top-left", layer_id="test-layer", formatter="<b>{{name}}</b>"
+        )
+
+        control_key = "infobox_top-left"
+        self.assertIn(control_key, m._controls)
+        control_config = m._controls[control_key]
+        self.assertEqual(control_config["type"], "infobox")
+        self.assertEqual(control_config["position"], "top-left")
+        self.assertIn("options", control_config)
+        self.assertEqual(control_config["options"].get("layerId"), "test-layer")
+
+        last_call = m._js_calls[-1]
+        self.assertEqual(last_call["method"], "addControl")
+        control_type, payload = last_call["args"]
+        self.assertEqual(control_type, "infobox")
+        self.assertEqual(payload.get("position"), "top-left")
+
+    def test_add_gradientbox_control(self):
+        """Adding GradientBox control should record state and emit JS call."""
+        m = MapLibreMap(center=[0, 0], zoom=2, controls={})
+        m.add_gradientbox_control(
+            position="top-right",
+            layer_id="points",
+            weight_property="value",
+            min_value=0,
+            max_value=100,
+        )
+
+        control_key = "gradientbox_top-right"
+        self.assertIn(control_key, m._controls)
+        cfg = m._controls[control_key]
+        self.assertEqual(cfg["type"], "gradientbox")
+        self.assertEqual(cfg["position"], "top-right")
+        self.assertEqual(cfg["options"].get("layerId"), "points")
+        self.assertEqual(cfg["options"].get("weight_property"), "value")
+        self.assertEqual(cfg["options"].get("min_value"), 0)
+        self.assertEqual(cfg["options"].get("max_value"), 100)
+
+        last_call = m._js_calls[-1]
+        self.assertEqual(last_call["method"], "addControl")
+        ctype, payload = last_call["args"]
+        self.assertEqual(ctype, "gradientbox")
+        self.assertEqual(payload.get("position"), "top-right")
+
     def test_geoman_data_defaults(self):
         """Geoman data should default to an empty collection."""
         self.assertEqual(

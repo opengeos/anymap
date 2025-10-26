@@ -2543,6 +2543,92 @@ function render({ model, el }) {
 
       }
 
+      // Load InfoBox plugin (works with MapLibre)
+      if (!window.MapboxInfoBoxControl || !window.MapboxGradientBoxControl) {
+        const prevDefine = window.define;
+        const prevModule = window.module;
+        const prevExports = window.exports;
+        const hadAMD = typeof prevDefine === 'function' && prevDefine.amd;
+        const hadMod = typeof prevModule !== 'undefined';
+        const hadExp = typeof prevExports !== 'undefined';
+
+        const restoreEnv = () => {
+          if (hadAMD) window.define = prevDefine; else delete window.define;
+          if (hadMod) window.module = prevModule; else delete window.module;
+          if (hadExp) window.exports = prevExports; else delete window.exports;
+        };
+
+        const tryLoad = (src) => new Promise((resolve) => {
+          const s = document.createElement('script');
+          s.src = src;
+          s.onload = () => resolve({ ok: true, src });
+          s.onerror = () => resolve({ ok: false, src });
+          document.head.appendChild(s);
+        });
+
+        const candidates = [
+          // infobox-control package
+          'https://cdn.jsdelivr.net/npm/infobox-control@latest/dist/index.umd.js',
+          'https://unpkg.com/infobox-control@latest/dist/index.umd.js',
+          // alternative package name
+          'https://cdn.jsdelivr.net/npm/mapbox-gl-infobox@latest/dist/index.umd.js',
+          'https://unpkg.com/mapbox-gl-infobox@latest/dist/index.umd.js',
+        ];
+
+        let loaded = false;
+        for (const src of candidates) {
+          if (hadAMD) window.define = undefined;
+          if (hadMod) window.module = undefined;
+          if (hadExp) window.exports = undefined;
+
+          /* eslint-disable no-await-in-loop */
+          const result = await tryLoad(src);
+          restoreEnv();
+          if (result.ok && (window.MapboxInfoBoxControl || window.MapboxGradientBoxControl)) {
+            loaded = true;
+            break;
+          }
+        }
+
+        if (!loaded && (!window.MapboxInfoBoxControl || !window.MapboxGradientBoxControl)) {
+          try {
+            let mod;
+            try { mod = await import('https://esm.sh/infobox-control@latest'); } catch (_) {}
+            if (!mod) {
+              try { mod = await import('https://esm.sh/mapbox-gl-infobox@latest'); } catch (e2) { throw e2; }
+            }
+            const InfoCtor = mod?.MapboxInfoBoxControl || mod?.InfoBoxControl || mod?.default?.MapboxInfoBoxControl;
+            const GradCtor = mod?.MapboxGradientBoxControl || mod?.GradientBoxControl || mod?.default?.MapboxGradientBoxControl;
+            if (InfoCtor) window.MapboxInfoBoxControl = InfoCtor;
+            if (GradCtor) window.MapboxGradientBoxControl = GradCtor;
+          } catch (e) {
+            console.warn('Failed to dynamically import mapbox-gl-infobox:', e);
+          }
+        }
+
+        // Alias common globals if present under different names
+        if (!window.MapboxInfoBoxControl && window.InfoBoxControl) {
+          window.MapboxInfoBoxControl = window.InfoBoxControl;
+        }
+        if (!window.MapboxGradientBoxControl && window.GradientBoxControl) {
+          window.MapboxGradientBoxControl = window.GradientBoxControl;
+        }
+
+        // Load CSS for InfoBox plugin
+        const hasStyle = document.querySelector('link[href*="mapbox-gl-infobox"][href$="styles.css"]') ||
+                         document.querySelector('link[href*="mapbox-gl-infobox"][href*="dist/styles.css"]') ||
+                         document.querySelector('link[href*="infobox-control"][href$="styles.css"]') ||
+                         document.querySelector('link[href*="infobox-control"][href*="dist/styles.css"]');
+        if (!hasStyle) {
+          const inject = (href) => { const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = href; document.head.appendChild(l); };
+          // try multiple popular paths
+          inject('https://unpkg.com/infobox-control@latest/styles.css');
+          inject('https://unpkg.com/infobox-control@latest/dist/styles.css');
+          inject('https://unpkg.com/mapbox-gl-infobox@latest/styles.css');
+          inject('https://unpkg.com/mapbox-gl-infobox@latest/dist/styles.css');
+        }
+      }
+
       // Load DeckGL for overlay layers
       if (!window.deck) {
         const deckScript = document.createElement('script');
@@ -4167,6 +4253,161 @@ function render({ model, el }) {
                   return;
                 }
                 break;
+              case 'infobox': {
+                if (!window.MapboxInfoBoxControl && window.InfoBoxControl) {
+                  window.MapboxInfoBoxControl = window.InfoBoxControl;
+                }
+                if (!window.MapboxInfoBoxControl) {
+                  console.warn('MapboxInfoBoxControl not available during restore');
+                  return;
+                }
+                try {
+                  const { position: _pos, formatter, formatter_template, ...other } = controlOptions || {};
+                  let finalOptions = { showOnHover: true, showOnClick: true, ...other };
+                  if (typeof formatter === 'function') {
+                    finalOptions.formatter = formatter;
+                  } else if (typeof formatter === 'string' && formatter.length > 0) {
+                    const template = formatter;
+                    finalOptions.formatter = (properties) => {
+                      const safe = properties || {};
+                      return template.replace(/\{\{?\s*(\w+)\s*\}?\}/g, (_, k) => (safe[k] ?? ''));
+                    };
+                  } else if (typeof formatter_template === 'string' && formatter_template.length > 0) {
+                    const template = formatter_template;
+                    finalOptions.formatter = (properties) => {
+                      const safe = properties || {};
+                      return template.replace(/\{\{?\s*(\w+)\s*\}?\}/g, (_, k) => (safe[k] ?? ''));
+                    };
+                  }
+                  const base = new window.MapboxInfoBoxControl(finalOptions);
+                  const targetLayerId = finalOptions.layerId || finalOptions.layerID || finalOptions.layer || null;
+                  control = {
+                    onAdd(m) {
+                      const el = base.onAdd(m);
+                      try {
+                        if (el && el.classList) {
+                          el.classList.add('maplibregl-ctrl');
+                          el.classList.add('maplibregl-ctrl-group');
+                          if (!el.style.margin) {
+                            el.style.margin = '10px';
+                          }
+                        }
+                        // Provide a reliable content box in case plugin doesn't render one until events
+                        let content = el.querySelector('.anymap-infobox-content');
+                        if (!content) {
+                          content = document.createElement('div');
+                          content.className = 'anymap-infobox-content';
+                          content.style.background = 'rgba(255,255,255,0.95)';
+                          content.style.borderRadius = '4px';
+                          content.style.padding = '6px 8px';
+                          content.style.boxShadow = '0 1px 3px rgba(0,0,0,0.2)';
+                          content.style.fontSize = '12px';
+                          content.style.maxWidth = '260px';
+                          content.style.display = 'none';
+                          el.appendChild(content);
+                        }
+                        // Attach hover/click listeners to populate content from layer features
+                        if (targetLayerId) {
+                          const updateFromPoint = (pt) => {
+                            try {
+                              const feats = m.queryRenderedFeatures(pt, { layers: [targetLayerId] });
+                              if (feats && feats.length > 0) {
+                                const props = feats[0].properties || {};
+                                const html = (typeof finalOptions.formatter === 'function')
+                                  ? finalOptions.formatter(props)
+                                  : Object.keys(props).map(k => `<div><b>${k}</b>: ${props[k]}</div>`).join('');
+                                if (html && html.length > 0) {
+                                  content.innerHTML = html;
+                                  content.style.display = '';
+                                } else {
+                                  content.style.display = 'none';
+                                }
+                              } else {
+                                content.style.display = 'none';
+                              }
+                            } catch (e) {
+                              // ignore
+                            }
+                          };
+                          if (finalOptions.showOnHover !== false) {
+                            m.on('mousemove', (ev) => updateFromPoint(ev.point));
+                          }
+                          if (finalOptions.showOnClick !== false) {
+                            m.on('click', (ev) => updateFromPoint(ev.point));
+                          }
+                        }
+                      } catch (_) {}
+                      return el;
+                    },
+                    onRemove(m) { if (typeof base.onRemove === 'function') base.onRemove(m); },
+                    updateOptions: base.updateOptions ? base.updateOptions.bind(base) : undefined,
+                  };
+                  console.log('InfoBox control restored successfully');
+                } catch (error) {
+                  console.error('Failed to restore InfoBox control:', error);
+                  return;
+                }
+                break;
+              }
+              case 'gradientbox': {
+                if (!window.MapboxGradientBoxControl && window.GradientBoxControl) {
+                  window.MapboxGradientBoxControl = window.GradientBoxControl;
+                }
+                if (!window.MapboxGradientBoxControl) {
+                  console.warn('MapboxGradientBoxControl not available during restore');
+                  return;
+                }
+                try {
+                  const { position: _pos, weight_property, minMaxValues, ...other } = controlOptions || {};
+                  const options = normalizeGradientOptions({ ...other, minMaxValues });
+                  if (!options.minMaxValues && (other.min_value != null || other.max_value != null)) {
+                    options.minMaxValues = { minValue: other.min_value ?? 0, maxValue: other.max_value ?? 1 };
+                  } else if (minMaxValues) {
+                    options.minMaxValues = minMaxValues;
+                  }
+                  if (weight_property && typeof weight_property === 'string') {
+                    options.weightGetter = (properties) => {
+                      const p = properties || {};
+                      const val = p[weight_property];
+                      const num = Number(val);
+                      return Number.isFinite(num) ? num : 0;
+                    };
+                  }
+                  // Expand min/max to multiple common shapes so various builds pick them up
+                  const minVal = (options.min_value != null) ? Number(options.min_value) : (options.minMaxValues?.minValue ?? options.min ?? options.domain?.[0]);
+                  const maxVal = (options.max_value != null) ? Number(options.max_value) : (options.minMaxValues?.maxValue ?? options.max ?? options.domain?.[1]);
+                  if (Number.isFinite(minVal) && Number.isFinite(maxVal)) {
+                    options.minValue = minVal; // common
+                    options.maxValue = maxVal;
+                    options.minMaxValues = { minValue: minVal, maxValue: maxVal };
+                    options.minMax = { min: minVal, max: maxVal };
+                    options.domain = [minVal, maxVal];
+                  }
+                  const base = new window.MapboxGradientBoxControl(options);
+                  control = {
+                    onAdd(m) {
+                      const el = base.onAdd(m);
+                      try {
+                        if (el && el.classList) {
+                          el.classList.add('maplibregl-ctrl');
+                          el.classList.add('maplibregl-ctrl-group');
+                          if (!el.style.margin) {
+                            el.style.margin = '10px';
+                          }
+                        }
+                      } catch (_) {}
+                      return el;
+                    },
+                    onRemove(m) { if (typeof base.onRemove === 'function') base.onRemove(m); },
+                    updateOptions: base.updateOptions ? base.updateOptions.bind(base) : undefined,
+                  };
+                  console.log('GradientBox control restored successfully');
+                } catch (error) {
+                  console.error('Failed to restore GradientBox control:', error);
+                  return;
+                }
+                break;
+              }
               default:
                 console.warn(`Unknown control type during restore: ${controlType}`);
                 return;
@@ -4541,6 +4782,29 @@ function render({ model, el }) {
               ? `widget_panel_${controlIdForKey}`
               : `${controlType}_${position}`;
 
+            // Normalize gradient options for multiple plugin builds
+            const normalizeGradientOptions = (options) => {
+              const out = { ...(options || {}) };
+              const domain = Array.isArray(out.domain) ? out.domain : undefined;
+              const minVal = (out.min_value != null) ? Number(out.min_value)
+                : (out.minMaxValues?.minValue ?? out.min ?? (domain ? domain[0] : undefined));
+              const maxVal = (out.max_value != null) ? Number(out.max_value)
+                : (out.minMaxValues?.maxValue ?? out.max ?? (domain ? domain[1] : undefined));
+              if (Number.isFinite(minVal) && Number.isFinite(maxVal)) {
+                out.minValue = minVal;
+                out.maxValue = maxVal;
+                out.minMaxValues = { minValue: minVal, maxValue: maxVal };
+                out.minMax = { min: minVal, max: maxVal };
+                out.domain = [minVal, maxVal];
+              }
+              if (Array.isArray(out.colors)) {
+                out.colorRamp = out.colors;
+                out.palette = out.colors;
+                out.gradient = out.colors;
+              }
+              return out;
+            };
+
             // Check if this control is already added
             if (el._controls.has(controlKey)) {
               const existingControl = el._controls.get(controlKey);
@@ -4551,7 +4815,8 @@ function render({ model, el }) {
                 Object.keys(controlOptions).length > 0
               ) {
                 try {
-                  existingControl.updateOptions(controlOptions);
+                  const normalized = controlType === 'gradientbox' ? normalizeGradientOptions(controlOptions) : controlOptions;
+                  existingControl.updateOptions(normalized);
                 } catch (updateError) {
                   console.debug(
                     `Failed to refresh options for existing ${controlType} control:`,
@@ -4714,6 +4979,168 @@ function render({ model, el }) {
                   return;
                 }
                 break;
+
+              case 'infobox': {
+                if (!window.MapboxInfoBoxControl) {
+                  console.warn('MapboxInfoBoxControl not available');
+                  return;
+                }
+                try {
+                  const { position: _pos, formatter, formatter_template, ...other } = controlOptions || {};
+
+                  let finalOptions = { showOnHover: true, showOnClick: true, ...other };
+                  if (typeof formatter === 'function') {
+                    finalOptions.formatter = formatter;
+                  } else if (typeof formatter === 'string' && formatter.length > 0) {
+                    const template = formatter;
+                    finalOptions.formatter = (properties) => {
+                      const safe = properties || {};
+                      return template.replace(/\{\{?\s*(\w+)\s*\}?\}/g, (_, k) => (safe[k] ?? ''));
+                    };
+                  } else if (typeof formatter_template === 'string' && formatter_template.length > 0) {
+                    const template = formatter_template;
+                    finalOptions.formatter = (properties) => {
+                      const safe = properties || {};
+                      return template.replace(/\{\{?\s*(\w+)\s*\}?\}/g, (_, k) => (safe[k] ?? ''));
+                    };
+                  } else {
+                    finalOptions.formatter = (properties) => {
+                      const props = properties || {};
+                      const rows = Object.keys(props).map(k => `<tr><th>${k}</th><td>${props[k]}</td></tr>`).join('');
+                      return `<table class="anymap-infobox">${rows}</table>`;
+                    };
+                  }
+
+                  const base = new window.MapboxInfoBoxControl(finalOptions);
+                  control = {
+                    onAdd(m) {
+                      const el = base.onAdd(m);
+                      try {
+                        if (el && el.classList) {
+                          el.classList.add('maplibregl-ctrl');
+                          el.classList.add('maplibregl-ctrl-group');
+                          el.style.margin = '10px';
+                          el.style.padding = '0px';
+                        }
+                        // Provide a reliable content box in case plugin doesn't render one until events
+                        let content = el.querySelector('.anymap-infobox-content');
+                        if (!content) {
+                          content = document.createElement('div');
+                          content.className = 'anymap-infobox-content';
+                          content.style.background = 'rgba(255,255,255,0.95)';
+                          content.style.borderRadius = '4px';
+                          content.style.padding = '8px 10px';
+                          content.style.boxShadow = '0 1px 3px rgba(0,0,0,0.2)';
+                          content.style.fontSize = '12px';
+                          content.style.maxWidth = '260px';
+                          content.style.display = 'none';
+                          el.appendChild(content);
+                        }
+                        // Attach hover/click listeners to populate content from layer features if layerId provided
+                        const targetLayerId = (finalOptions.layerId || finalOptions.layer || finalOptions.layerID);
+                        if (targetLayerId) {
+                          const updateFromPoint = (pt) => {
+                            try {
+                              const feats = m.queryRenderedFeatures(pt, { layers: [targetLayerId] });
+                              if (feats && feats.length > 0) {
+                                const props = feats[0].properties || {};
+                                const html = (typeof finalOptions.formatter === 'function')
+                                  ? finalOptions.formatter(props)
+                                  : Object.keys(props).map(k => `<div><b>${k}</b>: ${props[k]}</div>`).join('');
+                                if (html && html.length > 0) {
+                                  content.innerHTML = html;
+                                  content.style.display = '';
+                                } else {
+                                  content.style.display = 'none';
+                                }
+                              } else {
+                                content.style.display = 'none';
+                              }
+                            } catch (e) { /* ignore */ }
+                          };
+                          if (finalOptions.showOnHover !== false) {
+                            m.on('mousemove', (ev) => updateFromPoint(ev.point));
+                          }
+                          if (finalOptions.showOnClick !== false) {
+                            m.on('click', (ev) => updateFromPoint(ev.point));
+                          }
+                        }
+                      } catch (_) {}
+                      return el;
+                    },
+                    onRemove(m) { if (typeof base.onRemove === 'function') base.onRemove(m); },
+                    updateOptions: base.updateOptions ? (opts) => base.updateOptions(opts) : undefined,
+                  };
+                  console.log('InfoBox control added successfully');
+                } catch (error) {
+                  console.error('Failed to create InfoBox control:', error);
+                  return;
+                }
+                break;
+              }
+
+              case 'gradientbox': {
+                if (!window.MapboxGradientBoxControl) {
+                  console.warn('MapboxGradientBoxControl not available');
+                  return;
+                }
+                try {
+                  const { position: _pos, weight_property, minMaxValues, ...other } = controlOptions || {};
+                  const options = normalizeGradientOptions({ ...other, minMaxValues });
+
+                  // Handle min/max values normalization
+                  if (!options.minMaxValues && (other.min_value != null || other.max_value != null)) {
+                    options.minMaxValues = { minValue: other.min_value ?? 0, maxValue: other.max_value ?? 1 };
+                  } else if (minMaxValues) {
+                    options.minMaxValues = minMaxValues;
+                  }
+
+                  if (weight_property && typeof weight_property === 'string') {
+                    options.weightGetter = (properties) => {
+                      const p = properties || {};
+                      const val = p[weight_property];
+                      const num = Number(val);
+                      return Number.isFinite(num) ? num : 0;
+                    };
+                  }
+
+                  // Expand min/max to multiple common shapes so various builds pick them up
+                  const minVal = (options.min_value != null) ? Number(options.min_value) : (options.minMaxValues?.minValue ?? options.min ?? options.domain?.[0]);
+                  const maxVal = (options.max_value != null) ? Number(options.max_value) : (options.minMaxValues?.maxValue ?? options.max ?? options.domain?.[1]);
+                  if (Number.isFinite(minVal) && Number.isFinite(maxVal)) {
+                    options.minValue = minVal; // common
+                    options.maxValue = maxVal;
+                    options.minMaxValues = { minValue: minVal, maxValue: maxVal };
+                    options.minMax = { min: minVal, max: maxVal };
+                    options.domain = [minVal, maxVal];
+                  }
+
+                  const base = new window.MapboxGradientBoxControl(options);
+                  control = {
+                    onAdd(m) {
+                      const el = base.onAdd(m);
+                      try {
+                        if (el && el.classList) {
+                          el.classList.add('maplibregl-ctrl');
+                          el.classList.add('maplibregl-ctrl-group');
+                          el.style.margin = '10px';
+                        }
+                      } catch (_) {}
+                      return el;
+                    },
+                    onRemove(m) { if (typeof base.onRemove === 'function') base.onRemove(m); },
+                    updateOptions: (opts) => {
+                      const normalized = normalizeGradientOptions(opts || {});
+                      if (base.updateOptions) base.updateOptions(normalized);
+                    },
+                  };
+                  console.log('GradientBox control added successfully');
+                } catch (error) {
+                  console.error('Failed to create GradientBox control:', error);
+                  return;
+                }
+                break;
+              }
 
               case 'maplibre_geocoder': {
                 if (!window.MaplibreGeocoder) {

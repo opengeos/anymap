@@ -82,6 +82,7 @@ nav:
     - Examples:
           - examples/basic_usage.ipynb
           - examples/maplibre_example.ipynb
+          - examples/infobox_example.ipynb
           - examples/mapbox_example.ipynb
           - examples/leaflet_example.ipynb
           - examples/openlayers_example.ipynb
