@@ -199,6 +199,67 @@ class TestMapLibreMap(unittest.TestCase):
         self.assertEqual(calls[0]["args"][0], bounds)
         self.assertEqual(calls[0]["args"][1]["padding"], 100)
 
+    def test_add_legend_control_derives_targets(self):
+        """Legend control should build targets from layer metadata when none supplied."""
+        self.map._js_calls.clear()
+
+        geojson_data = {
+            "type": "FeatureCollection",
+            "features": [
+                {
+                    "type": "Feature",
+                    "geometry": {"type": "Point", "coordinates": [-122.1, 37.7]},
+                    "properties": {},
+                }
+            ],
+        }
+        layer_id = "density_points"
+        self.map.add_geojson_layer(
+            layer_id=layer_id,
+            geojson_data=geojson_data,
+            layer_type="circle",
+            paint={"circle-radius": 5},
+        )
+        self.map.layer_dict[layer_id]["layer"].setdefault("metadata", {})[
+            "name"
+        ] = "Density"
+        self.map._layer_dict = dict(self.map.layer_dict)
+        self.map._js_calls.clear()
+
+        self.map.add_legend_control(position="bottom-left")
+
+        self.assertTrue(self.map._js_calls)
+        method_call = self.map._js_calls[-1]
+        self.assertEqual(method_call["method"], "addControl")
+        self.assertEqual(method_call["args"][0], "legend")
+        control_options = method_call["args"][1]
+        self.assertNotIn("targets", control_options)
+        self.assertIn("label_overrides", control_options)
+        self.assertIn(layer_id, control_options["label_overrides"])
+        self.assertEqual(control_options["label_overrides"][layer_id], "Density")
+        self.assertNotIn("maxHeight", control_options)
+        self.assertNotIn("toggleIcon", control_options)
+
+    def test_add_legend_control_custom_targets(self):
+        """Legend control should honour explicitly provided targets mapping."""
+        self.map._js_calls.clear()
+
+        custom_targets = {"layer_a": "Custom Layer"}
+        custom_labels = {"layer_a": "Nice Layer"}
+        self.map.add_legend_control(
+            targets=custom_targets,
+            label_overrides=custom_labels,
+            max_height=320,
+            toggle_icon="📋",
+        )
+
+        method_call = self.map._js_calls[-1]
+        control_options = method_call["args"][1]
+        self.assertEqual(control_options["targets"], custom_targets)
+        self.assertEqual(control_options["label_overrides"], custom_labels)
+        self.assertEqual(control_options["maxHeight"], "320px")
+        self.assertEqual(control_options["toggleIcon"], "📋")
+
     def test_add_infobox_control(self):
         """Adding InfoBox control should record state and emit JS call."""
         m = MapLibreMap(center=[0, 0], zoom=2, controls={})

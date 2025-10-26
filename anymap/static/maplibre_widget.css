@@ -435,6 +435,41 @@
   opacity: 0.45;
 }
 
+.layer-control-legend-button {
+  color: #565b65;
+}
+
+.layer-control-legend-button.layer-control-legend-active {
+  color: #1f6feb;
+  background-color: rgba(31, 111, 235, 0.12);
+}
+
+.layer-control-legend-button.layer-control-legend-active:hover {
+  background-color: rgba(31, 111, 235, 0.18);
+}
+
+.anymap-legend-collapsed {
+  width: auto !important;
+  height: auto !important;
+  padding: 4px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.anymap-legend-collapsed .mapboxgl-legend-list {
+  display: none !important;
+}
+
+.anymap-legend-toggle-collapsed {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.anymap-legend-toggle-expanded {
+  box-shadow: none;
+}
+
 .layer-control-style-editor {
   display: none;
   width: 100%;
