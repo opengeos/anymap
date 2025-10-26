@@ -2986,6 +2986,123 @@ class MapLibreMap(MapWidget):
 
         self.call_js_method("addControl", "gradientbox", control_options)
 
+    def add_legend_control(
+        self,
+        position: str = "bottom-left",
+        show_default: bool = True,
+        show_checkbox: bool = True,
+        only_rendered: bool = False,
+        reverse_order: bool = False,
+        options: Optional[Dict[str, Any]] = None,
+        targets: Optional[Dict[str, str]] = None,
+        label_overrides: Optional[Dict[str, str]] = None,
+        max_height: Optional[Union[int, float, str]] = None,
+        toggle_icon: Optional[str] = None,
+    ) -> None:
+        """Add a Legend control (watergis/mapbox-gl-legend) to the map.
+
+        The legend control inspects map layers and renders a legend UI. It works
+        best when layers include helpful `metadata` such as a human-readable
+        name, unit, or labels.
+
+        Args:
+            position: Control position ('top-left', 'top-right', 'bottom-left', 'bottom-right').
+            show_default: Whether to show default legend items inferred from layers.
+            show_checkbox: Whether to include visibility checkboxes per item.
+            only_rendered: If True, only include layers currently rendered in viewport.
+            reverse_order: If True, reverse the legend item order.
+            options: Additional plugin options forwarded to LegendControl.
+            targets: Optional mapping of layer IDs to include in the legend. When
+                provided, only these layers will appear (matching plugin behaviour).
+            label_overrides: Optional mapping of layer IDs to custom legend labels.
+                When omitted, labels are derived from layer metadata and fall back
+                to layer ids. This does not restrict which layers are shown.
+            max_height: Optional CSS size (e.g. 320, "320px", "60vh") used to cap the
+                legend panel height. When provided, a scrollbar appears if content
+                exceeds this limit.
+            toggle_icon: Optional HTML string or Unicode glyph for the collapsed
+                legend toggle button. Defaults to a list-style icon if omitted.
+        """
+
+        def _derive_labels() -> Dict[str, str]:
+            derived: Dict[str, str] = {}
+            for layer_id, layer_info in self.layer_dict.items():
+                layer_config = layer_info.get("layer", {})
+                if not isinstance(layer_config, dict):
+                    continue
+
+                if layer_config.get("type") == "background":
+                    continue
+
+                if not layer_info.get("visible", True):
+                    continue
+
+                metadata = layer_config.get("metadata") or {}
+                legend_meta = metadata.get("legend") or {}
+                if legend_meta.get("exclude"):
+                    continue
+
+                label = (
+                    legend_meta.get("label")
+                    or legend_meta.get("title")
+                    or metadata.get("name")
+                    or legend_meta.get("name")
+                    or layer_info.get("name")
+                    or layer_config.get("id")
+                    or layer_id
+                )
+                derived[layer_id] = label
+
+            return derived
+
+        control_options: Dict[str, Any] = dict(options or {})
+        control_options.update(
+            {
+                "position": position,
+                "showDefault": show_default,
+                "showCheckbox": show_checkbox,
+                "onlyRendered": only_rendered,
+                "reverseOrder": reverse_order,
+            }
+        )
+
+        if targets is not None:
+            control_options["targets"] = dict(targets)
+
+        if max_height is not None:
+            if isinstance(max_height, (int, float)):
+                max_height_value = f"{max_height}px"
+            else:
+                max_height_value = str(max_height)
+            control_options["maxHeight"] = max_height_value
+
+        if toggle_icon is not None:
+            control_options["toggleIcon"] = str(toggle_icon)
+
+        auto_labels = _derive_labels()
+        merged_labels: Dict[str, str] = dict(auto_labels)
+        for label_map in (
+            control_options.get("label_overrides"),
+            control_options.get("labelOverrides"),
+            label_overrides,
+        ):
+            if label_map:
+                merged_labels.update(label_map)
+
+        if merged_labels:
+            control_options["label_overrides"] = merged_labels
+
+        control_key = f"legend_{position}"
+        current_controls = dict(self._controls)
+        current_controls[control_key] = {
+            "type": "legend",
+            "position": position,
+            "options": control_options,
+        }
+        self._controls = current_controls
+
+        self.call_js_method("addControl", "legend", control_options)
+
     def _process_deckgl_props(self, props: Dict[str, Any]) -> Dict[str, Any]:
         """Process DeckGL properties to handle lambda functions and other non-serializable objects.
 

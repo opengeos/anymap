@@ -56,6 +56,507 @@ function processDeckGLProps(props) {
   return processed;
 }
 
+function resolveLegendControlClass() {
+  const candidates = [
+    () => window.MapboxLegendControl,
+    () => window.LegendControl,
+    () => window.mapboxgl && window.mapboxgl.LegendControl,
+    () => window.maplibregl && window.maplibregl.LegendControl,
+  ];
+
+  for (const get of candidates) {
+    try {
+      const value = get();
+      if (!value) continue;
+      if (typeof value === 'function') return value;
+      if (typeof value === 'object') {
+        if (typeof value.LegendControl === 'function') return value.LegendControl;
+        if (typeof value.default === 'function') return value.default;
+        // Some UMDs nest under .default.LegendControl
+        if (value.default && typeof value.default.LegendControl === 'function') {
+          return value.default.LegendControl;
+        }
+      }
+    } catch (_) {}
+  }
+  return null;
+}
+
+function scheduleLegendInitialization(controlKey, { position, options }, map, el) {
+  const attempt = () => {
+    try {
+      const LegendCtor = resolveLegendControlClass();
+      if (!LegendCtor) {
+        setTimeout(attempt, 200);
+        return;
+      }
+      const legendConfig = { ...(options || {}) };
+      const labelOverridesRaw = legendConfig.labelOverrides || legendConfig.label_overrides;
+      delete legendConfig.labelOverrides;
+      delete legendConfig.label_overrides;
+
+      const normalizeHeight = (value) => {
+        if (value == null) return null;
+        if (typeof value === 'number') return `${value}px`;
+        const str = String(value).trim();
+        if (!str) return null;
+        if (/^\d+(\.\d+)?$/.test(str)) {
+          return `${str}px`;
+        }
+        return str;
+      };
+
+      const maxHeightRaw = legendConfig.maxHeight || legendConfig.max_height;
+      delete legendConfig.maxHeight;
+      delete legendConfig.max_height;
+
+      const computeAutoMaxHeight = () => {
+        try {
+          if (map && typeof map.getContainer === 'function') {
+            const container = map.getContainer();
+            if (container && container.clientHeight) {
+              const height = Math.max(container.clientHeight - 100, 160);
+              return `${height}px`;
+            }
+          }
+        } catch (error) {
+          console.warn('Failed to compute map-based legend height:', error);
+        }
+
+        if (el && el.clientHeight) {
+          const fallback = Math.max(el.clientHeight - 100, 160);
+          return `${fallback}px`;
+        }
+
+        if (typeof window !== 'undefined' && window.innerHeight) {
+          const viewportHeight = Math.max(window.innerHeight - 100, 160);
+          return `${viewportHeight}px`;
+        }
+
+        return 'calc(100vh - 100px)';
+      };
+
+      let maxHeight = normalizeHeight(maxHeightRaw);
+      const autoMaxHeight = maxHeight == null;
+      if (autoMaxHeight) {
+        maxHeight = computeAutoMaxHeight();
+      }
+
+      const toggleIconRaw = legendConfig.toggleIcon || legendConfig.toggle_icon;
+      delete legendConfig.toggleIcon;
+      delete legendConfig.toggle_icon;
+
+      let targetsArg = legendConfig.targets;
+      if (targetsArg && typeof targetsArg === 'object') {
+        targetsArg = { ...targetsArg };
+      }
+      delete legendConfig.targets;
+
+      const base = new LegendCtor(targetsArg, legendConfig);
+      const controlState = {
+        targets: targetsArg,
+        options: legendConfig,
+        labelOverrides: labelOverridesRaw && typeof labelOverridesRaw === 'object'
+          ? { ...labelOverridesRaw }
+          : {},
+        maxHeight,
+        autoMaxHeight,
+        container: null,
+        methodsPatched: false,
+        toggleIcon: toggleIconRaw != null ? String(toggleIconRaw) : null,
+        resizeHandler: null,
+        mapResizeHandler: null,
+      };
+
+      const originalGetLayerLegend = typeof base.getLayerLegend === 'function'
+        ? base.getLayerLegend
+        : null;
+
+      const applyLabelOverrides = () => {
+        if (!originalGetLayerLegend) {
+          return;
+        }
+
+        if (!controlState.labelOverrides || Object.keys(controlState.labelOverrides).length === 0) {
+          base.getLayerLegend = originalGetLayerLegend;
+          return;
+        }
+
+        base.getLayerLegend = function patchedGetLayerLegend(...args) {
+          const existingTargets = this.targets;
+          let mergedTargets = existingTargets;
+
+          if (existingTargets === undefined) {
+            mergedTargets = { ...controlState.labelOverrides };
+          } else {
+            mergedTargets = { ...existingTargets, ...controlState.labelOverrides };
+          }
+
+          this.targets = mergedTargets;
+          try {
+            return originalGetLayerLegend.apply(this, args);
+          } finally {
+            this.targets = existingTargets;
+          }
+        };
+      };
+
+      const ensureAutoHeightListeners = () => {
+        if (!controlState.autoMaxHeight || controlState.resizeHandler) {
+          return;
+        }
+        const handler = () => {
+          const nextValue = computeAutoMaxHeight();
+          if (nextValue && nextValue !== controlState.maxHeight) {
+            controlState.maxHeight = nextValue;
+            applyMaxHeight();
+          }
+        };
+        controlState.resizeHandler = handler;
+        if (typeof window !== 'undefined') {
+          window.addEventListener('resize', handler);
+        }
+        if (map && typeof map.on === 'function') {
+          map.on('resize', handler);
+          controlState.mapResizeHandler = handler;
+        }
+      };
+
+      const teardownAutoHeightListeners = () => {
+        if (controlState.resizeHandler && typeof window !== 'undefined') {
+          window.removeEventListener('resize', controlState.resizeHandler);
+        }
+        if (controlState.mapResizeHandler && map && typeof map.off === 'function') {
+          map.off('resize', controlState.mapResizeHandler);
+        }
+        controlState.resizeHandler = null;
+        controlState.mapResizeHandler = null;
+      };
+
+      const applyMaxHeight = () => {
+        const container = controlState.container;
+        if (!container) {
+          return;
+        }
+        const targetEl =
+          container.querySelector('.mapboxgl-legend-list') ||
+          container.querySelector('.mapboxgl-legend') ||
+          container;
+        if (!targetEl) return;
+
+        if (controlState.maxHeight) {
+          targetEl.style.maxHeight = controlState.maxHeight;
+          if (!targetEl.style.overflowY) {
+            targetEl.style.overflowY = 'auto';
+          }
+          if (!targetEl.style.overflowX) {
+            targetEl.style.overflowX = 'hidden';
+          }
+        }
+      };
+
+      const updateMaxHeight = (value) => {
+        const normalized = normalizeHeight(value);
+        if (normalized) {
+          controlState.autoMaxHeight = false;
+          teardownAutoHeightListeners();
+          controlState.maxHeight = normalized;
+        } else if (value !== undefined) {
+          controlState.autoMaxHeight = true;
+          controlState.maxHeight = computeAutoMaxHeight();
+          ensureAutoHeightListeners();
+        }
+        applyMaxHeight();
+      };
+
+      if (controlState.autoMaxHeight) {
+        ensureAutoHeightListeners();
+      }
+
+      const applyLegendStyling = () => {
+        const container = controlState.container;
+        if (!container) {
+          return;
+        }
+
+        const resolveToggleButton = () =>
+          container.querySelector('.mapboxgl-legend-switcher') ||
+          container.querySelector('.mapboxgl-legend-button');
+
+        const applyToggleIcon = () => {
+          const button = resolveToggleButton();
+          if (!button) {
+            return;
+          }
+          const iconContent =
+            controlState.toggleIcon && controlState.toggleIcon.length > 0
+              ? controlState.toggleIcon
+              : '<span style="font-size:16px;line-height:1;">☷</span>';
+
+          if (button.innerHTML !== iconContent) {
+            button.innerHTML = iconContent;
+          }
+          if (!button.getAttribute('aria-label')) {
+            button.setAttribute('aria-label', 'Show legend');
+          }
+          button.style.display = 'inline-flex';
+          button.style.alignItems = 'center';
+          button.style.justifyContent = 'center';
+          button.style.width = '30px';
+          button.style.height = '30px';
+          button.style.borderRadius = '4px';
+          button.style.background = 'rgba(255,255,255,0.92)';
+          button.style.border = '1px solid rgba(0,0,0,0.2)';
+          button.style.boxShadow = '0 1px 2px rgba(0,0,0,0.25)';
+          button.style.cursor = 'pointer';
+          button.style.padding = '0';
+          if (!button.style.margin) {
+            button.style.margin = '0 0 6px 0';
+          }
+        };
+
+        const title = container.querySelector('.mapboxgl-legend-title-label');
+        const closeBtn = container.querySelector('.mapboxgl-legend-close-button');
+
+        if (title) {
+          title.style.fontWeight = '600';
+          title.style.fontSize = '13px';
+          title.style.color = '#1f1f1f';
+          title.style.margin = '0';
+        }
+
+        if (title && closeBtn) {
+          let header = container.querySelector('.anymap-legend-header');
+          if (!header) {
+            header = document.createElement('div');
+            header.className = 'anymap-legend-header';
+            const parent = title.parentNode || container;
+            parent.insertBefore(header, title);
+          }
+          if (!header.contains(title)) {
+            header.appendChild(title);
+          }
+          if (!header.contains(closeBtn)) {
+            header.appendChild(closeBtn);
+          }
+          header.style.display = 'flex';
+          header.style.alignItems = 'center';
+          header.style.justifyContent = 'space-between';
+          header.style.gap = '8px';
+          header.style.marginBottom = '4px';
+
+          closeBtn.style.margin = '0';
+          closeBtn.style.background = 'transparent';
+          closeBtn.style.border = 'none';
+          closeBtn.style.cursor = 'pointer';
+          closeBtn.style.fontSize = '14px';
+          closeBtn.style.lineHeight = '1';
+          closeBtn.style.padding = '2px 4px';
+
+          let nextNode = header.nextSibling;
+          while (nextNode && nextNode.nodeType === Node.TEXT_NODE && !nextNode.textContent.trim()) {
+            nextNode = nextNode.nextSibling;
+          }
+          if (nextNode && nextNode.nodeType === Node.ELEMENT_NODE && nextNode.tagName === 'BR') {
+            nextNode.parentNode.removeChild(nextNode);
+          }
+        }
+
+        const rows = container.querySelectorAll('.legend-table tr');
+        rows.forEach((row) => {
+          row.style.height = '26px';
+          row.style.lineHeight = '26px';
+          row.style.display = 'table-row';
+          row.style.borderBottom = '1px solid rgba(0,0,0,0.05)';
+
+          const cells = row.querySelectorAll('td');
+          if (cells.length === 0) {
+            return;
+          }
+
+          const hasCheckbox = cells.length === 3;
+          const symbolCell = hasCheckbox ? cells[1] : cells[0];
+          const labelCell = hasCheckbox ? cells[2] : cells[1];
+
+          if (symbolCell) {
+            symbolCell.style.width = '28px';
+            symbolCell.style.minWidth = '28px';
+            symbolCell.style.maxWidth = '32px';
+            symbolCell.style.padding = '2px 6px';
+            symbolCell.style.display = '';
+            symbolCell.style.alignItems = '';
+            symbolCell.style.justifyContent = '';
+            symbolCell.style.borderRadius = '4px';
+            symbolCell.style.boxSizing = 'border-box';
+            symbolCell.style.margin = '2px 0';
+            const hasInlineBackground =
+              symbolCell.style.backgroundColor && symbolCell.style.backgroundColor !== 'transparent';
+            if (!hasInlineBackground) {
+              symbolCell.style.backgroundColor = 'transparent';
+            }
+            symbolCell.style.backgroundImage = symbolCell.style.backgroundImage || '';
+            symbolCell.style.backgroundPosition = symbolCell.style.backgroundPosition || 'center';
+            symbolCell.style.backgroundRepeat = symbolCell.style.backgroundRepeat || 'no-repeat';
+            symbolCell.style.backgroundSize = symbolCell.style.backgroundSize || 'contain';
+
+            const img = symbolCell.querySelector('img');
+            if (img) {
+              img.style.maxHeight = '18px';
+              img.style.maxWidth = '22px';
+            }
+            const svg = symbolCell.querySelector('svg');
+            if (svg) {
+              svg.style.maxHeight = '18px';
+              svg.style.maxWidth = '22px';
+              svg.style.display = 'block';
+              svg.style.margin = '0 auto';
+            }
+
+            const swatch = symbolCell.querySelector('div');
+            if (swatch) {
+              swatch.style.margin = '0 auto';
+              swatch.style.width = '100%';
+              swatch.style.height = '100%';
+              swatch.style.borderRadius = '3px';
+            }
+          }
+
+          if (labelCell) {
+            labelCell.style.paddingLeft = '6px';
+            labelCell.style.fontSize = '12px';
+            labelCell.style.color = '#1f1f1f';
+            labelCell.style.whiteSpace = 'nowrap';
+          }
+        });
+
+        applyToggleIcon();
+      };
+
+      const patchLegendMethods = () => {
+        if (controlState.methodsPatched) {
+          return;
+        }
+        if (typeof base.updateLegendControl === 'function') {
+          const originalUpdate = base.updateLegendControl.bind(base);
+          base.updateLegendControl = (...args) => {
+            const result = originalUpdate(...args);
+            applyLegendStyling();
+            return result;
+          };
+        }
+        if (typeof base.redraw === 'function') {
+          const originalRedraw = base.redraw.bind(base);
+          base.redraw = (...args) => {
+            const result = originalRedraw(...args);
+            applyLegendStyling();
+            return result;
+          };
+        }
+        controlState.methodsPatched = true;
+      };
+
+      patchLegendMethods();
+      applyLabelOverrides();
+
+      const control = {
+        onAdd(m) {
+          const elc = base.onAdd(m);
+          try {
+            if (elc && elc.classList) {
+              elc.classList.add('maplibregl-ctrl');
+              elc.classList.add('maplibregl-ctrl-group');
+              if (!elc.style.margin) elc.style.margin = '10px';
+            }
+          } catch (_) {}
+          controlState.container = elc;
+          applyMaxHeight();
+          applyLegendStyling();
+          return elc;
+        },
+        onRemove(m) {
+          try {
+            teardownAutoHeightListeners();
+            controlState.container = null;
+          } catch (_) {}
+          if (typeof base.onRemove === 'function') {
+            base.onRemove(m);
+          }
+        },
+        updateOptions: (opts) => {
+          if (!opts || typeof opts !== 'object') {
+            return;
+          }
+          const nextConfig = { ...opts };
+          const nextTargets = nextConfig.targets && typeof nextConfig.targets === 'object'
+            ? { ...nextConfig.targets }
+            : undefined;
+          delete nextConfig.targets;
+
+          const nextLabelOverrides = nextConfig.labelOverrides || nextConfig.label_overrides;
+          delete nextConfig.labelOverrides;
+          delete nextConfig.label_overrides;
+
+          const nextMaxHeight = nextConfig.maxHeight || nextConfig.max_height;
+          delete nextConfig.maxHeight;
+          delete nextConfig.max_height;
+
+          const nextToggleIcon =
+            nextConfig.toggleIcon !== undefined
+              ? nextConfig.toggleIcon
+              : nextConfig.toggle_icon;
+          delete nextConfig.toggleIcon;
+          delete nextConfig.toggle_icon;
+
+          if (nextTargets) {
+            controlState.targets = nextTargets;
+            base.targets = { ...nextTargets };
+          }
+
+          if (nextLabelOverrides && typeof nextLabelOverrides === 'object') {
+            controlState.labelOverrides = {
+              ...(controlState.labelOverrides || {}),
+              ...nextLabelOverrides,
+            };
+            applyLabelOverrides();
+          }
+
+          if (nextMaxHeight !== undefined) {
+            updateMaxHeight(nextMaxHeight);
+          }
+
+          if (nextToggleIcon !== undefined) {
+            const iconString = nextToggleIcon != null ? String(nextToggleIcon) : '';
+            controlState.toggleIcon = iconString.length > 0 ? iconString : null;
+          }
+
+          if (Object.keys(nextConfig).length > 0) {
+            controlState.options = { ...controlState.options, ...nextConfig };
+            base.options = { ...(base.options || {}), ...controlState.options };
+          }
+
+          if (typeof base.updateLegendControl === 'function') {
+            base.updateLegendControl();
+          } else if (typeof base.redraw === 'function') {
+            base.redraw();
+          }
+          applyLegendStyling();
+        },
+      };
+      controlState.cleanup = () => {
+        teardownAutoHeightListeners();
+        controlState.container = null;
+      };
+      control._anymapLegendState = controlState;
+      map.addControl(control, position || 'bottom-left');
+      el._controls.set(controlKey, control);
+      console.log('Legend control initialized successfully');
+    } catch (error) {
+      console.error('Failed to initialize Legend control:', error);
+    }
+  };
+  attempt();
+}
+
 function resolveExportControlClass() {
   if (!window.MaplibreExportControl) {
     return null;
@@ -447,10 +948,11 @@ function applyGeomanCollapsedState(instance, collapsed) {
 
 // Layer Control class
 class LayerControl {
-  constructor(options, map, model) {
+  constructor(options, map, model, widgetEl) {
     this.options = options;
     this.map = map;
     this.model = model;
+    this.widgetEl = widgetEl;
     this.collapsed = options.collapsed !== false;
     this.layerStates = options.layerStates || {};
     this.targetLayers = options.layers || Object.keys(this.layerStates);
@@ -465,6 +967,24 @@ class LayerControl {
     this.widthDragRectWidth = null;
     this.widthDragStartX = null;
     this.widthDragStartWidth = null;
+    const legendConfig = (options && typeof options.legend === 'object' && options.legend) || {};
+    const legendOptionsRaw = {
+      ...(options.legendOptions || {}),
+      ...(options.legend_options || {}),
+      ...(
+        legendConfig && typeof legendConfig.options === 'object'
+          ? legendConfig.options
+          : {}
+      ),
+    };
+    this.legendOptions = legendOptionsRaw;
+    this.legendPosition =
+      legendConfig.position ||
+      options.legendPosition ||
+      options.legend_position ||
+      'bottom-left';
+    this.legendControlKey = `legend_${this.legendPosition}`;
+    this.legendButtonRef = null;
 
     // Create control container
     this.container = document.createElement('div');
@@ -1113,8 +1633,15 @@ class LayerControl {
         }
       }
     } else if (layerId === 'Background') {
+      button.disabled = false;
+      button.title = 'Show legend';
+      button.classList.add('layer-control-legend-button');
+      button.setAttribute('aria-label', 'Show legend');
+      this.legendButtonRef = button;
+      this.setLegendButtonState(this.isLegendControlPresent());
+    } else {
       button.disabled = true;
-      button.title = 'Styling not available for Background layers';
+      button.title = 'Styling not available for this layer';
     }
   }
 
@@ -1147,8 +1674,21 @@ class LayerControl {
     button.setAttribute('aria-label', `Style ${state.name || layerId}`);
     button.innerHTML = '&#9881;';
     if (!hasOptions) {
-      button.disabled = true;
-      button.title = 'Styling not available for Background layers';
+      if (layerId === 'Background') {
+        button.disabled = false;
+        button.title = 'Show legend';
+        button.setAttribute('aria-label', 'Show legend');
+        button.classList.add('layer-control-legend-button');
+        button.addEventListener('click', (event) => {
+          event.stopPropagation();
+          this.showLegendControl();
+        });
+        this.legendButtonRef = button;
+        this.setLegendButtonState(this.isLegendControlPresent());
+      } else {
+        button.disabled = true;
+        button.title = 'Styling not available for this layer';
+      }
     } else {
       button.addEventListener('click', (event) => {
         event.stopPropagation();
@@ -1723,6 +2263,200 @@ class LayerControl {
     }
   }
 
+  isLegendControlPresent() {
+    if (!this.widgetEl || !this.widgetEl._controls) {
+      return false;
+    }
+    return this.widgetEl._controls.has(this.legendControlKey);
+  }
+
+  setLegendButtonState(active) {
+    if (!this.legendButtonRef) {
+      return;
+    }
+    if (active) {
+      this.legendButtonRef.classList.add('layer-control-legend-active');
+      this.legendButtonRef.setAttribute('aria-pressed', 'true');
+    } else {
+      this.legendButtonRef.classList.remove('layer-control-legend-active');
+      this.legendButtonRef.removeAttribute('aria-pressed');
+    }
+  }
+
+  syncLegendControlTrait(controlKey, legendOptions) {
+    if (!this.model || typeof this.model.get !== 'function') {
+      return;
+    }
+    try {
+      const currentControls = this.model.get('_controls') || {};
+      if (currentControls[controlKey]) {
+        return;
+      }
+      const nextControls = { ...currentControls };
+      nextControls[controlKey] = {
+        type: 'legend',
+        position: this.legendPosition,
+        options: { position: this.legendPosition, ...(legendOptions || {}) },
+      };
+      this.model.set('_controls', nextControls);
+      this.model.save_changes();
+    } catch (error) {
+      console.warn('Failed to sync legend control state:', error);
+    }
+  }
+
+  openLegendContainer(controlKey, retries = 10) {
+    if (!this.widgetEl || !this.widgetEl._controls) {
+      if (retries > 0) {
+        setTimeout(() => this.openLegendContainer(controlKey, retries - 1), 150);
+      }
+      return;
+    }
+
+    const control = this.widgetEl._controls.get(controlKey);
+    if (!control) {
+      if (retries > 0) {
+        setTimeout(() => this.openLegendContainer(controlKey, retries - 1), 150);
+      } else {
+        this.setLegendButtonState(false);
+      }
+      return;
+    }
+
+    const legendState =
+      control._anymapLegendState ||
+      (typeof control.getState === 'function' ? control.getState() : null);
+    const container =
+      (legendState && legendState.container) ||
+      (typeof control.getContainer === 'function' ? control.getContainer() : null);
+
+    if (!container || !(container instanceof HTMLElement)) {
+      if (retries > 0) {
+        setTimeout(() => this.openLegendContainer(controlKey, retries - 1), 150);
+      }
+      return;
+    }
+
+    const panel = container.querySelector('.mapboxgl-legend-list');
+    const toggleButton = container.querySelector('.mapboxgl-legend-switcher');
+    const closeButton = container.querySelector('.mapboxgl-legend-close-button');
+
+    this.configureLegendInteractions(container, panel, toggleButton, closeButton);
+  }
+
+  configureLegendInteractions(container, panel, toggleButton, closeButton) {
+    if (!container) {
+      return;
+    }
+
+    const setVisibility = (visible) => {
+      if (panel) {
+        panel.style.display = visible ? 'block' : 'none';
+      }
+      if (toggleButton) {
+        toggleButton.setAttribute('aria-expanded', visible ? 'true' : 'false');
+      }
+      this.setLegendButtonState(visible);
+    };
+
+    setVisibility(true);
+
+    if (toggleButton && !toggleButton.__anymapLegendToggleHook) {
+      toggleButton.__anymapLegendToggleHook = true;
+      toggleButton.style.display = 'inline-flex';
+      if (!toggleButton.getAttribute('aria-label')) {
+        toggleButton.setAttribute('aria-label', 'Toggle legend');
+      }
+      toggleButton.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+        const isVisible = panel ? panel.style.display !== 'none' : false;
+        setVisibility(!isVisible);
+      });
+    }
+
+    if (closeButton && !closeButton.__anymapLegendCloseHook) {
+      closeButton.__anymapLegendCloseHook = true;
+      closeButton.title = 'Remove legend';
+      closeButton.setAttribute('aria-label', 'Remove legend');
+      closeButton.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+        this.removeLegendControl();
+      });
+    }
+  }
+
+  showLegendControl() {
+    const legendOptions = { ...(this.legendOptions || {}) };
+    const ensureOption = (primary, alternate, value) => {
+      if (!(primary in legendOptions) && (!alternate || !(alternate in legendOptions))) {
+        legendOptions[primary] = value;
+      }
+    };
+    ensureOption('showDefault', 'show_default', true);
+    ensureOption('onlyRendered', 'only_rendered', false);
+
+    const controlsMap = this.widgetEl && this.widgetEl._controls;
+
+    if (!controlsMap || !controlsMap.has(this.legendControlKey)) {
+      if (!this.widgetEl) {
+        console.warn('Widget element not available; unable to add legend control.');
+        return;
+      }
+      scheduleLegendInitialization(
+        this.legendControlKey,
+        { position: this.legendPosition, options: legendOptions },
+        this.map,
+        this.widgetEl,
+      );
+      this.syncLegendControlTrait(this.legendControlKey, legendOptions);
+      this.setLegendButtonState(true);
+      this.openLegendContainer(this.legendControlKey, 12);
+      return;
+    }
+
+    this.setLegendButtonState(true);
+    this.openLegendContainer(this.legendControlKey, 6);
+  }
+
+  removeLegendControl() {
+    const controlsMap = this.widgetEl && this.widgetEl._controls;
+    let control = null;
+
+    if (controlsMap && controlsMap.has(this.legendControlKey)) {
+      control = controlsMap.get(this.legendControlKey);
+      try {
+        if (control && this.map && typeof this.map.removeControl === 'function') {
+          this.map.removeControl(control);
+        }
+      } catch (error) {
+        console.warn('Failed to remove legend control from map:', error);
+      }
+      controlsMap.delete(this.legendControlKey);
+      if (control && control._anymapLegendState && typeof control._anymapLegendState.cleanup === 'function') {
+        control._anymapLegendState.cleanup();
+      }
+    }
+
+    if (this.model && typeof this.model.get === 'function') {
+      try {
+        const currentControls = { ...(this.model.get('_controls') || {}) };
+        if (currentControls[this.legendControlKey]) {
+          delete currentControls[this.legendControlKey];
+          this.model.set('_controls', currentControls);
+          this.model.save_changes();
+        }
+      } catch (error) {
+        console.warn('Failed to sync legend removal:', error);
+      }
+    }
+
+    this.setLegendButtonState(false);
+  }
+
   toggleBackgroundVisibility(visible) {
     // Update local state
     if (this.layerStates['Background']) {
@@ -2138,7 +2872,15 @@ function render({ model, el }) {
           throw new Error('MapLibre GL JS failed to load');
         }
 
+        if (!window.mapboxgl) {
+          window.mapboxgl = window.maplibregl;
+        }
+
         console.log("MapLibre GL JS loaded successfully");
+      }
+
+      if (!window.mapboxgl && window.maplibregl) {
+        window.mapboxgl = window.maplibregl;
       }
 
       // Load MapLibre GL CSS
@@ -2626,6 +3368,80 @@ function render({ model, el }) {
           inject('https://unpkg.com/infobox-control@latest/dist/styles.css');
           inject('https://unpkg.com/mapbox-gl-infobox@latest/styles.css');
           inject('https://unpkg.com/mapbox-gl-infobox@latest/dist/styles.css');
+        }
+      }
+
+      // Load Legend plugin (watergis/mapbox-gl-legend)
+      if (!resolveLegendControlClass()) {
+        const prevDefineLg = window.define;
+        const prevModuleLg = window.module;
+        const prevExportsLg = window.exports;
+        const hadAMDLg = typeof prevDefineLg === 'function' && prevDefineLg.amd;
+        const hadModLg = typeof prevModuleLg !== 'undefined';
+        const hadExpLg = typeof prevExportsLg !== 'undefined';
+
+        const restoreEnvLg = () => {
+          if (hadAMDLg) window.define = prevDefineLg; else delete window.define;
+          if (hadModLg) window.module = prevModuleLg; else delete window.module;
+          if (hadExpLg) window.exports = prevExportsLg; else delete window.exports;
+        };
+
+        const tryLoadLg = (src) => new Promise((resolve) => {
+          const s = document.createElement('script');
+          s.src = src;
+          s.onload = () => resolve({ ok: true, src });
+          s.onerror = () => resolve({ ok: false, src });
+          document.head.appendChild(s);
+        });
+
+        const legendCandidates = [
+          'https://cdn.jsdelivr.net/npm/@watergis/mapbox-gl-legend@latest/dist/cdn/mapbox-gl-legend.js',
+          'https://unpkg.com/@watergis/mapbox-gl-legend@latest/dist/cdn/mapbox-gl-legend.js',
+        ];
+
+        let lgLoaded = false;
+        for (const src of legendCandidates) {
+          if (hadAMDLg) window.define = undefined;
+          if (hadModLg) window.module = undefined;
+          if (hadExpLg) window.exports = undefined;
+
+          /* eslint-disable no-await-in-loop */
+          const result = await tryLoadLg(src);
+          restoreEnvLg();
+          if (result.ok && resolveLegendControlClass()) {
+            lgLoaded = true;
+            break;
+          }
+        }
+
+        if (!lgLoaded && !resolveLegendControlClass()) {
+          try {
+            let mod;
+            try { mod = await import('https://esm.sh/@watergis/mapbox-gl-legend@latest'); } catch (_) {}
+            if (!mod) {
+              try { mod = await import('https://esm.sh/mapbox-gl-legend@latest'); } catch (e2) { throw e2; }
+            }
+            const LegendCtor = mod?.default?.LegendControl || mod?.LegendControl || mod?.default || mod?.MapboxLegendControl;
+            if (LegendCtor && typeof LegendCtor === 'function') {
+              window.MapboxLegendControl = LegendCtor;
+            } else if (mod && typeof mod === 'object') {
+              // Attempt to attach module under a known global for later resolution
+              window.MapboxLegendControl = mod;
+            }
+          } catch (e) {
+            console.warn('Failed to dynamically import mapbox-gl-legend:', e);
+          }
+        }
+
+        // Load CSS for Legend plugin
+        const hasLegendStyle = document.querySelector('link[href*="mapbox-gl-legend"][href*="style.css"]') ||
+                               document.querySelector('link[href*="mapbox-gl-legend"][href*="styles.css"]') ||
+                               document.querySelector('link[href*="@watergis/mapbox-gl-legend"][href*="style.css"]') ||
+                               document.querySelector('link[href*="@watergis/mapbox-gl-legend"][href*="styles.css"]');
+        if (!hasLegendStyle) {
+          const inject = (href) => { const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = href; document.head.appendChild(l); };
+          inject('https://cdn.jsdelivr.net/npm/@watergis/mapbox-gl-legend@latest/css/styles.css');
+          inject('https://unpkg.com/@watergis/mapbox-gl-legend@latest/css/styles.css');
         }
       }
 
@@ -3843,7 +4659,7 @@ function render({ model, el }) {
                 return;
               case 'layer_control':
                 // Handle layer control restoration
-                control = new LayerControl(controlOptions || {}, map, model);
+                control = new LayerControl(controlOptions || {}, map, model, el);
                 break;
               case 'geoman': {
                 scheduleGeomanInitialization(controlKey, {
@@ -4408,6 +5224,11 @@ function render({ model, el }) {
                 }
                 break;
               }
+              case 'legend': {
+                const { position: _pos, ...other } = controlOptions || {};
+                scheduleLegendInitialization(controlKey, { position, options: other }, map, el);
+                return;
+              }
               default:
                 console.warn(`Unknown control type during restore: ${controlType}`);
                 return;
@@ -4848,7 +5669,7 @@ function render({ model, el }) {
                 control = new maplibregl.GlobeControl(controlOptions || {});
                 break;
               case 'layer_control':
-                control = new LayerControl(controlOptions || {}, map, model);
+                control = new LayerControl(controlOptions || {}, map, model, el);
                 break;
               case 'geoman': {
                 scheduleGeomanInitialization(controlKey, {
@@ -5140,6 +5961,12 @@ function render({ model, el }) {
                   return;
                 }
                 break;
+              }
+
+              case 'legend': {
+                const { position: _pos, ...other } = controlOptions || {};
+                scheduleLegendInitialization(controlKey, { position, options: other }, map, el);
+                return;
               }
 
               case 'maplibre_geocoder': {

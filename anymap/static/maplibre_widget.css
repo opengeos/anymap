@@ -435,6 +435,19 @@
   opacity: 0.45;
 }
 
+.layer-control-legend-button {
+  color: #565b65;
+}
+
+.layer-control-legend-button.layer-control-legend-active {
+  color: #1f6feb;
+  background-color: rgba(31, 111, 235, 0.12);
+}
+
+.layer-control-legend-button.layer-control-legend-active:hover {
+  background-color: rgba(31, 111, 235, 0.18);
+}
+
 .layer-control-style-editor {
   display: none;
   width: 100%;
