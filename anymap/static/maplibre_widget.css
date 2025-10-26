@@ -448,6 +448,12 @@
   background-color: rgba(31, 111, 235, 0.18);
 }
 
+.anymap-legend-collapsed {
+  width: auto !important;
+  height: auto !important;
+  padding: 4px !important;
+}
+
 .layer-control-style-editor {
   display: none;
   width: 100%;

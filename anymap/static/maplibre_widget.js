@@ -166,6 +166,7 @@ function scheduleLegendInitialization(controlKey, { position, options }, map, el
         toggleIcon: toggleIconRaw != null ? String(toggleIconRaw) : null,
         resizeHandler: null,
         mapResizeHandler: null,
+        base,
       };
 
       const originalGetLayerLegend = typeof base.getLayerLegend === 'function'
@@ -458,6 +459,25 @@ function scheduleLegendInitialization(controlKey, { position, options }, map, el
       patchLegendMethods();
       applyLabelOverrides();
 
+      const refreshLegend = (force = false) => {
+        try {
+          if (!controlState.base) {
+            return;
+          }
+          if (force && typeof controlState.base.updateLegendControl === 'function') {
+            controlState.base.updateLegendControl();
+            return;
+          }
+          if (typeof controlState.base.redraw === 'function') {
+            controlState.base.redraw();
+          } else if (typeof controlState.base.updateLegendControl === 'function') {
+            controlState.base.updateLegendControl();
+          }
+        } catch (error) {
+          console.debug('Legend refresh failed:', error);
+        }
+      };
+
       const control = {
         onAdd(m) {
           const elc = base.onAdd(m);
@@ -471,6 +491,10 @@ function scheduleLegendInitialization(controlKey, { position, options }, map, el
           controlState.container = elc;
           applyMaxHeight();
           applyLegendStyling();
+          refreshLegend(true);
+          if (controlState.autoMaxHeight) {
+            ensureAutoHeightListeners();
+          }
           return elc;
         },
         onRemove(m) {
@@ -534,13 +558,10 @@ function scheduleLegendInitialization(controlKey, { position, options }, map, el
             base.options = { ...(base.options || {}), ...controlState.options };
           }
 
-          if (typeof base.updateLegendControl === 'function') {
-            base.updateLegendControl();
-          } else if (typeof base.redraw === 'function') {
-            base.redraw();
-          }
+          refreshLegend();
           applyLegendStyling();
         },
+        refreshLegend: () => refreshLegend(true),
       };
       controlState.cleanup = () => {
         teardownAutoHeightListeners();
@@ -2342,6 +2363,28 @@ class LayerControl {
     const closeButton = container.querySelector('.mapboxgl-legend-close-button');
 
     this.configureLegendInteractions(container, panel, toggleButton, closeButton);
+
+    const state = (this.widgetEl && this.widgetEl._controls && this.widgetEl._controls.get(controlKey)?._anymapLegendState) || legendState;
+    const triggerRefresh = () => {
+      if (state && typeof state.base?.updateLegendControl === 'function') {
+        try {
+          state.base.updateLegendControl();
+        } catch (error) {
+          console.debug('Legend refresh on open failed:', error);
+        }
+      } else if (control && typeof control.refreshLegend === 'function') {
+        try {
+          control.refreshLegend();
+        } catch (error) {
+          console.debug('Legend refresh via control failed:', error);
+        }
+      }
+    };
+
+    triggerRefresh();
+    if (this.map && typeof this.map.once === 'function') {
+      this.map.once('idle', () => triggerRefresh());
+    }
   }
 
   configureLegendInteractions(container, panel, toggleButton, closeButton) {
@@ -2349,17 +2392,25 @@ class LayerControl {
       return;
     }
 
-    const setVisibility = (visible) => {
+    const setVisibility = (visible, force) => {
       if (panel) {
         panel.style.display = visible ? 'block' : 'none';
       }
       if (toggleButton) {
         toggleButton.setAttribute('aria-expanded', visible ? 'true' : 'false');
+        toggleButton.style.display = visible ? 'none' : 'inline-flex';
       }
-      this.setLegendButtonState(visible);
+      if (visible || force) {
+        this.setLegendButtonState(true);
+      } else {
+        this.setLegendButtonState(false);
+      }
+      if (container) {
+        container.classList.toggle('anymap-legend-collapsed', !visible);
+      }
     };
 
-    setVisibility(true);
+    setVisibility(true, true);
 
     if (toggleButton && !toggleButton.__anymapLegendToggleHook) {
       toggleButton.__anymapLegendToggleHook = true;
@@ -2373,6 +2424,18 @@ class LayerControl {
         event.stopImmediatePropagation();
         const isVisible = panel ? panel.style.display !== 'none' : false;
         setVisibility(!isVisible);
+        if (!isVisible) {
+          const state =
+            (this.widgetEl && this.widgetEl._controls && this.widgetEl._controls.get(this.legendControlKey)?._anymapLegendState) ||
+            null;
+          if (state && typeof state.base?.updateLegendControl === 'function') {
+            try {
+              state.base.updateLegendControl();
+            } catch (error) {
+              console.debug('Legend refresh on expand failed:', error);
+            }
+          }
+        }
       });
     }
 
@@ -2397,7 +2460,8 @@ class LayerControl {
       }
     };
     ensureOption('showDefault', 'show_default', true);
-    ensureOption('onlyRendered', 'only_rendered', false);
+    ensureOption('onlyRendered', 'only_rendered', true);
+    this.legendOptions = { ...legendOptions };
 
     const controlsMap = this.widgetEl && this.widgetEl._controls;
 
