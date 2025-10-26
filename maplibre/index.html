@@ -1501,6 +1501,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.add_legend_control" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_legend_control()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.add_maplibre_geocoder" class="md-nav__link">
     <span class="md-ellipsis">
       add_maplibre_geocoder()
@@ -2522,6 +2531,15 @@
   <a href="#anymap.maplibre.MapLibreMap.add_layer_control" class="md-nav__link">
     <span class="md-ellipsis">
       add_layer_control()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.add_legend_control" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_legend_control()
     </span>
   </a>
   
@@ -6199,6 +6217,123 @@ data sources, custom styling, and interactive features.</p>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addControl&quot;</span><span class="p">,</span> <span class="s2">&quot;gradientbox&quot;</span><span class="p">,</span> <span class="n">control_options</span><span class="p">)</span>
 
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_legend_control</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">position</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;bottom-left&quot;</span><span class="p">,</span>
+        <span class="n">show_default</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">show_checkbox</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">only_rendered</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">reverse_order</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">targets</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">label_overrides</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">max_height</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">toggle_icon</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a Legend control (watergis/mapbox-gl-legend) to the map.</span>
+
+<span class="sd">        The legend control inspects map layers and renders a legend UI. It works</span>
+<span class="sd">        best when layers include helpful `metadata` such as a human-readable</span>
+<span class="sd">        name, unit, or labels.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            position: Control position (&#39;top-left&#39;, &#39;top-right&#39;, &#39;bottom-left&#39;, &#39;bottom-right&#39;).</span>
+<span class="sd">            show_default: Whether to show default legend items inferred from layers.</span>
+<span class="sd">            show_checkbox: Whether to include visibility checkboxes per item.</span>
+<span class="sd">            only_rendered: If True, only include layers currently rendered in viewport.</span>
+<span class="sd">            reverse_order: If True, reverse the legend item order.</span>
+<span class="sd">            options: Additional plugin options forwarded to LegendControl.</span>
+<span class="sd">            targets: Optional mapping of layer IDs to include in the legend. When</span>
+<span class="sd">                provided, only these layers will appear (matching plugin behaviour).</span>
+<span class="sd">            label_overrides: Optional mapping of layer IDs to custom legend labels.</span>
+<span class="sd">                When omitted, labels are derived from layer metadata and fall back</span>
+<span class="sd">                to layer ids. This does not restrict which layers are shown.</span>
+<span class="sd">            max_height: Optional CSS size (e.g. 320, &quot;320px&quot;, &quot;60vh&quot;) used to cap the</span>
+<span class="sd">                legend panel height. When provided, a scrollbar appears if content</span>
+<span class="sd">                exceeds this limit.</span>
+<span class="sd">            toggle_icon: Optional HTML string or Unicode glyph for the collapsed</span>
+<span class="sd">                legend toggle button. Defaults to a list-style icon if omitted.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_derive_labels</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+            <span class="n">derived</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">layer_id</span><span class="p">,</span> <span class="n">layer_info</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">layer_config</span> <span class="o">=</span> <span class="n">layer_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="p">{})</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layer_config</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                    <span class="k">continue</span>
+
+                <span class="k">if</span> <span class="n">layer_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;background&quot;</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">layer_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;visible&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
+                    <span class="k">continue</span>
+
+                <span class="n">metadata</span> <span class="o">=</span> <span class="n">layer_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;metadata&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+                <span class="n">legend_meta</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;legend&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+                <span class="k">if</span> <span class="n">legend_meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;exclude&quot;</span><span class="p">):</span>
+                    <span class="k">continue</span>
+
+                <span class="n">label</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">legend_meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">)</span>
+                    <span class="ow">or</span> <span class="n">legend_meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">)</span>
+                    <span class="ow">or</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
+                    <span class="ow">or</span> <span class="n">legend_meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
+                    <span class="ow">or</span> <span class="n">layer_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
+                    <span class="ow">or</span> <span class="n">layer_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span>
+                    <span class="ow">or</span> <span class="n">layer_id</span>
+                <span class="p">)</span>
+                <span class="n">derived</span><span class="p">[</span><span class="n">layer_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">label</span>
+
+            <span class="k">return</span> <span class="n">derived</span>
+
+        <span class="n">control_options</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">options</span> <span class="ow">or</span> <span class="p">{})</span>
+        <span class="n">control_options</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
+                <span class="s2">&quot;showDefault&quot;</span><span class="p">:</span> <span class="n">show_default</span><span class="p">,</span>
+                <span class="s2">&quot;showCheckbox&quot;</span><span class="p">:</span> <span class="n">show_checkbox</span><span class="p">,</span>
+                <span class="s2">&quot;onlyRendered&quot;</span><span class="p">:</span> <span class="n">only_rendered</span><span class="p">,</span>
+                <span class="s2">&quot;reverseOrder&quot;</span><span class="p">:</span> <span class="n">reverse_order</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">targets</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">control_options</span><span class="p">[</span><span class="s2">&quot;targets&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">targets</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">max_height</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">max_height</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+                <span class="n">max_height_value</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">max_height</span><span class="si">}</span><span class="s2">px&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">max_height_value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">max_height</span><span class="p">)</span>
+            <span class="n">control_options</span><span class="p">[</span><span class="s2">&quot;maxHeight&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_height_value</span>
+
+        <span class="k">if</span> <span class="n">toggle_icon</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">control_options</span><span class="p">[</span><span class="s2">&quot;toggleIcon&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">toggle_icon</span><span class="p">)</span>
+
+        <span class="n">auto_labels</span> <span class="o">=</span> <span class="n">_derive_labels</span><span class="p">()</span>
+        <span class="n">merged_labels</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">auto_labels</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">label_map</span> <span class="ow">in</span> <span class="p">(</span>
+            <span class="n">control_options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;label_overrides&quot;</span><span class="p">),</span>
+            <span class="n">control_options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;labelOverrides&quot;</span><span class="p">),</span>
+            <span class="n">label_overrides</span><span class="p">,</span>
+        <span class="p">):</span>
+            <span class="k">if</span> <span class="n">label_map</span><span class="p">:</span>
+                <span class="n">merged_labels</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">label_map</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">merged_labels</span><span class="p">:</span>
+            <span class="n">control_options</span><span class="p">[</span><span class="s2">&quot;label_overrides&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">merged_labels</span>
+
+        <span class="n">control_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;legend_</span><span class="si">{</span><span class="n">position</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">current_controls</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_controls</span><span class="p">)</span>
+        <span class="n">current_controls</span><span class="p">[</span><span class="n">control_key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;legend&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
+            <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="n">control_options</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_controls</span> <span class="o">=</span> <span class="n">current_controls</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addControl&quot;</span><span class="p">,</span> <span class="s2">&quot;legend&quot;</span><span class="p">,</span> <span class="n">control_options</span><span class="p">)</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">_process_deckgl_props</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">props</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Process DeckGL properties to handle lambda functions and other non-serializable objects.</span>
 
@@ -9858,6 +9993,228 @@ similar to other controls, and expands when clicked.</p>
 
   </div>
 
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="anymap.maplibre.MapLibreMap.add_legend_control" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">add_legend_control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s1">&#39;bottom-left&#39;</span><span class="p">,</span> <span class="n">show_default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">show_checkbox</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">only_rendered</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">reverse_order</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">targets</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">label_overrides</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">toggle_icon</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+
+<a href="#anymap.maplibre.MapLibreMap.add_legend_control" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Add a Legend control (watergis/mapbox-gl-legend) to the map.</p>
+<p>The legend control inspects map layers and renders a legend UI. It works
+best when layers include helpful <code>metadata</code> such as a human-readable
+name, unit, or labels.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>position</code></td>
+        <td><code>str</code></td>
+        <td><p>Control position ('top-left', 'top-right', 'bottom-left', 'bottom-right').</p></td>
+        <td><code>&#39;bottom-left&#39;</code></td>
+      </tr>
+      <tr>
+        <td><code>show_default</code></td>
+        <td><code>bool</code></td>
+        <td><p>Whether to show default legend items inferred from layers.</p></td>
+        <td><code>True</code></td>
+      </tr>
+      <tr>
+        <td><code>show_checkbox</code></td>
+        <td><code>bool</code></td>
+        <td><p>Whether to include visibility checkboxes per item.</p></td>
+        <td><code>True</code></td>
+      </tr>
+      <tr>
+        <td><code>only_rendered</code></td>
+        <td><code>bool</code></td>
+        <td><p>If True, only include layers currently rendered in viewport.</p></td>
+        <td><code>False</code></td>
+      </tr>
+      <tr>
+        <td><code>reverse_order</code></td>
+        <td><code>bool</code></td>
+        <td><p>If True, reverse the legend item order.</p></td>
+        <td><code>False</code></td>
+      </tr>
+      <tr>
+        <td><code>options</code></td>
+        <td><code>Optional[Dict[str, Any]]</code></td>
+        <td><p>Additional plugin options forwarded to LegendControl.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>targets</code></td>
+        <td><code>Optional[Dict[str, str]]</code></td>
+        <td><p>Optional mapping of layer IDs to include in the legend. When
+provided, only these layers will appear (matching plugin behaviour).</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>label_overrides</code></td>
+        <td><code>Optional[Dict[str, str]]</code></td>
+        <td><p>Optional mapping of layer IDs to custom legend labels.
+When omitted, labels are derived from layer metadata and fall back
+to layer ids. This does not restrict which layers are shown.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>max_height</code></td>
+        <td><code>Union[int, float, str]</code></td>
+        <td><p>Optional CSS size (e.g. 320, "320px", "60vh") used to cap the
+legend panel height. When provided, a scrollbar appears if content
+exceeds this limit.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>toggle_icon</code></td>
+        <td><code>Optional[str]</code></td>
+        <td><p>Optional HTML string or Unicode glyph for the collapsed
+legend toggle button. Defaults to a list-style icon if omitted.</p></td>
+        <td><code>None</code></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>anymap/maplibre.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_legend_control</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">position</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;bottom-left&quot;</span><span class="p">,</span>
+    <span class="n">show_default</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">show_checkbox</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">only_rendered</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">reverse_order</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">targets</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">label_overrides</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">max_height</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">toggle_icon</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a Legend control (watergis/mapbox-gl-legend) to the map.</span>
+
+<span class="sd">    The legend control inspects map layers and renders a legend UI. It works</span>
+<span class="sd">    best when layers include helpful `metadata` such as a human-readable</span>
+<span class="sd">    name, unit, or labels.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        position: Control position (&#39;top-left&#39;, &#39;top-right&#39;, &#39;bottom-left&#39;, &#39;bottom-right&#39;).</span>
+<span class="sd">        show_default: Whether to show default legend items inferred from layers.</span>
+<span class="sd">        show_checkbox: Whether to include visibility checkboxes per item.</span>
+<span class="sd">        only_rendered: If True, only include layers currently rendered in viewport.</span>
+<span class="sd">        reverse_order: If True, reverse the legend item order.</span>
+<span class="sd">        options: Additional plugin options forwarded to LegendControl.</span>
+<span class="sd">        targets: Optional mapping of layer IDs to include in the legend. When</span>
+<span class="sd">            provided, only these layers will appear (matching plugin behaviour).</span>
+<span class="sd">        label_overrides: Optional mapping of layer IDs to custom legend labels.</span>
+<span class="sd">            When omitted, labels are derived from layer metadata and fall back</span>
+<span class="sd">            to layer ids. This does not restrict which layers are shown.</span>
+<span class="sd">        max_height: Optional CSS size (e.g. 320, &quot;320px&quot;, &quot;60vh&quot;) used to cap the</span>
+<span class="sd">            legend panel height. When provided, a scrollbar appears if content</span>
+<span class="sd">            exceeds this limit.</span>
+<span class="sd">        toggle_icon: Optional HTML string or Unicode glyph for the collapsed</span>
+<span class="sd">            legend toggle button. Defaults to a list-style icon if omitted.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_derive_labels</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+        <span class="n">derived</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">layer_id</span><span class="p">,</span> <span class="n">layer_info</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">layer_config</span> <span class="o">=</span> <span class="n">layer_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">,</span> <span class="p">{})</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layer_config</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">layer_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;background&quot;</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">layer_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;visible&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="n">metadata</span> <span class="o">=</span> <span class="n">layer_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;metadata&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+            <span class="n">legend_meta</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;legend&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+            <span class="k">if</span> <span class="n">legend_meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;exclude&quot;</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="n">label</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">legend_meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">)</span>
+                <span class="ow">or</span> <span class="n">legend_meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">)</span>
+                <span class="ow">or</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
+                <span class="ow">or</span> <span class="n">legend_meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
+                <span class="ow">or</span> <span class="n">layer_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
+                <span class="ow">or</span> <span class="n">layer_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span>
+                <span class="ow">or</span> <span class="n">layer_id</span>
+            <span class="p">)</span>
+            <span class="n">derived</span><span class="p">[</span><span class="n">layer_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">label</span>
+
+        <span class="k">return</span> <span class="n">derived</span>
+
+    <span class="n">control_options</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">options</span> <span class="ow">or</span> <span class="p">{})</span>
+    <span class="n">control_options</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
+            <span class="s2">&quot;showDefault&quot;</span><span class="p">:</span> <span class="n">show_default</span><span class="p">,</span>
+            <span class="s2">&quot;showCheckbox&quot;</span><span class="p">:</span> <span class="n">show_checkbox</span><span class="p">,</span>
+            <span class="s2">&quot;onlyRendered&quot;</span><span class="p">:</span> <span class="n">only_rendered</span><span class="p">,</span>
+            <span class="s2">&quot;reverseOrder&quot;</span><span class="p">:</span> <span class="n">reverse_order</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">targets</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">control_options</span><span class="p">[</span><span class="s2">&quot;targets&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">targets</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">max_height</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">max_height</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+            <span class="n">max_height_value</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">max_height</span><span class="si">}</span><span class="s2">px&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">max_height_value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">max_height</span><span class="p">)</span>
+        <span class="n">control_options</span><span class="p">[</span><span class="s2">&quot;maxHeight&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_height_value</span>
+
+    <span class="k">if</span> <span class="n">toggle_icon</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">control_options</span><span class="p">[</span><span class="s2">&quot;toggleIcon&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">toggle_icon</span><span class="p">)</span>
+
+    <span class="n">auto_labels</span> <span class="o">=</span> <span class="n">_derive_labels</span><span class="p">()</span>
+    <span class="n">merged_labels</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">auto_labels</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">label_map</span> <span class="ow">in</span> <span class="p">(</span>
+        <span class="n">control_options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;label_overrides&quot;</span><span class="p">),</span>
+        <span class="n">control_options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;labelOverrides&quot;</span><span class="p">),</span>
+        <span class="n">label_overrides</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="n">label_map</span><span class="p">:</span>
+            <span class="n">merged_labels</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">label_map</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">merged_labels</span><span class="p">:</span>
+        <span class="n">control_options</span><span class="p">[</span><span class="s2">&quot;label_overrides&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">merged_labels</span>
+
+    <span class="n">control_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;legend_</span><span class="si">{</span><span class="n">position</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">current_controls</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_controls</span><span class="p">)</span>
+    <span class="n">current_controls</span><span class="p">[</span><span class="n">control_key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;legend&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
+        <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="n">control_options</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_controls</span> <span class="o">=</span> <span class="n">current_controls</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addControl&quot;</span><span class="p">,</span> <span class="s2">&quot;legend&quot;</span><span class="p">,</span> <span class="n">control_options</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
 
 
 
