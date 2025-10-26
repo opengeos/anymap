@@ -2888,6 +2888,104 @@ class MapLibreMap(MapWidget):
 
         self.call_js_method("addControl", "temporal", control_options)
 
+    def add_infobox_control(
+        self,
+        position: str = "top-right",
+        layer_id: Optional[str] = None,
+        formatter: Optional[Union[str, Any]] = None,
+        collapsed: bool = True,
+        options: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        """Add an InfoBox control (mapbox-gl-infobox) to display feature attributes.
+
+        Args:
+            position: Control position ('top-left', 'top-right', 'bottom-left', 'bottom-right').
+            layer_id: Optional target layer id to listen for hover/click features.
+            formatter: Either an HTML template string (e.g., "<b>{{name}}</b>") or a callable
+                taking a properties dict and returning HTML. Strings will be templated against
+                feature properties; unknown keys render as empty.
+            collapsed: Whether the control starts collapsed.
+            options: Additional plugin options passed through.
+        """
+        control_options: Dict[str, Any] = dict(options or {})
+        control_options.update(
+            {
+                "position": position,
+                "collapsed": collapsed,
+            }
+        )
+        if layer_id is not None:
+            control_options["layerId"] = layer_id
+        if formatter is not None:
+            # Strings are handled as templates in JS; callables cannot be serialized
+            if isinstance(formatter, str):
+                control_options["formatter"] = formatter
+            else:
+                # Best-effort stringification to avoid non-serializable objects
+                control_options["formatter_template"] = str(formatter)
+
+        control_key = f"infobox_{position}"
+        current_controls = dict(self._controls)
+        current_controls[control_key] = {
+            "type": "infobox",
+            "position": position,
+            "options": control_options,
+        }
+        self._controls = current_controls
+
+        self.call_js_method("addControl", "infobox", control_options)
+
+    def add_gradientbox_control(
+        self,
+        position: str = "top-right",
+        layer_id: Optional[str] = None,
+        weight_property: Optional[str] = None,
+        min_value: Optional[float] = None,
+        max_value: Optional[float] = None,
+        colors: Optional[List[str]] = None,
+        collapsed: bool = True,
+        options: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        """Add a GradientBox control (mapbox-gl-infobox) to show value legend.
+
+        Args:
+            position: Control position.
+            layer_id: Optional target layer id used for value extraction.
+            weight_property: Feature property name used to compute weights.
+            min_value: Minimum value for gradient legend.
+            max_value: Maximum value for gradient legend.
+            collapsed: Whether the control starts collapsed.
+            options: Additional plugin options.
+        """
+        control_options: Dict[str, Any] = dict(options or {})
+        control_options.update(
+            {
+                "position": position,
+                "collapsed": collapsed,
+            }
+        )
+        if layer_id is not None:
+            control_options["layerId"] = layer_id
+        if weight_property is not None:
+            control_options["weight_property"] = weight_property
+        if min_value is not None or max_value is not None:
+            # JS layer will normalize into minMaxValues
+            control_options["min_value"] = min_value
+            control_options["max_value"] = max_value
+        if colors is not None:
+            control_options["colors"] = colors
+
+        control_key = f"gradientbox_{position}"
+        current_controls = dict(self._controls)
+        current_controls[control_key] = {
+            "type": "gradientbox",
+            "position": position,
+            "options": control_options,
+        }
+        self._controls = current_controls
+
+        self.call_js_method("addControl", "gradientbox", control_options)
+
     def _process_deckgl_props(self, props: Dict[str, Any]) -> Dict[str, Any]:
         """Process DeckGL properties to handle lambda functions and other non-serializable objects.
 
