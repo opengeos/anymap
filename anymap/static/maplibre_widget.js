@@ -2392,13 +2392,48 @@ class LayerControl {
       return;
     }
 
+    if (!container.__anymapLegendOriginalStyle) {
+      container.__anymapLegendOriginalStyle = {
+        width: container.style.width || '',
+        height: container.style.height || '',
+        padding: container.style.padding || '',
+        background: container.style.background || '',
+        boxShadow: container.style.boxShadow || '',
+        borderRadius: container.style.borderRadius || '',
+        border: container.style.border || '',
+      };
+    }
+
+    const applyCollapsedStyles = (collapsed) => {
+      const original = container.__anymapLegendOriginalStyle;
+      if (collapsed) {
+        container.style.width = 'auto';
+        container.style.height = 'auto';
+        container.style.padding = '4px';
+        container.style.background = 'transparent';
+        container.style.boxShadow = 'none';
+        container.style.border = 'none';
+        container.style.borderRadius = '4px';
+      } else if (original) {
+        container.style.width = original.width;
+        container.style.height = original.height;
+        container.style.padding = original.padding;
+        container.style.background = original.background;
+        container.style.boxShadow = original.boxShadow;
+        container.style.borderRadius = original.borderRadius;
+        container.style.border = original.border;
+      }
+    };
+
     const setVisibility = (visible, force) => {
       if (panel) {
         panel.style.display = visible ? 'block' : 'none';
       }
       if (toggleButton) {
         toggleButton.setAttribute('aria-expanded', visible ? 'true' : 'false');
-        toggleButton.style.display = visible ? 'none' : 'inline-flex';
+        toggleButton.style.display = visible ? 'inline-flex' : 'inline-flex';
+        toggleButton.classList.toggle('anymap-legend-toggle-collapsed', !visible);
+        toggleButton.classList.toggle('anymap-legend-toggle-expanded', visible);
       }
       if (visible || force) {
         this.setLegendButtonState(true);
@@ -2407,6 +2442,10 @@ class LayerControl {
       }
       if (container) {
         container.classList.toggle('anymap-legend-collapsed', !visible);
+      }
+      applyCollapsedStyles(!visible);
+      if (toggleButton) {
+        toggleButton.style.margin = visible ? '0 0 6px 0' : '0';
       }
     };
 

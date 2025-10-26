@@ -454,6 +454,19 @@
   padding: 4px !important;
 }
 
+.anymap-legend-collapsed .mapboxgl-legend-list {
+  display: none !important;
+}
+
+.anymap-legend-toggle-collapsed {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.anymap-legend-toggle-expanded {
+  box-shadow: none;
+}
+
 .layer-control-style-editor {
   display: none;
   width: 100%;
