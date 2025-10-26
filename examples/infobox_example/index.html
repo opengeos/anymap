@@ -12,9 +12,13 @@
         <meta name="author" content="giswqs">
       
       
-        <link rel="canonical" href="https://anymap.dev/examples/to_html/">
+        <link rel="canonical" href="https://anymap.dev/examples/infobox_example/">
       
       
+        <link rel="prev" href="../maplibre_example/">
+      
+      
+        <link rel="next" href="../mapbox_example/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -22,7 +26,7 @@
     
     
       
-        <title>To html - anymap</title>
+        <title>Infobox example - anymap</title>
       
     
     
@@ -78,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#html-export-example" class="md-skip">
+        <a href="#infobox-and-gradientbox-controls-example" class="md-skip">
           Skip to content
         </a>
       
@@ -114,7 +118,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              To html
+              Infobox example
             
           </span>
         </div>
@@ -416,18 +420,20 @@
       
   
   
+    
   
   
+  
     
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
         
           
           <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
@@ -443,7 +449,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             Examples
@@ -500,10 +506,32 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../infobox_example/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Infobox example
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -514,6 +542,53 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-map-and-add-a-demo-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      Create a map and add a demo layer
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-infobox-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      Add InfoBox control
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-gradientbox-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      Add GradientBox control
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1357,104 +1432,29 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#maplibre-export-example" class="md-nav__link">
+  <a href="#create-a-map-and-add-a-demo-layer" class="md-nav__link">
     <span class="md-ellipsis">
-      MapLibre Export Example
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="MapLibre Export Example">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#export-maplibre-map-to-html" class="md-nav__link">
-    <span class="md-ellipsis">
-      Export MapLibre Map to HTML
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#preview-the-html-content" class="md-nav__link">
-    <span class="md-ellipsis">
-      Preview the HTML Content
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#mapbox-export-example" class="md-nav__link">
-    <span class="md-ellipsis">
-      Mapbox Export Example
+      Create a map and add a demo layer
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#advanced-export-options" class="md-nav__link">
+  <a href="#add-infobox-control" class="md-nav__link">
     <span class="md-ellipsis">
-      Advanced Export Options
+      Add InfoBox control
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#return-html-as-string-no-file" class="md-nav__link">
+  <a href="#add-gradientbox-control" class="md-nav__link">
     <span class="md-ellipsis">
-      Return HTML as String (No File)
+      Add GradientBox control
     </span>
   </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#summary" class="md-nav__link">
-    <span class="md-ellipsis">
-      Summary
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Summary">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#features" class="md-nav__link">
-    <span class="md-ellipsis">
-      ✨ Features:
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#use-cases" class="md-nav__link">
-    <span class="md-ellipsis">
-      🎯 Use Cases:
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#generated-files" class="md-nav__link">
-    <span class="md-ellipsis">
-      📂 Generated Files:
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1471,7 +1471,7 @@
               <article class="md-content__inner md-typeset">
                 
 
-    <a href="/examples/to_html/to_html.ipynb" title="Download Notebook" class="md-content__button md-icon">
+    <a href="/examples/infobox_example/infobox_example.ipynb" title="Download Notebook" class="md-content__button md-icon">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 20h14v-2H5m14-9h-4V3H9v6H5l7 7z"/></svg>
     </a>
 
@@ -1926,8 +1926,8 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="html-export-example">HTML Export Example<a class="anchor-link" href="#html-export-example">¶</a></h1><p>This notebook demonstrates how to export anymap maps to standalone HTML files using the <code>to_html()</code> method.</p>
-<p>The exported HTML files are self-contained and can be opened in any web browser while maintaining all map layers and interactivity.</p>
+<h1 id="infobox-and-gradientbox-controls-example">InfoBox and GradientBox Controls Example<a class="anchor-link" href="#infobox-and-gradientbox-controls-example">¶</a></h1><p>This notebook demonstrates how to use the <code>mapbox-gl-infobox</code> plugin with AnyMap's MapLibre maps.
+It shows both the InfoBox (feature attributes) and GradientBox (value legend) controls.</p>
 </div>
 </div>
 </div>
@@ -1950,11 +1950,9 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">anymap</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">anymap</span><span class="w"> </span><span class="kn">import</span> <span class="n">MapLibreMap</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-1">import anymap
-import json</div>
+<div class="clipboard-copy-txt" id="cell-1">from anymap import MapLibreMap</div>
 </div>
 </div>
 </div>
@@ -1967,7 +1965,7 @@ import json</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="maplibre-export-example">MapLibre Export Example<a class="anchor-link" href="#maplibre-export-example">¶</a></h2><p>Create a MapLibre map with various layer types and export it to HTML.</p>
+<h2 id="create-a-map-and-add-a-demo-layer">Create a map and add a demo layer<a class="anchor-link" href="#create-a-map-and-add-a-demo-layer">¶</a></h2>
 </div>
 </div>
 </div>
@@ -1990,110 +1988,54 @@ import json</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Create a MapLibre map</span>
-<span class="n">m</span> <span class="o">=</span> <span class="n">anymap</span><span class="o">.</span><span class="n">MapLibreMap</span><span class="p">(</span>
-    <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mf">37.7749</span><span class="p">,</span> <span class="o">-</span><span class="mf">122.4194</span><span class="p">],</span>  <span class="c1"># San Francisco</span>
-    <span class="n">zoom</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
-    <span class="n">style</span><span class="o">=</span><span class="s2">"https://demotiles.maplibre.org/style.json"</span><span class="p">,</span>
-<span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Create a MapLibre map and add world cities from the provided dataset</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span><span class="o">,</span><span class="w"> </span><span class="nn">urllib.request</span>
 
-<span class="c1"># Add a GeoJSON layer with some sample data</span>
-<span class="n">sample_geojson</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"FeatureCollection"</span><span class="p">,</span>
-    <span class="s2">"features"</span><span class="p">:</span> <span class="p">[</span>
-        <span class="p">{</span>
-            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Feature"</span><span class="p">,</span>
-            <span class="s2">"geometry"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Point"</span><span class="p">,</span> <span class="s2">"coordinates"</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">122.4194</span><span class="p">,</span> <span class="mf">37.7749</span><span class="p">]},</span>
-            <span class="s2">"properties"</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"San Francisco"</span><span class="p">,</span>
-                <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"The beautiful city by the bay"</span><span class="p">,</span>
-            <span class="p">},</span>
-        <span class="p">},</span>
-        <span class="p">{</span>
-            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Feature"</span><span class="p">,</span>
-            <span class="s2">"geometry"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Point"</span><span class="p">,</span> <span class="s2">"coordinates"</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">122.4594</span><span class="p">,</span> <span class="mf">37.7849</span><span class="p">]},</span>
-            <span class="s2">"properties"</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Golden Gate Park"</span><span class="p">,</span>
-                <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Large urban park"</span><span class="p">,</span>
-            <span class="p">},</span>
-        <span class="p">},</span>
-    <span class="p">],</span>
-<span class="p">}</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">MapLibreMap</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">"liberty"</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s2">"600px"</span><span class="p">)</span>
 
-<span class="c1"># Add the GeoJSON layer</span>
+<span class="k">with</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span>
+    <span class="s2">"https://github.com/opengeos/datasets/releases/download/world/world_cities.geojson"</span>
+<span class="p">)</span> <span class="k">as</span> <span class="n">resp</span><span class="p">:</span>
+    <span class="n">world_cities</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span>
+
 <span class="n">m</span><span class="o">.</span><span class="n">add_geojson_layer</span><span class="p">(</span>
-    <span class="n">layer_id</span><span class="o">=</span><span class="s2">"sample_points"</span><span class="p">,</span>
-    <span class="n">geojson_data</span><span class="o">=</span><span class="n">sample_geojson</span><span class="p">,</span>
+    <span class="n">layer_id</span><span class="o">=</span><span class="s2">"world-cities"</span><span class="p">,</span>
+    <span class="n">geojson_data</span><span class="o">=</span><span class="n">world_cities</span><span class="p">,</span>
     <span class="n">layer_type</span><span class="o">=</span><span class="s2">"circle"</span><span class="p">,</span>
     <span class="n">paint</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">"circle-radius"</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
-        <span class="s2">"circle-color"</span><span class="p">:</span> <span class="s2">"#ff6b6b"</span><span class="p">,</span>
+        <span class="s2">"circle-radius"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="s2">"circle-color"</span><span class="p">:</span> <span class="s2">"#e11d48"</span><span class="p">,</span>
+        <span class="s2">"circle-opacity"</span><span class="p">:</span> <span class="mf">0.7</span><span class="p">,</span>
+        <span class="s2">"circle-stroke-width"</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
         <span class="s2">"circle-stroke-color"</span><span class="p">:</span> <span class="s2">"#ffffff"</span><span class="p">,</span>
-        <span class="s2">"circle-stroke-width"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
     <span class="p">},</span>
 <span class="p">)</span>
 
-<span class="c1"># Add a raster layer (OpenStreetMap tiles)</span>
-<span class="n">m</span><span class="o">.</span><span class="n">add_tile_layer</span><span class="p">(</span>
-    <span class="n">layer_id</span><span class="o">=</span><span class="s2">"osm_overlay"</span><span class="p">,</span>
-    <span class="n">source_url</span><span class="o">=</span><span class="s2">"https://tile.openstreetmap.org/</span><span class="si">{z}</span><span class="s2">/</span><span class="si">{x}</span><span class="s2">/</span><span class="si">{y}</span><span class="s2">.png"</span><span class="p">,</span>
-    <span class="n">paint</span><span class="o">=</span><span class="p">{</span><span class="s2">"raster-opacity"</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">},</span>
-<span class="p">)</span>
-
-<span class="c1"># Display the map</span>
 <span class="n">m</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-2"># Create a MapLibre map
-m = anymap.MapLibreMap(
-    center=[37.7749, -122.4194],  # San Francisco
-    zoom=12,
-    style="https://demotiles.maplibre.org/style.json",
-)
+<div class="clipboard-copy-txt" id="cell-2"># Create a MapLibre map and add world cities from the provided dataset
+import json, urllib.request
 
-# Add a GeoJSON layer with some sample data
-sample_geojson = {
-    "type": "FeatureCollection",
-    "features": [
-        {
-            "type": "Feature",
-            "geometry": {"type": "Point", "coordinates": [-122.4194, 37.7749]},
-            "properties": {
-                "name": "San Francisco",
-                "description": "The beautiful city by the bay",
-            },
-        },
-        {
-            "type": "Feature",
-            "geometry": {"type": "Point", "coordinates": [-122.4594, 37.7849]},
-            "properties": {
-                "name": "Golden Gate Park",
-                "description": "Large urban park",
-            },
-        },
-    ],
-}
+m = MapLibreMap(center=[0, 20], zoom=2.5, style="liberty", height="600px")
 
-# Add the GeoJSON layer
+with urllib.request.urlopen(
+    "https://github.com/opengeos/datasets/releases/download/world/world_cities.geojson"
+) as resp:
+    world_cities = json.load(resp)
+
 m.add_geojson_layer(
-    layer_id="sample_points",
-    geojson_data=sample_geojson,
+    layer_id="world-cities",
+    geojson_data=world_cities,
     layer_type="circle",
     paint={
-        "circle-radius": 10,
-        "circle-color": "#ff6b6b",
+        "circle-radius": 3,
+        "circle-color": "#e11d48",
+        "circle-opacity": 0.7,
+        "circle-stroke-width": 0.5,
         "circle-stroke-color": "#ffffff",
-        "circle-stroke-width": 2,
     },
 )
 
-# Add a raster layer (OpenStreetMap tiles)
-m.add_tile_layer(
-    layer_id="osm_overlay",
-    source_url="https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-    paint={"raster-opacity": 0.3},
-)
-
-# Display the map
 m</div>
 </div>
 </div>
@@ -2107,7 +2049,7 @@ m</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="export-maplibre-map-to-html">Export MapLibre Map to HTML<a class="anchor-link" href="#export-maplibre-map-to-html">¶</a></h3><p>Now let's export this map to a standalone HTML file:</p>
+<h2 id="add-infobox-control">Add InfoBox control<a class="anchor-link" href="#add-infobox-control">¶</a></h2>
 </div>
 </div>
 </div>
@@ -2130,29 +2072,23 @@ m</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Export to HTML file</span>
-<span class="n">html_content</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">to_html</span><span class="p">(</span>
-    <span class="n">filename</span><span class="o">=</span><span class="s2">"maplibre_export.html"</span><span class="p">,</span>
-    <span class="n">title</span><span class="o">=</span><span class="s2">"San Francisco Map - MapLibre Export"</span><span class="p">,</span>
-    <span class="n">width</span><span class="o">=</span><span class="s2">"100%"</span><span class="p">,</span>
-    <span class="n">height</span><span class="o">=</span><span class="s2">"700px"</span><span class="p">,</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Show feature attributes when hovering/clicking on cities</span>
+<span class="n">m</span><span class="o">.</span><span class="n">add_infobox_control</span><span class="p">(</span>
+    <span class="n">position</span><span class="o">=</span><span class="s2">"bottom-right"</span><span class="p">,</span>
+    <span class="n">layer_id</span><span class="o">=</span><span class="s2">"world-cities"</span><span class="p">,</span>
+    <span class="n">formatter</span><span class="o">=</span><span class="s2">"&lt;div style='margin: 8px; font-size: 14px;'&gt;&lt;b&gt;{{name}}&lt;/b&gt;&lt;br/&gt;Population: {{population}}&lt;/div&gt;"</span><span class="p">,</span>
+    <span class="n">collapsed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"✅ Map exported to 'maplibre_export.html'"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"📄 HTML file size: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">html_content</span><span class="p">)</span><span class="si">}</span><span class="s2"> characters"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"🌐 You can now open the HTML file in any web browser!"</span><span class="p">)</span>
+<span class="c1"># m</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-3"># Export to HTML file
-html_content = m.to_html(
-    filename="maplibre_export.html",
-    title="San Francisco Map - MapLibre Export",
-    width="100%",
-    height="700px",
+<div class="clipboard-copy-txt" id="cell-3"># Show feature attributes when hovering/clicking on cities
+m.add_infobox_control(
+    position="bottom-right",
+    layer_id="world-cities",
+    formatter="<div style="margin: 8px; font-size: 14px;"><b>{{name}}</b><br/>Population: {{population}}</div>",
+    collapsed=False,
 )
-
-print("✅ Map exported to 'maplibre_export.html'")
-print(f"📄 HTML file size: {len(html_content)} characters")
-print("🌐 You can now open the HTML file in any web browser!")</div>
+# m</div>
 </div>
 </div>
 </div>
@@ -2165,7 +2101,7 @@ print("🌐 You can now open the HTML file in any web browser!")</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="preview-the-html-content">Preview the HTML Content<a class="anchor-link" href="#preview-the-html-content">¶</a></h3><p>Let's take a look at the generated HTML structure:</p>
+<h2 id="add-gradientbox-control">Add GradientBox control<a class="anchor-link" href="#add-gradientbox-control">¶</a></h2>
 </div>
 </div>
 </div>
@@ -2188,54 +2124,31 @@ print("🌐 You can now open the HTML file in any web browser!")</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Show the first 1000 characters of the HTML</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"HTML Preview (first 1000 characters):"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"="</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">html_content</span><span class="p">[:</span><span class="mi">1000</span><span class="p">]</span> <span class="o">+</span> <span class="s2">"..."</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"="</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
-
-<span class="c1"># Check what layers are included</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">🗺️  Layers included in export:"</span><span class="p">)</span>
-<span class="k">if</span> <span class="s2">"sample_points"</span> <span class="ow">in</span> <span class="n">html_content</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"  ✓ Sample points layer"</span><span class="p">)</span>
-<span class="k">if</span> <span class="s2">"osm_overlay"</span> <span class="ow">in</span> <span class="n">html_content</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"  ✓ OpenStreetMap overlay layer"</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">📍 Map configuration:"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  • Center: </span><span class="si">{</span><span class="n">m</span><span class="o">.</span><span class="n">center</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  • Zoom: </span><span class="si">{</span><span class="n">m</span><span class="o">.</span><span class="n">zoom</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  • Style: </span><span class="si">{</span><span class="n">m</span><span class="o">.</span><span class="n">style</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Display a population legend for the dataset</span>
+<span class="n">m</span><span class="o">.</span><span class="n">add_gradientbox_control</span><span class="p">(</span>
+    <span class="n">position</span><span class="o">=</span><span class="s2">"top-left"</span><span class="p">,</span>
+    <span class="n">layer_id</span><span class="o">=</span><span class="s2">"world-cities"</span><span class="p">,</span>
+    <span class="n">weight_property</span><span class="o">=</span><span class="s2">"population"</span><span class="p">,</span>
+    <span class="n">min_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">max_value</span><span class="o">=</span><span class="mi">40000000</span><span class="p">,</span>
+    <span class="n">colors</span><span class="o">=</span><span class="p">[</span><span class="s2">"#ffffcc"</span><span class="p">,</span> <span class="s2">"#a1dab4"</span><span class="p">,</span> <span class="s2">"#41b6c4"</span><span class="p">,</span> <span class="s2">"#225ea8"</span><span class="p">,</span> <span class="s2">"#ffffff"</span><span class="p">],</span>
+    <span class="n">collapsed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="c1"># m</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-4"># Show the first 1000 characters of the HTML
-print("HTML Preview (first 1000 characters):")
-print("=" * 50)
-print(html_content[:1000] + "...")
-print("=" * 50)
-
-# Check what layers are included
-print("\n🗺️  Layers included in export:")
-if "sample_points" in html_content:
-    print("  ✓ Sample points layer")
-if "osm_overlay" in html_content:
-    print("  ✓ OpenStreetMap overlay layer")
-
-print("\n📍 Map configuration:")
-print(f"  • Center: {m.center}")
-print(f"  • Zoom: {m.zoom}")
-print(f"  • Style: {m.style}")</div>
+<div class="clipboard-copy-txt" id="cell-4"># Display a population legend for the dataset
+m.add_gradientbox_control(
+    position="top-left",
+    layer_id="world-cities",
+    weight_property="population",
+    min_value=0,
+    max_value=40000000,
+    colors=["#ffffcc", "#a1dab4", "#41b6c4", "#225ea8", "#ffffff"],
+    collapsed=True,
+)
+# m</div>
 </div>
 </div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="mapbox-export-example">Mapbox Export Example<a class="anchor-link" href="#mapbox-export-example">¶</a></h2><p>Now let's create a Mapbox map and export it to HTML. Note that you'll need a Mapbox access token for this to work properly.</p>
 </div>
 </div>
 </div>
@@ -2258,399 +2171,11 @@ print(f"  • Style: {m.style}")</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Create a Mapbox map (you'll need to set your access token)</span>
-<span class="c1"># You can set the token via environment variable MAPBOX_ACCESS_TOKEN</span>
-<span class="c1"># or pass it directly as access_token parameter</span>
-
-<span class="n">m_mapbox</span> <span class="o">=</span> <span class="n">anymap</span><span class="o">.</span><span class="n">MapboxMap</span><span class="p">(</span>
-    <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mf">40.7128</span><span class="p">,</span> <span class="o">-</span><span class="mf">74.0060</span><span class="p">],</span>  <span class="c1"># New York</span>
-    <span class="n">zoom</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span>
-    <span class="n">style</span><span class="o">=</span><span class="s2">"mapbox://styles/mapbox/streets-v12"</span><span class="p">,</span>
-    <span class="c1"># access_token="your_mapbox_token_here"  # Uncomment and add your token</span>
-<span class="p">)</span>
-
-<span class="c1"># Add some NYC landmarks</span>
-<span class="n">nyc_landmarks</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"FeatureCollection"</span><span class="p">,</span>
-    <span class="s2">"features"</span><span class="p">:</span> <span class="p">[</span>
-        <span class="p">{</span>
-            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Feature"</span><span class="p">,</span>
-            <span class="s2">"geometry"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Point"</span><span class="p">,</span> <span class="s2">"coordinates"</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">74.0445</span><span class="p">,</span> <span class="mf">40.6892</span><span class="p">]},</span>
-            <span class="s2">"properties"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Statue of Liberty"</span><span class="p">},</span>
-        <span class="p">},</span>
-        <span class="p">{</span>
-            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Feature"</span><span class="p">,</span>
-            <span class="s2">"geometry"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Point"</span><span class="p">,</span> <span class="s2">"coordinates"</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">73.9857</span><span class="p">,</span> <span class="mf">40.7484</span><span class="p">]},</span>
-            <span class="s2">"properties"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Empire State Building"</span><span class="p">},</span>
-        <span class="p">},</span>
-        <span class="p">{</span>
-            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Feature"</span><span class="p">,</span>
-            <span class="s2">"geometry"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Point"</span><span class="p">,</span> <span class="s2">"coordinates"</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">73.9781</span><span class="p">,</span> <span class="mf">40.7549</span><span class="p">]},</span>
-            <span class="s2">"properties"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Times Square"</span><span class="p">},</span>
-        <span class="p">},</span>
-    <span class="p">],</span>
-<span class="p">}</span>
-
-<span class="n">m_mapbox</span><span class="o">.</span><span class="n">add_geojson_layer</span><span class="p">(</span>
-    <span class="n">layer_id</span><span class="o">=</span><span class="s2">"nyc_landmarks"</span><span class="p">,</span>
-    <span class="n">geojson_data</span><span class="o">=</span><span class="n">nyc_landmarks</span><span class="p">,</span>
-    <span class="n">layer_type</span><span class="o">=</span><span class="s2">"circle"</span><span class="p">,</span>
-    <span class="n">paint</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">"circle-radius"</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
-        <span class="s2">"circle-color"</span><span class="p">:</span> <span class="s2">"#4264fb"</span><span class="p">,</span>
-        <span class="s2">"circle-stroke-color"</span><span class="p">:</span> <span class="s2">"#ffffff"</span><span class="p">,</span>
-        <span class="s2">"circle-stroke-width"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-    <span class="p">},</span>
-<span class="p">)</span>
-
-<span class="c1"># Display the map</span>
-<span class="n">m_mapbox</span>
+<div class="highlight-ipynb hl-python"><pre><span></span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-5"># Create a Mapbox map (you'll need to set your access token)
-# You can set the token via environment variable MAPBOX_ACCESS_TOKEN
-# or pass it directly as access_token parameter
-
-m_mapbox = anymap.MapboxMap(
-    center=[40.7128, -74.0060],  # New York
-    zoom=13,
-    style="mapbox://styles/mapbox/streets-v12",
-    # access_token="your_mapbox_token_here"  # Uncomment and add your token
-)
-
-# Add some NYC landmarks
-nyc_landmarks = {
-    "type": "FeatureCollection",
-    "features": [
-        {
-            "type": "Feature",
-            "geometry": {"type": "Point", "coordinates": [-74.0445, 40.6892]},
-            "properties": {"name": "Statue of Liberty"},
-        },
-        {
-            "type": "Feature",
-            "geometry": {"type": "Point", "coordinates": [-73.9857, 40.7484]},
-            "properties": {"name": "Empire State Building"},
-        },
-        {
-            "type": "Feature",
-            "geometry": {"type": "Point", "coordinates": [-73.9781, 40.7549]},
-            "properties": {"name": "Times Square"},
-        },
-    ],
-}
-
-m_mapbox.add_geojson_layer(
-    layer_id="nyc_landmarks",
-    geojson_data=nyc_landmarks,
-    layer_type="circle",
-    paint={
-        "circle-radius": 8,
-        "circle-color": "#4264fb",
-        "circle-stroke-color": "#ffffff",
-        "circle-stroke-width": 2,
-    },
-)
-
-# Display the map
-m_mapbox</div>
+<div class="clipboard-copy-txt" id="cell-5"></div>
 </div>
 </div>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-6">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Export Mapbox map to HTML</span>
-<span class="n">mapbox_html</span> <span class="o">=</span> <span class="n">m_mapbox</span><span class="o">.</span><span class="n">to_html</span><span class="p">(</span>
-    <span class="n">filename</span><span class="o">=</span><span class="s2">"mapbox_export.html"</span><span class="p">,</span>
-    <span class="n">title</span><span class="o">=</span><span class="s2">"New York Landmarks - Mapbox Export"</span><span class="p">,</span>
-    <span class="n">width</span><span class="o">=</span><span class="s2">"100%"</span><span class="p">,</span>
-    <span class="n">height</span><span class="o">=</span><span class="s2">"600px"</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"✅ Mapbox map exported to 'mapbox_export.html'"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"📄 HTML file size: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">mapbox_html</span><span class="p">)</span><span class="si">}</span><span class="s2"> characters"</span><span class="p">)</span>
-
-<span class="c1"># Check if access token warning is present</span>
-<span class="k">if</span> <span class="s2">"access-token-warning"</span> <span class="ow">in</span> <span class="n">mapbox_html</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"⚠️  Warning: No Mapbox access token detected in export"</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"   The exported map will need a valid Mapbox token to work properly"</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"✅ Access token included in export"</span><span class="p">)</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-6"># Export Mapbox map to HTML
-mapbox_html = m_mapbox.to_html(
-    filename="mapbox_export.html",
-    title="New York Landmarks - Mapbox Export",
-    width="100%",
-    height="600px",
-)
-
-print("✅ Mapbox map exported to 'mapbox_export.html'")
-print(f"📄 HTML file size: {len(mapbox_html)} characters")
-
-# Check if access token warning is present
-if "access-token-warning" in mapbox_html:
-    print("⚠️  Warning: No Mapbox access token detected in export")
-    print("   The exported map will need a valid Mapbox token to work properly")
-else:
-    print("✅ Access token included in export")</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="advanced-export-options">Advanced Export Options<a class="anchor-link" href="#advanced-export-options">¶</a></h2><p>The <code>to_html()</code> method supports various customization options:</p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-7">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Create a more complex map with multiple layer types</span>
-<span class="n">complex_map</span> <span class="o">=</span> <span class="n">anymap</span><span class="o">.</span><span class="n">MapLibreMap</span><span class="p">(</span>
-    <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mf">51.505</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.09</span><span class="p">],</span>  <span class="c1"># London</span>
-    <span class="n">zoom</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-    <span class="n">bearing</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span>  <span class="c1"># Rotate the map</span>
-    <span class="n">pitch</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>  <span class="c1"># Add some tilt</span>
-<span class="p">)</span>
-
-<span class="c1"># Add a polygon layer (rough outline of central London)</span>
-<span class="n">london_boundary</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"FeatureCollection"</span><span class="p">,</span>
-    <span class="s2">"features"</span><span class="p">:</span> <span class="p">[</span>
-        <span class="p">{</span>
-            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Feature"</span><span class="p">,</span>
-            <span class="s2">"geometry"</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Polygon"</span><span class="p">,</span>
-                <span class="s2">"coordinates"</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="p">[</span>
-                        <span class="p">[</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">51.45</span><span class="p">],</span>
-                        <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">51.45</span><span class="p">],</span>
-                        <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">51.55</span><span class="p">],</span>
-                        <span class="p">[</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">51.55</span><span class="p">],</span>
-                        <span class="p">[</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">51.45</span><span class="p">],</span>
-                    <span class="p">]</span>
-                <span class="p">],</span>
-            <span class="p">},</span>
-            <span class="s2">"properties"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Central London Area"</span><span class="p">},</span>
-        <span class="p">}</span>
-    <span class="p">],</span>
-<span class="p">}</span>
-
-<span class="n">complex_map</span><span class="o">.</span><span class="n">add_geojson_layer</span><span class="p">(</span>
-    <span class="n">layer_id</span><span class="o">=</span><span class="s2">"london_area"</span><span class="p">,</span>
-    <span class="n">geojson_data</span><span class="o">=</span><span class="n">london_boundary</span><span class="p">,</span>
-    <span class="n">layer_type</span><span class="o">=</span><span class="s2">"fill"</span><span class="p">,</span>
-    <span class="n">paint</span><span class="o">=</span><span class="p">{</span><span class="s2">"fill-color"</span><span class="p">:</span> <span class="s2">"#088"</span><span class="p">,</span> <span class="s2">"fill-opacity"</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">},</span>
-<span class="p">)</span>
-
-<span class="c1"># Export with custom styling</span>
-<span class="n">custom_html</span> <span class="o">=</span> <span class="n">complex_map</span><span class="o">.</span><span class="n">to_html</span><span class="p">(</span>
-    <span class="n">filename</span><span class="o">=</span><span class="s2">"london_custom_export.html"</span><span class="p">,</span>
-    <span class="n">title</span><span class="o">=</span><span class="s2">"London Map with Custom Styling"</span><span class="p">,</span>
-    <span class="n">width</span><span class="o">=</span><span class="s2">"1200px"</span><span class="p">,</span>
-    <span class="n">height</span><span class="o">=</span><span class="s2">"800px"</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"✅ Complex map exported to 'london_custom_export.html'"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"📐 Map properties preserved:"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"   • Bearing: </span><span class="si">{</span><span class="n">complex_map</span><span class="o">.</span><span class="n">bearing</span><span class="si">}</span><span class="s2">°"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"   • Pitch: </span><span class="si">{</span><span class="n">complex_map</span><span class="o">.</span><span class="n">pitch</span><span class="si">}</span><span class="s2">°"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"   • Layers: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">complex_map</span><span class="o">.</span><span class="n">get_layers</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"   • Sources: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">complex_map</span><span class="o">.</span><span class="n">get_sources</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-7"># Create a more complex map with multiple layer types
-complex_map = anymap.MapLibreMap(
-    center=[51.505, -0.09],  # London
-    zoom=10,
-    bearing=45,  # Rotate the map
-    pitch=30,  # Add some tilt
-)
-
-# Add a polygon layer (rough outline of central London)
-london_boundary = {
-    "type": "FeatureCollection",
-    "features": [
-        {
-            "type": "Feature",
-            "geometry": {
-                "type": "Polygon",
-                "coordinates": [
-                    [
-                        [-0.2, 51.45],
-                        [0.1, 51.45],
-                        [0.1, 51.55],
-                        [-0.2, 51.55],
-                        [-0.2, 51.45],
-                    ]
-                ],
-            },
-            "properties": {"name": "Central London Area"},
-        }
-    ],
-}
-
-complex_map.add_geojson_layer(
-    layer_id="london_area",
-    geojson_data=london_boundary,
-    layer_type="fill",
-    paint={"fill-color": "#088", "fill-opacity": 0.3},
-)
-
-# Export with custom styling
-custom_html = complex_map.to_html(
-    filename="london_custom_export.html",
-    title="London Map with Custom Styling",
-    width="1200px",
-    height="800px",
-)
-
-print("✅ Complex map exported to 'london_custom_export.html'")
-print(f"📐 Map properties preserved:")
-print(f"   • Bearing: {complex_map.bearing}°")
-print(f"   • Pitch: {complex_map.pitch}°")
-print(f"   • Layers: {list(complex_map.get_layers().keys())}")
-print(f"   • Sources: {list(complex_map.get_sources().keys())}")</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="return-html-as-string-no-file">Return HTML as String (No File)<a class="anchor-link" href="#return-html-as-string-no-file">¶</a></h2><p>You can also get the HTML content as a string without saving to a file:</p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-8">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Generate HTML without saving to file</span>
-<span class="n">html_string</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">to_html</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"String Export Example"</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"📝 Generated HTML string of </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">html_string</span><span class="p">)</span><span class="si">}</span><span class="s2"> characters"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">🔍 HTML validation checks:"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  ✓ Contains DOCTYPE: </span><span class="si">{</span><span class="s1">'&lt;!DOCTYPE html&gt;'</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">html_string</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  ✓ Contains MapLibre: </span><span class="si">{</span><span class="s1">'maplibre-gl'</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">html_string</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  ✓ Contains map container: </span><span class="si">{</span><span class="s1">'id="map"'</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">html_string</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  ✓ Contains map state: </span><span class="si">{</span><span class="s1">'mapState'</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">html_string</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  ✓ Contains layers: </span><span class="si">{</span><span class="s1">'sample_points'</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">html_string</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-
-<span class="c1"># You could save this string manually if needed</span>
-<span class="c1"># with open("manual_export.html", "w") as f:</span>
-<span class="c1">#     f.write(html_string)</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-8"># Generate HTML without saving to file
-html_string = m.to_html(title="String Export Example")
-
-print(f"📝 Generated HTML string of {len(html_string)} characters")
-print("\n🔍 HTML validation checks:")
-print(f"  ✓ Contains DOCTYPE: {'<!DOCTYPE html>
-' in html_string}")
-print(f"  ✓ Contains MapLibre: {'maplibre-gl' in html_string}")
-print(f"  ✓ Contains map container: {'id="map"' in html_string}")
-print(f"  ✓ Contains map state: {'mapState' in html_string}")
-print(f"  ✓ Contains layers: {'sample_points' in html_string}")
-
-# You could save this string manually if needed
-# with open("manual_export.html", "w") as f:
-#     f.write(html_string)</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="summary">Summary<a class="anchor-link" href="#summary">¶</a></h2><p>The <code>to_html()</code> method provides a convenient way to export anymap maps to standalone HTML files:</p>
-<h3 id="features">✨ Features:<a class="anchor-link" href="#features">¶</a></h3><ul>
-<li><strong>Self-contained</strong>: No dependencies on Jupyter or Python runtime</li>
-<li><strong>Layer persistence</strong>: All layers and sources are preserved</li>
-<li><strong>Interactive</strong>: Full map interactivity (pan, zoom, layer visibility)</li>
-<li><strong>Customizable</strong>: Control title, dimensions, and styling</li>
-<li><strong>Cross-platform</strong>: Works in any modern web browser</li>
-</ul>
-<h3 id="use-cases">🎯 Use Cases:<a class="anchor-link" href="#use-cases">¶</a></h3><ul>
-<li>Share maps with non-technical users</li>
-<li>Embed maps in websites or presentations</li>
-<li>Create standalone map applications</li>
-<li>Archive map states for later viewing</li>
-<li>Generate reports with interactive maps</li>
-</ul>
-<h3 id="generated-files">📂 Generated Files:<a class="anchor-link" href="#generated-files">¶</a></h3><p>After running this notebook, you should have these exported HTML files:</p>
-<ul>
-<li><code>maplibre_export.html</code> - San Francisco map with points and raster overlay</li>
-<li><code>mapbox_export.html</code> - New York landmarks map</li>
-<li><code>london_custom_export.html</code> - London map with custom styling and polygon layer</li>
-</ul>
-<p>Open any of these files in your web browser to see the interactive maps!</p>
 </div>
 </div>
 </div>
@@ -2684,7 +2209,7 @@ print(f"  ✓ Contains layers: {'sample_points' in html_string}")
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 5, 2025 02:53:59 UTC"><span class="timeago" datetime="2025-07-05T02:53:59+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 5, 2025 02:53:59 UTC">2025-07-05</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="October 26, 2025 03:18:36 UTC"><span class="timeago" datetime="2025-10-26T03:18:36+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 26, 2025 03:18:36 UTC">2025-10-26</span>
   </span>
 
     
@@ -2694,7 +2219,7 @@ print(f"  ✓ Contains layers: {'sample_points' in html_string}")
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 3, 2025 23:50:28 UTC"><span class="timeago" datetime="2025-07-03T23:50:28+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 3, 2025 23:50:28 UTC">2025-07-03</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="October 26, 2025 03:18:36 UTC"><span class="timeago" datetime="2025-10-26T03:18:36+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 26, 2025 03:18:36 UTC">2025-10-26</span>
   </span>
 
     
