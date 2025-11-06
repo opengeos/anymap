@@ -1,16 +1,53 @@
 // Leaflet widget implementation for anywidget
-import L from "https://cdn.skypack.dev/leaflet@1.9.4";
+// Load Leaflet from the exact same source as HTML export for consistency
 
+// Ensure Leaflet CSS is loaded
 if (!document.querySelector(`link[href*="leaflet.css"]`)) {
     const cssLink = document.createElement("link");
     cssLink.rel = "stylesheet";
     cssLink.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
-    cssLink.integrity = 'sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=';
     cssLink.crossOrigin = '';
     document.head.appendChild(cssLink);
 }
 
+// Preload all required scripts in the correct order for Jupyter compatibility
+let scriptsLoadPromise = null;
+
+function loadScript(src) {
+    return new Promise((resolve, reject) => {
+        // Check if script is already loaded
+        if (document.querySelector(`script[src="${src}"]`)) {
+            resolve();
+            return;
+        }
+
+        const script = document.createElement('script');
+        script.src = src;
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+    });
+}
+
+function ensureAllScripts() {
+    if (scriptsLoadPromise) return scriptsLoadPromise;
+
+    scriptsLoadPromise = loadScript('https://unpkg.com/leaflet@1.9.4/dist/leaflet.js')
+        .then(() => loadScript('https://unpkg.com/proj4'))
+        .then(() => loadScript('https://unpkg.com/georaster'))
+        .then(() => loadScript('https://unpkg.com/georaster-layer-for-leaflet'))
+        .then(() => {
+            console.log('All scripts loaded successfully');
+            return window.L;
+        });
+
+    return scriptsLoadPromise;
+}
+
 function render({ model, el }) {
+    // Preload all scripts immediately when widget is created
+    ensureAllScripts().catch(err => console.error('Failed to preload scripts:', err));
+
     // Create unique ID for this widget instance
     const widgetId = `leaflet-map-${Math.random().toString(36).substr(2, 9)}`;
 
@@ -42,9 +79,12 @@ function render({ model, el }) {
     el.innerHTML = "";
     el.appendChild(container);
 
-    // Initialize the map after ensuring Leaflet is loaded
+    // Initialize the map after ensuring all scripts are loaded
     const initializeMap = async () => {
         try {
+            // Ensure all scripts are loaded in the correct order for Jupyter compatibility
+            const L = await ensureAllScripts();
+
             // Double-check that container exists in DOM
             if (!document.getElementById(widgetId)) {
                 console.error("Map container not found in DOM:", widgetId);
@@ -153,11 +193,11 @@ function addDefaultTileLayer(map, tileLayerName) {
 
     // Handle custom URL template
     if (!tileProviders[tileLayerName] && tileLayerName.includes("{z}")) {
-        L.tileLayer(tileLayerName, {
+        window.L.tileLayer(tileLayerName, {
             attribution: '© Map data providers'
         }).addTo(map);
     } else {
-        L.tileLayer(provider.url, {
+        window.L.tileLayer(provider.url, {
             attribution: provider.attribution,
             subdomains: ['a', 'b', 'c']
         }).addTo(map);
@@ -207,11 +247,11 @@ function addLayerToMap(map, el, layerId, layerConfig) {
 
     try {
         if (layerConfig.type === "tile") {
-            layer = L.tileLayer(layerConfig.url, {
+            layer = window.L.tileLayer(layerConfig.url, {
                 attribution: layerConfig.attribution || ""
             });
         } else if (layerConfig.type === "marker") {
-            layer = L.marker(layerConfig.latlng, {
+            layer = window.L.marker(layerConfig.latlng, {
                 draggable: layerConfig.draggable || false
             });
 
@@ -222,11 +262,11 @@ function addLayerToMap(map, el, layerId, layerConfig) {
             bindTooltip(layer, layerConfig)
 
             if (layerConfig.icon) {
-                const icon = L.icon(layerConfig.icon);
+                const icon = window.L.icon(layerConfig.icon);
                 layer.setIcon(icon);
             }
         } else if (layerConfig.type === "circle") {
-            layer = L.circle(layerConfig.latlng, {
+            layer = window.L.circle(layerConfig.latlng, {
                 radius: layerConfig.radius,
                 color: layerConfig.color || "blue",
                 fillColor: layerConfig.fillColor || "blue",
@@ -235,7 +275,7 @@ function addLayerToMap(map, el, layerId, layerConfig) {
             });
             bindTooltip(layer, layerConfig);
         } else if (layerConfig.type === "polygon") {
-            layer = L.polygon(layerConfig.latlngs, {
+            layer = window.L.polygon(layerConfig.latlngs, {
                 color: layerConfig.color || "blue",
                 fillColor: layerConfig.fillColor || "blue",
                 fillOpacity: layerConfig.fillOpacity || 0.2,
@@ -243,13 +283,13 @@ function addLayerToMap(map, el, layerId, layerConfig) {
             });
             bindTooltip(layer, layerConfig);
         } else if (layerConfig.type === "polyline") {
-            layer = L.polyline(layerConfig.latlngs, {
+            layer = window.L.polyline(layerConfig.latlngs, {
                 color: layerConfig.color || "blue",
                 weight: layerConfig.weight || 3
             });
             bindTooltip(layer, layerConfig);
         } else if (layerConfig.type === "geojson") {
-            layer = L.geoJSON(layerConfig.data, layerConfig.style || {});
+            layer = window.L.geoJSON(layerConfig.data, layerConfig.style || {});
         } else if (layerConfig.type === "geotiff") {
             // Defer to async loader for georaster-layer-for-leaflet
             addGeotiffLayer(map, el, layerId, layerConfig);
@@ -287,72 +327,62 @@ function loadScriptWithFallback(urls) {
 }
 
 function ensureGeorasterScripts() {
-    if (window.GeoRasterLayer && window.parseGeoraster) return Promise.resolve(true);
-    if (window._georasterLoadingPromise) return window._georasterLoadingPromise;
+    // Scripts are now preloaded, just check if they're available
+    if (window.GeoRasterLayer && window.parseGeoraster) {
+        return Promise.resolve(true);
+    }
 
-    const georasterUrls = [
-        // Local vendor preferred
-        '/files/anymap/static/vendor/georaster.browser.bundle.min.js',
-        '/files/anymap/static/vendor/georaster.bundle.min.js',
-        '/files/anymap/static/vendor/georaster.browser.min.js',
-        // CDNs
-        'https://cdn.jsdelivr.net/npm/georaster@1.6.0/dist/georaster.browser.bundle.min.js',
-        'https://fastly.jsdelivr.net/npm/georaster@1.6.0/dist/georaster.browser.bundle.min.js',
-        'https://unpkg.com/georaster@1.6.0/dist/georaster.browser.bundle.min.js'
-    ];
-    // Pin to a pre-ESM UMD build to avoid georaster-stack ESM import
-    const layerUrls = [
-        // Local vendor preferred
-        '/files/anymap/static/vendor/georaster-layer-for-leaflet.min.js',
-        // CDN pinned to 2.0.2 which provides UMD min.js
-        'https://cdn.jsdelivr.net/npm/georaster-layer-for-leaflet@2.0.2/dist/georaster-layer-for-leaflet.min.js',
-        'https://fastly.jsdelivr.net/npm/georaster-layer-for-leaflet@2.0.2/dist/georaster-layer-for-leaflet.min.js',
-        'https://unpkg.com/georaster-layer-for-leaflet@2.0.2/dist/georaster-layer-for-leaflet.min.js'
-    ];
+    // If not available, wait a bit and try again (they should be loading)
+    return new Promise((resolve, reject) => {
+        let attempts = 0;
+        const maxAttempts = 50; // 5 seconds max wait
 
-    // Temporarily ensure UMD path in case environment exposes CommonJS globals
-    const prevModule = window.module; const prevExports = window.exports; try { delete window.module; delete window.exports; } catch(e) {}
-    window._georasterLoadingPromise = loadScriptWithFallback(georasterUrls)
-        .then(() => loadScriptWithFallback(layerUrls))
-        .then(() => true)
-        .catch((err) => {
-            console.error('Failed to load georaster scripts from all sources:', err);
-            throw err;
-        })
-        .finally(() => { if (prevModule !== undefined) window.module = prevModule; if (prevExports !== undefined) window.exports = prevExports; });
+        const checkScripts = () => {
+            if (window.GeoRasterLayer && window.parseGeoraster) {
+                resolve(true);
+            } else if (attempts < maxAttempts) {
+                attempts++;
+                setTimeout(checkScripts, 100);
+            } else {
+                reject(new Error('GeoRaster scripts not available after waiting'));
+            }
+        };
 
-    return window._georasterLoadingPromise;
+        checkScripts();
+    });
 }
 
 function addGeotiffLayer(map, el, layerId, layerConfig) {
     ensureGeorasterScripts()
-        .then(() => window.parseGeoraster(layerConfig.url))
+        .then(() => {
+            // console.log("Loading GeoTIFF:", layerConfig.url);
+            return window.parseGeoraster(layerConfig.url);
+        })
         .then((georaster) => {
-            const opts = { ...layerConfig, georaster };
-            delete opts.type; delete opts.url; delete opts.fit_bounds;
+            // console.log("georaster:", georaster);
 
-            try {
-                const bands = georaster.numberOfRasters || (georaster.bands ? georaster.bands.length : 1);
-                if (!opts.pixelValuesToColorFn && bands === 1 && georaster.mins && georaster.maxs) {
-                    const min = georaster.mins[0];
-                    const max = georaster.maxs[0];
-                    const opacity = (typeof layerConfig.opacity === 'number') ? layerConfig.opacity : 1.0;
-                    opts.pixelValuesToColorFn = (values) => {
-                        const v = values[0];
-                        if (v === null || v === undefined || Number.isNaN(v)) return null;
-                        let t = (v - min) / (max - min);
-                        t = Math.max(0, Math.min(1, t));
-                        const gray = Math.round(255 * t);
-                        return `rgba(${gray},${gray},${gray},${opacity})`;
-                    };
-                }
-            } catch (e) { console.warn('Default color mapping failed:', e); }
+            // Create options object EXACTLY like the reference example
+            const opts = {
+                attribution: layerConfig.attribution || "Planet",
+                georaster: georaster,
+                resolution: layerConfig.resolution || 128
+            };
+
+            // Only add additional options if they were explicitly provided
+            if (layerConfig.opacity !== undefined) opts.opacity = layerConfig.opacity;
+            if (layerConfig.debugLevel !== undefined) opts.debugLevel = layerConfig.debugLevel;
+            if (layerConfig.pixelValuesToColorFn) opts.pixelValuesToColorFn = layerConfig.pixelValuesToColorFn;
 
             const geoLayer = new GeoRasterLayer(opts);
             geoLayer.addTo(map);
             el._layers[layerId] = geoLayer;
+
             if (layerConfig.fit_bounds !== false && geoLayer.getBounds) {
-                try { map.fitBounds(geoLayer.getBounds()); } catch (e) {}
+                try {
+                    map.fitBounds(geoLayer.getBounds());
+                } catch (e) {
+                    console.warn('Could not fit bounds:', e);
+                }
             }
         })
         .catch((err) => {
