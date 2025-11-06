@@ -278,6 +278,49 @@ class LeafletMap(MapWidget):
         self.add_layer(geojson_id, geojson_config)
         return geojson_id
 
+    def add_geotiff(
+        self,
+        url: str,
+        layer_id: Optional[str] = None,
+        fit_bounds: bool = True,
+        **options: Any,
+    ) -> str:
+        """Add a Cloud Optimized GeoTIFF (COG) to the map without TiTiler.
+
+        This method uses georaster-layer-for-leaflet in the frontend to stream and
+        render a COG directly in the browser via HTTP range requests.
+
+        Args:
+            url: URL to the Cloud Optimized GeoTIFF.
+            layer_id: Optional unique identifier for the layer. If not provided,
+                one will be generated.
+            fit_bounds: Whether to fit the map to the layer's bounds after it
+                loads on the client.
+            **options: Additional options forwarded to GeoRasterLayer (e.g.,
+                ``opacity``, ``resolution``, ``debugLevel``).
+
+        Returns:
+            The layer ID used to add the layer.
+        """
+        if layer_id is None:
+            layer_id = f"geotiff_{len(self._layers)}"
+
+        # Use minimal defaults matching the reference example exactly
+        default_options = {
+            "resolution": 128,  # Match reference example exactly
+        }
+
+        layer_config = {
+            "type": "geotiff",
+            "url": url,
+            "fit_bounds": fit_bounds,
+            **{k: v for k, v in default_options.items() if k not in options},
+            **options,
+        }
+
+        self.add_layer(layer_id, layer_config)
+        return layer_id
+
     def fit_bounds(self, bounds: List[List[float]]) -> None:
         """Fit the map view to given bounds.
 
@@ -310,9 +353,7 @@ class LeafletMap(MapWidget):
 <head>
     <title>{title}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-          crossorigin=""/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <style>
         body {{
             margin: 0;
@@ -328,9 +369,7 @@ class LeafletMap(MapWidget):
 <body>
     <div id="map"></div>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-            crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         // Initialize the map
         var map = L.map('map', {{
@@ -383,6 +422,59 @@ class LeafletMap(MapWidget):
                 }});
             }} else if (layer.type === 'geojson') {{
                 leafletLayer = L.geoJSON(layer.data, layer.style || {{}});
+            }} else if (layer.type === 'geotiff') {{
+                // Load COG via georaster-layer-for-leaflet - simplified to match reference example
+                (function(layerCfg) {{
+                    // Simple script loading function
+                    var loadScript = function(src) {{
+                        return new Promise(function(resolve, reject) {{
+                            var script = document.createElement('script');
+                            script.src = src;
+                            script.onload = resolve;
+                            script.onerror = reject;
+                            document.head.appendChild(script);
+                        }});
+                    }};
+
+                    // Load scripts in sequence exactly like the reference example
+                    var loadScripts = function() {{
+                        if (window.GeoRasterLayer && window.parseGeoraster) return Promise.resolve();
+
+                        return loadScript('https://unpkg.com/proj4')
+                            .then(function() {{ return loadScript('https://unpkg.com/georaster'); }})
+                            .then(function() {{ return loadScript('https://unpkg.com/georaster-layer-for-leaflet'); }});
+                    }};
+
+                    loadScripts().then(function() {{
+                        console.log('Loading GeoTIFF:', layerCfg.url);
+                        return window.parseGeoraster(layerCfg.url);
+                    }}).then(function(georaster) {{
+                        console.log('georaster:', georaster);
+
+                        // Create options EXACTLY like the reference example
+                        var opts = {{
+                            attribution: layerCfg.attribution || "Planet",
+                            georaster: georaster,
+                            resolution: layerCfg.resolution || 128
+                        }};
+
+                        // Only add additional options if explicitly provided
+                        if (layerCfg.opacity !== undefined) opts.opacity = layerCfg.opacity;
+
+                        var grLayer = new GeoRasterLayer(opts);
+                        grLayer.addTo(map);
+
+                        if (layerCfg.fit_bounds !== false && grLayer.getBounds) {{
+                            try {{
+                                map.fitBounds(grLayer.getBounds());
+                            }} catch (e) {{
+                                console.warn('Could not fit bounds:', e);
+                            }}
+                        }}
+                    }}).catch(function(err) {{
+                        console.error('Failed to load GeoTIFF:', err);
+                    }});
+                }})(layer);
             }}
 
             if (leafletLayer) {{

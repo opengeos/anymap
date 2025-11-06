@@ -30,3 +30,6 @@ recursive-exclude tests *
 recursive-exclude dist *
 recursive-exclude anymap.egg-info *
 
+# Include widget frontend assets and vendored libraries
+recursive-include anymap/static *.js *.css
+recursive-include anymap/static/vendor *.js
