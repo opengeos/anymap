@@ -278,6 +278,43 @@ class LeafletMap(MapWidget):
         self.add_layer(geojson_id, geojson_config)
         return geojson_id
 
+    def add_geotiff(
+        self,
+        url: str,
+        layer_id: Optional[str] = None,
+        fit_bounds: bool = True,
+        **options: Any,
+    ) -> str:
+        """Add a Cloud Optimized GeoTIFF (COG) to the map without TiTiler.
+
+        This method uses georaster-layer-for-leaflet in the frontend to stream and
+        render a COG directly in the browser via HTTP range requests.
+
+        Args:
+            url: URL to the Cloud Optimized GeoTIFF.
+            layer_id: Optional unique identifier for the layer. If not provided,
+                one will be generated.
+            fit_bounds: Whether to fit the map to the layer's bounds after it
+                loads on the client.
+            **options: Additional options forwarded to GeoRasterLayer (e.g.,
+                ``opacity``, ``resolution``, ``resampling``, ``nodata``).
+
+        Returns:
+            The layer ID used to add the layer.
+        """
+        if layer_id is None:
+            layer_id = f"geotiff_{len(self._layers)}"
+
+        layer_config = {
+            "type": "geotiff",
+            "url": url,
+            "fit_bounds": fit_bounds,
+            **options,
+        }
+
+        self.add_layer(layer_id, layer_config)
+        return layer_id
+
     def fit_bounds(self, bounds: List[List[float]]) -> None:
         """Fit the map view to given bounds.
 
@@ -383,6 +420,78 @@ class LeafletMap(MapWidget):
                 }});
             }} else if (layer.type === 'geojson') {{
                 leafletLayer = L.geoJSON(layer.data, layer.style || {{}});
+            }} else if (layer.type === 'geotiff') {{
+                // Load COG via georaster-layer-for-leaflet
+                (function(layerCfg) {{
+                    var loadScriptWithFallback = function(urls) {{
+                        return new Promise(function(resolve, reject) {{
+                            var i = 0;
+                            var next = function() {{
+                                if (i >= urls.length) return reject(new Error('All script sources failed'));
+                                var u = urls[i++];
+                                var s = document.createElement('script');
+                                s.async = true;
+                                s.src = u;
+                                s.onload = function() {{ resolve({ ok: true, url: u }); }};
+                                s.onerror = function() {{ console.warn('Script failed, trying fallback:', u); s.remove(); next(); }};
+                                document.head.appendChild(s);
+                            }};
+                            next();
+                        }});
+                    }};
+                    var ensureScripts = function() {{
+                        if (window.GeoRasterLayer && window.parseGeoraster) return Promise.resolve(true);
+                        var georasterUrls = [
+                            '/files/anymap/static/vendor/georaster.browser.bundle.min.js',
+                            '/files/anymap/static/vendor/georaster.bundle.min.js',
+                            '/files/anymap/static/vendor/georaster.browser.min.js',
+                            'https://cdn.jsdelivr.net/npm/georaster@1.6.0/dist/georaster.browser.bundle.min.js',
+                            'https://fastly.jsdelivr.net/npm/georaster@1.6.0/dist/georaster.browser.bundle.min.js',
+                            'https://unpkg.com/georaster@1.6.0/dist/georaster.browser.bundle.min.js'
+                        ];
+                        var layerUrls = [
+                            '/files/anymap/static/vendor/georaster-layer-for-leaflet.min.js',
+                            'https://cdn.jsdelivr.net/npm/georaster-layer-for-leaflet@2.0.2/dist/georaster-layer-for-leaflet.min.js',
+                            'https://fastly.jsdelivr.net/npm/georaster-layer-for-leaflet@2.0.2/dist/georaster-layer-for-leaflet.min.js',
+                            'https://unpkg.com/georaster-layer-for-leaflet@2.0.2/dist/georaster-layer-for-leaflet.min.js'
+                        ];
+                        var prevModule = window.module; var prevExports = window.exports; try {{ delete window.module; delete window.exports; }} catch(e) {{}}
+                        return loadScriptWithFallback(georasterUrls).then(function() {{
+                            return loadScriptWithFallback(layerUrls);
+                        }}).finally(function() {{ if (prevModule !== undefined) window.module = prevModule; if (prevExports !== undefined) window.exports = prevExports; }});
+                    }};
+
+                    ensureScripts().then(function() {{
+                        window.parseGeoraster(layerCfg.url).then(function(georaster) {{
+                            var opts = Object.assign({{ georaster: georaster }}, layerCfg);
+                            delete opts.type; delete opts.url; delete opts.fit_bounds;
+
+                            // Provide a default grayscale for single-band rasters if not specified
+                            try {{
+                                var bands = georaster.numberOfRasters || (georaster.bands ? georaster.bands.length : 1);
+                                if (!opts.pixelValuesToColorFn && bands === 1 && georaster.mins && georaster.maxs) {{
+                                    var min = georaster.mins[0];
+                                    var max = georaster.maxs[0];
+                                    var opacity = (typeof layerCfg.opacity === 'number') ? layerCfg.opacity : 1.0;
+                                    opts.pixelValuesToColorFn = function(values) {{
+                                        var v = values[0];
+                                        if (v === null || v === undefined || isNaN(v)) return null;
+                                        var t = (v - min) / (max - min);
+                                        t = Math.max(0, Math.min(1, t));
+                                        var gray = Math.round(255 * t);
+                                        return 'rgba(' + gray + ',' + gray + ',' + gray + ',' + opacity + ')';
+                                    }};
+                                }}
+                            }} catch (e) {{ console.warn('Default color mapping failed:', e); }}
+
+                            var grLayer = new GeoRasterLayer(opts);
+                            grLayer.addTo(map);
+                            if (layerCfg.fit_bounds !== false && grLayer.getBounds) {{
+                                try {{ map.fitBounds(grLayer.getBounds()); }} catch (e) {{}}
+                            }}
+                        }}).catch(function(err) {{ console.error('Failed to load GeoTIFF:', err); }});
+                    }}).catch(function(err) {{ console.error('Failed to load georaster scripts:', err); }});
+                }})(layer);
             }}
 
             if (leafletLayer) {{

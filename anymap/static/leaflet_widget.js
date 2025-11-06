@@ -250,6 +250,10 @@ function addLayerToMap(map, el, layerId, layerConfig) {
             bindTooltip(layer, layerConfig);
         } else if (layerConfig.type === "geojson") {
             layer = L.geoJSON(layerConfig.data, layerConfig.style || {});
+        } else if (layerConfig.type === "geotiff") {
+            // Defer to async loader for georaster-layer-for-leaflet
+            addGeotiffLayer(map, el, layerId, layerConfig);
+            return; // early exit; layer added asynchronously
         }
 
         if (layer) {
@@ -259,6 +263,101 @@ function addLayerToMap(map, el, layerId, layerConfig) {
     } catch (error) {
         console.error("Error adding layer:", error);
     }
+}
+
+function loadScriptWithFallback(urls) {
+    return new Promise((resolve, reject) => {
+        let index = 0;
+        const tryNext = () => {
+            if (index >= urls.length) return reject(new Error('All script sources failed'));
+            const url = urls[index++];
+            const s = document.createElement('script');
+            s.async = true;
+            s.src = url;
+            s.onload = () => resolve({ ok: true, url });
+            s.onerror = () => {
+                console.warn('Script failed, trying fallback:', url);
+                s.remove();
+                tryNext();
+            };
+            document.head.appendChild(s);
+        };
+        tryNext();
+    });
+}
+
+function ensureGeorasterScripts() {
+    if (window.GeoRasterLayer && window.parseGeoraster) return Promise.resolve(true);
+    if (window._georasterLoadingPromise) return window._georasterLoadingPromise;
+
+    const georasterUrls = [
+        // Local vendor preferred
+        '/files/anymap/static/vendor/georaster.browser.bundle.min.js',
+        '/files/anymap/static/vendor/georaster.bundle.min.js',
+        '/files/anymap/static/vendor/georaster.browser.min.js',
+        // CDNs
+        'https://cdn.jsdelivr.net/npm/georaster@1.6.0/dist/georaster.browser.bundle.min.js',
+        'https://fastly.jsdelivr.net/npm/georaster@1.6.0/dist/georaster.browser.bundle.min.js',
+        'https://unpkg.com/georaster@1.6.0/dist/georaster.browser.bundle.min.js'
+    ];
+    // Pin to a pre-ESM UMD build to avoid georaster-stack ESM import
+    const layerUrls = [
+        // Local vendor preferred
+        '/files/anymap/static/vendor/georaster-layer-for-leaflet.min.js',
+        // CDN pinned to 2.0.2 which provides UMD min.js
+        'https://cdn.jsdelivr.net/npm/georaster-layer-for-leaflet@2.0.2/dist/georaster-layer-for-leaflet.min.js',
+        'https://fastly.jsdelivr.net/npm/georaster-layer-for-leaflet@2.0.2/dist/georaster-layer-for-leaflet.min.js',
+        'https://unpkg.com/georaster-layer-for-leaflet@2.0.2/dist/georaster-layer-for-leaflet.min.js'
+    ];
+
+    // Temporarily ensure UMD path in case environment exposes CommonJS globals
+    const prevModule = window.module; const prevExports = window.exports; try { delete window.module; delete window.exports; } catch(e) {}
+    window._georasterLoadingPromise = loadScriptWithFallback(georasterUrls)
+        .then(() => loadScriptWithFallback(layerUrls))
+        .then(() => true)
+        .catch((err) => {
+            console.error('Failed to load georaster scripts from all sources:', err);
+            throw err;
+        })
+        .finally(() => { if (prevModule !== undefined) window.module = prevModule; if (prevExports !== undefined) window.exports = prevExports; });
+
+    return window._georasterLoadingPromise;
+}
+
+function addGeotiffLayer(map, el, layerId, layerConfig) {
+    ensureGeorasterScripts()
+        .then(() => window.parseGeoraster(layerConfig.url))
+        .then((georaster) => {
+            const opts = { ...layerConfig, georaster };
+            delete opts.type; delete opts.url; delete opts.fit_bounds;
+
+            try {
+                const bands = georaster.numberOfRasters || (georaster.bands ? georaster.bands.length : 1);
+                if (!opts.pixelValuesToColorFn && bands === 1 && georaster.mins && georaster.maxs) {
+                    const min = georaster.mins[0];
+                    const max = georaster.maxs[0];
+                    const opacity = (typeof layerConfig.opacity === 'number') ? layerConfig.opacity : 1.0;
+                    opts.pixelValuesToColorFn = (values) => {
+                        const v = values[0];
+                        if (v === null || v === undefined || Number.isNaN(v)) return null;
+                        let t = (v - min) / (max - min);
+                        t = Math.max(0, Math.min(1, t));
+                        const gray = Math.round(255 * t);
+                        return `rgba(${gray},${gray},${gray},${opacity})`;
+                    };
+                }
+            } catch (e) { console.warn('Default color mapping failed:', e); }
+
+            const geoLayer = new GeoRasterLayer(opts);
+            geoLayer.addTo(map);
+            el._layers[layerId] = geoLayer;
+            if (layerConfig.fit_bounds !== false && geoLayer.getBounds) {
+                try { map.fitBounds(geoLayer.getBounds()); } catch (e) {}
+            }
+        })
+        .catch((err) => {
+            console.error('Error adding GeoTIFF layer:', err);
+        });
 }
 
 function removeLayerFromMap(map, el, layerId) {
