@@ -22,7 +22,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.22">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.23">
     
     
       
@@ -1248,6 +1248,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.leaflet.LeafletMap.add_geotiff" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_geotiff()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.leaflet.LeafletMap.add_marker" class="md-nav__link">
     <span class="md-ellipsis">
       add_marker()
@@ -1541,6 +1550,15 @@
   <a href="#anymap.leaflet.LeafletMap.add_geojson" class="md-nav__link">
     <span class="md-ellipsis">
       add_geojson()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.leaflet.LeafletMap.add_geotiff" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_geotiff()
     </span>
   </a>
   
@@ -1914,6 +1932,49 @@ MapWidget            (AnyWidget)
         <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">geojson_id</span><span class="p">,</span> <span class="n">geojson_config</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">geojson_id</span>
 
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_geotiff</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">layer_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">fit_bounds</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">options</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a Cloud Optimized GeoTIFF (COG) to the map without TiTiler.</span>
+
+<span class="sd">        This method uses georaster-layer-for-leaflet in the frontend to stream and</span>
+<span class="sd">        render a COG directly in the browser via HTTP range requests.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            url: URL to the Cloud Optimized GeoTIFF.</span>
+<span class="sd">            layer_id: Optional unique identifier for the layer. If not provided,</span>
+<span class="sd">                one will be generated.</span>
+<span class="sd">            fit_bounds: Whether to fit the map to the layer&#39;s bounds after it</span>
+<span class="sd">                loads on the client.</span>
+<span class="sd">            **options: Additional options forwarded to GeoRasterLayer (e.g.,</span>
+<span class="sd">                ``opacity``, ``resolution``, ``debugLevel``).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The layer ID used to add the layer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">layer_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">layer_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;geotiff_</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_layers</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="c1"># Use minimal defaults matching the reference example exactly</span>
+        <span class="n">default_options</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;resolution&quot;</span><span class="p">:</span> <span class="mi">128</span><span class="p">,</span>  <span class="c1"># Match reference example exactly</span>
+        <span class="p">}</span>
+
+        <span class="n">layer_config</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;geotiff&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">url</span><span class="p">,</span>
+            <span class="s2">&quot;fit_bounds&quot;</span><span class="p">:</span> <span class="n">fit_bounds</span><span class="p">,</span>
+            <span class="o">**</span><span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">default_options</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">options</span><span class="p">},</span>
+            <span class="o">**</span><span class="n">options</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">layer_id</span><span class="p">,</span> <span class="n">layer_config</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">layer_id</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">fit_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bounds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fit the map view to given bounds.</span>
 
@@ -1946,9 +2007,7 @@ MapWidget            (AnyWidget)
 <span class="s2">&lt;head&gt;</span>
 <span class="s2">    &lt;title&gt;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2">&lt;/title&gt;</span>
 <span class="s2">    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;</span>
-<span class="s2">    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://unpkg.com/leaflet@1.9.4/dist/leaflet.css&quot;</span>
-<span class="s2">          integrity=&quot;sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=&quot;</span>
-<span class="s2">          crossorigin=&quot;&quot;/&gt;</span>
+<span class="s2">    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://unpkg.com/leaflet@1.9.4/dist/leaflet.css&quot;/&gt;</span>
 <span class="s2">    &lt;style&gt;</span>
 <span class="s2">        body </span><span class="se">{{</span>
 <span class="s2">            margin: 0;</span>
@@ -1964,9 +2023,7 @@ MapWidget            (AnyWidget)
 <span class="s2">&lt;body&gt;</span>
 <span class="s2">    &lt;div id=&quot;map&quot;&gt;&lt;/div&gt;</span>
 
-<span class="s2">    &lt;script src=&quot;https://unpkg.com/leaflet@1.9.4/dist/leaflet.js&quot;</span>
-<span class="s2">            integrity=&quot;sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=&quot;</span>
-<span class="s2">            crossorigin=&quot;&quot;&gt;&lt;/script&gt;</span>
+<span class="s2">    &lt;script src=&quot;https://unpkg.com/leaflet@1.9.4/dist/leaflet.js&quot;&gt;&lt;/script&gt;</span>
 <span class="s2">    &lt;script&gt;</span>
 <span class="s2">        // Initialize the map</span>
 <span class="s2">        var map = L.map(&#39;map&#39;, </span><span class="se">{{</span>
@@ -2019,6 +2076,59 @@ MapWidget            (AnyWidget)
 <span class="s2">                </span><span class="se">}}</span><span class="s2">);</span>
 <span class="s2">            </span><span class="se">}}</span><span class="s2"> else if (layer.type === &#39;geojson&#39;) </span><span class="se">{{</span>
 <span class="s2">                leafletLayer = L.geoJSON(layer.data, layer.style || </span><span class="se">{{}}</span><span class="s2">);</span>
+<span class="s2">            </span><span class="se">}}</span><span class="s2"> else if (layer.type === &#39;geotiff&#39;) </span><span class="se">{{</span>
+<span class="s2">                // Load COG via georaster-layer-for-leaflet - simplified to match reference example</span>
+<span class="s2">                (function(layerCfg) </span><span class="se">{{</span>
+<span class="s2">                    // Simple script loading function</span>
+<span class="s2">                    var loadScript = function(src) </span><span class="se">{{</span>
+<span class="s2">                        return new Promise(function(resolve, reject) </span><span class="se">{{</span>
+<span class="s2">                            var script = document.createElement(&#39;script&#39;);</span>
+<span class="s2">                            script.src = src;</span>
+<span class="s2">                            script.onload = resolve;</span>
+<span class="s2">                            script.onerror = reject;</span>
+<span class="s2">                            document.head.appendChild(script);</span>
+<span class="s2">                        </span><span class="se">}}</span><span class="s2">);</span>
+<span class="s2">                    </span><span class="se">}}</span><span class="s2">;</span>
+
+<span class="s2">                    // Load scripts in sequence exactly like the reference example</span>
+<span class="s2">                    var loadScripts = function() </span><span class="se">{{</span>
+<span class="s2">                        if (window.GeoRasterLayer &amp;&amp; window.parseGeoraster) return Promise.resolve();</span>
+
+<span class="s2">                        return loadScript(&#39;https://unpkg.com/proj4&#39;)</span>
+<span class="s2">                            .then(function() </span><span class="se">{{</span><span class="s2"> return loadScript(&#39;https://unpkg.com/georaster&#39;); </span><span class="se">}}</span><span class="s2">)</span>
+<span class="s2">                            .then(function() </span><span class="se">{{</span><span class="s2"> return loadScript(&#39;https://unpkg.com/georaster-layer-for-leaflet&#39;); </span><span class="se">}}</span><span class="s2">);</span>
+<span class="s2">                    </span><span class="se">}}</span><span class="s2">;</span>
+
+<span class="s2">                    loadScripts().then(function() </span><span class="se">{{</span>
+<span class="s2">                        console.log(&#39;Loading GeoTIFF:&#39;, layerCfg.url);</span>
+<span class="s2">                        return window.parseGeoraster(layerCfg.url);</span>
+<span class="s2">                    </span><span class="se">}}</span><span class="s2">).then(function(georaster) </span><span class="se">{{</span>
+<span class="s2">                        console.log(&#39;georaster:&#39;, georaster);</span>
+
+<span class="s2">                        // Create options EXACTLY like the reference example</span>
+<span class="s2">                        var opts = </span><span class="se">{{</span>
+<span class="s2">                            attribution: layerCfg.attribution || &quot;Planet&quot;,</span>
+<span class="s2">                            georaster: georaster,</span>
+<span class="s2">                            resolution: layerCfg.resolution || 128</span>
+<span class="s2">                        </span><span class="se">}}</span><span class="s2">;</span>
+
+<span class="s2">                        // Only add additional options if explicitly provided</span>
+<span class="s2">                        if (layerCfg.opacity !== undefined) opts.opacity = layerCfg.opacity;</span>
+
+<span class="s2">                        var grLayer = new GeoRasterLayer(opts);</span>
+<span class="s2">                        grLayer.addTo(map);</span>
+
+<span class="s2">                        if (layerCfg.fit_bounds !== false &amp;&amp; grLayer.getBounds) </span><span class="se">{{</span>
+<span class="s2">                            try </span><span class="se">{{</span>
+<span class="s2">                                map.fitBounds(grLayer.getBounds());</span>
+<span class="s2">                            </span><span class="se">}}</span><span class="s2"> catch (e) </span><span class="se">{{</span>
+<span class="s2">                                console.warn(&#39;Could not fit bounds:&#39;, e);</span>
+<span class="s2">                            </span><span class="se">}}</span>
+<span class="s2">                        </span><span class="se">}}</span>
+<span class="s2">                    </span><span class="se">}}</span><span class="s2">).catch(function(err) </span><span class="se">{{</span>
+<span class="s2">                        console.error(&#39;Failed to load GeoTIFF:&#39;, err);</span>
+<span class="s2">                    </span><span class="se">}}</span><span class="s2">);</span>
+<span class="s2">                </span><span class="se">}}</span><span class="s2">)(layer);</span>
 <span class="s2">            </span><span class="se">}}</span>
 
 <span class="s2">            if (leafletLayer) </span><span class="se">{{</span>
@@ -2391,6 +2501,129 @@ MapWidget            (AnyWidget)
 
     <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">geojson_id</span><span class="p">,</span> <span class="n">geojson_config</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">geojson_id</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="anymap.leaflet.LeafletMap.add_geotiff" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">add_geotiff</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">layer_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fit_bounds</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">)</span></code>
+
+
+<a href="#anymap.leaflet.LeafletMap.add_geotiff" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Add a Cloud Optimized GeoTIFF (COG) to the map without TiTiler.</p>
+<p>This method uses georaster-layer-for-leaflet in the frontend to stream and
+render a COG directly in the browser via HTTP range requests.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>url</code></td>
+        <td><code>str</code></td>
+        <td><p>URL to the Cloud Optimized GeoTIFF.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>layer_id</code></td>
+        <td><code>Optional[str]</code></td>
+        <td><p>Optional unique identifier for the layer. If not provided,
+one will be generated.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>fit_bounds</code></td>
+        <td><code>bool</code></td>
+        <td><p>Whether to fit the map to the layer's bounds after it
+loads on the client.</p></td>
+        <td><code>True</code></td>
+      </tr>
+      <tr>
+        <td><code>**options</code></td>
+        <td><code>Any</code></td>
+        <td><p>Additional options forwarded to GeoRasterLayer (e.g.,
+<code>opacity</code>, <code>resolution</code>, <code>debugLevel</code>).</p></td>
+        <td><code>{}</code></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>str</code></td>
+      <td><p>The layer ID used to add the layer.</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>anymap/leaflet.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_geotiff</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">layer_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">fit_bounds</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">options</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a Cloud Optimized GeoTIFF (COG) to the map without TiTiler.</span>
+
+<span class="sd">    This method uses georaster-layer-for-leaflet in the frontend to stream and</span>
+<span class="sd">    render a COG directly in the browser via HTTP range requests.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        url: URL to the Cloud Optimized GeoTIFF.</span>
+<span class="sd">        layer_id: Optional unique identifier for the layer. If not provided,</span>
+<span class="sd">            one will be generated.</span>
+<span class="sd">        fit_bounds: Whether to fit the map to the layer&#39;s bounds after it</span>
+<span class="sd">            loads on the client.</span>
+<span class="sd">        **options: Additional options forwarded to GeoRasterLayer (e.g.,</span>
+<span class="sd">            ``opacity``, ``resolution``, ``debugLevel``).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The layer ID used to add the layer.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">layer_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">layer_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;geotiff_</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_layers</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="c1"># Use minimal defaults matching the reference example exactly</span>
+    <span class="n">default_options</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;resolution&quot;</span><span class="p">:</span> <span class="mi">128</span><span class="p">,</span>  <span class="c1"># Match reference example exactly</span>
+    <span class="p">}</span>
+
+    <span class="n">layer_config</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;geotiff&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">url</span><span class="p">,</span>
+        <span class="s2">&quot;fit_bounds&quot;</span><span class="p">:</span> <span class="n">fit_bounds</span><span class="p">,</span>
+        <span class="o">**</span><span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">default_options</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">options</span><span class="p">},</span>
+        <span class="o">**</span><span class="n">options</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">layer_id</span><span class="p">,</span> <span class="n">layer_config</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">layer_id</span>
 </code></pre></div>
         </details>
     </div>

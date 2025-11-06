@@ -22,7 +22,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.22">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.23">
     
     
       
@@ -608,6 +608,15 @@
   <a href="#installation" class="md-nav__link">
     <span class="md-ellipsis">
       Installation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#basic-leaflet-map-with-geotiff" class="md-nav__link">
+    <span class="md-ellipsis">
+      Basic Leaflet Map with GeoTIFF
     </span>
   </a>
   
@@ -1522,6 +1531,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#basic-leaflet-map-with-geotiff" class="md-nav__link">
+    <span class="md-ellipsis">
+      Basic Leaflet Map with GeoTIFF
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#basic-leaflet-map" class="md-nav__link">
     <span class="md-ellipsis">
       Basic Leaflet Map
@@ -2131,7 +2149,7 @@ import json</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="basic-leaflet-map">Basic Leaflet Map<a class="anchor-link" href="#basic-leaflet-map">¶</a></h2><p>Create a basic Leaflet map with default settings:</p>
+<h2 id="basic-leaflet-map-with-geotiff">Basic Leaflet Map with GeoTIFF<a class="anchor-link" href="#basic-leaflet-map-with-geotiff">¶</a></h2><p>Create a basic Leaflet map with a GeoTIFF layer using the corrected implementation:</p>
 </div>
 </div>
 </div>
@@ -2156,17 +2174,151 @@ import json</div>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Create a basic Leaflet map</span>
 <span class="n">leaflet_map</span> <span class="o">=</span> <span class="n">anymap</span><span class="o">.</span><span class="n">LeafletMap</span><span class="p">(</span>
-    <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mf">51.505</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.09</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="s2">"100%"</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s2">"600px"</span>  <span class="c1"># London coordinates</span>
+    <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mf">29.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">95.9</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="s2">"100%"</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s2">"600px"</span>
 <span class="p">)</span>
-
+<span class="n">url</span> <span class="o">=</span> <span class="s2">"https://huggingface.co/datasets/giswqs/geospatial/resolve/main/las_vegas_train_naip.tif"</span>
+<span class="n">leaflet_map</span><span class="o">.</span><span class="n">add_geotiff</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">nodata</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">leaflet_map</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-2"># Create a basic Leaflet map
 leaflet_map = anymap.LeafletMap(
-    center=[51.505, -0.09], zoom=13, width="100%", height="600px"  # London coordinates
+    center=[29.5, -95.9], zoom=12, width="100%", height="600px"
+)
+url = "https://huggingface.co/datasets/giswqs/geospatial/resolve/main/las_vegas_train_naip.tif"
+leaflet_map.add_geotiff(url, resolution=128, nodata=0)
+leaflet_map</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-3">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">anymap</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-3">import anymap
+import json</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="basic-leaflet-map">Basic Leaflet Map<a class="anchor-link" href="#basic-leaflet-map">¶</a></h2><p>Create a basic Leaflet map with default settings:</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-4">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Create a basic Leaflet map</span>
+<span class="n">leaflet_map</span> <span class="o">=</span> <span class="n">anymap</span><span class="o">.</span><span class="n">LeafletMap</span><span class="p">(</span>
+    <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="s2">"100%"</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s2">"600px"</span>  <span class="c1"># London coordinates</span>
+<span class="p">)</span>
+<span class="n">url</span> <span class="o">=</span> <span class="s2">"https://storage.googleapis.com/pdd-stac/disasters/hurricane-harvey/0831/20170831_172754_101c_3b_Visual.tif"</span>
+<span class="c1"># url = "https://huggingface.co/datasets/giswqs/geospatial/resolve/main/las_vegas_train_naip.tif"</span>
+<span class="n">leaflet_map</span><span class="o">.</span><span class="n">add_geotiff</span><span class="p">(</span>
+    <span class="n">url</span><span class="p">,</span>
+    <span class="n">resolution</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span>
+    <span class="c1"># resampleMethod='bilinear',</span>
+    <span class="c1"># noDataValue=0,</span>
+    <span class="c1"># opacity=1.0</span>
+<span class="p">)</span>
+<span class="n">leaflet_map</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-4"># Create a basic Leaflet map
+leaflet_map = anymap.LeafletMap(
+    center=[0, 0], zoom=12, width="100%", height="600px"  # London coordinates
+)
+url = "https://storage.googleapis.com/pdd-stac/disasters/hurricane-harvey/0831/20170831_172754_101c_3b_Visual.tif"
+# url = "https://huggingface.co/datasets/giswqs/geospatial/resolve/main/las_vegas_train_naip.tif"
+leaflet_map.add_geotiff(
+    url,
+    resolution=128,
+    # resampleMethod='bilinear',
+    # noDataValue=0,
+    # opacity=1.0
+)
+leaflet_map</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-5">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">html_content</span> <span class="o">=</span> <span class="n">leaflet_map</span><span class="o">.</span><span class="n">to_html</span><span class="p">(</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">"Tokyo Map - Leaflet Example"</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="s2">"100%"</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s2">"600px"</span>
+<span class="p">)</span>
+
+<span class="c1"># Save to file</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"tokyo_map.html"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">html_content</span><span class="p">)</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-5">html_content = leaflet_map.to_html(
+    title="Tokyo Map - Leaflet Example", width="100%", height="600px"
 )
 
-leaflet_map</div>
+# Save to file
+with open("tokyo_map.html", "w") as f:
+    f.write(html_content)</div>
 </div>
 </div>
 </div>
@@ -2192,7 +2344,7 @@ leaflet_map</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-3">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-6">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2217,7 +2369,7 @@ leaflet_map</div>
 
 <span class="n">map_with_options</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-3"># Create a Leaflet map with advanced options
+<div class="clipboard-copy-txt" id="cell-6"># Create a Leaflet map with advanced options
 map_with_options = anymap.LeafletMap(
     height="400px",
     map_options={
@@ -2256,7 +2408,7 @@ map_with_options</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-4">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-7">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2273,7 +2425,7 @@ map_with_options</div>
 
 <span class="n">osm_map</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-4"># OpenStreetMap (default)
+<div class="clipboard-copy-txt" id="cell-7"># OpenStreetMap (default)
 osm_map = anymap.LeafletMap(
     center=[40.7128, -74.0060], zoom=10, tile_layer="OpenStreetMap"  # New York
 )
@@ -2293,7 +2445,7 @@ osm_map</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-5">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-8">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2310,7 +2462,7 @@ osm_map</div>
 
 <span class="n">positron_map</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-5"># CartoDB Positron (light theme)
+<div class="clipboard-copy-txt" id="cell-8"># CartoDB Positron (light theme)
 positron_map = anymap.LeafletMap(
     center=[40.7128, -74.0060], zoom=10, tile_layer="CartoDB.Positron"
 )
@@ -2330,7 +2482,7 @@ positron_map</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-6">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-9">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2347,7 +2499,7 @@ positron_map</div>
 
 <span class="n">dark_map</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-6"># CartoDB Dark Matter (dark theme)
+<div class="clipboard-copy-txt" id="cell-9"># CartoDB Dark Matter (dark theme)
 dark_map = anymap.LeafletMap(
     center=[40.7128, -74.0060], zoom=10, tile_layer="CartoDB.DarkMatter"
 )
@@ -2378,7 +2530,7 @@ dark_map</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-7">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-10">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2414,7 +2566,7 @@ dark_map</div>
 
 <span class="n">marker_map</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-7"># Create a map with markers
+<div class="clipboard-copy-txt" id="cell-10"># Create a map with markers
 marker_map = anymap.LeafletMap(center=[51.5074, -0.1278], zoom=12)  # London
 
 # Add markers for famous London landmarks
@@ -2464,7 +2616,7 @@ marker_map</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-8">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-11">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2518,7 +2670,7 @@ marker_map</div>
 
 <span class="n">shapes_map</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-8"># Create a map with shapes
+<div class="clipboard-copy-txt" id="cell-11"># Create a map with shapes
 shapes_map = anymap.LeafletMap(center=[40.7128, -74.0060], zoom=11)  # New York
 
 # Add a circle around Central Park
@@ -2586,7 +2738,7 @@ shapes_map</br></div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-9">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-12">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2622,7 +2774,7 @@ shapes_map</br></div>
 
 <span class="n">geojson_map</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-9"># Sample GeoJSON data
+<div class="clipboard-copy-txt" id="cell-12"># Sample GeoJSON data
 geojson_data = {
     "type": "FeatureCollection",
     "features": [
@@ -2672,7 +2824,7 @@ geojson_map</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-10">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-13">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2687,7 +2839,7 @@ geojson_map</div>
 
 <span class="n">control_map</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-10"># Create a map for demonstrations
+<div class="clipboard-copy-txt" id="cell-13"># Create a map for demonstrations
 control_map = anymap.LeafletMap(center=[37.7749, -122.4194], zoom=10)  # San Francisco
 
 control_map</div>
@@ -2705,7 +2857,7 @@ control_map</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-11">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-14">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2718,7 +2870,7 @@ control_map</div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Fly to a different location</span>
 <span class="n">control_map</span><span class="o">.</span><span class="n">fly_to</span><span class="p">(</span><span class="mf">34.0522</span><span class="p">,</span> <span class="o">-</span><span class="mf">118.2437</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>  <span class="c1"># Los Angeles</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-11"># Fly to a different location
+<div class="clipboard-copy-txt" id="cell-14"># Fly to a different location
 control_map.fly_to(34.0522, -118.2437, 12)  # Los Angeles</div>
 </div>
 </div>
@@ -2734,7 +2886,7 @@ control_map.fly_to(34.0522, -118.2437, 12)  # Los Angeles</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-12">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-15">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2748,7 +2900,7 @@ control_map.fly_to(34.0522, -118.2437, 12)  # Los Angeles</div>
 <span class="n">control_map</span><span class="o">.</span><span class="n">set_center</span><span class="p">(</span><span class="mf">25.7617</span><span class="p">,</span> <span class="o">-</span><span class="mf">80.1918</span><span class="p">)</span>  <span class="c1"># Miami</span>
 <span class="n">control_map</span><span class="o">.</span><span class="n">set_zoom</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-12"># Set center and zoom
+<div class="clipboard-copy-txt" id="cell-15"># Set center and zoom
 control_map.set_center(25.7617, -80.1918)  # Miami
 control_map.set_zoom(11)</div>
 </div>
@@ -2765,7 +2917,7 @@ control_map.set_zoom(11)</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-13">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-16">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2779,7 +2931,7 @@ control_map.set_zoom(11)</div>
 <span class="c1"># Southwest and Northeast corners of the bounding box</span>
 <span class="n">control_map</span><span class="o">.</span><span class="n">fit_bounds</span><span class="p">([[</span><span class="mf">25.7617</span><span class="p">,</span> <span class="o">-</span><span class="mf">80.1918</span><span class="p">],</span> <span class="p">[</span><span class="mf">25.7907</span><span class="p">,</span> <span class="o">-</span><span class="mf">80.1310</span><span class="p">]])</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-13"># Fit bounds to a specific area
+<div class="clipboard-copy-txt" id="cell-16"># Fit bounds to a specific area
 # Southwest and Northeast corners of the bounding box
 control_map.fit_bounds([[25.7617, -80.1918], [25.7907, -80.1310]])</div>
 </div>
@@ -2807,7 +2959,7 @@ control_map.fit_bounds([[25.7617, -80.1918], [25.7907, -80.1310]])</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-14">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-17">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2829,7 +2981,7 @@ control_map.fit_bounds([[25.7617, -80.1918], [25.7907, -80.1310]])</div>
 
 <span class="n">multi_layer_map</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-14"># Create a map with multiple tile layers
+<div class="clipboard-copy-txt" id="cell-17"># Create a map with multiple tile layers
 multi_layer_map = anymap.LeafletMap(center=[48.8566, 2.3522], zoom=12)  # Paris
 
 # Add a custom tile layer
@@ -2865,7 +3017,7 @@ multi_layer_map</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-15">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-18">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2901,7 +3053,7 @@ multi_layer_map</div>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"Map exported to tokyo_map.html"</span><span class="p">)</span>
 <span class="n">export_map</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-15"># Create a map for export
+<div class="clipboard-copy-txt" id="cell-18"># Create a map for export
 export_map = anymap.LeafletMap(
     center=[35.6762, 139.6503], zoom=10, tile_layer="CartoDB.Positron"  # Tokyo
 )
@@ -2951,7 +3103,7 @@ export_map</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-16">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-19">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2982,7 +3134,7 @@ export_map</div>
 
 <span class="n">layer_map</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-16"># Create a map for layer management
+<div class="clipboard-copy-txt" id="cell-19"># Create a map for layer management
 layer_map = anymap.LeafletMap(center=[52.5200, 13.4050], zoom=11)  # Berlin
 
 # Add several layers
@@ -3016,7 +3168,7 @@ layer_map</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-17">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-20">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -3032,7 +3184,7 @@ layer_map</div>
 <span class="k">for</span> <span class="n">layer_id</span><span class="p">,</span> <span class="n">layer_config</span> <span class="ow">in</span> <span class="n">layers</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="n">layer_id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">layer_config</span><span class="p">[</span><span class="s1">'type'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-17"># Get current layers
+<div class="clipboard-copy-txt" id="cell-20"># Get current layers
 layers = layer_map.get_layers()
 print("Current layers:")
 for layer_id, layer_config in layers.items():
@@ -3051,7 +3203,7 @@ for layer_id, layer_config in layers.items():
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-18">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-21">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -3065,7 +3217,7 @@ for layer_id, layer_config in layers.items():
 <span class="n">layer_map</span><span class="o">.</span><span class="n">remove_layer</span><span class="p">(</span><span class="n">circle_id</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Removed circle layer: </span><span class="si">{</span><span class="n">circle_id</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-18"># Remove a layer
+<div class="clipboard-copy-txt" id="cell-21"># Remove a layer
 layer_map.remove_layer(circle_id)
 print(f"Removed circle layer: {circle_id}")</div>
 </div>
@@ -3082,7 +3234,7 @@ print(f"Removed circle layer: {circle_id}")</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-19">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-22">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -3096,7 +3248,7 @@ print(f"Removed circle layer: {circle_id}")</div>
 <span class="n">layer_map</span><span class="o">.</span><span class="n">clear_layers</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"All layers cleared"</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-19"># Clear all layers
+<div class="clipboard-copy-txt" id="cell-22"># Clear all layers
 layer_map.clear_layers()
 print("All layers cleared")</div>
 </div>
@@ -3155,7 +3307,7 @@ print("All layers cleared")</div>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 5, 2025 09:26:48 UTC"><span class="timeago" datetime="2025-07-05T09:26:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 5, 2025 09:26:48 UTC">2025-07-05</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 6, 2025 03:47:39 UTC"><span class="timeago" datetime="2025-11-06T03:47:39+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 6, 2025 03:47:39 UTC">2025-11-06</span>
   </span>
 
     
