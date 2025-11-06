@@ -363,7 +363,7 @@ function addGeotiffLayer(map, el, layerId, layerConfig) {
 
             // Create options object EXACTLY like the reference example
             const opts = {
-                attribution: layerConfig.attribution || "Planet",
+                attribution: layerConfig.attribution || "",
                 georaster: georaster,
                 resolution: layerConfig.resolution || 128
             };
