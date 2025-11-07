@@ -1809,6 +1809,21 @@ class MapLibreMap(MapWidget):
 
         return self.geoman_data
 
+    def collapse_geoman_control(self) -> None:
+        """Collapse the Geoman draw control toolbar."""
+
+        self.call_js_method("collapseGeomanControl")
+
+    def expand_geoman_control(self) -> None:
+        """Expand the Geoman draw control toolbar."""
+
+        self.call_js_method("expandGeomanControl")
+
+    def toggle_geoman_control(self) -> None:
+        """Toggle the Geoman draw control toolbar between collapsed and expanded states."""
+
+        self.call_js_method("toggleGeomanControl")
+
     def add_measures_control(
         self,
         position: str = "top-left",
