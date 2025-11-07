@@ -1350,6 +1350,23 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#custom-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Custom Configuration
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1816,7 +1833,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="add-geoman-draw-control">Add Geoman Draw Control<a class="anchor-link" href="#add-geoman-draw-control">¶</a></h1>
+<h1 id="add-geoman-draw-control">Add Geoman Draw Control<a class="anchor-link" href="#add-geoman-draw-control">¶</a></h1><p>The Geoman draw control allows you to draw and edit geometries on the map. By default, snapping is enabled to help you create precise geometries by snapping to existing features.</p>
 </div>
 </div>
 </div>
@@ -1844,13 +1861,6 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="n">m</span> <span class="o">=</span> <span class="n">MapLibreMap</span><span class="p">()</span>
 <span class="n">m</span><span class="o">.</span><span class="n">add_basemap</span><span class="p">(</span><span class="s2">"Esri.WorldImagery"</span><span class="p">)</span>
 <span class="n">m</span><span class="o">.</span><span class="n">add_geoman_control</span><span class="p">()</span>
-<span class="c1"># m.add_geoman_control(</span>
-<span class="c1">#             position="top-left",</span>
-<span class="c1">#             geoman_options={"settings": {"controlsCollapsible": False}},</span>
-<span class="c1">#             settings={"controlsPosition": "top-right"},</span>
-<span class="c1">#             controls={"draw": {"polygon": {"active": True}}},</span>
-<span class="c1">#             collapsed=False,</span>
-<span class="c1">#         )</span>
 <span class="n">m</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-1">from anymap.maplibre import MapLibreMap
@@ -1858,21 +1868,25 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 m = MapLibreMap()
 m.add_basemap("Esri.WorldImagery")
 m.add_geoman_control()
-# m.add_geoman_control(
-#             position="top-left",
-#             geoman_options={"settings": {"controlsCollapsible": False}},
-#             settings={"controlsPosition": "top-right"},
-#             controls={"draw": {"polygon": {"active": True}}},
-#             collapsed=False,
-#         )
 m</div>
 </div>
 </div>
 </div>
 </div>
 </div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=2">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="custom-configuration">Custom Configuration<a class="anchor-link" href="#custom-configuration">¶</a></h2><p>You can customize the Geoman control with various options. For example, you can disable snapping if needed:</p>
+</div>
+</div>
+</div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=2">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=3">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1890,9 +1904,21 @@ m</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">m2</span> <span class="o">=</span> <span class="n">MapLibreMap</span><span class="p">()</span>
+<span class="n">m2</span><span class="o">.</span><span class="n">add_basemap</span><span class="p">(</span><span class="s2">"Esri.WorldImagery"</span><span class="p">)</span>
+<span class="n">m2</span><span class="o">.</span><span class="n">add_geoman_control</span><span class="p">(</span>
+    <span class="n">position</span><span class="o">=</span><span class="s2">"top-left"</span><span class="p">,</span>
+    <span class="n">controls</span><span class="o">=</span><span class="p">{</span><span class="s2">"helper"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"snapping"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"active"</span><span class="p">:</span> <span class="kc">False</span><span class="p">}}},</span>
+<span class="p">)</span>
+<span class="n">m2</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-2"></div>
+<div class="clipboard-copy-txt" id="cell-2">m2 = MapLibreMap()
+m2.add_basemap("Esri.WorldImagery")
+m2.add_geoman_control(
+    position="top-left",
+    controls={"helper": {"snapping": {"active": False}}},
+)
+m2</div>
 </div>
 </div>
 </div>
@@ -1928,7 +1954,7 @@ m</div>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="October 23, 2025 04:31:20 UTC"><span class="timeago" datetime="2025-10-23T04:31:20+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 23, 2025 04:31:20 UTC">2025-10-23</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 7, 2025 15:30:58 UTC"><span class="timeago" datetime="2025-11-07T15:30:58+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 7, 2025 15:30:58 UTC">2025-11-07</span>
   </span>
 
     

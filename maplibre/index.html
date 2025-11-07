@@ -4969,8 +4969,14 @@ data sources, custom styling, and interactive features.</p>
             <span class="n">geoman_settings</span> <span class="o">=</span> <span class="n">geoman_config</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;settings&quot;</span><span class="p">,</span> <span class="p">{})</span>
             <span class="n">geoman_settings</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">settings</span><span class="p">)</span>
 
+        <span class="c1"># Enable snapping by default</span>
+        <span class="n">geoman_controls</span> <span class="o">=</span> <span class="n">geoman_config</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;controls&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">helper_controls</span> <span class="o">=</span> <span class="n">geoman_controls</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;helper&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">snapping_config</span> <span class="o">=</span> <span class="n">helper_controls</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;snapping&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="k">if</span> <span class="s2">&quot;active&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">snapping_config</span><span class="p">:</span>
+            <span class="n">snapping_config</span><span class="p">[</span><span class="s2">&quot;active&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
         <span class="k">if</span> <span class="n">controls</span><span class="p">:</span>
-            <span class="n">geoman_controls</span> <span class="o">=</span> <span class="n">geoman_config</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;controls&quot;</span><span class="p">,</span> <span class="p">{})</span>
             <span class="k">for</span> <span class="n">section</span><span class="p">,</span> <span class="n">section_options</span> <span class="ow">in</span> <span class="n">controls</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">section_options</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
                     <span class="n">section_config</span> <span class="o">=</span> <span class="n">geoman_controls</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="p">{})</span>
@@ -9247,8 +9253,14 @@ button configuration overrides.</p></td>
         <span class="n">geoman_settings</span> <span class="o">=</span> <span class="n">geoman_config</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;settings&quot;</span><span class="p">,</span> <span class="p">{})</span>
         <span class="n">geoman_settings</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">settings</span><span class="p">)</span>
 
+    <span class="c1"># Enable snapping by default</span>
+    <span class="n">geoman_controls</span> <span class="o">=</span> <span class="n">geoman_config</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;controls&quot;</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="n">helper_controls</span> <span class="o">=</span> <span class="n">geoman_controls</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;helper&quot;</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="n">snapping_config</span> <span class="o">=</span> <span class="n">helper_controls</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;snapping&quot;</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="k">if</span> <span class="s2">&quot;active&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">snapping_config</span><span class="p">:</span>
+        <span class="n">snapping_config</span><span class="p">[</span><span class="s2">&quot;active&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
     <span class="k">if</span> <span class="n">controls</span><span class="p">:</span>
-        <span class="n">geoman_controls</span> <span class="o">=</span> <span class="n">geoman_config</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;controls&quot;</span><span class="p">,</span> <span class="p">{})</span>
         <span class="k">for</span> <span class="n">section</span><span class="p">,</span> <span class="n">section_options</span> <span class="ow">in</span> <span class="n">controls</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">section_options</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
                 <span class="n">section_config</span> <span class="o">=</span> <span class="n">geoman_controls</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="p">{})</span>
