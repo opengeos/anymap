@@ -3901,6 +3901,7 @@ function render({ model, el }) {
 
       try {
         const exported = geomanInstance.features.exportGeoJson();
+        el._lastExportedData = exported; // Store for comparison
         el._geomanSyncFromJs = true;
         model.set("geoman_data", exported);
         model.save_changes();
@@ -3911,30 +3912,75 @@ function render({ model, el }) {
 
     const importGeomanData = (data, skipExport = false) => {
       el._pendingGeomanData = normalizeGeomanGeoJson(data);
-      if (!el._geomanInstance) {
+      // Try map.gm first (v0.5.0+ API), then fallback to el._geomanInstance
+      const geomanInstance = map.gm || el._geomanInstance;
+      if (!geomanInstance) {
         return;
       }
       try {
         const collection = el._pendingGeomanData;
-        el._geomanInstance.features.updateManager.withAtomicSourcesUpdate(() => {
-          const existingFeatures = Array.from(el._geomanInstance.features.featureStore.values());
-          existingFeatures.forEach((feature) => {
+
+        // Clear/replace features in all Geoman sources
+        // Drawn features may be in different sources initially
+        if (geomanInstance.features.setSourceGeoJson) {
+          const sources = ['gm_main', 'gm_temporary', 'gm_standby'];
+          let successCount = 0;
+
+          sources.forEach(sourceName => {
             try {
-              el._geomanInstance.features.delete(feature);
-            } catch (deleteError) {
-              console.warn('Failed to remove Geoman feature during import:', deleteError);
+              geomanInstance.features.setSourceGeoJson({
+                geoJson: collection,
+                sourceName: sourceName
+              });
+              successCount++;
+            } catch (sourceError) {
+              // Source might not exist, which is okay
             }
           });
-          if (collection.features.length) {
-            el._geomanInstance.features.importGeoJson(collection);
+
+          if (successCount === 0) {
+            deleteAndImportFeatures(geomanInstance, collection);
           }
-        });
+        } else {
+          // Use delete/import approach if setSourceGeoJson not available
+          deleteAndImportFeatures(geomanInstance, collection);
+        }
+
         el._pendingGeomanData = null;
         if (!skipExport) {
           exportGeomanData();
         }
       } catch (error) {
         console.error('Failed to import Geoman data:', error);
+      }
+
+      // Helper function for delete/import approach
+      function deleteAndImportFeatures(geomanInstance, collection) {
+        // Use atomic update to ensure map renders correctly
+        if (geomanInstance.features.updateManager && geomanInstance.features.updateManager.withAtomicSourcesUpdate) {
+          geomanInstance.features.updateManager.withAtomicSourcesUpdate(() => {
+            clearAndImport(geomanInstance, collection);
+          });
+        } else {
+          clearAndImport(geomanInstance, collection);
+        }
+      }
+
+      function clearAndImport(geomanInstance, collection) {
+        // Clear all existing features by ID
+        const featureIds = Array.from(geomanInstance.features.featureStore.keys());
+        featureIds.forEach((featureId) => {
+          try {
+            geomanInstance.features.delete(featureId);
+          } catch (deleteError) {
+            console.warn('Failed to delete Geoman feature:', featureId, deleteError);
+          }
+        });
+
+        // Import new features if any
+        if (collection.features.length > 0) {
+          geomanInstance.features.importGeoJson(collection);
+        }
       }
     };
 
@@ -4034,12 +4080,25 @@ function render({ model, el }) {
     };
 
     const geomanModelListener = () => {
-      // If this change originated from a JS export, skip importing to avoid
-      // destroying interaction state (e.g., active drag selection)
+      const newData = model.get("geoman_data");
+
+      // If this change originated from a JS export, check if data actually changed
       if (el._geomanSyncFromJs) {
-        el._geomanSyncFromJs = false;
-        return;
+        // Compare the new data with what we last exported
+        const lastExported = el._lastExportedData || { type: 'FeatureCollection', features: [] };
+        const newDataStr = JSON.stringify(newData);
+        const lastExportedStr = JSON.stringify(lastExported);
+
+        if (newDataStr === lastExportedStr) {
+          // Data unchanged - skip import to avoid circular updates
+          el._geomanSyncFromJs = false;
+          return;
+        } else {
+          // Data changed from Python even though we just exported - process it
+          el._geomanSyncFromJs = false;
+        }
       }
+
       // Import data set from Python without re-exporting to avoid feedback loops
       importGeomanData(model.get("geoman_data"), true);
     };
