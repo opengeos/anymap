@@ -1357,6 +1357,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#managing-drawn-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Managing Drawn Features
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#custom-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       Custom Configuration
@@ -1881,7 +1890,7 @@ m</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="custom-configuration">Custom Configuration<a class="anchor-link" href="#custom-configuration">¶</a></h2><p>You can customize the Geoman control with various options. For example, you can disable snapping if needed:</p>
+<h2 id="managing-drawn-features">Managing Drawn Features<a class="anchor-link" href="#managing-drawn-features">¶</a></h2><p>You can retrieve the drawn features as GeoJSON:</p>
 </div>
 </div>
 </div>
@@ -1904,6 +1913,200 @@ m</div>
 </div>
 </clipboard-copy>
 </div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">m</span><span class="o">.</span><span class="n">get_geoman_data</span><span class="p">()</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-2">m.get_geoman_data()</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=4">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-3">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">m</span><span class="o">.</span><span class="n">clear_geoman_data</span><span class="p">()</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-3">m.clear_geoman_data()</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=5">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-4">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">m</span><span class="o">.</span><span class="n">set_geoman_data</span><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"FeatureCollection"</span><span class="p">,</span>
+        <span class="s2">"features"</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Feature"</span><span class="p">,</span>
+                <span class="s2">"properties"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"__gm_id"</span><span class="p">:</span> <span class="s2">"feature-1"</span><span class="p">,</span> <span class="s2">"__gm_shape"</span><span class="p">:</span> <span class="s2">"marker"</span><span class="p">},</span>
+                <span class="s2">"geometry"</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Point"</span><span class="p">,</span>
+                    <span class="s2">"coordinates"</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">94.21874999999979</span><span class="p">,</span> <span class="mf">42.31453821054666</span><span class="p">],</span>
+                <span class="p">},</span>
+                <span class="s2">"id"</span><span class="p">:</span> <span class="s2">"feature-1"</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Feature"</span><span class="p">,</span>
+                <span class="s2">"properties"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"__gm_id"</span><span class="p">:</span> <span class="s2">"feature-4"</span><span class="p">,</span> <span class="s2">"__gm_shape"</span><span class="p">:</span> <span class="s2">"rectangle"</span><span class="p">},</span>
+                <span class="s2">"geometry"</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"Polygon"</span><span class="p">,</span>
+                    <span class="s2">"coordinates"</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="p">[</span>
+                            <span class="p">[</span><span class="o">-</span><span class="mf">100.89843749999969</span><span class="p">,</span> <span class="mf">29.559900578322555</span><span class="p">],</span>
+                            <span class="p">[</span><span class="o">-</span><span class="mf">100.89843749999969</span><span class="p">,</span> <span class="mf">39.11796883981944</span><span class="p">],</span>
+                            <span class="p">[</span><span class="o">-</span><span class="mf">83.67187500000044</span><span class="p">,</span> <span class="mf">39.11796883981944</span><span class="p">],</span>
+                            <span class="p">[</span><span class="o">-</span><span class="mf">83.67187500000044</span><span class="p">,</span> <span class="mf">29.559900578322555</span><span class="p">],</span>
+                            <span class="p">[</span><span class="o">-</span><span class="mf">100.89843749999969</span><span class="p">,</span> <span class="mf">29.559900578322555</span><span class="p">],</span>
+                        <span class="p">]</span>
+                    <span class="p">],</span>
+                <span class="p">},</span>
+                <span class="s2">"id"</span><span class="p">:</span> <span class="s2">"feature-4"</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">],</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-4">m.set_geoman_data(
+    {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "properties": {"__gm_id": "feature-1", "__gm_shape": "marker"},
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [-94.21874999999979, 42.31453821054666],
+                },
+                "id": "feature-1",
+            },
+            {
+                "type": "Feature",
+                "properties": {"__gm_id": "feature-4", "__gm_shape": "rectangle"},
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [-100.89843749999969, 29.559900578322555],
+                            [-100.89843749999969, 39.11796883981944],
+                            [-83.67187500000044, 39.11796883981944],
+                            [-83.67187500000044, 29.559900578322555],
+                            [-100.89843749999969, 29.559900578322555],
+                        ]
+                    ],
+                },
+                "id": "feature-4",
+            },
+        ],
+    }
+)</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=6">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-5">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">m</span><span class="o">.</span><span class="n">set_geoman_data</span><span class="p">({</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"FeatureCollection"</span><span class="p">,</span> <span class="s2">"features"</span><span class="p">:</span> <span class="p">[]})</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-5">m.set_geoman_data({"type": "FeatureCollection", "features": []})</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=7">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>Clear all drawn features from the map:</p>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=8">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="custom-configuration">Custom Configuration<a class="anchor-link" href="#custom-configuration">¶</a></h2><p>You can customize the Geoman control with various options. For example, you can disable snapping if needed:</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=9">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-6">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">m2</span> <span class="o">=</span> <span class="n">MapLibreMap</span><span class="p">()</span>
 <span class="n">m2</span><span class="o">.</span><span class="n">add_basemap</span><span class="p">(</span><span class="s2">"Esri.WorldImagery"</span><span class="p">)</span>
 <span class="n">m2</span><span class="o">.</span><span class="n">add_geoman_control</span><span class="p">(</span>
@@ -1912,7 +2115,7 @@ m</div>
 <span class="p">)</span>
 <span class="n">m2</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-2">m2 = MapLibreMap()
+<div class="clipboard-copy-txt" id="cell-6">m2 = MapLibreMap()
 m2.add_basemap("Esri.WorldImagery")
 m2.add_geoman_control(
     position="top-left",
@@ -1954,7 +2157,7 @@ m2</div>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 7, 2025 15:30:58 UTC"><span class="timeago" datetime="2025-11-07T15:30:58+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 7, 2025 15:30:58 UTC">2025-11-07</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 7, 2025 16:32:34 UTC"><span class="timeago" datetime="2025-11-07T16:32:34+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 7, 2025 16:32:34 UTC">2025-11-07</span>
   </span>
 
     
