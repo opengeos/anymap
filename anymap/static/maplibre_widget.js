@@ -947,8 +947,16 @@ function shouldSyncGeomanEvent(event) {
   );
 }
 
+// Track ongoing collapse/expand operations to prevent rapid successive clicks
+let geomanCollapseInProgress = false;
+
 function applyGeomanCollapsedState(instance, collapsed) {
   if (!instance || !instance.control || !instance.control.container) {
+    return;
+  }
+
+  // Prevent concurrent collapse/expand operations
+  if (geomanCollapseInProgress) {
     return;
   }
 
@@ -960,10 +968,18 @@ function applyGeomanCollapsedState(instance, collapsed) {
     return;
   }
 
-  if (collapsed && !isCollapsed) {
+  // Check if we need to change state
+  if ((collapsed && !isCollapsed) || (!collapsed && isCollapsed)) {
+    // Set flag to prevent concurrent operations
+    geomanCollapseInProgress = true;
+
+    // Click the toggle button
     toggleButton.click();
-  } else if (!collapsed && isCollapsed) {
-    toggleButton.click();
+
+    // Wait for DOM to update before allowing next operation
+    setTimeout(() => {
+      geomanCollapseInProgress = false;
+    }, 200); // 200ms should be enough for the DOM to update
   }
 }
 
@@ -7218,6 +7234,44 @@ function render({ model, el }) {
           case 'exportGeomanData':
             // Export current Geoman features and sync to Python
             exportGeomanData();
+            break;
+
+          case 'collapseGeomanControl':
+            // Collapse the Geoman control toolbar
+            {
+              const geomanInstance = map.gm || el._geomanInstance;
+              if (geomanInstance) {
+                requestAnimationFrame(() => {
+                  applyGeomanCollapsedState(geomanInstance, true);
+                });
+              }
+            }
+            break;
+
+          case 'expandGeomanControl':
+            // Expand the Geoman control toolbar
+            {
+              const geomanInstance = map.gm || el._geomanInstance;
+              if (geomanInstance) {
+                requestAnimationFrame(() => {
+                  applyGeomanCollapsedState(geomanInstance, false);
+                });
+              }
+            }
+            break;
+
+          case 'toggleGeomanControl':
+            // Toggle the Geoman control toolbar collapse state
+            {
+              const geomanInstance = map.gm || el._geomanInstance;
+              if (geomanInstance && geomanInstance.control && geomanInstance.control.container) {
+                requestAnimationFrame(() => {
+                  const container = geomanInstance.control.container;
+                  const isCollapsed = !container.querySelector('.gm-reactive-controls');
+                  applyGeomanCollapsedState(geomanInstance, !isCollapsed);
+                });
+              }
+            }
             break;
 
           case 'initMapScene':
