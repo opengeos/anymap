@@ -58,8 +58,8 @@ function render({ model, el }) {
   async function initializeDeckGL() {
     try {
       // Load MapLibre CSS and JS
-      await loadStylesheet('https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css');
-      await loadScript('https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js');
+      await loadStylesheet('https://unpkg.com/maplibre-gl@5.10.0/dist/maplibre-gl.css');
+      await loadScript('https://unpkg.com/maplibre-gl@5.10.0/dist/maplibre-gl.js');
 
       // Load DeckGL
       await loadScript('https://unpkg.com/deck.gl@9.1.12/dist.min.js');
