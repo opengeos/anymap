@@ -2866,7 +2866,7 @@ function render({ model, el }) {
       // Load MapLibre GL JS first
       if (!window.maplibregl) {
         const maplibreScript = document.createElement('script');
-        maplibreScript.src = 'https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js';
+        maplibreScript.src = 'https://unpkg.com/maplibre-gl@5.10.0/dist/maplibre-gl.js';
 
         const previousDefine = window.define;
         const previousModule = window.module;
@@ -2956,7 +2956,7 @@ function render({ model, el }) {
       if (!document.querySelector('link[href*="maplibre-gl.css"]')) {
         const maplibreCSS = document.createElement('link');
         maplibreCSS.rel = 'stylesheet';
-        maplibreCSS.href = 'https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css';
+        maplibreCSS.href = 'https://unpkg.com/maplibre-gl@5.10.0/dist/maplibre-gl.css';
         document.head.appendChild(maplibreCSS);
       }
 
@@ -3335,7 +3335,7 @@ function render({ model, el }) {
       if (!resolveGeoGridClass()) {
         try {
           // Load GeoGrid as ES module via dynamic import
-          const geoGridModule = await import('https://unpkg.com/geogrid-maplibre-gl@latest');
+          const geoGridModule = await import('https://unpkg.com/geogrid-maplibre-gl@5.10.0');
           window.GeoGrid = geoGridModule.GeoGrid || geoGridModule.default || geoGridModule;
 
           if (!resolveGeoGridClass()) {
@@ -3349,7 +3349,7 @@ function render({ model, el }) {
       if (!document.querySelector('link[href*="geogrid.css"]')) {
         const geogridCSS = document.createElement('link');
         geogridCSS.rel = 'stylesheet';
-        geogridCSS.href = 'https://unpkg.com/geogrid-maplibre-gl@latest/dist/geogrid.css';
+        geogridCSS.href = 'https://unpkg.com/geogrid-maplibre-gl@5.10.0/dist/geogrid.css';
         document.head.appendChild(geogridCSS);
 
       }

@@ -27,8 +27,8 @@ function loadCSS(href) {
 async function loadDependencies() {
     if (!window.maplibregl && !maplibreLoaded) {
         await Promise.all([
-            loadScript('https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js'),
-            loadCSS('https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css')
+            loadScript('https://unpkg.com/maplibre-gl@5.10.0/dist/maplibre-gl.js'),
+            loadCSS('https://unpkg.com/maplibre-gl@5.10.0/dist/maplibre-gl.css')
         ]);
         maplibreLoaded = true;
     }
