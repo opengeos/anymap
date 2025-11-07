@@ -3335,7 +3335,7 @@ function render({ model, el }) {
       if (!resolveGeoGridClass()) {
         try {
           // Load GeoGrid as ES module via dynamic import
-          const geoGridModule = await import('https://unpkg.com/geogrid-maplibre-gl@5.10.0');
+          const geoGridModule = await import('https://unpkg.com/geogrid-maplibre-gl@latest');
           window.GeoGrid = geoGridModule.GeoGrid || geoGridModule.default || geoGridModule;
 
           if (!resolveGeoGridClass()) {
@@ -3349,7 +3349,7 @@ function render({ model, el }) {
       if (!document.querySelector('link[href*="geogrid.css"]')) {
         const geogridCSS = document.createElement('link');
         geogridCSS.rel = 'stylesheet';
-        geogridCSS.href = 'https://unpkg.com/geogrid-maplibre-gl@5.10.0/dist/geogrid.css';
+        geogridCSS.href = 'https://unpkg.com/geogrid-maplibre-gl@latest/dist/geogrid.css';
         document.head.appendChild(geogridCSS);
 
       }
