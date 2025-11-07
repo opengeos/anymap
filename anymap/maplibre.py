@@ -1738,8 +1738,14 @@ class MapLibreMap(MapWidget):
             geoman_settings = geoman_config.setdefault("settings", {})
             geoman_settings.update(settings)
 
+        # Enable snapping by default
+        geoman_controls = geoman_config.setdefault("controls", {})
+        helper_controls = geoman_controls.setdefault("helper", {})
+        snapping_config = helper_controls.setdefault("snapping", {})
+        if "active" not in snapping_config:
+            snapping_config["active"] = True
+
         if controls:
-            geoman_controls = geoman_config.setdefault("controls", {})
             for section, section_options in controls.items():
                 if isinstance(section_options, dict):
                     section_config = geoman_controls.setdefault(section, {})
