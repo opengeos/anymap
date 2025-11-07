@@ -1663,6 +1663,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.collapse_geoman_control" class="md-nav__link">
+    <span class="md-ellipsis">
+      collapse_geoman_control()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.create_container" class="md-nav__link">
     <span class="md-ellipsis">
       create_container()
@@ -1693,6 +1702,15 @@
   <a href="#anymap.maplibre.MapLibreMap.enable_feature_popup" class="md-nav__link">
     <span class="md-ellipsis">
       enable_feature_popup()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.expand_geoman_control" class="md-nav__link">
+    <span class="md-ellipsis">
+      expand_geoman_control()
     </span>
   </a>
   
@@ -2089,6 +2107,15 @@
   <a href="#anymap.maplibre.MapLibreMap.to_html" class="md-nav__link">
     <span class="md-ellipsis">
       to_html()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.toggle_geoman_control" class="md-nav__link">
+    <span class="md-ellipsis">
+      toggle_geoman_control()
     </span>
   </a>
   
@@ -2699,6 +2726,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.collapse_geoman_control" class="md-nav__link">
+    <span class="md-ellipsis">
+      collapse_geoman_control()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.create_container" class="md-nav__link">
     <span class="md-ellipsis">
       create_container()
@@ -2729,6 +2765,15 @@
   <a href="#anymap.maplibre.MapLibreMap.enable_feature_popup" class="md-nav__link">
     <span class="md-ellipsis">
       enable_feature_popup()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.expand_geoman_control" class="md-nav__link">
+    <span class="md-ellipsis">
+      expand_geoman_control()
     </span>
   </a>
   
@@ -3125,6 +3170,15 @@
   <a href="#anymap.maplibre.MapLibreMap.to_html" class="md-nav__link">
     <span class="md-ellipsis">
       to_html()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.toggle_geoman_control" class="md-nav__link">
+    <span class="md-ellipsis">
+      toggle_geoman_control()
     </span>
   </a>
   
@@ -5039,6 +5093,21 @@ data sources, custom styling, and interactive features.</p>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">geoman_data</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">collapse_geoman_control</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Collapse the Geoman draw control toolbar.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;collapseGeomanControl&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">expand_geoman_control</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Expand the Geoman draw control toolbar.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;expandGeomanControl&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">toggle_geoman_control</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Toggle the Geoman draw control toolbar between collapsed and expanded states.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;toggleGeomanControl&quot;</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">add_measures_control</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -12242,6 +12311,34 @@ If omitted, a unique identifier is generated from the label.</p></td>
 
 
 
+<h3 id="anymap.maplibre.MapLibreMap.collapse_geoman_control" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">collapse_geoman_control</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+
+<a href="#anymap.maplibre.MapLibreMap.collapse_geoman_control" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Collapse the Geoman draw control toolbar.</p>
+
+        <details class="quote">
+          <summary>Source code in <code>anymap/maplibre.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">collapse_geoman_control</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Collapse the Geoman draw control toolbar.&quot;&quot;&quot;</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;collapseGeomanControl&quot;</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
 <h3 id="anymap.maplibre.MapLibreMap.create_container" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">create_container</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sidebar_visible</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">expanded</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
@@ -12616,6 +12713,34 @@ not supplied. Defaults to 25.</p></td>
         <span class="n">config</span><span class="p">[</span><span class="s2">&quot;titleField&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">title_field</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;enableFeaturePopup&quot;</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="anymap.maplibre.MapLibreMap.expand_geoman_control" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">expand_geoman_control</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+
+<a href="#anymap.maplibre.MapLibreMap.expand_geoman_control" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Expand the Geoman draw control toolbar.</p>
+
+        <details class="quote">
+          <summary>Source code in <code>anymap/maplibre.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">expand_geoman_control</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Expand the Geoman draw control toolbar.&quot;&quot;&quot;</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;expandGeomanControl&quot;</span><span class="p">)</span>
 </code></pre></div>
         </details>
     </div>
@@ -15302,6 +15427,34 @@ Use GeoJSON or GPKG formats for mixed geometry types.</p>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">html_content</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">html_content</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="anymap.maplibre.MapLibreMap.toggle_geoman_control" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">toggle_geoman_control</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+
+<a href="#anymap.maplibre.MapLibreMap.toggle_geoman_control" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Toggle the Geoman draw control toolbar between collapsed and expanded states.</p>
+
+        <details class="quote">
+          <summary>Source code in <code>anymap/maplibre.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">toggle_geoman_control</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Toggle the Geoman draw control toolbar between collapsed and expanded states.&quot;&quot;&quot;</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;toggleGeomanControl&quot;</span><span class="p">)</span>
 </code></pre></div>
         </details>
     </div>
