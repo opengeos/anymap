@@ -85,147 +85,147 @@
          <lastmod>2025-11-08</lastmod>
     </url>
     <url>
-         <loc>https://anymap.dev/examples/add_draw_data_example/</loc>
+         <loc>https://anymap.dev/examples/cesium/cesium_example/</loc>
          <lastmod>2025-11-08</lastmod>
     </url>
     <url>
-         <loc>https://anymap.dev/examples/basic_usage/</loc>
+         <loc>https://anymap.dev/examples/deckgl/deckgl_example/</loc>
          <lastmod>2025-11-08</lastmod>
     </url>
     <url>
-         <loc>https://anymap.dev/examples/cesium_example/</loc>
+         <loc>https://anymap.dev/examples/keplergl/keplergl_example/</loc>
          <lastmod>2025-11-08</lastmod>
     </url>
     <url>
-         <loc>https://anymap.dev/examples/clicked_attribute_example/</loc>
+         <loc>https://anymap.dev/examples/leaflet/leaflet_example/</loc>
          <lastmod>2025-11-08</lastmod>
     </url>
     <url>
-         <loc>https://anymap.dev/examples/cog_metadata_example/</loc>
+         <loc>https://anymap.dev/examples/mapbox/mapbox_example/</loc>
          <lastmod>2025-11-08</lastmod>
     </url>
     <url>
-         <loc>https://anymap.dev/examples/custom_draw_styles_example/</loc>
+         <loc>https://anymap.dev/examples/maplibre/add_draw_data_example/</loc>
          <lastmod>2025-11-08</lastmod>
     </url>
     <url>
-         <loc>https://anymap.dev/examples/deckgl_example/</loc>
+         <loc>https://anymap.dev/examples/maplibre/basic_usage/</loc>
          <lastmod>2025-11-08</lastmod>
     </url>
     <url>
-         <loc>https://anymap.dev/examples/deckgl_pointcloud_example/</loc>
+         <loc>https://anymap.dev/examples/maplibre/clicked_attribute_example/</loc>
          <lastmod>2025-11-08</lastmod>
     </url>
     <url>
-         <loc>https://anymap.dev/examples/draw_control_example/</loc>
+         <loc>https://anymap.dev/examples/maplibre/cog_metadata_example/</loc>
          <lastmod>2025-11-08</lastmod>
     </url>
     <url>
-         <loc>https://anymap.dev/examples/geocoder_example/</loc>
+         <loc>https://anymap.dev/examples/maplibre/custom_draw_styles_example/</loc>
          <lastmod>2025-11-08</lastmod>
     </url>
     <url>
-         <loc>https://anymap.dev/examples/geogrid_example/</loc>
+         <loc>https://anymap.dev/examples/maplibre/deckgl_pointcloud_example/</loc>
          <lastmod>2025-11-08</lastmod>
     </url>
     <url>
-         <loc>https://anymap.dev/examples/infobox_example/</loc>
+         <loc>https://anymap.dev/examples/maplibre/draw_control_example/</loc>
          <lastmod>2025-11-08</lastmod>
     </url>
     <url>
-         <loc>https://anymap.dev/examples/keplergl_example/</loc>
+         <loc>https://anymap.dev/examples/maplibre/geocoder_example/</loc>
          <lastmod>2025-11-08</lastmod>
     </url>
     <url>
-         <loc>https://anymap.dev/examples/layer_control_example/</loc>
+         <loc>https://anymap.dev/examples/maplibre/geogrid_example/</loc>
          <lastmod>2025-11-08</lastmod>
     </url>
     <url>
-         <loc>https://anymap.dev/examples/leaflet_example/</loc>
+         <loc>https://anymap.dev/examples/maplibre/infobox_example/</loc>
          <lastmod>2025-11-08</lastmod>
     </url>
     <url>
-         <loc>https://anymap.dev/examples/map_click_polygon_intersection/</loc>
+         <loc>https://anymap.dev/examples/maplibre/layer_control_example/</loc>
          <lastmod>2025-11-08</lastmod>
     </url>
     <url>
-         <loc>https://anymap.dev/examples/map_comparison/</loc>
+         <loc>https://anymap.dev/examples/maplibre/map_click_polygon_intersection/</loc>
          <lastmod>2025-11-08</lastmod>
     </url>
     <url>
-         <loc>https://anymap.dev/examples/mapbox_example/</loc>
+         <loc>https://anymap.dev/examples/maplibre/map_comparison/</loc>
          <lastmod>2025-11-08</lastmod>
     </url>
     <url>
-         <loc>https://anymap.dev/examples/maplibre_add_raster/</loc>
+         <loc>https://anymap.dev/examples/maplibre/maplibre_add_raster/</loc>
          <lastmod>2025-11-08</lastmod>
     </url>
     <url>
-         <loc>https://anymap.dev/examples/maplibre_add_vector/</loc>
+         <loc>https://anymap.dev/examples/maplibre/maplibre_add_vector/</loc>
          <lastmod>2025-11-08</lastmod>
     </url>
     <url>
-         <loc>https://anymap.dev/examples/maplibre_example/</loc>
+         <loc>https://anymap.dev/examples/maplibre/maplibre_example/</loc>
          <lastmod>2025-11-08</lastmod>
     </url>
     <url>
-         <loc>https://anymap.dev/examples/maplibre_export_map/</loc>
+         <loc>https://anymap.dev/examples/maplibre/maplibre_export_map/</loc>
          <lastmod>2025-11-08</lastmod>
     </url>
     <url>
-         <loc>https://anymap.dev/examples/maplibre_flatgeobuf/</loc>
+         <loc>https://anymap.dev/examples/maplibre/maplibre_flatgeobuf/</loc>
          <lastmod>2025-11-08</lastmod>
     </url>
     <url>
-         <loc>https://anymap.dev/examples/maplibre_geocoder_example/</loc>
+         <loc>https://anymap.dev/examples/maplibre/maplibre_geocoder_example/</loc>
          <lastmod>2025-11-08</lastmod>
     </url>
     <url>
-         <loc>https://anymap.dev/examples/maplibre_geoman/</loc>
+         <loc>https://anymap.dev/examples/maplibre/maplibre_geoman/</loc>
          <lastmod>2025-11-08</lastmod>
     </url>
     <url>
-         <loc>https://anymap.dev/examples/maplibre_legend_example/</loc>
+         <loc>https://anymap.dev/examples/maplibre/maplibre_legend_example/</loc>
          <lastmod>2025-11-08</lastmod>
     </url>
     <url>
-         <loc>https://anymap.dev/examples/maplibre_measures/</loc>
+         <loc>https://anymap.dev/examples/maplibre/maplibre_measures/</loc>
          <lastmod>2025-11-08</lastmod>
     </url>
     <url>
-         <loc>https://anymap.dev/examples/maplibre_three_plugin_example/</loc>
+         <loc>https://anymap.dev/examples/maplibre/maplibre_three_plugin_example/</loc>
          <lastmod>2025-11-08</lastmod>
     </url>
     <url>
-         <loc>https://anymap.dev/examples/openlayers_example/</loc>
+         <loc>https://anymap.dev/examples/maplibre/pmtiles_example/</loc>
          <lastmod>2025-11-08</lastmod>
     </url>
     <url>
-         <loc>https://anymap.dev/examples/pmtiles_example/</loc>
+         <loc>https://anymap.dev/examples/maplibre/save_draw_data_example/</loc>
          <lastmod>2025-11-08</lastmod>
     </url>
     <url>
-         <loc>https://anymap.dev/examples/potree_example/</loc>
+         <loc>https://anymap.dev/examples/maplibre/streetview_example/</loc>
          <lastmod>2025-11-08</lastmod>
     </url>
     <url>
-         <loc>https://anymap.dev/examples/save_draw_data_example/</loc>
+         <loc>https://anymap.dev/examples/maplibre/temporal_control_example/</loc>
          <lastmod>2025-11-08</lastmod>
     </url>
     <url>
-         <loc>https://anymap.dev/examples/streetview_example/</loc>
+         <loc>https://anymap.dev/examples/maplibre/terrain_example/</loc>
          <lastmod>2025-11-08</lastmod>
     </url>
     <url>
-         <loc>https://anymap.dev/examples/temporal_control_example/</loc>
+         <loc>https://anymap.dev/examples/maplibre/to_html/</loc>
          <lastmod>2025-11-08</lastmod>
     </url>
     <url>
-         <loc>https://anymap.dev/examples/terrain_example/</loc>
+         <loc>https://anymap.dev/examples/openlayers/openlayers_example/</loc>
          <lastmod>2025-11-08</lastmod>
     </url>
     <url>
-         <loc>https://anymap.dev/examples/to_html/</loc>
+         <loc>https://anymap.dev/examples/potree/potree_example/</loc>
          <lastmod>2025-11-08</lastmod>
     </url>
 </urlset>
