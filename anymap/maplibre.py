@@ -743,9 +743,9 @@ class MapLibreMap(MapWidget):
         Args:
             layer_id: The layer to which the popup is added.
             prop: The property of the source to be displayed. If None, all properties are displayed.
-            template: A mustache-style template. If supplied, prop is ignored.
-                     Use {{property_name}} to reference feature properties.
-                     Example: "Name: {{name}}<br>Value: {{value}}"
+            template: A simple template with mustache-style variable interpolation. Only
+                     `{{property_name}}` substitution is supported; sections, conditionals,
+                     and iteration are not. Example: "Name: {{name}}<br>Value: {{value}}"
             trigger: Event that triggers the popup. Either "click" or "hover". Defaults to "click".
         """
         config: Dict[str, Any] = {"layerId": layer_id, "trigger": trigger}
