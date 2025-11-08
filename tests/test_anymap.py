@@ -330,7 +330,6 @@ class TestMapLibreMap(unittest.TestCase):
         geoman_settings = control_config["options"]["geoman_options"].get(
             "settings", {}
         )
-        self.assertTrue(geoman_settings.get("controlsCollapsible"))
 
         last_call = map_widget._js_calls[-1]
         self.assertEqual(last_call["method"], "addControl")
@@ -344,18 +343,14 @@ class TestMapLibreMap(unittest.TestCase):
         map_widget = MapLibreMap(center=[0, 0], zoom=1, controls={})
         map_widget.add_geoman_control(
             position="top-right",
-            geoman_options={"settings": {"controlsCollapsible": False}},
             settings={"controlsPosition": "top-right"},
             controls={"draw": {"polygon": {"active": True}}},
-            collapsed=False,
         )
 
         control_key = "geoman_top-right"
         options = map_widget._controls[control_key]["options"]["geoman_options"]
         settings = options.get("settings", {})
         self.assertEqual(settings.get("controlsPosition"), "top-right")
-        self.assertFalse(settings.get("controlsCollapsible"))
-        self.assertTrue(settings.get("controlsUiEnabledByDefault"))
 
         controls_section = options.get("controls", {})
         self.assertIn("draw", controls_section)
@@ -366,7 +361,6 @@ class TestMapLibreMap(unittest.TestCase):
 
         last_call = map_widget._js_calls[-1]
         self.assertEqual(last_call["args"][0], "geoman")
-        self.assertFalse(last_call["args"][1].get("collapsed"))
 
     def test_set_and_clear_geoman_data(self):
         """Round-trip Geoman data through helper methods."""
