@@ -4453,6 +4453,19 @@ function render({ model, el }) {
         return '';
       }
       const properties = feature.properties || {};
+
+      // If template is provided, use it
+      if (config.template && typeof config.template === 'string') {
+        const template = config.template;
+        // Replace {{property}} or {property} with actual values
+        const rendered = template.replace(/\{\{(\w+)\}\}|\{(\w+)\}/g, (match, doubleBraced, singleBraced) => {
+          const propName = doubleBraced || singleBraced;
+          const value = properties[propName];
+          return value !== undefined && value !== null ? escapeHtml(String(value)) : '';
+        });
+        return `<div class="anymap-popup">${rendered}</div>`;
+      }
+
       const fieldDefs = Array.isArray(config.fields) ? config.fields : null;
       const maxProperties =
         typeof config.maxProperties === 'number' && config.maxProperties > 0
@@ -4538,8 +4551,9 @@ function render({ model, el }) {
 
       const popupState = { popup: null };
       const maxWidth = typeof config.maxWidth === 'string' ? config.maxWidth : '320px';
+      const trigger = config.trigger || 'click'; // Default to 'click' if not specified
 
-      const clickHandler = (event) => {
+      const showPopup = (event) => {
         const feature = event && event.features && event.features[0];
         if (!feature) {
           if (popupState.popup) {
@@ -4562,9 +4576,10 @@ function render({ model, el }) {
           popupState.popup.remove();
         }
 
+        const isHoverTrigger = trigger === 'hover';
         popupState.popup = new maplibregl.Popup({
-          closeButton: config.closeButton !== false,
-          closeOnClick: true,
+          closeButton: isHoverTrigger ? false : (config.closeButton !== false),
+          closeOnClick: !isHoverTrigger,
           maxWidth,
         })
           .setLngLat(event.lngLat)
@@ -4576,13 +4591,22 @@ function render({ model, el }) {
         });
       };
 
-      const enterHandler = () => {
+      const clickHandler = (event) => {
+        if (trigger === 'click') {
+          showPopup(event);
+        }
+      };
+
+      const enterHandler = (event) => {
         map.getCanvas().style.cursor = 'pointer';
+        if (trigger === 'hover') {
+          showPopup(event);
+        }
       };
 
       const leaveHandler = () => {
         map.getCanvas().style.cursor = '';
-        if (popupState.popup) {
+        if (trigger === 'hover' && popupState.popup) {
           popupState.popup.remove();
           popupState.popup = null;
         }
