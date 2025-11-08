@@ -76,8 +76,7 @@ nav:
     - Installation: installation.md
     - Usage: usage.md
     - Contributing: contributing.md
-    - FAQ: faq.md
-    - Changelog: changelog.md
+    - Changelog: https://github.com/opengeos/anymap/releases
     - Report Issues: https://github.com/opengeos/anymap/issues
     - Cesium:
           - examples/cesium/cesium_example.ipynb
@@ -102,12 +101,12 @@ nav:
           - examples/maplibre/clicked_attribute_example.ipynb
           - examples/maplibre/map_click_polygon_intersection.ipynb
           - examples/maplibre/custom_draw_styles_example.ipynb
-    - Mapbox
-      - examples/mapbox/mapbox_example.ipynb
-    - OpenLayers
-      - examples/openlayers/openlayers_example.ipynb
-    - Potree
-      - examples/potree/potree_example.ipynb
+    - Mapbox:
+          - examples/mapbox/mapbox_example.ipynb
+    - OpenLayers:
+          - examples/openlayers/openlayers_example.ipynb
+    - Potree:
+          - examples/potree/potree_example.ipynb
     - API Reference:
           - anymap module: anymap.md
           - base module: base.md
