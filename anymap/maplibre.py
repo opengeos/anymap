@@ -1769,9 +1769,13 @@ class MapLibreMap(MapWidget):
 
         self.call_js_method("addControl", "geoman", control_options)
 
-        if collapsed:
-            self.collapse_geoman_control()
-
+        if collapsed is not None:
+            if collapsed:
+                self.collapse_geoman_control()
+            else:
+                # If an explicit method to uncollapse exists, call it here.
+                # For now, this is a placeholder for future logic.
+                pass
     def remove_geoman_control(self, position: str = "top-left") -> None:
         """Remove the Geoman control toolbar."""
 
