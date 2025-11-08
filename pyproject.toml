@@ -28,13 +28,14 @@ classifiers = [
 
 [project.optional-dependencies]
 all = [
-    "anymap[extra]",
+    "anymap[extra, raster]",
 ]
 
 extra = [
     "pandas",
 ]
 
+raster = ["localtileserver>=0.10.6", "jupyter-server-proxy", "rio-cogeo", "rioxarray",  "flask", "flask-cors"]
 
 [tool]
 [tool.setuptools.packages.find]

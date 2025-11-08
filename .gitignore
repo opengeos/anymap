@@ -8,6 +8,7 @@ todo.md
 private/
 docs/examples/*.html
 *.html
+*.tif
 
 # C extensions
 *.so
