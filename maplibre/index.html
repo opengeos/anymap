@@ -1875,6 +1875,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.add_source" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_source()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.add_temporal_control" class="md-nav__link">
     <span class="md-ellipsis">
       add_temporal_control()
@@ -2995,6 +3004,15 @@
   <a href="#anymap.maplibre.MapLibreMap.add_raster" class="md-nav__link">
     <span class="md-ellipsis">
       add_raster()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.add_source" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_source()
     </span>
   </a>
   
@@ -4891,6 +4909,34 @@ data sources, custom styling, and interactive features.</p>
 
         <span class="c1"># Update layer controls if they exist</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_update_layer_controls</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">source_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a data source to the map.</span>
+
+<span class="sd">        This method adds a data source and tracks it in the source_dict attribute</span>
+<span class="sd">        for easy reference. The source can then be used by layers.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            source_id: Unique identifier for the data source.</span>
+<span class="sd">            source_config: Dictionary containing source configuration.</span>
+<span class="sd">                          Must include a &#39;type&#39; field (e.g., &#39;geojson&#39;, &#39;vector&#39;, &#39;raster&#39;).</span>
+<span class="sd">                          Additional fields depend on the source type.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; m = MapLibreMap()</span>
+<span class="sd">            &gt;&gt;&gt; m.add_source(&#39;my-source&#39;, {</span>
+<span class="sd">            ...     &#39;type&#39;: &#39;geojson&#39;,</span>
+<span class="sd">            ...     &#39;data&#39;: {</span>
+<span class="sd">            ...         &#39;type&#39;: &#39;Feature&#39;,</span>
+<span class="sd">            ...         &#39;geometry&#39;: {&#39;type&#39;: &#39;Point&#39;, &#39;coordinates&#39;: [0, 0]}</span>
+<span class="sd">            ...     }</span>
+<span class="sd">            ... })</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Store source in source_dict for local tracking</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">source_dict</span><span class="p">[</span><span class="n">source_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">source_config</span>
+
+        <span class="c1"># Call parent class method to handle JavaScript synchronization</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">add_source</span><span class="p">(</span><span class="n">source_id</span><span class="p">,</span> <span class="n">source_config</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">add_geojson_layer</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -12360,6 +12406,97 @@ Defaults to True.</p></td>
     <span class="c1"># [minx, miny, maxx, maxy]</span>
     <span class="k">if</span> <span class="n">fit_bounds</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fit_bounds</span><span class="p">(</span><span class="n">bounds</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="anymap.maplibre.MapLibreMap.add_source" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">add_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_id</span><span class="p">,</span> <span class="n">source_config</span><span class="p">)</span></code>
+
+
+<a href="#anymap.maplibre.MapLibreMap.add_source" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Add a data source to the map.</p>
+<p>This method adds a data source and tracks it in the source_dict attribute
+for easy reference. The source can then be used by layers.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>source_id</code></td>
+        <td><code>str</code></td>
+        <td><p>Unique identifier for the data source.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>source_config</code></td>
+        <td><code>Dict[str, Any]</code></td>
+        <td><p>Dictionary containing source configuration.
+          Must include a 'type' field (e.g., 'geojson', 'vector', 'raster').
+          Additional fields depend on the source type.</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">m</span> <span class="o">=</span> <span class="n">MapLibreMap</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">m</span><span class="o">.</span><span class="n">add_source</span><span class="p">(</span><span class="s1">&#39;my-source&#39;</span><span class="p">,</span> <span class="p">{</span>
+<span class="o">...</span>     <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;geojson&#39;</span><span class="p">,</span>
+<span class="o">...</span>     <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="p">{</span>
+<span class="o">...</span>         <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;Feature&#39;</span><span class="p">,</span>
+<span class="o">...</span>         <span class="s1">&#39;geometry&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;Point&#39;</span><span class="p">,</span> <span class="s1">&#39;coordinates&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]}</span>
+<span class="o">...</span>     <span class="p">}</span>
+<span class="o">...</span> <span class="p">})</span>
+</code></pre></div>
+
+        <details class="quote">
+          <summary>Source code in <code>anymap/maplibre.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">source_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a data source to the map.</span>
+
+<span class="sd">    This method adds a data source and tracks it in the source_dict attribute</span>
+<span class="sd">    for easy reference. The source can then be used by layers.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        source_id: Unique identifier for the data source.</span>
+<span class="sd">        source_config: Dictionary containing source configuration.</span>
+<span class="sd">                      Must include a &#39;type&#39; field (e.g., &#39;geojson&#39;, &#39;vector&#39;, &#39;raster&#39;).</span>
+<span class="sd">                      Additional fields depend on the source type.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; m = MapLibreMap()</span>
+<span class="sd">        &gt;&gt;&gt; m.add_source(&#39;my-source&#39;, {</span>
+<span class="sd">        ...     &#39;type&#39;: &#39;geojson&#39;,</span>
+<span class="sd">        ...     &#39;data&#39;: {</span>
+<span class="sd">        ...         &#39;type&#39;: &#39;Feature&#39;,</span>
+<span class="sd">        ...         &#39;geometry&#39;: {&#39;type&#39;: &#39;Point&#39;, &#39;coordinates&#39;: [0, 0]}</span>
+<span class="sd">        ...     }</span>
+<span class="sd">        ... })</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Store source in source_dict for local tracking</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">source_dict</span><span class="p">[</span><span class="n">source_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">source_config</span>
+
+    <span class="c1"># Call parent class method to handle JavaScript synchronization</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">add_source</span><span class="p">(</span><span class="n">source_id</span><span class="p">,</span> <span class="n">source_config</span><span class="p">)</span>
 </code></pre></div>
         </details>
     </div>
