@@ -4802,46 +4802,6 @@ data sources, custom styling, and interactive features.</p>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_style</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the style of the map.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            Dict: The style of the map.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_style</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_style</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-                <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_style</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-                <span class="n">style</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_style</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-                <span class="n">style</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_style</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">style</span> <span class="o">=</span> <span class="p">{}</span>
-            <span class="k">return</span> <span class="n">style</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">{}</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_style_layers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">return_ids</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">sorted</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the names of the basemap layers.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            List[str]: The names of the basemap layers.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">style</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_style</span><span class="p">()</span>
-        <span class="k">if</span> <span class="s2">&quot;layers&quot;</span> <span class="ow">in</span> <span class="n">style</span><span class="p">:</span>
-            <span class="n">layers</span> <span class="o">=</span> <span class="n">style</span><span class="p">[</span><span class="s2">&quot;layers&quot;</span><span class="p">]</span>
-            <span class="k">if</span> <span class="n">return_ids</span><span class="p">:</span>
-                <span class="n">ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">layer</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">layers</span><span class="p">]</span>
-                <span class="k">if</span> <span class="nb">sorted</span><span class="p">:</span>
-                    <span class="n">ids</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
-
-                <span class="k">return</span> <span class="n">ids</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">layers</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">[]</span>
-
     <span class="k">def</span><span class="w"> </span><span class="nf">add_layer</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">layer</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
@@ -5311,21 +5271,39 @@ data sources, custom styling, and interactive features.</p>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">source_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">layer_id</span><span class="si">}</span><span class="s2">_source&quot;</span>
 
+        <span class="c1"># Build source configuration</span>
+        <span class="n">source_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;raster&quot;</span><span class="p">,</span> <span class="s2">&quot;tiles&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">source_url</span><span class="p">],</span> <span class="s2">&quot;tileSize&quot;</span><span class="p">:</span> <span class="mi">256</span><span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">attribution</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">source_config</span><span class="p">[</span><span class="s2">&quot;attribution&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">attribution</span>
+
+        <span class="c1"># Add any additional source options from kwargs</span>
+        <span class="n">source_config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+
         <span class="c1"># Add raster source</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_source</span><span class="p">(</span>
-            <span class="n">source_id</span><span class="p">,</span>
-            <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;raster&quot;</span><span class="p">,</span> <span class="s2">&quot;tiles&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">source_url</span><span class="p">],</span> <span class="s2">&quot;tileSize&quot;</span><span class="p">:</span> <span class="mi">256</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">},</span>
-        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_source</span><span class="p">(</span><span class="n">source_id</span><span class="p">,</span> <span class="n">source_config</span><span class="p">)</span>
 
         <span class="c1"># Add raster layer</span>
         <span class="n">layer_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">layer_id</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;raster&quot;</span><span class="p">,</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">source_id</span><span class="p">}</span>
+
+        <span class="c1"># Add minzoom/maxzoom if specified</span>
+        <span class="k">if</span> <span class="n">minzoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;minzoom&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">minzoom</span>
+        <span class="k">if</span> <span class="n">maxzoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;maxzoom&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">maxzoom</span>
 
         <span class="k">if</span> <span class="n">paint</span><span class="p">:</span>
             <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;paint&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">paint</span>
         <span class="k">if</span> <span class="n">layout</span><span class="p">:</span>
             <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;layout&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">layout</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">layer</span><span class="o">=</span><span class="n">layer_config</span><span class="p">,</span> <span class="n">before_id</span><span class="o">=</span><span class="n">before_id</span><span class="p">,</span> <span class="n">layer_id</span><span class="o">=</span><span class="n">layer_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span>
+            <span class="n">layer</span><span class="o">=</span><span class="n">layer_config</span><span class="p">,</span>
+            <span class="n">before_id</span><span class="o">=</span><span class="n">before_id</span><span class="p">,</span>
+            <span class="n">layer_id</span><span class="o">=</span><span class="n">layer_id</span><span class="p">,</span>
+            <span class="n">opacity</span><span class="o">=</span><span class="n">opacity</span><span class="p">,</span>
+            <span class="n">visible</span><span class="o">=</span><span class="n">visible</span><span class="p">,</span>
+        <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">add_vector_layer</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -13269,21 +13247,39 @@ maplibre-gl-temporal-control plugin.</p>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">source_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">layer_id</span><span class="si">}</span><span class="s2">_source&quot;</span>
 
+    <span class="c1"># Build source configuration</span>
+    <span class="n">source_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;raster&quot;</span><span class="p">,</span> <span class="s2">&quot;tiles&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">source_url</span><span class="p">],</span> <span class="s2">&quot;tileSize&quot;</span><span class="p">:</span> <span class="mi">256</span><span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">attribution</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">source_config</span><span class="p">[</span><span class="s2">&quot;attribution&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">attribution</span>
+
+    <span class="c1"># Add any additional source options from kwargs</span>
+    <span class="n">source_config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+
     <span class="c1"># Add raster source</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">add_source</span><span class="p">(</span>
-        <span class="n">source_id</span><span class="p">,</span>
-        <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;raster&quot;</span><span class="p">,</span> <span class="s2">&quot;tiles&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">source_url</span><span class="p">],</span> <span class="s2">&quot;tileSize&quot;</span><span class="p">:</span> <span class="mi">256</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">},</span>
-    <span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_source</span><span class="p">(</span><span class="n">source_id</span><span class="p">,</span> <span class="n">source_config</span><span class="p">)</span>
 
     <span class="c1"># Add raster layer</span>
     <span class="n">layer_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">layer_id</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;raster&quot;</span><span class="p">,</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">source_id</span><span class="p">}</span>
+
+    <span class="c1"># Add minzoom/maxzoom if specified</span>
+    <span class="k">if</span> <span class="n">minzoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;minzoom&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">minzoom</span>
+    <span class="k">if</span> <span class="n">maxzoom</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;maxzoom&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">maxzoom</span>
 
     <span class="k">if</span> <span class="n">paint</span><span class="p">:</span>
         <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;paint&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">paint</span>
     <span class="k">if</span> <span class="n">layout</span><span class="p">:</span>
         <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;layout&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">layout</span>
 
-    <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">layer</span><span class="o">=</span><span class="n">layer_config</span><span class="p">,</span> <span class="n">before_id</span><span class="o">=</span><span class="n">before_id</span><span class="p">,</span> <span class="n">layer_id</span><span class="o">=</span><span class="n">layer_id</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span>
+        <span class="n">layer</span><span class="o">=</span><span class="n">layer_config</span><span class="p">,</span>
+        <span class="n">before_id</span><span class="o">=</span><span class="n">before_id</span><span class="p">,</span>
+        <span class="n">layer_id</span><span class="o">=</span><span class="n">layer_id</span><span class="p">,</span>
+        <span class="n">opacity</span><span class="o">=</span><span class="n">opacity</span><span class="p">,</span>
+        <span class="n">visible</span><span class="o">=</span><span class="n">visible</span><span class="p">,</span>
+    <span class="p">)</span>
 </code></pre></div>
         </details>
     </div>
@@ -15106,24 +15102,21 @@ Returns None if metadata retrieval fails.</p></td>
 </table>
         <details class="quote">
           <summary>Source code in <code>anymap/maplibre.py</code></summary>
-          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_style</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_style</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get the style of the map.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Dict: The style of the map.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_style</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_style</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_style</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-            <span class="n">style</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_style</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-            <span class="n">style</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_style</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">style</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">return</span> <span class="n">style</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_style</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_style</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="n">style</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_style</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">style</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_style</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">{}</span>
+        <span class="n">style</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">return</span> <span class="n">style</span>
 </code></pre></div>
         </details>
     </div>
