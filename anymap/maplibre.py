@@ -248,6 +248,83 @@ class MapLibreMap(MapWidget):
         if add_sidebar:
             self._ipython_display_ = self._patched_display
 
+    def get_style(self) -> Dict:
+        """
+        Get the style of the map.
+
+        Returns:
+            Dict: The style of the map.
+        """
+        if isinstance(self._style, str):
+            response = requests.get(self._style, timeout=10)
+            style = response.json()
+        elif isinstance(self._style, dict):
+            style = self._style
+        else:
+            style = {}
+        return style
+
+    def get_style_layers(self, return_ids=False, sorted=True) -> List[str]:
+        """
+        Get the names of the basemap layers.
+
+        Returns:
+            List[str]: The names of the basemap layers.
+        """
+        style = self.get_style()
+        if "layers" in style:
+            layers = style["layers"]
+            if return_ids:
+                ids = [layer["id"] for layer in layers]
+                if sorted:
+                    ids.sort()
+
+                return ids
+            else:
+                return layers
+        else:
+            return []
+
+    def find_style_layer(self, id: str) -> Optional[Dict]:
+        """
+        Searches for a style layer in the map's current style by its ID and returns it if found.
+
+        Args:
+            id (str): The ID of the style layer to find.
+
+        Returns:
+            Optional[Dict]: The style layer as a dictionary if found, otherwise None.
+        """
+        layers = self.get_style_layers()
+        for layer in layers:
+            if layer["id"] == id:
+                return layer
+        return None
+
+    def find_first_symbol_layer(self) -> Optional[Dict]:
+        """
+        Find the first symbol layer in the map's current style.
+
+        Returns:
+            Optional[Dict]: The first symbol layer as a dictionary if found, otherwise None.
+        """
+        layers = self.get_style_layers()
+        for layer in layers:
+            if layer["type"] == "symbol":
+                return layer
+        return None
+
+    @property
+    def first_symbol_layer_id(self) -> Optional[str]:
+        """
+        Get the ID of the first symbol layer in the map's current style.
+        """
+        layer = self.find_first_symbol_layer()
+        if layer is not None:
+            return layer["id"]
+        else:
+            return None
+
     def show(
         self,
         sidebar_visible: bool = False,
@@ -1047,16 +1124,19 @@ class MapLibreMap(MapWidget):
                 layer["id"], list(self._layers.keys()), overwrite
             )
 
+        # Store before_id in layer metadata for restoration when displaying in multiple cells
+        if before_id is not None:
+            if "metadata" not in layer:
+                layer["metadata"] = {}
+            layer["metadata"]["beforeId"] = before_id
+
         # Store layer in local state for persistence
         current_layers = dict(self._layers)
         current_layers[layer_id] = layer
         self._layers = current_layers
 
         # Call JavaScript method with before_id if provided
-        if before_id:
-            self.call_js_method("addLayer", layer, before_id)
-        else:
-            self.call_js_method("addLayer", layer, layer_id)
+        self.call_js_method("addLayer", layer, before_id)
 
         self.set_visibility(layer_id, visible)
         self.set_opacity(layer_id, opacity)
