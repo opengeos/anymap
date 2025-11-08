@@ -1080,46 +1080,6 @@ class MapLibreMap(MapWidget):
         else:
             return None
 
-    def get_style(self):
-        """
-        Get the style of the map.
-
-        Returns:
-            Dict: The style of the map.
-        """
-        if self._style is not None:
-            if isinstance(self._style, str):
-                response = requests.get(self._style, timeout=10)
-                style = response.json()
-            elif isinstance(self._style, dict):
-                style = self._style
-            else:
-                style = {}
-            return style
-        else:
-            return {}
-
-    def get_style_layers(self, return_ids=False, sorted=True) -> List[str]:
-        """
-        Get the names of the basemap layers.
-
-        Returns:
-            List[str]: The names of the basemap layers.
-        """
-        style = self.get_style()
-        if "layers" in style:
-            layers = style["layers"]
-            if return_ids:
-                ids = [layer["id"] for layer in layers]
-                if sorted:
-                    ids.sort()
-
-                return ids
-            else:
-                return layers
-        else:
-            return []
-
     def add_layer(
         self,
         layer: Dict[str, Any],
@@ -1589,21 +1549,39 @@ class MapLibreMap(MapWidget):
         """
         source_id = f"{layer_id}_source"
 
+        # Build source configuration
+        source_config = {"type": "raster", "tiles": [source_url], "tileSize": 256}
+
+        if attribution is not None:
+            source_config["attribution"] = attribution
+
+        # Add any additional source options from kwargs
+        source_config.update(kwargs)
+
         # Add raster source
-        self.add_source(
-            source_id,
-            {"type": "raster", "tiles": [source_url], "tileSize": 256, **kwargs},
-        )
+        self.add_source(source_id, source_config)
 
         # Add raster layer
         layer_config = {"id": layer_id, "type": "raster", "source": source_id}
+
+        # Add minzoom/maxzoom if specified
+        if minzoom is not None:
+            layer_config["minzoom"] = minzoom
+        if maxzoom is not None:
+            layer_config["maxzoom"] = maxzoom
 
         if paint:
             layer_config["paint"] = paint
         if layout:
             layer_config["layout"] = layout
 
-        self.add_layer(layer=layer_config, before_id=before_id, layer_id=layer_id)
+        self.add_layer(
+            layer=layer_config,
+            before_id=before_id,
+            layer_id=layer_id,
+            opacity=opacity,
+            visible=visible,
+        )
 
     def add_vector_layer(
         self,
