@@ -4673,12 +4673,19 @@ function render({ model, el }) {
             const sourceConfig = sources[sourceId];
             const isCogLayer = sourceConfig && sourceConfig.url && sourceConfig.url.startsWith('cog://');
 
+            // Get beforeId from layer metadata if it was stored
+            const beforeId = layerConfig.metadata && layerConfig.metadata.beforeId;
+
             if (isCogLayer && !window._cogProtocolRegistered) {
               // Retry adding COG-dependent layers after source is ready
               setTimeout(() => {
                 if (!map.getLayer(layerId) && map.getSource(sourceId)) {
                   try {
-                    map.addLayer(layerConfig);
+                    if (beforeId) {
+                      map.addLayer(layerConfig, beforeId);
+                    } else {
+                      map.addLayer(layerConfig);
+                    }
                     console.log(`COG layer ${layerId} added successfully on retry`);
                   } catch (retryError) {
                     console.warn(`Failed to add COG layer ${layerId} on retry:`, retryError);
@@ -4686,7 +4693,12 @@ function render({ model, el }) {
                 }
               }, 600);
             } else {
-              map.addLayer(layerConfig);
+              // Restore layer with beforeId if it was specified
+              if (beforeId) {
+                map.addLayer(layerConfig, beforeId);
+              } else {
+                map.addLayer(layerConfig);
+              }
             }
           } catch (error) {
             console.warn(`Failed to restore layer ${layerId}:`, error);
@@ -5657,16 +5669,46 @@ function render({ model, el }) {
             break;
 
           case 'addLayer':
-            const [layerConfig, layerId] = args;
-            const actualLayerId = layerId || layerConfig.id;
-            if (!map.getLayer(actualLayerId)) {
-              map.addLayer(layerConfig);
+            const [layerConfig, beforeId] = args;
+            const actualLayerId = layerConfig.id;
+
+            // If layer already exists, remove it first to allow re-adding with new position
+            if (map.getLayer(actualLayerId)) {
+              try {
+                map.removeLayer(actualLayerId);
+              } catch (error) {
+                console.error('[addLayer] Error removing existing layer:', error);
+              }
+            }
+
+            try {
+              // Pass beforeId to map.addLayer if provided
+              if (beforeId) {
+                map.addLayer(layerConfig, beforeId);
+              } else {
+                map.addLayer(layerConfig);
+              }
               // Persist layer in model state
               const currentLayers = model.get("_layers") || {};
               currentLayers[actualLayerId] = layerConfig;
               model.set("_layers", currentLayers);
               model.save_changes();
               attachFeaturePopup(actualLayerId);
+            } catch (error) {
+              console.error('[addLayer] Error adding layer:', error);
+              // Try adding without beforeId as fallback
+              if (beforeId) {
+                try {
+                  map.addLayer(layerConfig);
+                  const currentLayers = model.get("_layers") || {};
+                  currentLayers[actualLayerId] = layerConfig;
+                  model.set("_layers", currentLayers);
+                  model.save_changes();
+                  attachFeaturePopup(actualLayerId);
+                } catch (retryError) {
+                  console.error('[addLayer] Retry also failed:', retryError);
+                }
+              }
             }
             break;
 
