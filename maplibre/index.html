@@ -1857,6 +1857,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.add_popup" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_popup()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.add_raster" class="md-nav__link">
     <span class="md-ellipsis">
       add_raster()
@@ -2968,6 +2977,15 @@
   <a href="#anymap.maplibre.MapLibreMap.add_pmtiles" class="md-nav__link">
     <span class="md-ellipsis">
       add_pmtiles()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.add_popup" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_popup()
     </span>
   </a>
   
@@ -4416,6 +4434,37 @@ data sources, custom styling, and interactive features.</p>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;disableFeaturePopup&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;layerId&quot;</span><span class="p">:</span> <span class="n">layer_id</span><span class="p">})</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_popup</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">layer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">prop</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">template</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">trigger</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;click&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a popup to a layer.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            layer_id: The layer to which the popup is added.</span>
+<span class="sd">            prop: The property of the source to be displayed. If None, all properties are displayed.</span>
+<span class="sd">            template: A simple template with mustache-style variable interpolation. Only</span>
+<span class="sd">                     `{{property_name}}` substitution is supported; sections, conditionals,</span>
+<span class="sd">                     and iteration are not. Example: &quot;Name: {{name}}&lt;br&gt;Value: {{value}}&quot;</span>
+<span class="sd">            trigger: Event that triggers the popup. Either &quot;click&quot; or &quot;hover&quot;. Defaults to &quot;click&quot;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">trigger</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;click&quot;</span><span class="p">,</span> <span class="s2">&quot;hover&quot;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;trigger must be either &#39;click&#39; or &#39;hover&#39;&quot;</span><span class="p">)</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;layerId&quot;</span><span class="p">:</span> <span class="n">layer_id</span><span class="p">,</span> <span class="s2">&quot;trigger&quot;</span><span class="p">:</span> <span class="n">trigger</span><span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">template</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Use template for custom formatting</span>
+            <span class="n">config</span><span class="p">[</span><span class="s2">&quot;template&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">template</span>
+        <span class="k">elif</span> <span class="n">prop</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Show only specific property</span>
+            <span class="n">config</span><span class="p">[</span><span class="s2">&quot;fields&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">prop</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="n">prop</span><span class="p">}]</span>
+        <span class="c1"># If both are None, show all properties (default behavior)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;enableFeaturePopup&quot;</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">add_widget_control</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -11969,6 +12018,99 @@ within polygons on the map.</p>
             <span class="n">opacity</span><span class="o">=</span><span class="n">opacity</span><span class="p">,</span>
             <span class="n">visible</span><span class="o">=</span><span class="n">visible</span><span class="p">,</span>
         <span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="anymap.maplibre.MapLibreMap.add_popup" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">add_popup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer_id</span><span class="p">,</span> <span class="n">prop</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">trigger</span><span class="o">=</span><span class="s1">&#39;click&#39;</span><span class="p">)</span></code>
+
+
+<a href="#anymap.maplibre.MapLibreMap.add_popup" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Add a popup to a layer.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>layer_id</code></td>
+        <td><code>str</code></td>
+        <td><p>The layer to which the popup is added.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>prop</code></td>
+        <td><code>Optional[str]</code></td>
+        <td><p>The property of the source to be displayed. If None, all properties are displayed.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>template</code></td>
+        <td><code>Optional[str]</code></td>
+        <td><p>A simple template with mustache-style variable interpolation. Only
+     <code>{{property_name}}</code> substitution is supported; sections, conditionals,
+     and iteration are not. Example: "Name: {{name}}<br>Value: {{value}}"</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>trigger</code></td>
+        <td><code>str</code></td>
+        <td><p>Event that triggers the popup. Either "click" or "hover". Defaults to "click".</p></td>
+        <td><code>&#39;click&#39;</code></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>anymap/maplibre.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_popup</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">layer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">prop</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">template</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">trigger</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;click&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a popup to a layer.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        layer_id: The layer to which the popup is added.</span>
+<span class="sd">        prop: The property of the source to be displayed. If None, all properties are displayed.</span>
+<span class="sd">        template: A simple template with mustache-style variable interpolation. Only</span>
+<span class="sd">                 `{{property_name}}` substitution is supported; sections, conditionals,</span>
+<span class="sd">                 and iteration are not. Example: &quot;Name: {{name}}&lt;br&gt;Value: {{value}}&quot;</span>
+<span class="sd">        trigger: Event that triggers the popup. Either &quot;click&quot; or &quot;hover&quot;. Defaults to &quot;click&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">trigger</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;click&quot;</span><span class="p">,</span> <span class="s2">&quot;hover&quot;</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;trigger must be either &#39;click&#39; or &#39;hover&#39;&quot;</span><span class="p">)</span>
+    <span class="n">config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;layerId&quot;</span><span class="p">:</span> <span class="n">layer_id</span><span class="p">,</span> <span class="s2">&quot;trigger&quot;</span><span class="p">:</span> <span class="n">trigger</span><span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">template</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Use template for custom formatting</span>
+        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;template&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">template</span>
+    <span class="k">elif</span> <span class="n">prop</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Show only specific property</span>
+        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;fields&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">prop</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="n">prop</span><span class="p">}]</span>
+    <span class="c1"># If both are None, show all properties (default behavior)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;enableFeaturePopup&quot;</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
 </code></pre></div>
         </details>
     </div>
