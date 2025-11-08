@@ -1429,6 +1429,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.add_geojson" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_geojson()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.add_geojson_layer" class="md-nav__link">
     <span class="md-ellipsis">
       add_geojson_layer()
@@ -1546,6 +1555,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.add_raster" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_raster()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.add_temporal_control" class="md-nav__link">
     <span class="md-ellipsis">
       add_temporal_control()
@@ -1603,6 +1621,15 @@
   <a href="#anymap.maplibre.MapLibreMap.add_to_sidebar" class="md-nav__link">
     <span class="md-ellipsis">
       add_to_sidebar()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.add_vector" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_vector()
     </span>
   </a>
   
@@ -2492,6 +2519,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.add_geojson" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_geojson()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.add_geojson_layer" class="md-nav__link">
     <span class="md-ellipsis">
       add_geojson_layer()
@@ -2609,6 +2645,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.add_raster" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_raster()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.add_temporal_control" class="md-nav__link">
     <span class="md-ellipsis">
       add_temporal_control()
@@ -2666,6 +2711,15 @@
   <a href="#anymap.maplibre.MapLibreMap.add_to_sidebar" class="md-nav__link">
     <span class="md-ellipsis">
       add_to_sidebar()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.add_vector" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_vector()
     </span>
   </a>
   
@@ -4412,6 +4466,298 @@ data sources, custom styling, and interactive features.</p>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;fitBounds&quot;</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;padding&quot;</span><span class="p">:</span> <span class="n">padding</span><span class="p">})</span>
 
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_geojson</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">],</span>
+        <span class="n">layer_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="nb">filter</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">paint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">fit_bounds</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">visible</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">opacity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">before_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">source_args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a GeoJSON layer to the map.</span>
+
+<span class="sd">        This method adds a GeoJSON layer to the map. The GeoJSON data can be a</span>
+<span class="sd">        URL to a GeoJSON file or a GeoJSON dictionary.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data: The GeoJSON data. This can be a URL to a GeoJSON file or a</span>
+<span class="sd">                GeoJSON dictionary.</span>
+<span class="sd">            layer_type: The type of the layer. It can be one of the following:</span>
+<span class="sd">                &#39;circle&#39;, &#39;fill&#39;, &#39;fill-extrusion&#39;, &#39;line&#39;, &#39;symbol&#39;. If None,</span>
+<span class="sd">                the type is inferred from the GeoJSON data.</span>
+<span class="sd">            filter: The filter to apply to the layer. If None, no filter is applied.</span>
+<span class="sd">            paint: The paint properties to apply to the layer. If None, default</span>
+<span class="sd">                paint properties are applied based on geometry type.</span>
+<span class="sd">            name: The name of the layer. If None, &#39;GeoJSON&#39; is used.</span>
+<span class="sd">            fit_bounds: Whether to adjust the viewport of the map to fit the</span>
+<span class="sd">                bounds of the GeoJSON data. Defaults to True.</span>
+<span class="sd">            visible: Whether the layer is visible or not. Defaults to True.</span>
+<span class="sd">            opacity: The opacity of the layer. Defaults to 1.0.</span>
+<span class="sd">            before_id: The ID of an existing layer before which the new layer</span>
+<span class="sd">                should be inserted.</span>
+<span class="sd">            source_args: Additional keyword arguments that are passed to the</span>
+<span class="sd">                GeoJSON source.</span>
+<span class="sd">            **kwargs: Additional keyword arguments that are passed to the layer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">geopandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gpd</span>
+
+        <span class="n">bounds</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">geom_type</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">source_args</span> <span class="o">=</span> <span class="n">source_args</span> <span class="ow">or</span> <span class="p">{}</span>
+
+        <span class="c1"># Load data from file or URL if necessary</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;http&quot;</span><span class="p">):</span>
+                <span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">__geo_interface__</span>
+                <span class="k">if</span> <span class="n">fit_bounds</span><span class="p">:</span>
+                    <span class="n">bounds</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">total_bounds</span>  <span class="c1"># [minx, miny, maxx, maxy]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;The data must be a URL, file path, or GeoJSON dictionary.&quot;</span>
+                <span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;FeatureCollection&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">fit_bounds</span><span class="p">:</span>
+                <span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="o">.</span><span class="n">from_features</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                <span class="n">bounds</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">total_bounds</span>  <span class="c1"># [minx, miny, maxx, maxy]</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;The data must be a URL, file path, or GeoJSON dictionary.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Generate layer name if not provided</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;GeoJSON&quot;</span>
+
+        <span class="c1"># Infer geometry type and set default paint if not provided</span>
+        <span class="k">if</span> <span class="n">paint</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;features&quot;</span> <span class="ow">in</span> <span class="n">data</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">geom_type</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;geometry&quot;</span><span class="p">][</span><span class="s2">&quot;type&quot;</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="s2">&quot;geometry&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+                <span class="n">geom_type</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;geometry&quot;</span><span class="p">][</span><span class="s2">&quot;type&quot;</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">geom_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;Point&quot;</span><span class="p">,</span> <span class="s2">&quot;MultiPoint&quot;</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">layer_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">layer_type</span> <span class="o">=</span> <span class="s2">&quot;circle&quot;</span>
+                <span class="n">paint</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;circle-radius&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+                    <span class="s2">&quot;circle-color&quot;</span><span class="p">:</span> <span class="s2">&quot;#3388ff&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;circle-stroke-color&quot;</span><span class="p">:</span> <span class="s2">&quot;#ffffff&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;circle-stroke-width&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="k">elif</span> <span class="n">geom_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;LineString&quot;</span><span class="p">,</span> <span class="s2">&quot;MultiLineString&quot;</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">layer_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">layer_type</span> <span class="o">=</span> <span class="s2">&quot;line&quot;</span>
+                <span class="n">paint</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;line-color&quot;</span><span class="p">:</span> <span class="s2">&quot;#3388ff&quot;</span><span class="p">,</span> <span class="s2">&quot;line-width&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+            <span class="k">elif</span> <span class="n">geom_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;Polygon&quot;</span><span class="p">,</span> <span class="s2">&quot;MultiPolygon&quot;</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">layer_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">layer_type</span> <span class="o">=</span> <span class="s2">&quot;fill&quot;</span>
+                <span class="n">paint</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;fill-color&quot;</span><span class="p">:</span> <span class="s2">&quot;#3388ff&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;fill-opacity&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+                <span class="p">}</span>
+
+        <span class="c1"># Add source</span>
+        <span class="n">source_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">_source&quot;</span>
+        <span class="n">source_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;geojson&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">}</span>
+        <span class="n">source_config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">source_args</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_source</span><span class="p">(</span><span class="n">source_id</span><span class="p">,</span> <span class="n">source_config</span><span class="p">)</span>
+
+        <span class="c1"># Prepare layer configuration</span>
+        <span class="n">layer_config</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">layer_type</span> <span class="ow">or</span> <span class="s2">&quot;fill&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">source_id</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="nb">filter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;filter&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">filter</span>
+
+        <span class="k">if</span> <span class="n">paint</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;paint&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">paint</span>
+
+        <span class="n">layer_config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c1"># Add layer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">layer</span><span class="o">=</span><span class="n">layer_config</span><span class="p">,</span> <span class="n">before_id</span><span class="o">=</span><span class="n">before_id</span><span class="p">,</span> <span class="n">layer_id</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="c1"># Set visibility</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">visible</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_visibility</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># Set opacity</span>
+        <span class="k">if</span> <span class="n">opacity</span> <span class="o">&lt;</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_opacity</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">opacity</span><span class="p">)</span>
+
+        <span class="c1"># Fit bounds if requested</span>
+        <span class="k">if</span> <span class="n">fit_bounds</span> <span class="ow">and</span> <span class="n">bounds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Convert from [minx, miny, maxx, maxy] to [[west, south], [east, north]]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fit_bounds</span><span class="p">([[</span><span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="p">[</span><span class="n">bounds</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">3</span><span class="p">]]])</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_vector</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;gpd.GeoDataFrame&quot;</span><span class="p">],</span>
+        <span class="n">layer_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="nb">filter</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">paint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">fit_bounds</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">visible</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">before_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">source_args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a vector layer to the map.</span>
+
+<span class="sd">        This method adds a vector layer to the map. The vector data can be a</span>
+<span class="sd">        URL or local file path to a vector file (e.g., shapefile, GeoJSON,</span>
+<span class="sd">        GeoPackage) or a GeoDataFrame.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data: The vector data. This can be a URL, local file path to a</span>
+<span class="sd">                vector file, or a GeoDataFrame.</span>
+<span class="sd">            layer_type: The type of the layer. If None, the type is inferred</span>
+<span class="sd">                from the GeoJSON data.</span>
+<span class="sd">            filter: The filter to apply to the layer. If None, no filter is applied.</span>
+<span class="sd">            paint: The paint properties to apply to the layer. If None, default</span>
+<span class="sd">                paint properties are applied.</span>
+<span class="sd">            name: The name of the layer. If None, a default name is generated.</span>
+<span class="sd">            fit_bounds: Whether to adjust the viewport of the map to fit the</span>
+<span class="sd">                bounds of the data. Defaults to True.</span>
+<span class="sd">            visible: Whether the layer is visible or not. Defaults to True.</span>
+<span class="sd">            before_id: The ID of an existing layer before which the new layer</span>
+<span class="sd">                should be inserted.</span>
+<span class="sd">            source_args: Additional keyword arguments that are passed to the</span>
+<span class="sd">                GeoJSON source.</span>
+<span class="sd">            **kwargs: Additional keyword arguments that are passed to the layer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">geopandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gpd</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">):</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">__geo_interface__</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">__geo_interface__</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_geojson</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">,</span>
+            <span class="n">layer_type</span><span class="o">=</span><span class="n">layer_type</span><span class="p">,</span>
+            <span class="nb">filter</span><span class="o">=</span><span class="nb">filter</span><span class="p">,</span>
+            <span class="n">paint</span><span class="o">=</span><span class="n">paint</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">fit_bounds</span><span class="o">=</span><span class="n">fit_bounds</span><span class="p">,</span>
+            <span class="n">visible</span><span class="o">=</span><span class="n">visible</span><span class="p">,</span>
+            <span class="n">before_id</span><span class="o">=</span><span class="n">before_id</span><span class="p">,</span>
+            <span class="n">source_args</span><span class="o">=</span><span class="n">source_args</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_raster</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">source</span><span class="p">,</span>
+        <span class="n">indexes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">colormap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">vmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">vmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">nodata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Raster&quot;</span><span class="p">,</span>
+        <span class="n">before_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">fit_bounds</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">visible</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">opacity</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">array_args</span><span class="o">=</span><span class="p">{},</span>
+        <span class="n">client_args</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;cors_all&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+        <span class="n">overwrite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a local raster dataset to the map.</span>
+<span class="sd">            If you are using this function in JupyterHub on a remote server</span>
+<span class="sd">            (e.g., Binder, Microsoft Planetary Computer) and if the raster</span>
+<span class="sd">            does not render properly, try installing jupyter-server-proxy using</span>
+<span class="sd">            `pip install jupyter-server-proxy`, then running the following code</span>
+<span class="sd">            before calling this function. For more info, see https://bit.ly/3JbmF93.</span>
+
+<span class="sd">            import os</span>
+<span class="sd">            os.environ[&#39;LOCALTILESERVER_CLIENT_PREFIX&#39;] = &#39;proxy/{port}&#39;</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            source (str): The path to the GeoTIFF file or the URL of the Cloud</span>
+<span class="sd">                Optimized GeoTIFF.</span>
+<span class="sd">            indexes (int, optional): The band(s) to use. Band indexing starts</span>
+<span class="sd">                at 1. Defaults to None.</span>
+<span class="sd">            colormap (str, optional): The name of the colormap from `matplotlib`</span>
+<span class="sd">                to use when plotting a single band.</span>
+<span class="sd">                See https://matplotlib.org/stable/gallery/color/colormap_reference.html.</span>
+<span class="sd">                Default is greyscale.</span>
+<span class="sd">            vmin (float, optional): The minimum value to use when colormapping</span>
+<span class="sd">                the palette when plotting a single band. Defaults to None.</span>
+<span class="sd">            vmax (float, optional): The maximum value to use when colormapping</span>
+<span class="sd">                the palette when plotting a single band. Defaults to None.</span>
+<span class="sd">            nodata (float, optional): The value from the band to use to interpret</span>
+<span class="sd">                as not valid data. Defaults to None.</span>
+<span class="sd">            name (str, optional): The layer name to use. Defaults to &#39;Raster&#39;.</span>
+<span class="sd">            before_id (str, optional): The layer id to insert the layer before. Defaults to None.</span>
+<span class="sd">            fit_bounds (bool, optional): Whether to zoom to the extent of the</span>
+<span class="sd">                layer. Defaults to True.</span>
+<span class="sd">            visible (bool, optional): Whether the layer is visible. Defaults to True.</span>
+<span class="sd">            opacity (float, optional): The opacity of the layer. Defaults to 1.0.</span>
+<span class="sd">            array_args (dict, optional): Additional arguments to pass to</span>
+<span class="sd">                `array_to_memory_file` when reading the raster. Defaults to {}.</span>
+<span class="sd">            client_args (dict, optional): Additional arguments to pass to</span>
+<span class="sd">                localtileserver.TileClient. Defaults to { &quot;cors_all&quot;: False }.</span>
+<span class="sd">            overwrite (bool, optional): Whether to overwrite an existing layer with the same name.</span>
+<span class="sd">                Defaults to True.</span>
+<span class="sd">            **kwargs: Additional keyword arguments to be passed to the underlying</span>
+<span class="sd">                `add_tile_layer` method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+
+        <span class="k">if</span> <span class="s2">&quot;zoom_to_layer&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">fit_bounds</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;zoom_to_layer&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s2">&quot;layer_name&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;layer_name&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">):</span>
+            <span class="n">source</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">array_to_image</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="o">**</span><span class="n">array_args</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s2">&quot;colormap_name&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">colormap</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;colormap_name&quot;</span><span class="p">)</span>
+
+        <span class="n">url</span><span class="p">,</span> <span class="n">tile_client</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_local_tile_url</span><span class="p">(</span>
+            <span class="n">source</span><span class="p">,</span>
+            <span class="n">indexes</span><span class="o">=</span><span class="n">indexes</span><span class="p">,</span>
+            <span class="n">colormap</span><span class="o">=</span><span class="n">colormap</span><span class="p">,</span>
+            <span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span>
+            <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span>
+            <span class="n">nodata</span><span class="o">=</span><span class="n">nodata</span><span class="p">,</span>
+            <span class="n">opacity</span><span class="o">=</span><span class="n">opacity</span><span class="p">,</span>
+            <span class="n">client_args</span><span class="o">=</span><span class="n">client_args</span><span class="p">,</span>
+            <span class="n">return_client</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_tile_layer</span><span class="p">(</span>
+            <span class="n">layer_id</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">source_url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
+            <span class="n">opacity</span><span class="o">=</span><span class="n">opacity</span><span class="p">,</span>
+            <span class="n">visible</span><span class="o">=</span><span class="n">visible</span><span class="p">,</span>
+            <span class="n">before_id</span><span class="o">=</span><span class="n">before_id</span><span class="p">,</span>
+            <span class="n">overwrite</span><span class="o">=</span><span class="n">overwrite</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">bounds</span> <span class="o">=</span> <span class="n">tile_client</span><span class="o">.</span><span class="n">bounds</span><span class="p">()</span>  <span class="c1"># [ymin, ymax, xmin, xmax]</span>
+        <span class="n">bounds</span> <span class="o">=</span> <span class="p">[[</span><span class="n">bounds</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[</span><span class="n">bounds</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">]]]</span>
+        <span class="c1"># [minx, miny, maxx, maxy]</span>
+        <span class="k">if</span> <span class="n">fit_bounds</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fit_bounds</span><span class="p">(</span><span class="n">bounds</span><span class="p">)</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">add_tile_layer</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">layer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -5061,6 +5407,7 @@ data sources, custom styling, and interactive features.</p>
                 <span class="c1"># If an explicit method to uncollapse exists, call it here.</span>
                 <span class="c1"># For now, this is a placeholder for future logic.</span>
                 <span class="k">pass</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">remove_geoman_control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;top-left&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove the Geoman control toolbar.&quot;&quot;&quot;</span>
 
@@ -9137,6 +9484,251 @@ constructor. Can include custom <code>gridDensity</code> or <code>formatLabels</
 
 
 
+<h3 id="anymap.maplibre.MapLibreMap.add_geojson" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">add_geojson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">layer_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">paint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fit_bounds</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">before_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">source_args</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+
+<a href="#anymap.maplibre.MapLibreMap.add_geojson" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Add a GeoJSON layer to the map.</p>
+<p>This method adds a GeoJSON layer to the map. The GeoJSON data can be a
+URL to a GeoJSON file or a GeoJSON dictionary.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>data</code></td>
+        <td><code>Union[str, Dict]</code></td>
+        <td><p>The GeoJSON data. This can be a URL to a GeoJSON file or a
+GeoJSON dictionary.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>layer_type</code></td>
+        <td><code>Optional[str]</code></td>
+        <td><p>The type of the layer. It can be one of the following:
+'circle', 'fill', 'fill-extrusion', 'line', 'symbol'. If None,
+the type is inferred from the GeoJSON data.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>filter</code></td>
+        <td><code>Optional[Dict]</code></td>
+        <td><p>The filter to apply to the layer. If None, no filter is applied.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>paint</code></td>
+        <td><code>Optional[Dict]</code></td>
+        <td><p>The paint properties to apply to the layer. If None, default
+paint properties are applied based on geometry type.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>name</code></td>
+        <td><code>Optional[str]</code></td>
+        <td><p>The name of the layer. If None, 'GeoJSON' is used.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>fit_bounds</code></td>
+        <td><code>bool</code></td>
+        <td><p>Whether to adjust the viewport of the map to fit the
+bounds of the GeoJSON data. Defaults to True.</p></td>
+        <td><code>True</code></td>
+      </tr>
+      <tr>
+        <td><code>visible</code></td>
+        <td><code>bool</code></td>
+        <td><p>Whether the layer is visible or not. Defaults to True.</p></td>
+        <td><code>True</code></td>
+      </tr>
+      <tr>
+        <td><code>opacity</code></td>
+        <td><code>float</code></td>
+        <td><p>The opacity of the layer. Defaults to 1.0.</p></td>
+        <td><code>1.0</code></td>
+      </tr>
+      <tr>
+        <td><code>before_id</code></td>
+        <td><code>Optional[str]</code></td>
+        <td><p>The ID of an existing layer before which the new layer
+should be inserted.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>source_args</code></td>
+        <td><code>Optional[Dict]</code></td>
+        <td><p>Additional keyword arguments that are passed to the
+GeoJSON source.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>**kwargs</code></td>
+        <td><code>Any</code></td>
+        <td><p>Additional keyword arguments that are passed to the layer.</p></td>
+        <td><code>{}</code></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>anymap/maplibre.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_geojson</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">],</span>
+    <span class="n">layer_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="nb">filter</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">paint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">fit_bounds</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">visible</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">opacity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">before_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">source_args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a GeoJSON layer to the map.</span>
+
+<span class="sd">    This method adds a GeoJSON layer to the map. The GeoJSON data can be a</span>
+<span class="sd">    URL to a GeoJSON file or a GeoJSON dictionary.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data: The GeoJSON data. This can be a URL to a GeoJSON file or a</span>
+<span class="sd">            GeoJSON dictionary.</span>
+<span class="sd">        layer_type: The type of the layer. It can be one of the following:</span>
+<span class="sd">            &#39;circle&#39;, &#39;fill&#39;, &#39;fill-extrusion&#39;, &#39;line&#39;, &#39;symbol&#39;. If None,</span>
+<span class="sd">            the type is inferred from the GeoJSON data.</span>
+<span class="sd">        filter: The filter to apply to the layer. If None, no filter is applied.</span>
+<span class="sd">        paint: The paint properties to apply to the layer. If None, default</span>
+<span class="sd">            paint properties are applied based on geometry type.</span>
+<span class="sd">        name: The name of the layer. If None, &#39;GeoJSON&#39; is used.</span>
+<span class="sd">        fit_bounds: Whether to adjust the viewport of the map to fit the</span>
+<span class="sd">            bounds of the GeoJSON data. Defaults to True.</span>
+<span class="sd">        visible: Whether the layer is visible or not. Defaults to True.</span>
+<span class="sd">        opacity: The opacity of the layer. Defaults to 1.0.</span>
+<span class="sd">        before_id: The ID of an existing layer before which the new layer</span>
+<span class="sd">            should be inserted.</span>
+<span class="sd">        source_args: Additional keyword arguments that are passed to the</span>
+<span class="sd">            GeoJSON source.</span>
+<span class="sd">        **kwargs: Additional keyword arguments that are passed to the layer.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">geopandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gpd</span>
+
+    <span class="n">bounds</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">geom_type</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">source_args</span> <span class="o">=</span> <span class="n">source_args</span> <span class="ow">or</span> <span class="p">{}</span>
+
+    <span class="c1"># Load data from file or URL if necessary</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;http&quot;</span><span class="p">):</span>
+            <span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">__geo_interface__</span>
+            <span class="k">if</span> <span class="n">fit_bounds</span><span class="p">:</span>
+                <span class="n">bounds</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">total_bounds</span>  <span class="c1"># [minx, miny, maxx, maxy]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;The data must be a URL, file path, or GeoJSON dictionary.&quot;</span>
+            <span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;FeatureCollection&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">fit_bounds</span><span class="p">:</span>
+            <span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="o">.</span><span class="n">from_features</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="n">bounds</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">total_bounds</span>  <span class="c1"># [minx, miny, maxx, maxy]</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;The data must be a URL, file path, or GeoJSON dictionary.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Generate layer name if not provided</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;GeoJSON&quot;</span>
+
+    <span class="c1"># Infer geometry type and set default paint if not provided</span>
+    <span class="k">if</span> <span class="n">paint</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;features&quot;</span> <span class="ow">in</span> <span class="n">data</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">geom_type</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;geometry&quot;</span><span class="p">][</span><span class="s2">&quot;type&quot;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="s2">&quot;geometry&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">geom_type</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;geometry&quot;</span><span class="p">][</span><span class="s2">&quot;type&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">geom_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;Point&quot;</span><span class="p">,</span> <span class="s2">&quot;MultiPoint&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">layer_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">layer_type</span> <span class="o">=</span> <span class="s2">&quot;circle&quot;</span>
+            <span class="n">paint</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;circle-radius&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+                <span class="s2">&quot;circle-color&quot;</span><span class="p">:</span> <span class="s2">&quot;#3388ff&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;circle-stroke-color&quot;</span><span class="p">:</span> <span class="s2">&quot;#ffffff&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;circle-stroke-width&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="k">elif</span> <span class="n">geom_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;LineString&quot;</span><span class="p">,</span> <span class="s2">&quot;MultiLineString&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">layer_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">layer_type</span> <span class="o">=</span> <span class="s2">&quot;line&quot;</span>
+            <span class="n">paint</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;line-color&quot;</span><span class="p">:</span> <span class="s2">&quot;#3388ff&quot;</span><span class="p">,</span> <span class="s2">&quot;line-width&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+        <span class="k">elif</span> <span class="n">geom_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;Polygon&quot;</span><span class="p">,</span> <span class="s2">&quot;MultiPolygon&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">layer_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">layer_type</span> <span class="o">=</span> <span class="s2">&quot;fill&quot;</span>
+            <span class="n">paint</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;fill-color&quot;</span><span class="p">:</span> <span class="s2">&quot;#3388ff&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;fill-opacity&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+            <span class="p">}</span>
+
+    <span class="c1"># Add source</span>
+    <span class="n">source_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">_source&quot;</span>
+    <span class="n">source_config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;geojson&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">}</span>
+    <span class="n">source_config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">source_args</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_source</span><span class="p">(</span><span class="n">source_id</span><span class="p">,</span> <span class="n">source_config</span><span class="p">)</span>
+
+    <span class="c1"># Prepare layer configuration</span>
+    <span class="n">layer_config</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">layer_type</span> <span class="ow">or</span> <span class="s2">&quot;fill&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">source_id</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="nb">filter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;filter&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">filter</span>
+
+    <span class="k">if</span> <span class="n">paint</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">layer_config</span><span class="p">[</span><span class="s2">&quot;paint&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">paint</span>
+
+    <span class="n">layer_config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="c1"># Add layer</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">layer</span><span class="o">=</span><span class="n">layer_config</span><span class="p">,</span> <span class="n">before_id</span><span class="o">=</span><span class="n">before_id</span><span class="p">,</span> <span class="n">layer_id</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="c1"># Set visibility</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">visible</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_visibility</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># Set opacity</span>
+    <span class="k">if</span> <span class="n">opacity</span> <span class="o">&lt;</span> <span class="mf">1.0</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_opacity</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">opacity</span><span class="p">)</span>
+
+    <span class="c1"># Fit bounds if requested</span>
+    <span class="k">if</span> <span class="n">fit_bounds</span> <span class="ow">and</span> <span class="n">bounds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Convert from [minx, miny, maxx, maxy] to [[west, south], [east, north]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit_bounds</span><span class="p">([[</span><span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="p">[</span><span class="n">bounds</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">3</span><span class="p">]]])</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
 <h3 id="anymap.maplibre.MapLibreMap.add_geojson_layer" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">add_geojson_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer_id</span><span class="p">,</span> <span class="n">geojson_data</span><span class="p">,</span> <span class="n">layer_type</span><span class="o">=</span><span class="s1">&#39;fill&#39;</span><span class="p">,</span> <span class="n">paint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">before_id</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
@@ -10936,6 +11528,255 @@ within polygons on the map.</p>
 
 
 
+<h3 id="anymap.maplibre.MapLibreMap.add_raster" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">add_raster</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">indexes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nodata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Raster&#39;</span><span class="p">,</span> <span class="n">before_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fit_bounds</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">array_args</span><span class="o">=</span><span class="p">{},</span> <span class="n">client_args</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;cors_all&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+
+<a href="#anymap.maplibre.MapLibreMap.add_raster" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Add a local raster dataset to the map.
+    If you are using this function in JupyterHub on a remote server
+    (e.g., Binder, Microsoft Planetary Computer) and if the raster
+    does not render properly, try installing jupyter-server-proxy using
+    <code>pip install jupyter-server-proxy</code>, then running the following code
+    before calling this function. For more info, see https://bit.ly/3JbmF93.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code>import os
+os.environ[&#39;LOCALTILESERVER_CLIENT_PREFIX&#39;] = &#39;proxy/{port}&#39;
+</code></pre></div></td></tr></table></div>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>source</code></td>
+        <td><code>str</code></td>
+        <td><p>The path to the GeoTIFF file or the URL of the Cloud
+Optimized GeoTIFF.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>indexes</code></td>
+        <td><code>int</code></td>
+        <td><p>The band(s) to use. Band indexing starts
+at 1. Defaults to None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>colormap</code></td>
+        <td><code>str</code></td>
+        <td><p>The name of the colormap from <code>matplotlib</code>
+to use when plotting a single band.
+See https://matplotlib.org/stable/gallery/color/colormap_reference.html.
+Default is greyscale.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>vmin</code></td>
+        <td><code>float</code></td>
+        <td><p>The minimum value to use when colormapping
+the palette when plotting a single band. Defaults to None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>vmax</code></td>
+        <td><code>float</code></td>
+        <td><p>The maximum value to use when colormapping
+the palette when plotting a single band. Defaults to None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>nodata</code></td>
+        <td><code>float</code></td>
+        <td><p>The value from the band to use to interpret
+as not valid data. Defaults to None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>name</code></td>
+        <td><code>str</code></td>
+        <td><p>The layer name to use. Defaults to 'Raster'.</p></td>
+        <td><code>&#39;Raster&#39;</code></td>
+      </tr>
+      <tr>
+        <td><code>before_id</code></td>
+        <td><code>str</code></td>
+        <td><p>The layer id to insert the layer before. Defaults to None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>fit_bounds</code></td>
+        <td><code>bool</code></td>
+        <td><p>Whether to zoom to the extent of the
+layer. Defaults to True.</p></td>
+        <td><code>True</code></td>
+      </tr>
+      <tr>
+        <td><code>visible</code></td>
+        <td><code>bool</code></td>
+        <td><p>Whether the layer is visible. Defaults to True.</p></td>
+        <td><code>True</code></td>
+      </tr>
+      <tr>
+        <td><code>opacity</code></td>
+        <td><code>float</code></td>
+        <td><p>The opacity of the layer. Defaults to 1.0.</p></td>
+        <td><code>1.0</code></td>
+      </tr>
+      <tr>
+        <td><code>array_args</code></td>
+        <td><code>dict</code></td>
+        <td><p>Additional arguments to pass to
+<code>array_to_memory_file</code> when reading the raster. Defaults to {}.</p></td>
+        <td><code>{}</code></td>
+      </tr>
+      <tr>
+        <td><code>client_args</code></td>
+        <td><code>dict</code></td>
+        <td><p>Additional arguments to pass to
+localtileserver.TileClient. Defaults to { "cors_all": False }.</p></td>
+        <td><code>{&#39;cors_all&#39;: True}</code></td>
+      </tr>
+      <tr>
+        <td><code>overwrite</code></td>
+        <td><code>bool</code></td>
+        <td><p>Whether to overwrite an existing layer with the same name.
+Defaults to True.</p></td>
+        <td><code>True</code></td>
+      </tr>
+      <tr>
+        <td><code>**kwargs</code></td>
+        <td><code>Any</code></td>
+        <td><p>Additional keyword arguments to be passed to the underlying
+<code>add_tile_layer</code> method.</p></td>
+        <td><code>{}</code></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>anymap/maplibre.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_raster</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">source</span><span class="p">,</span>
+    <span class="n">indexes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">colormap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">vmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">vmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">nodata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Raster&quot;</span><span class="p">,</span>
+    <span class="n">before_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">fit_bounds</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">visible</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">opacity</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">array_args</span><span class="o">=</span><span class="p">{},</span>
+    <span class="n">client_args</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;cors_all&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+    <span class="n">overwrite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a local raster dataset to the map.</span>
+<span class="sd">        If you are using this function in JupyterHub on a remote server</span>
+<span class="sd">        (e.g., Binder, Microsoft Planetary Computer) and if the raster</span>
+<span class="sd">        does not render properly, try installing jupyter-server-proxy using</span>
+<span class="sd">        `pip install jupyter-server-proxy`, then running the following code</span>
+<span class="sd">        before calling this function. For more info, see https://bit.ly/3JbmF93.</span>
+
+<span class="sd">        import os</span>
+<span class="sd">        os.environ[&#39;LOCALTILESERVER_CLIENT_PREFIX&#39;] = &#39;proxy/{port}&#39;</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        source (str): The path to the GeoTIFF file or the URL of the Cloud</span>
+<span class="sd">            Optimized GeoTIFF.</span>
+<span class="sd">        indexes (int, optional): The band(s) to use. Band indexing starts</span>
+<span class="sd">            at 1. Defaults to None.</span>
+<span class="sd">        colormap (str, optional): The name of the colormap from `matplotlib`</span>
+<span class="sd">            to use when plotting a single band.</span>
+<span class="sd">            See https://matplotlib.org/stable/gallery/color/colormap_reference.html.</span>
+<span class="sd">            Default is greyscale.</span>
+<span class="sd">        vmin (float, optional): The minimum value to use when colormapping</span>
+<span class="sd">            the palette when plotting a single band. Defaults to None.</span>
+<span class="sd">        vmax (float, optional): The maximum value to use when colormapping</span>
+<span class="sd">            the palette when plotting a single band. Defaults to None.</span>
+<span class="sd">        nodata (float, optional): The value from the band to use to interpret</span>
+<span class="sd">            as not valid data. Defaults to None.</span>
+<span class="sd">        name (str, optional): The layer name to use. Defaults to &#39;Raster&#39;.</span>
+<span class="sd">        before_id (str, optional): The layer id to insert the layer before. Defaults to None.</span>
+<span class="sd">        fit_bounds (bool, optional): Whether to zoom to the extent of the</span>
+<span class="sd">            layer. Defaults to True.</span>
+<span class="sd">        visible (bool, optional): Whether the layer is visible. Defaults to True.</span>
+<span class="sd">        opacity (float, optional): The opacity of the layer. Defaults to 1.0.</span>
+<span class="sd">        array_args (dict, optional): Additional arguments to pass to</span>
+<span class="sd">            `array_to_memory_file` when reading the raster. Defaults to {}.</span>
+<span class="sd">        client_args (dict, optional): Additional arguments to pass to</span>
+<span class="sd">            localtileserver.TileClient. Defaults to { &quot;cors_all&quot;: False }.</span>
+<span class="sd">        overwrite (bool, optional): Whether to overwrite an existing layer with the same name.</span>
+<span class="sd">            Defaults to True.</span>
+<span class="sd">        **kwargs: Additional keyword arguments to be passed to the underlying</span>
+<span class="sd">            `add_tile_layer` method.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+
+    <span class="k">if</span> <span class="s2">&quot;zoom_to_layer&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="n">fit_bounds</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;zoom_to_layer&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;layer_name&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;layer_name&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">):</span>
+        <span class="n">source</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">array_to_image</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="o">**</span><span class="n">array_args</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;colormap_name&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="n">colormap</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;colormap_name&quot;</span><span class="p">)</span>
+
+    <span class="n">url</span><span class="p">,</span> <span class="n">tile_client</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_local_tile_url</span><span class="p">(</span>
+        <span class="n">source</span><span class="p">,</span>
+        <span class="n">indexes</span><span class="o">=</span><span class="n">indexes</span><span class="p">,</span>
+        <span class="n">colormap</span><span class="o">=</span><span class="n">colormap</span><span class="p">,</span>
+        <span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span>
+        <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span>
+        <span class="n">nodata</span><span class="o">=</span><span class="n">nodata</span><span class="p">,</span>
+        <span class="n">opacity</span><span class="o">=</span><span class="n">opacity</span><span class="p">,</span>
+        <span class="n">client_args</span><span class="o">=</span><span class="n">client_args</span><span class="p">,</span>
+        <span class="n">return_client</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_tile_layer</span><span class="p">(</span>
+        <span class="n">layer_id</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+        <span class="n">source_url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
+        <span class="n">opacity</span><span class="o">=</span><span class="n">opacity</span><span class="p">,</span>
+        <span class="n">visible</span><span class="o">=</span><span class="n">visible</span><span class="p">,</span>
+        <span class="n">before_id</span><span class="o">=</span><span class="n">before_id</span><span class="p">,</span>
+        <span class="n">overwrite</span><span class="o">=</span><span class="n">overwrite</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">bounds</span> <span class="o">=</span> <span class="n">tile_client</span><span class="o">.</span><span class="n">bounds</span><span class="p">()</span>  <span class="c1"># [ymin, ymax, xmin, xmax]</span>
+    <span class="n">bounds</span> <span class="o">=</span> <span class="p">[[</span><span class="n">bounds</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[</span><span class="n">bounds</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">]]]</span>
+    <span class="c1"># [minx, miny, maxx, maxy]</span>
+    <span class="k">if</span> <span class="n">fit_bounds</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit_bounds</span><span class="p">(</span><span class="n">bounds</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
 <h3 id="anymap.maplibre.MapLibreMap.add_temporal_control" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">add_temporal_control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s1">&#39;top-right&#39;</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">performance</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
@@ -11834,6 +12675,168 @@ maplibre-gl-temporal-control plugin.</p>
         <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
         <span class="n">expanded</span><span class="o">=</span><span class="n">expanded</span><span class="p">,</span>
         <span class="n">host_map</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="anymap.maplibre.MapLibreMap.add_vector" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">add_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">layer_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">paint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fit_bounds</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">before_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">source_args</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+
+<a href="#anymap.maplibre.MapLibreMap.add_vector" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Add a vector layer to the map.</p>
+<p>This method adds a vector layer to the map. The vector data can be a
+URL or local file path to a vector file (e.g., shapefile, GeoJSON,
+GeoPackage) or a GeoDataFrame.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>data</code></td>
+        <td><code>Union[str, gpd.GeoDataFrame]</code></td>
+        <td><p>The vector data. This can be a URL, local file path to a
+vector file, or a GeoDataFrame.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>layer_type</code></td>
+        <td><code>Optional[str]</code></td>
+        <td><p>The type of the layer. If None, the type is inferred
+from the GeoJSON data.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>filter</code></td>
+        <td><code>Optional[Dict]</code></td>
+        <td><p>The filter to apply to the layer. If None, no filter is applied.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>paint</code></td>
+        <td><code>Optional[Dict]</code></td>
+        <td><p>The paint properties to apply to the layer. If None, default
+paint properties are applied.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>name</code></td>
+        <td><code>Optional[str]</code></td>
+        <td><p>The name of the layer. If None, a default name is generated.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>fit_bounds</code></td>
+        <td><code>bool</code></td>
+        <td><p>Whether to adjust the viewport of the map to fit the
+bounds of the data. Defaults to True.</p></td>
+        <td><code>True</code></td>
+      </tr>
+      <tr>
+        <td><code>visible</code></td>
+        <td><code>bool</code></td>
+        <td><p>Whether the layer is visible or not. Defaults to True.</p></td>
+        <td><code>True</code></td>
+      </tr>
+      <tr>
+        <td><code>before_id</code></td>
+        <td><code>Optional[str]</code></td>
+        <td><p>The ID of an existing layer before which the new layer
+should be inserted.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>source_args</code></td>
+        <td><code>Optional[Dict]</code></td>
+        <td><p>Additional keyword arguments that are passed to the
+GeoJSON source.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>**kwargs</code></td>
+        <td><code>Any</code></td>
+        <td><p>Additional keyword arguments that are passed to the layer.</p></td>
+        <td><code>{}</code></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>anymap/maplibre.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_vector</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;gpd.GeoDataFrame&quot;</span><span class="p">],</span>
+    <span class="n">layer_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="nb">filter</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">paint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">fit_bounds</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">visible</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">before_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">source_args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a vector layer to the map.</span>
+
+<span class="sd">    This method adds a vector layer to the map. The vector data can be a</span>
+<span class="sd">    URL or local file path to a vector file (e.g., shapefile, GeoJSON,</span>
+<span class="sd">    GeoPackage) or a GeoDataFrame.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data: The vector data. This can be a URL, local file path to a</span>
+<span class="sd">            vector file, or a GeoDataFrame.</span>
+<span class="sd">        layer_type: The type of the layer. If None, the type is inferred</span>
+<span class="sd">            from the GeoJSON data.</span>
+<span class="sd">        filter: The filter to apply to the layer. If None, no filter is applied.</span>
+<span class="sd">        paint: The paint properties to apply to the layer. If None, default</span>
+<span class="sd">            paint properties are applied.</span>
+<span class="sd">        name: The name of the layer. If None, a default name is generated.</span>
+<span class="sd">        fit_bounds: Whether to adjust the viewport of the map to fit the</span>
+<span class="sd">            bounds of the data. Defaults to True.</span>
+<span class="sd">        visible: Whether the layer is visible or not. Defaults to True.</span>
+<span class="sd">        before_id: The ID of an existing layer before which the new layer</span>
+<span class="sd">            should be inserted.</span>
+<span class="sd">        source_args: Additional keyword arguments that are passed to the</span>
+<span class="sd">            GeoJSON source.</span>
+<span class="sd">        **kwargs: Additional keyword arguments that are passed to the layer.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">geopandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gpd</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">__geo_interface__</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">__geo_interface__</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_geojson</span><span class="p">(</span>
+        <span class="n">data</span><span class="p">,</span>
+        <span class="n">layer_type</span><span class="o">=</span><span class="n">layer_type</span><span class="p">,</span>
+        <span class="nb">filter</span><span class="o">=</span><span class="nb">filter</span><span class="p">,</span>
+        <span class="n">paint</span><span class="o">=</span><span class="n">paint</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+        <span class="n">fit_bounds</span><span class="o">=</span><span class="n">fit_bounds</span><span class="p">,</span>
+        <span class="n">visible</span><span class="o">=</span><span class="n">visible</span><span class="p">,</span>
+        <span class="n">before_id</span><span class="o">=</span><span class="n">before_id</span><span class="p">,</span>
+        <span class="n">source_args</span><span class="o">=</span><span class="n">source_args</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">)</span>
 </code></pre></div>
