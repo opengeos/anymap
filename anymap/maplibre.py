@@ -1127,6 +1127,298 @@ class MapLibreMap(MapWidget):
         """
         self.call_js_method("fitBounds", bounds, {"padding": padding})
 
+    def add_geojson(
+        self,
+        data: Union[str, Dict],
+        layer_type: Optional[str] = None,
+        filter: Optional[Dict] = None,
+        paint: Optional[Dict] = None,
+        name: Optional[str] = None,
+        fit_bounds: bool = True,
+        visible: bool = True,
+        opacity: float = 1.0,
+        before_id: Optional[str] = None,
+        source_args: Optional[Dict] = None,
+        **kwargs: Any,
+    ) -> None:
+        """Add a GeoJSON layer to the map.
+
+        This method adds a GeoJSON layer to the map. The GeoJSON data can be a
+        URL to a GeoJSON file or a GeoJSON dictionary.
+
+        Args:
+            data: The GeoJSON data. This can be a URL to a GeoJSON file or a
+                GeoJSON dictionary.
+            layer_type: The type of the layer. It can be one of the following:
+                'circle', 'fill', 'fill-extrusion', 'line', 'symbol'. If None,
+                the type is inferred from the GeoJSON data.
+            filter: The filter to apply to the layer. If None, no filter is applied.
+            paint: The paint properties to apply to the layer. If None, default
+                paint properties are applied based on geometry type.
+            name: The name of the layer. If None, 'GeoJSON' is used.
+            fit_bounds: Whether to adjust the viewport of the map to fit the
+                bounds of the GeoJSON data. Defaults to True.
+            visible: Whether the layer is visible or not. Defaults to True.
+            opacity: The opacity of the layer. Defaults to 1.0.
+            before_id: The ID of an existing layer before which the new layer
+                should be inserted.
+            source_args: Additional keyword arguments that are passed to the
+                GeoJSON source.
+            **kwargs: Additional keyword arguments that are passed to the layer.
+        """
+        import geopandas as gpd
+
+        bounds = None
+        geom_type = None
+        source_args = source_args or {}
+
+        # Load data from file or URL if necessary
+        if isinstance(data, str):
+            if os.path.isfile(data) or data.startswith("http"):
+                gdf = gpd.read_file(data)
+                data = gdf.__geo_interface__
+                if fit_bounds:
+                    bounds = gdf.total_bounds  # [minx, miny, maxx, maxy]
+            else:
+                raise ValueError(
+                    "The data must be a URL, file path, or GeoJSON dictionary."
+                )
+        elif isinstance(data, dict) and data.get("type") == "FeatureCollection":
+            if fit_bounds:
+                gdf = gpd.GeoDataFrame.from_features(data)
+                bounds = gdf.total_bounds  # [minx, miny, maxx, maxy]
+        elif not isinstance(data, dict):
+            raise ValueError(
+                "The data must be a URL, file path, or GeoJSON dictionary."
+            )
+
+        # Generate layer name if not provided
+        if name is None:
+            name = "GeoJSON"
+
+        # Infer geometry type and set default paint if not provided
+        if paint is None:
+            if "features" in data and len(data["features"]) > 0:
+                geom_type = data["features"][0]["geometry"]["type"]
+            elif "geometry" in data:
+                geom_type = data["geometry"]["type"]
+
+            if geom_type in ["Point", "MultiPoint"]:
+                if layer_type is None:
+                    layer_type = "circle"
+                paint = {
+                    "circle-radius": 5,
+                    "circle-color": "#3388ff",
+                    "circle-stroke-color": "#ffffff",
+                    "circle-stroke-width": 1,
+                }
+            elif geom_type in ["LineString", "MultiLineString"]:
+                if layer_type is None:
+                    layer_type = "line"
+                paint = {"line-color": "#3388ff", "line-width": 2}
+            elif geom_type in ["Polygon", "MultiPolygon"]:
+                if layer_type is None:
+                    layer_type = "fill"
+                paint = {
+                    "fill-color": "#3388ff",
+                    "fill-opacity": 0.5,
+                }
+
+        # Add source
+        source_id = f"{name}_source"
+        source_config = {"type": "geojson", "data": data}
+        source_config.update(source_args)
+        self.add_source(source_id, source_config)
+
+        # Prepare layer configuration
+        layer_config = {
+            "id": name,
+            "type": layer_type or "fill",
+            "source": source_id,
+        }
+
+        if filter is not None:
+            layer_config["filter"] = filter
+
+        if paint is not None:
+            layer_config["paint"] = paint
+
+        layer_config.update(kwargs)
+
+        # Add layer
+        self.add_layer(layer=layer_config, before_id=before_id, layer_id=name)
+
+        # Set visibility
+        if not visible:
+            self.set_visibility(name, False)
+
+        # Set opacity
+        if opacity < 1.0:
+            self.set_opacity(name, opacity)
+
+        # Fit bounds if requested
+        if fit_bounds and bounds is not None:
+            # Convert from [minx, miny, maxx, maxy] to [[west, south], [east, north]]
+            self.fit_bounds([[bounds[0], bounds[1]], [bounds[2], bounds[3]]])
+
+    def add_vector(
+        self,
+        data: Union[str, "gpd.GeoDataFrame"],
+        layer_type: Optional[str] = None,
+        filter: Optional[Dict] = None,
+        paint: Optional[Dict] = None,
+        name: Optional[str] = None,
+        fit_bounds: bool = True,
+        visible: bool = True,
+        before_id: Optional[str] = None,
+        source_args: Optional[Dict] = None,
+        **kwargs: Any,
+    ) -> None:
+        """Add a vector layer to the map.
+
+        This method adds a vector layer to the map. The vector data can be a
+        URL or local file path to a vector file (e.g., shapefile, GeoJSON,
+        GeoPackage) or a GeoDataFrame.
+
+        Args:
+            data: The vector data. This can be a URL, local file path to a
+                vector file, or a GeoDataFrame.
+            layer_type: The type of the layer. If None, the type is inferred
+                from the GeoJSON data.
+            filter: The filter to apply to the layer. If None, no filter is applied.
+            paint: The paint properties to apply to the layer. If None, default
+                paint properties are applied.
+            name: The name of the layer. If None, a default name is generated.
+            fit_bounds: Whether to adjust the viewport of the map to fit the
+                bounds of the data. Defaults to True.
+            visible: Whether the layer is visible or not. Defaults to True.
+            before_id: The ID of an existing layer before which the new layer
+                should be inserted.
+            source_args: Additional keyword arguments that are passed to the
+                GeoJSON source.
+            **kwargs: Additional keyword arguments that are passed to the layer.
+        """
+        import geopandas as gpd
+
+        if not isinstance(data, gpd.GeoDataFrame):
+            data = gpd.read_file(data).__geo_interface__
+        else:
+            data = data.__geo_interface__
+
+        self.add_geojson(
+            data,
+            layer_type=layer_type,
+            filter=filter,
+            paint=paint,
+            name=name,
+            fit_bounds=fit_bounds,
+            visible=visible,
+            before_id=before_id,
+            source_args=source_args,
+            **kwargs,
+        )
+
+    def add_raster(
+        self,
+        source,
+        indexes=None,
+        colormap=None,
+        vmin=None,
+        vmax=None,
+        nodata=None,
+        name="Raster",
+        before_id=None,
+        fit_bounds=True,
+        visible=True,
+        opacity=1.0,
+        array_args={},
+        client_args={"cors_all": True},
+        overwrite: bool = True,
+        **kwargs: Any,
+    ):
+        """Add a local raster dataset to the map.
+            If you are using this function in JupyterHub on a remote server
+            (e.g., Binder, Microsoft Planetary Computer) and if the raster
+            does not render properly, try installing jupyter-server-proxy using
+            `pip install jupyter-server-proxy`, then running the following code
+            before calling this function. For more info, see https://bit.ly/3JbmF93.
+
+            import os
+            os.environ['LOCALTILESERVER_CLIENT_PREFIX'] = 'proxy/{port}'
+
+        Args:
+            source (str): The path to the GeoTIFF file or the URL of the Cloud
+                Optimized GeoTIFF.
+            indexes (int, optional): The band(s) to use. Band indexing starts
+                at 1. Defaults to None.
+            colormap (str, optional): The name of the colormap from `matplotlib`
+                to use when plotting a single band.
+                See https://matplotlib.org/stable/gallery/color/colormap_reference.html.
+                Default is greyscale.
+            vmin (float, optional): The minimum value to use when colormapping
+                the palette when plotting a single band. Defaults to None.
+            vmax (float, optional): The maximum value to use when colormapping
+                the palette when plotting a single band. Defaults to None.
+            nodata (float, optional): The value from the band to use to interpret
+                as not valid data. Defaults to None.
+            name (str, optional): The layer name to use. Defaults to 'Raster'.
+            before_id (str, optional): The layer id to insert the layer before. Defaults to None.
+            fit_bounds (bool, optional): Whether to zoom to the extent of the
+                layer. Defaults to True.
+            visible (bool, optional): Whether the layer is visible. Defaults to True.
+            opacity (float, optional): The opacity of the layer. Defaults to 1.0.
+            array_args (dict, optional): Additional arguments to pass to
+                `array_to_memory_file` when reading the raster. Defaults to {}.
+            client_args (dict, optional): Additional arguments to pass to
+                localtileserver.TileClient. Defaults to { "cors_all": False }.
+            overwrite (bool, optional): Whether to overwrite an existing layer with the same name.
+                Defaults to True.
+            **kwargs: Additional keyword arguments to be passed to the underlying
+                `add_tile_layer` method.
+        """
+        import numpy as np
+        import xarray as xr
+
+        if "zoom_to_layer" in kwargs:
+            fit_bounds = kwargs.pop("zoom_to_layer")
+
+        if "layer_name" in kwargs:
+            name = kwargs.pop("layer_name")
+
+        if isinstance(source, np.ndarray) or isinstance(source, xr.DataArray):
+            source = utils.array_to_image(source, **array_args)
+
+        if "colormap_name" in kwargs:
+            colormap = kwargs.pop("colormap_name")
+
+        url, tile_client = utils.get_local_tile_url(
+            source,
+            indexes=indexes,
+            colormap=colormap,
+            vmin=vmin,
+            vmax=vmax,
+            nodata=nodata,
+            opacity=opacity,
+            client_args=client_args,
+            return_client=True,
+            **kwargs,
+        )
+
+        self.add_tile_layer(
+            layer_id=name,
+            source_url=url,
+            opacity=opacity,
+            visible=visible,
+            before_id=before_id,
+            overwrite=overwrite,
+        )
+
+        bounds = tile_client.bounds()  # [ymin, ymax, xmin, xmax]
+        bounds = [[bounds[2], bounds[0]], [bounds[3], bounds[1]]]
+        # [minx, miny, maxx, maxy]
+        if fit_bounds:
+            self.fit_bounds(bounds)
+
     def add_tile_layer(
         self,
         layer_id: str,
@@ -1776,6 +2068,7 @@ class MapLibreMap(MapWidget):
                 # If an explicit method to uncollapse exists, call it here.
                 # For now, this is a placeholder for future logic.
                 pass
+
     def remove_geoman_control(self, position: str = "top-left") -> None:
         """Remove the Geoman control toolbar."""
 

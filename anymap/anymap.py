@@ -16,17 +16,18 @@ For new code, consider importing directly from the specific modules:
 
 # Import all classes from their new dedicated modules
 from .base import MapWidget
-from .maplibre import MapLibreMap
+from .maplibre import MapLibreMap as Map
 from .mapbox import MapboxMap
 from .cesium import CesiumMap
 from .potree import PotreeMap
 from .deckgl import DeckGLMap
 from .compare import MapCompare
 
+
 # Make all classes available when importing from this module
 __all__ = [
+    "Map",
     "MapWidget",
-    "MapLibreMap",
     "MapboxMap",
     "CesiumMap",
     "PotreeMap",

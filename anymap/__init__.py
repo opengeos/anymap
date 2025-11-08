@@ -15,9 +15,14 @@ from .openlayers import OpenLayersMap
 from .keplergl import KeplerGLMap
 from .compare import MapCompare
 
+from .utils import download_file
+
+Map = MapLibreMap
+
 __all__ = [
-    "MapWidget",
+    "Map",
     "MapLibreMap",
+    "MapWidget",
     "MapboxMap",
     "CesiumMap",
     "PotreeMap",
