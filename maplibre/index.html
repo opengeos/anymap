@@ -1596,6 +1596,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.first_symbol_layer_id" class="md-nav__link">
+    <span class="md-ellipsis">
+      first_symbol_layer_id
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.sidebar_widgets" class="md-nav__link">
     <span class="md-ellipsis">
       sidebar_widgets
@@ -2031,6 +2040,24 @@
   <a href="#anymap.maplibre.MapLibreMap.expand_geoman_control" class="md-nav__link">
     <span class="md-ellipsis">
       expand_geoman_control()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.find_first_symbol_layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      find_first_symbol_layer()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.find_style_layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      find_style_layer()
     </span>
   </a>
   
@@ -2686,6 +2713,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.first_symbol_layer_id" class="md-nav__link">
+    <span class="md-ellipsis">
+      first_symbol_layer_id
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.sidebar_widgets" class="md-nav__link">
     <span class="md-ellipsis">
       sidebar_widgets
@@ -3121,6 +3157,24 @@
   <a href="#anymap.maplibre.MapLibreMap.expand_geoman_control" class="md-nav__link">
     <span class="md-ellipsis">
       expand_geoman_control()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.find_first_symbol_layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      find_first_symbol_layer()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.find_style_layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      find_style_layer()
     </span>
   </a>
   
@@ -3879,6 +3933,83 @@ data sources, custom styling, and interactive features.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">_flatgeobuf_defaults</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">if</span> <span class="n">add_sidebar</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_ipython_display_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_patched_display</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_style</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the style of the map.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict: The style of the map.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_style</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_style</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+            <span class="n">style</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_style</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">style</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_style</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">style</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">return</span> <span class="n">style</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_style_layers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">return_ids</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">sorted</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the names of the basemap layers.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List[str]: The names of the basemap layers.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">style</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_style</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s2">&quot;layers&quot;</span> <span class="ow">in</span> <span class="n">style</span><span class="p">:</span>
+            <span class="n">layers</span> <span class="o">=</span> <span class="n">style</span><span class="p">[</span><span class="s2">&quot;layers&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">return_ids</span><span class="p">:</span>
+                <span class="n">ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">layer</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">layers</span><span class="p">]</span>
+                <span class="k">if</span> <span class="nb">sorted</span><span class="p">:</span>
+                    <span class="n">ids</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+
+                <span class="k">return</span> <span class="n">ids</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">layers</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_style_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Searches for a style layer in the map&#39;s current style by its ID and returns it if found.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id (str): The ID of the style layer to find.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Optional[Dict]: The style layer as a dictionary if found, otherwise None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">layers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_style_layers</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">layers</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">layer</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="nb">id</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">layer</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_first_symbol_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Find the first symbol layer in the map&#39;s current style.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Optional[Dict]: The first symbol layer as a dictionary if found, otherwise None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">layers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_style_layers</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">layers</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">layer</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;symbol&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">layer</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">first_symbol_layer_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the ID of the first symbol layer in the map&#39;s current style.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">layer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_first_symbol_layer</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">layer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">layer</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">show</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -4679,16 +4810,19 @@ data sources, custom styling, and interactive features.</p>
                 <span class="n">layer</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_layers</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="n">overwrite</span>
             <span class="p">)</span>
 
+        <span class="c1"># Store before_id in layer metadata for restoration when displaying in multiple cells</span>
+        <span class="k">if</span> <span class="n">before_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;metadata&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">layer</span><span class="p">:</span>
+                <span class="n">layer</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">layer</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">][</span><span class="s2">&quot;beforeId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">before_id</span>
+
         <span class="c1"># Store layer in local state for persistence</span>
         <span class="n">current_layers</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_layers</span><span class="p">)</span>
         <span class="n">current_layers</span><span class="p">[</span><span class="n">layer_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">layer</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_layers</span> <span class="o">=</span> <span class="n">current_layers</span>
 
         <span class="c1"># Call JavaScript method with before_id if provided</span>
-        <span class="k">if</span> <span class="n">before_id</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addLayer&quot;</span><span class="p">,</span> <span class="n">layer</span><span class="p">,</span> <span class="n">before_id</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addLayer&quot;</span><span class="p">,</span> <span class="n">layer</span><span class="p">,</span> <span class="n">layer_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addLayer&quot;</span><span class="p">,</span> <span class="n">layer</span><span class="p">,</span> <span class="n">before_id</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">set_visibility</span><span class="p">(</span><span class="n">layer_id</span><span class="p">,</span> <span class="n">visible</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_opacity</span><span class="p">(</span><span class="n">layer_id</span><span class="p">,</span> <span class="n">opacity</span><span class="p">)</span>
@@ -7652,6 +7786,29 @@ data sources, custom styling, and interactive features.</p>
     <div class="doc doc-contents ">
 
       <p>Get the current draw data as GeoJSON.</p>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="anymap.maplibre.MapLibreMap.first_symbol_layer_id" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">first_symbol_layer_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span></code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-property"><code>property</code></small>
+      <small class="doc doc-property doc-property-readonly"><code>readonly</code></small>
+  </span>
+
+<a href="#anymap.maplibre.MapLibreMap.first_symbol_layer_id" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Get the ID of the first symbol layer in the map's current style.</p>
     </div>
 
   </div>
@@ -10799,16 +10956,19 @@ feature properties; unknown keys render as empty.</p></td>
             <span class="n">layer</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_layers</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="n">overwrite</span>
         <span class="p">)</span>
 
+    <span class="c1"># Store before_id in layer metadata for restoration when displaying in multiple cells</span>
+    <span class="k">if</span> <span class="n">before_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;metadata&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">layer</span><span class="p">:</span>
+            <span class="n">layer</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">layer</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">][</span><span class="s2">&quot;beforeId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">before_id</span>
+
     <span class="c1"># Store layer in local state for persistence</span>
     <span class="n">current_layers</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_layers</span><span class="p">)</span>
     <span class="n">current_layers</span><span class="p">[</span><span class="n">layer_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">layer</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_layers</span> <span class="o">=</span> <span class="n">current_layers</span>
 
     <span class="c1"># Call JavaScript method with before_id if provided</span>
-    <span class="k">if</span> <span class="n">before_id</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addLayer&quot;</span><span class="p">,</span> <span class="n">layer</span><span class="p">,</span> <span class="n">before_id</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addLayer&quot;</span><span class="p">,</span> <span class="n">layer</span><span class="p">,</span> <span class="n">layer_id</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addLayer&quot;</span><span class="p">,</span> <span class="n">layer</span><span class="p">,</span> <span class="n">before_id</span><span class="p">)</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">set_visibility</span><span class="p">(</span><span class="n">layer_id</span><span class="p">,</span> <span class="n">visible</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">set_opacity</span><span class="p">(</span><span class="n">layer_id</span><span class="p">,</span> <span class="n">opacity</span><span class="p">)</span>
@@ -14038,6 +14198,130 @@ not supplied. Defaults to 25.</p></td>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Expand the Geoman draw control toolbar.&quot;&quot;&quot;</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;expandGeomanControl&quot;</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="anymap.maplibre.MapLibreMap.find_first_symbol_layer" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">find_first_symbol_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+
+<a href="#anymap.maplibre.MapLibreMap.find_first_symbol_layer" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Find the first symbol layer in the map's current style.</p>
+
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>Optional[Dict]</code></td>
+      <td><p>The first symbol layer as a dictionary if found, otherwise None.</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>anymap/maplibre.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">find_first_symbol_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Find the first symbol layer in the map&#39;s current style.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Optional[Dict]: The first symbol layer as a dictionary if found, otherwise None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">layers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_style_layers</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">layers</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">layer</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;symbol&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">layer</span>
+    <span class="k">return</span> <span class="kc">None</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="anymap.maplibre.MapLibreMap.find_style_layer" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">find_style_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span></code>
+
+
+<a href="#anymap.maplibre.MapLibreMap.find_style_layer" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Searches for a style layer in the map's current style by its ID and returns it if found.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>id</code></td>
+        <td><code>str</code></td>
+        <td><p>The ID of the style layer to find.</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>Optional[Dict]</code></td>
+      <td><p>The style layer as a dictionary if found, otherwise None.</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>anymap/maplibre.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">find_style_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Searches for a style layer in the map&#39;s current style by its ID and returns it if found.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        id (str): The ID of the style layer to find.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Optional[Dict]: The style layer as a dictionary if found, otherwise None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">layers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_style_layers</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">layers</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">layer</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="nb">id</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">layer</span>
+    <span class="k">return</span> <span class="kc">None</span>
 </code></pre></div>
         </details>
     </div>
