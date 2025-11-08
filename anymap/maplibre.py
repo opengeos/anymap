@@ -748,6 +748,8 @@ class MapLibreMap(MapWidget):
                      and iteration are not. Example: "Name: {{name}}<br>Value: {{value}}"
             trigger: Event that triggers the popup. Either "click" or "hover". Defaults to "click".
         """
+        if trigger not in ["click", "hover"]:
+            raise ValueError("trigger must be either 'click' or 'hover'")
         config: Dict[str, Any] = {"layerId": layer_id, "trigger": trigger}
 
         if template is not None:
