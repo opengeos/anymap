@@ -5038,16 +5038,9 @@ data sources, custom styling, and interactive features.</p>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">geoman_controls</span><span class="p">[</span><span class="n">section</span><span class="p">]</span> <span class="o">=</span> <span class="n">section_options</span>
 
-        <span class="k">if</span> <span class="n">collapsed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">geoman_settings</span> <span class="o">=</span> <span class="n">geoman_config</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;settings&quot;</span><span class="p">,</span> <span class="p">{})</span>
-            <span class="n">geoman_settings</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;controlsCollapsible&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-            <span class="n">geoman_settings</span><span class="p">[</span><span class="s2">&quot;controlsUiEnabledByDefault&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span> <span class="k">if</span> <span class="n">collapsed</span> <span class="k">else</span> <span class="kc">True</span>
-
         <span class="n">control_options</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">}</span>
         <span class="k">if</span> <span class="n">geoman_config</span><span class="p">:</span>
             <span class="n">control_options</span><span class="p">[</span><span class="s2">&quot;geoman_options&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">geoman_config</span>
-        <span class="k">if</span> <span class="n">collapsed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">control_options</span><span class="p">[</span><span class="s2">&quot;collapsed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">collapsed</span><span class="p">)</span>
 
         <span class="n">control_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;geoman_</span><span class="si">{</span><span class="n">position</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="n">current_controls</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_controls</span><span class="p">)</span>
@@ -5061,6 +5054,13 @@ data sources, custom styling, and interactive features.</p>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addControl&quot;</span><span class="p">,</span> <span class="s2">&quot;geoman&quot;</span><span class="p">,</span> <span class="n">control_options</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">collapsed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">collapsed</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">collapse_geoman_control</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># If an explicit method to uncollapse exists, call it here.</span>
+                <span class="c1"># For now, this is a placeholder for future logic.</span>
+                <span class="k">pass</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">remove_geoman_control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;top-left&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove the Geoman control toolbar.&quot;&quot;&quot;</span>
 
@@ -9337,16 +9337,9 @@ button configuration overrides.</p></td>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">geoman_controls</span><span class="p">[</span><span class="n">section</span><span class="p">]</span> <span class="o">=</span> <span class="n">section_options</span>
 
-    <span class="k">if</span> <span class="n">collapsed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">geoman_settings</span> <span class="o">=</span> <span class="n">geoman_config</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;settings&quot;</span><span class="p">,</span> <span class="p">{})</span>
-        <span class="n">geoman_settings</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;controlsCollapsible&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-        <span class="n">geoman_settings</span><span class="p">[</span><span class="s2">&quot;controlsUiEnabledByDefault&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span> <span class="k">if</span> <span class="n">collapsed</span> <span class="k">else</span> <span class="kc">True</span>
-
     <span class="n">control_options</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">}</span>
     <span class="k">if</span> <span class="n">geoman_config</span><span class="p">:</span>
         <span class="n">control_options</span><span class="p">[</span><span class="s2">&quot;geoman_options&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">geoman_config</span>
-    <span class="k">if</span> <span class="n">collapsed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">control_options</span><span class="p">[</span><span class="s2">&quot;collapsed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">collapsed</span><span class="p">)</span>
 
     <span class="n">control_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;geoman_</span><span class="si">{</span><span class="n">position</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="n">current_controls</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_controls</span><span class="p">)</span>
@@ -9359,6 +9352,14 @@ button configuration overrides.</p></td>
     <span class="bp">self</span><span class="o">.</span><span class="n">controls</span><span class="p">[</span><span class="s2">&quot;geoman&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">position</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addControl&quot;</span><span class="p">,</span> <span class="s2">&quot;geoman&quot;</span><span class="p">,</span> <span class="n">control_options</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">collapsed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">collapsed</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">collapse_geoman_control</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># If an explicit method to uncollapse exists, call it here.</span>
+            <span class="c1"># For now, this is a placeholder for future logic.</span>
+            <span class="k">pass</span>
 </code></pre></div>
         </details>
     </div>
