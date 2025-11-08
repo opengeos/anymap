@@ -731,6 +731,35 @@ class MapLibreMap(MapWidget):
 
         self.call_js_method("disableFeaturePopup", {"layerId": layer_id})
 
+    def add_popup(
+        self,
+        layer_id: str,
+        prop: Optional[str] = None,
+        template: Optional[str] = None,
+        trigger: str = "click",
+    ) -> None:
+        """Add a popup to a layer.
+
+        Args:
+            layer_id: The layer to which the popup is added.
+            prop: The property of the source to be displayed. If None, all properties are displayed.
+            template: A mustache-style template. If supplied, prop is ignored.
+                     Use {{property_name}} to reference feature properties.
+                     Example: "Name: {{name}}<br>Value: {{value}}"
+            trigger: Event that triggers the popup. Either "click" or "hover". Defaults to "click".
+        """
+        config: Dict[str, Any] = {"layerId": layer_id, "trigger": trigger}
+
+        if template is not None:
+            # Use template for custom formatting
+            config["template"] = template
+        elif prop is not None:
+            # Show only specific property
+            config["fields"] = [{"name": prop, "label": prop}]
+        # If both are None, show all properties (default behavior)
+
+        self.call_js_method("enableFeaturePopup", config)
+
     def add_widget_control(
         self,
         widget: widgets.Widget,
