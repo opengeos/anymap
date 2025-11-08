@@ -4458,7 +4458,8 @@ function render({ model, el }) {
       if (config.template && typeof config.template === 'string') {
         const template = config.template;
         // Replace {{property}} or {property} with actual values
-        const rendered = template.replace(/\{\{?\s*(\w+)\s*\}?\}/g, (match, propName) => {
+        const rendered = template.replace(/\{\{(\w+)\}\}|\{(\w+)\}/g, (match, doubleBraced, singleBraced) => {
+          const propName = doubleBraced || singleBraced;
           const value = properties[propName];
           return value !== undefined && value !== null ? escapeHtml(String(value)) : '';
         });
