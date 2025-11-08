@@ -76,31 +76,37 @@ nav:
     - Installation: installation.md
     - Usage: usage.md
     - Contributing: contributing.md
-    - FAQ: faq.md
-    - Changelog: changelog.md
+    - Changelog: https://github.com/opengeos/anymap/releases
     - Report Issues: https://github.com/opengeos/anymap/issues
-    - Examples:
-          - examples/basic_usage.ipynb
-          - examples/maplibre_example.ipynb
-          - examples/infobox_example.ipynb
-          - examples/mapbox_example.ipynb
-          - examples/leaflet_example.ipynb
-          - examples/openlayers_example.ipynb
-          - examples/cesium_example.ipynb
-          - examples/deckgl_example.ipynb
-          - examples/keplergl_example.ipynb
-          - examples/potree_example.ipynb
-          - examples/pmtiles_example.ipynb
-          - examples/draw_control_example.ipynb
-          - examples/add_draw_data_example.ipynb
-          - examples/save_draw_data_example.ipynb
-          - examples/layer_control_example.ipynb
-          - examples/geocoder_example.ipynb
-          - examples/terrain_example.ipynb
-          - examples/streetview_example.ipynb
-          - examples/clicked_attribute_example.ipynb
-          - examples/map_click_polygon_intersection.ipynb
-          - examples/custom_draw_styles_example.ipynb
+    - Cesium:
+          - examples/cesium/cesium_example.ipynb
+    - DeckGL:
+          - examples/deckgl/deckgl_example.ipynb
+    - KeplerGL:
+          - examples/keplergl/keplergl_example.ipynb
+    - Leaflet:
+          - examples/leaflet/leaflet_example.ipynb
+    - MapLibre:
+          - examples/maplibre/basic_usage.ipynb
+          - examples/maplibre/maplibre_example.ipynb
+          - examples/maplibre/infobox_example.ipynb
+          - examples/maplibre/pmtiles_example.ipynb
+          - examples/maplibre/draw_control_example.ipynb
+          - examples/maplibre/add_draw_data_example.ipynb
+          - examples/maplibre/save_draw_data_example.ipynb
+          - examples/maplibre/layer_control_example.ipynb
+          - examples/maplibre/geocoder_example.ipynb
+          - examples/maplibre/terrain_example.ipynb
+          - examples/maplibre/streetview_example.ipynb
+          - examples/maplibre/clicked_attribute_example.ipynb
+          - examples/maplibre/map_click_polygon_intersection.ipynb
+          - examples/maplibre/custom_draw_styles_example.ipynb
+    - Mapbox:
+          - examples/mapbox/mapbox_example.ipynb
+    - OpenLayers:
+          - examples/openlayers/openlayers_example.ipynb
+    - Potree:
+          - examples/potree/potree_example.ipynb
     - API Reference:
           - anymap module: anymap.md
           - base module: base.md
