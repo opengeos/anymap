@@ -1188,6 +1188,34 @@ class MapLibreMap(MapWidget):
         # Update layer controls if they exist
         self._update_layer_controls()
 
+    def add_source(self, source_id: str, source_config: Dict[str, Any]) -> None:
+        """Add a data source to the map.
+
+        This method adds a data source and tracks it in the source_dict attribute
+        for easy reference. The source can then be used by layers.
+
+        Args:
+            source_id: Unique identifier for the data source.
+            source_config: Dictionary containing source configuration.
+                          Must include a 'type' field (e.g., 'geojson', 'vector', 'raster').
+                          Additional fields depend on the source type.
+
+        Example:
+            >>> m = MapLibreMap()
+            >>> m.add_source('my-source', {
+            ...     'type': 'geojson',
+            ...     'data': {
+            ...         'type': 'Feature',
+            ...         'geometry': {'type': 'Point', 'coordinates': [0, 0]}
+            ...     }
+            ... })
+        """
+        # Store source in source_dict for local tracking
+        self.source_dict[source_id] = source_config
+
+        # Call parent class method to handle JavaScript synchronization
+        super().add_source(source_id, source_config)
+
     def add_geojson_layer(
         self,
         layer_id: str,
