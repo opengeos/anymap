@@ -256,10 +256,10 @@ class MapLibreMap(MapWidget):
             Dict: The style of the map.
         """
         if isinstance(self._style, str):
-            response = requests.get(self.style, timeout=10)
+            response = requests.get(self._style, timeout=10)
             style = response.json()
-        elif isinstance(self.style, dict):
-            style = self.style
+        elif isinstance(self._style, dict):
+            style = self._style
         else:
             style = {}
         return style
