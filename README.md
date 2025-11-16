@@ -72,11 +72,15 @@ m = MapLibreMap(
 ### Adding Markers
 
 ```python
-# Add a marker with popup
+# Add a marker with popup and custom styling
 m.add_marker(
     lat=40.7128,
     lng=-74.0060,
-    popup="<h3>New York City</h3><p>The Big Apple</p>"
+    popup="<h3>New York City</h3><p>The Big Apple</p>",
+    options={
+        "color": "#ff5722",
+        "draggable": True,
+    }
 )
 ```
 

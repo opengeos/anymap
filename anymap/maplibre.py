@@ -1206,15 +1206,27 @@ class MapLibreMap(MapWidget):
 
         self.add_layer(layer=layer_config, before_id=before_id, layer_id=layer_id)
 
-    def add_marker(self, lng: float, lat: float, popup: Optional[str] = None) -> None:
+    def add_marker(
+        self,
+        lng: float,
+        lat: float,
+        popup: Optional[str] = None,
+        options: Optional[Dict[str, Any]] = None,
+    ) -> None:
         """Add a marker to the map.
 
         Args:
             lng: Longitude coordinate for the marker.
             lat: Latitude coordinate for the marker.
             popup: Optional popup text to display when marker is clicked.
+            options: Optional marker options forwarded to MapLibre GL JS.
+                This supports properties like color, draggable, and opacity.
         """
-        marker_data = {"coordinates": [lng, lat], "popup": popup}
+        marker_data = {
+            "coordinates": [lng, lat],
+            "popup": popup,
+            "options": options or {},
+        }
         self.call_js_method("addMarker", marker_data)
 
     def fit_bounds(self, bounds: List[List[float]], padding: int = 50) -> None:
