@@ -2608,9 +2608,19 @@ MapWidget            (AnyWidget)
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">layer_id</span><span class="p">,</span> <span class="n">layer_config</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">add_marker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lat</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lng</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">popup</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_marker</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">lat</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">lng</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">popup</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a marker to the map.&quot;&quot;&quot;</span>
-        <span class="n">marker_data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;coordinates&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">lng</span><span class="p">,</span> <span class="n">lat</span><span class="p">],</span> <span class="s2">&quot;popup&quot;</span><span class="p">:</span> <span class="n">popup</span><span class="p">}</span>
+        <span class="n">marker_data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;coordinates&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">lng</span><span class="p">,</span> <span class="n">lat</span><span class="p">],</span>
+            <span class="s2">&quot;popup&quot;</span><span class="p">:</span> <span class="n">popup</span><span class="p">,</span>
+            <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="n">options</span> <span class="ow">or</span> <span class="p">{},</span>
+        <span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addMarker&quot;</span><span class="p">,</span> <span class="n">marker_data</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">fit_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bounds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span> <span class="n">padding</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -3347,7 +3357,7 @@ MapWidget            (AnyWidget)
 
 
 <h3 id="anymap.mapbox.MapboxMap.add_marker" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">add_marker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lng</span><span class="p">,</span> <span class="n">popup</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">add_marker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lng</span><span class="p">,</span> <span class="n">popup</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
 
 <a href="#anymap.mapbox.MapboxMap.add_marker" class="headerlink" title="Permanent link">&para;</a></h3>
@@ -3358,9 +3368,19 @@ MapWidget            (AnyWidget)
 
         <details class="quote">
           <summary>Source code in <code>anymap/mapbox.py</code></summary>
-          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_marker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lat</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lng</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">popup</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_marker</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">lat</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">lng</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">popup</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a marker to the map.&quot;&quot;&quot;</span>
-    <span class="n">marker_data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;coordinates&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">lng</span><span class="p">,</span> <span class="n">lat</span><span class="p">],</span> <span class="s2">&quot;popup&quot;</span><span class="p">:</span> <span class="n">popup</span><span class="p">}</span>
+    <span class="n">marker_data</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;coordinates&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">lng</span><span class="p">,</span> <span class="n">lat</span><span class="p">],</span>
+        <span class="s2">&quot;popup&quot;</span><span class="p">:</span> <span class="n">popup</span><span class="p">,</span>
+        <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="n">options</span> <span class="ow">or</span> <span class="p">{},</span>
+    <span class="p">}</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addMarker&quot;</span><span class="p">,</span> <span class="n">marker_data</span><span class="p">)</span>
 </code></pre></div>
         </details>

@@ -5659,15 +5659,27 @@ data sources, custom styling, and interactive features.</p>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">layer</span><span class="o">=</span><span class="n">layer_config</span><span class="p">,</span> <span class="n">before_id</span><span class="o">=</span><span class="n">before_id</span><span class="p">,</span> <span class="n">layer_id</span><span class="o">=</span><span class="n">layer_id</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">add_marker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lng</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lat</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">popup</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_marker</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">lng</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">lat</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">popup</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a marker to the map.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            lng: Longitude coordinate for the marker.</span>
 <span class="sd">            lat: Latitude coordinate for the marker.</span>
 <span class="sd">            popup: Optional popup text to display when marker is clicked.</span>
+<span class="sd">            options: Optional marker options forwarded to MapLibre GL JS.</span>
+<span class="sd">                This supports properties like color, draggable, and opacity.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">marker_data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;coordinates&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">lng</span><span class="p">,</span> <span class="n">lat</span><span class="p">],</span> <span class="s2">&quot;popup&quot;</span><span class="p">:</span> <span class="n">popup</span><span class="p">}</span>
+        <span class="n">marker_data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;coordinates&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">lng</span><span class="p">,</span> <span class="n">lat</span><span class="p">],</span>
+            <span class="s2">&quot;popup&quot;</span><span class="p">:</span> <span class="n">popup</span><span class="p">,</span>
+            <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="n">options</span> <span class="ow">or</span> <span class="p">{},</span>
+        <span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addMarker&quot;</span><span class="p">,</span> <span class="n">marker_data</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">fit_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bounds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span> <span class="n">padding</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -12441,7 +12453,7 @@ search interface for finding locations and can display markers for search result
 
 
 <h3 id="anymap.maplibre.MapLibreMap.add_marker" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">add_marker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lng</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">popup</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">add_marker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lng</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">popup</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
 
 <a href="#anymap.maplibre.MapLibreMap.add_marker" class="headerlink" title="Permanent link">&para;</a></h3>
@@ -12479,19 +12491,38 @@ search interface for finding locations and can display markers for search result
         <td><p>Optional popup text to display when marker is clicked.</p></td>
         <td><code>None</code></td>
       </tr>
+      <tr>
+        <td><code>options</code></td>
+        <td><code>Optional[Dict[str, Any]]</code></td>
+        <td><p>Optional marker options forwarded to MapLibre GL JS.
+This supports properties like color, draggable, and opacity.</p></td>
+        <td><code>None</code></td>
+      </tr>
   </tbody>
 </table>
         <details class="quote">
           <summary>Source code in <code>anymap/maplibre.py</code></summary>
-          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_marker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lng</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lat</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">popup</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_marker</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">lng</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">lat</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">popup</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a marker to the map.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        lng: Longitude coordinate for the marker.</span>
 <span class="sd">        lat: Latitude coordinate for the marker.</span>
 <span class="sd">        popup: Optional popup text to display when marker is clicked.</span>
+<span class="sd">        options: Optional marker options forwarded to MapLibre GL JS.</span>
+<span class="sd">            This supports properties like color, draggable, and opacity.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">marker_data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;coordinates&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">lng</span><span class="p">,</span> <span class="n">lat</span><span class="p">],</span> <span class="s2">&quot;popup&quot;</span><span class="p">:</span> <span class="n">popup</span><span class="p">}</span>
+    <span class="n">marker_data</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;coordinates&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">lng</span><span class="p">,</span> <span class="n">lat</span><span class="p">],</span>
+        <span class="s2">&quot;popup&quot;</span><span class="p">:</span> <span class="n">popup</span><span class="p">,</span>
+        <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="n">options</span> <span class="ow">or</span> <span class="p">{},</span>
+    <span class="p">}</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addMarker&quot;</span><span class="p">,</span> <span class="n">marker_data</span><span class="p">)</span>
 </code></pre></div>
         </details>
