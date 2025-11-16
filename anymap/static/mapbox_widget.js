@@ -273,7 +273,8 @@ function render({ model, el }) {
 
         case 'addMarker':
           const markerData = args[0];
-          const marker = new mapboxgl.Marker()
+          const markerOptions = markerData.options || {};
+          const marker = new mapboxgl.Marker(markerOptions)
             .setLngLat(markerData.coordinates)
             .addTo(map);
 

@@ -5781,7 +5781,8 @@ function render({ model, el }) {
 
           case 'addMarker':
             const markerData = args[0];
-            const marker = new maplibregl.Marker()
+            const markerOptions = markerData.options || {};
+            const marker = new maplibregl.Marker(markerOptions)
               .setLngLat(markerData.coordinates)
               .addTo(map);
 

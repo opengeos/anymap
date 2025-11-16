@@ -180,13 +180,20 @@ class TestMapLibreMap(unittest.TestCase):
 
     def test_add_marker(self):
         """Test adding a marker."""
-        self.map.add_marker(-74.0060, 40.7128, popup="New York")
+        marker_options = {"color": "#ff0000", "opacity": 0.8}
+        self.map.add_marker(
+            -74.0060,
+            40.7128,
+            popup="New York",
+            options=marker_options,
+        )
 
         calls = self.map._js_calls
         self.assertEqual(len(calls), 1)
         self.assertEqual(calls[0]["method"], "addMarker")
         self.assertEqual(calls[0]["args"][0]["coordinates"], [-74.0060, 40.7128])
         self.assertEqual(calls[0]["args"][0]["popup"], "New York")
+        self.assertEqual(calls[0]["args"][0]["options"], marker_options)
 
     def test_fit_bounds(self):
         """Test fitting map to bounds."""
@@ -652,6 +659,17 @@ class TestMapboxMap(unittest.TestCase):
         self.map.set_fog(fog_config)
         calls = self.map._js_calls
         self.assertTrue(any(call["method"] == "setFog" for call in calls))
+
+    def test_add_marker_with_options(self):
+        """Markers should forward custom options to JS calls."""
+        options = {"color": "#3366ff", "draggable": True}
+        self.map._js_calls.clear()
+        self.map.add_marker(lat=37.7749, lng=-122.4194, popup="SF", options=options)
+
+        calls = self.map._js_calls
+        self.assertEqual(len(calls), 1)
+        self.assertEqual(calls[0]["method"], "addMarker")
+        self.assertEqual(calls[0]["args"][0]["options"], options)
 
     def test_add_3d_buildings(self):
         """Test adding 3D buildings layer."""
