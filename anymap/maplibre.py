@@ -2234,6 +2234,475 @@ class MapLibreMap(MapWidget):
 
         self.call_js_method("toggleGeomanControl")
 
+    def add_vector_editor(
+        self,
+        filename: Union[str, Dict[str, Any], "gpd.GeoDataFrame"],
+        properties: Optional[Dict[str, Any]] = None,
+        out_dir: Optional[str] = None,
+        filename_prefix: str = "",
+        time_format: str = "%Y%m%dT%H%M%S",
+        file_ext: str = "geojson",
+        controls: Optional[List[str]] = None,
+        geoman_position: str = "top-left",
+        widget_position: str = "top-right",
+        widget_label: str = "Vector Editor",
+        widget_icon: str = "✎",
+        fit_bounds_options: Optional[Dict] = None,
+        **kwargs: Any,
+    ) -> str:
+        """Add an interactive vector editor with property assignment capabilities.
+
+        This method creates an interactive interface for editing vector features and
+        assigning properties to them. It loads existing vector data, adds a Geoman
+        drawing control, and provides a widget panel for editing feature properties.
+
+        Args:
+            filename: Vector data source - can be:
+                - File path (GeoJSON, shapefile, etc.)
+                - URL to remote GeoJSON
+                - GeoJSON dictionary
+                - GeoDataFrame
+            properties: Dictionary defining editable properties where keys are property
+                names and values define the input type:
+                - List/tuple: Creates dropdown with these options
+                - int: Creates integer input with this default value
+                - float: Creates float input with this default value
+                - str: Creates text input with this default value
+                If None, properties are inferred from the data.
+            out_dir: Directory for exported files. Defaults to current directory.
+            filename_prefix: Prefix for exported filenames.
+            time_format: Format string for timestamp in exported filenames.
+            file_ext: File extension for exports (default: "geojson").
+            controls: List of Geoman drawing controls to enable.
+                Defaults to ["point", "polygon", "line_string", "trash"].
+            geoman_position: Position of Geoman control on map.
+            widget_position: Position of property editor widget on map.
+            widget_label: Label for the property editor widget panel.
+            widget_icon: Icon for the property editor toggle button.
+            fit_bounds_options: Options passed to fit_bounds().
+            **kwargs: Additional arguments passed to add_geoman_control().
+
+        Returns:
+            str: The control ID of the added widget control.
+
+        Example:
+            >>> m = MapLibreMap()
+            >>> m.add_basemap("Esri.WorldImagery")
+            >>> url = "https://example.com/buildings.geojson"
+            >>> properties = {
+            ...     "class": ["residential", "commercial", "industrial"],
+            ...     "height": 0.0,
+            ...     "floors": 1
+            ... }
+            >>> control_id = m.add_vector_editor(url, properties=properties)
+        """
+        from datetime import datetime
+        import os
+
+        if not HAS_GEOPANDAS:
+            raise ImportError(
+                "geopandas is required for add_vector_editor. "
+                "Install it with: pip install geopandas"
+            )
+
+        import geopandas as gpd
+
+        # Load vector data
+        if isinstance(filename, str):
+            # Check if it's a URL or file path
+            if filename.startswith(("http://", "https://")):
+                gdf = gpd.read_file(filename)
+            else:
+                _, ext = os.path.splitext(filename)
+                ext = ext.lower()
+                if ext in [".parquet", ".pq", ".geoparquet"]:
+                    gdf = gpd.read_parquet(filename)
+                else:
+                    gdf = gpd.read_file(filename)
+        elif isinstance(filename, dict):
+            gdf = gpd.GeoDataFrame.from_features(filename, crs="EPSG:4326")
+        elif isinstance(filename, gpd.GeoDataFrame):
+            gdf = filename
+        else:
+            raise ValueError(
+                "filename must be a string (path/URL), dict (GeoJSON), or GeoDataFrame"
+            )
+
+        # Ensure WGS84
+        gdf = gdf.to_crs(epsg=4326)
+
+        # Set output directory
+        if out_dir is None:
+            out_dir = os.getcwd()
+
+        # Infer properties from GeoDataFrame if not provided
+        if properties is None:
+            properties = {}
+            dtypes = gdf.dtypes.to_dict()
+            for key, value in dtypes.items():
+                if key != "geometry":
+                    if value == "object":
+                        if gdf[key].nunique() < 10:
+                            properties[key] = gdf[key].unique().tolist()
+                        else:
+                            properties[key] = ""
+                    elif value in ["int32", "int64"]:
+                        properties[key] = 0
+                    elif value in ["float32", "float64"]:
+                        properties[key] = 0.0
+                    elif value == "bool":
+                        properties[key] = gdf[key].unique().tolist()
+                    else:
+                        properties[key] = ""
+
+        # Select only property columns plus geometry
+        columns = list(properties.keys())
+        gdf = gdf[columns + ["geometry"]]
+        geojson = gdf.__geo_interface__
+
+        # Get bounds and fit map
+        bounds = utils.geojson_bounds(geojson)
+        if fit_bounds_options is None:
+            fit_bounds_options = {}
+        self.fit_bounds(bounds)
+
+        # Prepare GeoJSON features for Geoman with proper IDs
+        geoman_geojson = {"type": "FeatureCollection", "features": []}
+
+        for idx, feature in enumerate(geojson["features"]):
+            # Create a unique ID for each feature
+            feature_id = f"feature-{uuid.uuid4().hex[:8]}"
+
+            # Determine the Geoman shape type from geometry
+            geom_type = feature["geometry"]["type"]
+            if geom_type == "Point":
+                gm_shape = "marker"
+            elif geom_type in ["Polygon", "MultiPolygon"]:
+                gm_shape = "polygon"
+            elif geom_type in ["LineString", "MultiLineString"]:
+                gm_shape = "line"
+            else:
+                gm_shape = "polygon"
+
+            # Create Geoman-compatible feature with preserved properties
+            # Start with original properties, then add Geoman-specific ones
+            feature_properties = feature.get("properties", {}).copy()
+            feature_properties["__gm_id"] = feature_id
+            feature_properties["__gm_shape"] = gm_shape
+
+            geoman_feature = {
+                "type": "Feature",
+                "id": feature_id,
+                "properties": feature_properties,
+                "geometry": feature["geometry"],
+            }
+
+            geoman_geojson["features"].append(geoman_feature)
+
+        # Set default controls if not provided
+        if controls is None:
+            controls = {
+                "draw": {
+                    "point": {"active": True},
+                    "polygon": {"active": True},
+                    "line_string": {"active": True},
+                },
+                "edit": {
+                    "change": {"active": False},  # Disable edit mode button
+                    "trash": {"active": True},  # Keep delete button
+                },
+                "helper": {
+                    "click_to_edit": {"active": True}  # Enable click-to-edit mode
+                },
+            }
+
+        # Add Geoman control first
+        self.add_geoman_control(position=geoman_position, controls=controls, **kwargs)
+
+        # Now load the features into Geoman (will be editable with JS fix)
+        self.set_geoman_data(geoman_geojson)
+
+        # Initialize feature properties storage
+        # Map Geoman feature IDs to properties from GeoDataFrame
+        draw_features = {}
+        for idx, (row_idx, row) in enumerate(gdf.iterrows()):
+            # Get the corresponding Geoman feature ID
+            feature_id = geoman_geojson["features"][idx]["id"]
+
+            feature_props = {}
+            for prop in properties.keys():
+                if prop in gdf.columns:
+                    val = row[prop]
+                    # Convert numpy/pandas types to Python native types
+                    if hasattr(val, "item"):
+                        val = val.item()
+                    feature_props[prop] = val
+                else:
+                    # Use default value from properties
+                    if isinstance(properties[prop], (list, tuple)):
+                        feature_props[prop] = properties[prop][0]
+                    else:
+                        feature_props[prop] = properties[prop]
+            draw_features[feature_id] = feature_props
+
+        # Store on map instance
+        if not hasattr(self, "draw_features"):
+            self.draw_features = {}
+        self.draw_features.update(draw_features)
+
+        # Expand dropdown options to include values from loaded GeoDataFrame
+        for key, values in properties.items():
+            if isinstance(values, (list, tuple)) and key in gdf.columns:
+                # Get unique values from the loaded data
+                existing_values = set(gdf[key].dropna().unique())
+
+                # Merge with provided options
+                options_set = set(values)
+                merged_options = options_set.union(existing_values)
+                merged_list = [val for val in values if val in merged_options]
+                for val in sorted(existing_values):
+                    if val not in options_set:
+                        merged_list.append(val)
+                properties[key] = merged_list
+
+        # Create property editing widgets
+        prop_widgets = widgets.VBox()
+        output = widgets.Output()
+
+        # Add a label to show which feature is selected
+        feature_label = widgets.HTML(
+            value="<p style='margin:5px 0; color:#666; font-size:12px;'>No feature selected</p>"
+        )
+
+        for key, values in properties.items():
+            if isinstance(values, (list, tuple)):
+                prop_widget = widgets.Dropdown(
+                    options=values,
+                    description=key,
+                    style={"description_width": "initial"},
+                )
+            elif isinstance(values, int):
+                prop_widget = widgets.IntText(
+                    value=values,
+                    description=key,
+                    style={"description_width": "initial"},
+                )
+            elif isinstance(values, float):
+                prop_widget = widgets.FloatText(
+                    value=values,
+                    description=key,
+                    style={"description_width": "initial"},
+                )
+            else:
+                prop_widget = widgets.Text(
+                    value=str(values),
+                    description=key,
+                    style={"description_width": "initial"},
+                )
+            prop_widgets.children += (prop_widget,)
+
+        # Create buttons
+        button_layout = widgets.Layout(width="100px")
+        save_btn = widgets.Button(
+            description="Save",
+            button_style="primary",
+            layout=button_layout,
+            tooltip="Save current feature properties",
+        )
+        export_btn = widgets.Button(
+            description="Export",
+            button_style="success",
+            layout=button_layout,
+            tooltip="Export all features to file",
+        )
+        reset_btn = widgets.Button(
+            description="Reset",
+            button_style="warning",
+            layout=button_layout,
+            tooltip="Reset to default values",
+        )
+
+        # Track currently selected feature for property editing
+        current_feature_id = {"id": None}
+
+        # Create a dropdown to select features
+        feature_selector = widgets.Dropdown(
+            options=[],
+            description="Select Feature:",
+            style={"description_width": "initial"},
+            layout=widgets.Layout(width="100%", margin="5px 0"),
+        )
+
+        # Update feature selector when geoman_data changes
+        def update_feature_list(change):
+            """Update the feature dropdown when features change."""
+            geoman_data = change["new"]
+            if geoman_data and "features" in geoman_data:
+                features = geoman_data["features"]
+                if len(features) > 0:
+                    # Create options: (label, feature_id)
+                    options = [
+                        (f"Feature {idx + 1}", f.get("id"))
+                        for idx, f in enumerate(features)
+                        if f.get("id")
+                    ]
+                    feature_selector.options = options
+
+                    # If no feature selected yet, select the first one
+                    if current_feature_id["id"] is None and len(options) > 0:
+                        feature_selector.value = options[0][1]
+                else:
+                    feature_selector.options = []
+                    current_feature_id["id"] = None
+                    feature_label.value = "<p style='margin:5px 0; color:#666; font-size:12px;'>No features available</p>"
+            else:
+                feature_selector.options = []
+                current_feature_id["id"] = None
+                feature_label.value = "<p style='margin:5px 0; color:#666; font-size:12px;'>No features available</p>"
+
+        self.observe(update_feature_list, names="geoman_data")
+
+        # When user selects a feature from dropdown
+        def on_feature_selected(change):
+            """Update property widgets when user selects a feature."""
+            feature_id = change["new"]
+            if not feature_id:
+                return
+
+            current_feature_id["id"] = feature_id
+            feature_label.value = f"<p style='margin:5px 0; color:#0066cc; font-size:12px;'><b>Editing:</b> {feature_id}</p>"
+
+            # Initialize properties for new features
+            if feature_id not in self.draw_features:
+                self.draw_features[feature_id] = {}
+                for key, values in properties.items():
+                    if isinstance(values, (list, tuple)):
+                        self.draw_features[feature_id][key] = values[0]
+                    else:
+                        self.draw_features[feature_id][key] = values
+
+            # Update widgets with feature's current properties
+            feature_props = self.draw_features[feature_id]
+            for prop_widget in prop_widgets.children:
+                key = prop_widget.description
+                if key in feature_props:
+                    value = feature_props[key]
+                    # For dropdowns, only set if value is in options
+                    if hasattr(prop_widget, "options"):
+                        if value in prop_widget.options:
+                            prop_widget.value = value
+                        elif len(prop_widget.options) > 0:
+                            prop_widget.value = prop_widget.options[0]
+                    else:
+                        prop_widget.value = value
+
+        feature_selector.observe(on_feature_selected, names="value")
+
+        # Trigger initial update
+        update_feature_list({"new": self.geoman_data})
+
+        # Save button handler
+        def on_save_click(b):
+            output.clear_output()
+            feature_id = current_feature_id["id"]
+            if feature_id is not None:
+                # Save widget values to feature properties
+                for prop_widget in prop_widgets.children:
+                    key = prop_widget.description
+                    self.draw_features[feature_id][key] = prop_widget.value
+                with output:
+                    print("✓ Feature properties saved")
+            else:
+                with output:
+                    print(
+                        "⚠ No feature selected. Click on a feature to edit it or draw a new one."
+                    )
+
+        save_btn.on_click(on_save_click)
+
+        # Export button handler
+        def on_export_click(b):
+            output.clear_output()
+            current_time = datetime.now().strftime(time_format)
+            export_filename = os.path.join(
+                out_dir, f"{filename_prefix}{current_time}.{file_ext}"
+            )
+
+            # Update feature collection with saved properties
+            geoman_data = self.geoman_data
+            if geoman_data and "features" in geoman_data:
+                for idx, feature in enumerate(geoman_data["features"]):
+                    feature_id = feature.get("id")
+                    if feature_id and feature_id in self.draw_features:
+                        # Merge Geoman properties with our custom properties
+                        props = dict(feature.get("properties", {}))
+                        props.update(self.draw_features[feature_id])
+                        geoman_data["features"][idx]["properties"] = props
+
+                # Export to file
+                export_gdf = gpd.GeoDataFrame.from_features(
+                    geoman_data, crs="EPSG:4326"
+                )
+                export_gdf.to_file(export_filename, driver="GeoJSON")
+
+                with output:
+                    print(f"✓ Exported: {os.path.basename(export_filename)}")
+            else:
+                with output:
+                    print("⚠ No features to export")
+
+        export_btn.on_click(on_export_click)
+
+        # Reset button handler
+        def on_reset_click(b):
+            output.clear_output()
+            for prop_widget in prop_widgets.children:
+                key = prop_widget.description
+                if key in properties:
+                    if isinstance(properties[key], (list, tuple)):
+                        prop_widget.value = properties[key][0]
+                    else:
+                        prop_widget.value = properties[key]
+            with output:
+                print("✓ Reset to defaults")
+
+        reset_btn.on_click(on_reset_click)
+
+        # Create main widget container
+        info_label = widgets.HTML(
+            value="<i>Select a feature from the dropdown to edit its properties</i>",
+            layout=widgets.Layout(margin="0 0 5px 0"),
+        )
+
+        button_box = widgets.HBox(
+            [save_btn, export_btn, reset_btn],
+            layout=widgets.Layout(margin="10px 0"),
+        )
+
+        main_widget = widgets.VBox(
+            [
+                info_label,
+                feature_selector,
+                feature_label,
+                prop_widgets,
+                button_box,
+                output,
+            ],
+            layout=widgets.Layout(padding="10px"),
+        )
+
+        # Add widget control to map
+        control_id = self.add_widget_control(
+            main_widget,
+            label=widget_label,
+            icon=widget_icon,
+            position=widget_position,
+            collapsed=True,
+            panel_width=320,
+        )
+
+        return control_id
+
     def add_measures_control(
         self,
         position: str = "top-left",

@@ -1335,3 +1335,28 @@ def download_file(
                     tar_ref.extractall(os.path.dirname(output))
 
     return os.path.abspath(output)
+
+
+def geojson_bounds(geojson: dict) -> Optional[list]:
+    """
+    Calculate the bounds of a GeoJSON object.
+
+    This function uses the shapely library to calculate the bounds of a GeoJSON object.
+    If the shapely library is not installed, it will print a message and return None.
+
+    Args:
+        geojson (dict): A dictionary representing a GeoJSON object.
+
+    Returns:
+        A list of bounds (minx, miny, maxx, maxy) if shapely is installed, None otherwise.
+    """
+    try:
+        import shapely
+    except ImportError:
+        print("shapely is not installed")
+        return
+
+    if isinstance(geojson, str):
+        geojson = json.loads(geojson)
+
+    return list(shapely.bounds(shapely.from_geojson(json.dumps(geojson))))

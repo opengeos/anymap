@@ -3936,31 +3936,9 @@ function render({ model, el }) {
       try {
         const collection = el._pendingGeomanData;
 
-        // Clear/replace features in all Geoman sources
-        // Drawn features may be in different sources initially
-        if (geomanInstance.features.setSourceGeoJson) {
-          const sources = ['gm_main', 'gm_temporary', 'gm_standby'];
-          let successCount = 0;
-
-          sources.forEach(sourceName => {
-            try {
-              geomanInstance.features.setSourceGeoJson({
-                geoJson: collection,
-                sourceName: sourceName
-              });
-              successCount++;
-            } catch (sourceError) {
-              // Source might not exist, which is okay
-            }
-          });
-
-          if (successCount === 0) {
-            deleteAndImportFeatures(geomanInstance, collection);
-          }
-        } else {
-          // Use delete/import approach if setSourceGeoJson not available
-          deleteAndImportFeatures(geomanInstance, collection);
-        }
+        // Always use delete/import approach to ensure features are editable
+        // setSourceGeoJson doesn't make features properly editable
+        deleteAndImportFeatures(geomanInstance, collection);
 
         el._pendingGeomanData = null;
         if (!skipExport) {
@@ -3996,6 +3974,12 @@ function render({ model, el }) {
         // Import new features if any
         if (collection.features.length > 0) {
           geomanInstance.features.importGeoJson(collection);
+
+          // Disable global edit mode after import so vertices are hidden by default
+          // User will need to select individual features to edit them
+          if (geomanInstance.globalEditModeEnabled && geomanInstance.globalEditModeEnabled()) {
+            geomanInstance.disableGlobalEditMode();
+          }
         }
       }
     };
