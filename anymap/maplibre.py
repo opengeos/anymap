@@ -2481,8 +2481,6 @@ class MapLibreMap(MapWidget):
 
         # Get bounds and fit map
         bounds = utils.geojson_bounds(geojson)
-        if fit_bounds_options is None:
-            fit_bounds_options = {}
         self.fit_bounds(bounds)
 
         # Prepare GeoJSON features for Geoman with proper IDs
