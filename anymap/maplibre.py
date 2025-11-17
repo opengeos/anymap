@@ -2350,7 +2350,7 @@ class MapLibreMap(MapWidget):
         filename_prefix: str = "",
         time_format: str = "%Y%m%dT%H%M%S",
         file_ext: str = "geojson",
-        controls: Optional[List[str]] = None,
+        controls: Optional[Dict[str, Any]] = None,
         geoman_position: str = "top-left",
         widget_position: str = "top-right",
         widget_label: str = "Vector Editor",
