@@ -4052,6 +4052,8 @@ function render({ model, el }) {
 
               // Always schedule an export on any Geoman event; debounced above
               scheduleGeomanExport();
+            // Update status for Python
+            updateAndSyncGeomanStatus();
             };
 
             instance.setGlobalEventsListener(geomanListener);
@@ -4062,6 +4064,8 @@ function render({ model, el }) {
             } else {
               exportGeomanData();
             }
+            // Sync initial toolbar status
+            updateAndSyncGeomanStatus();
 
             if (typeof initialCollapsed === 'boolean') {
               requestAnimationFrame(() => {
@@ -4105,6 +4109,59 @@ function render({ model, el }) {
 
     model.on("change:geoman_data", geomanModelListener);
     el._geomanModelListener = geomanModelListener;
+
+    // Helpers to query Geoman toolbar status and sync to Python
+    function getGeomanToolbarStatus(geomanInstance) {
+      const status = {
+        activeButtons: [],
+        isCollapsed: null,
+        globalEditMode: false,
+      };
+      try {
+        status.globalEditMode = !!(geomanInstance.globalEditModeEnabled && geomanInstance.globalEditModeEnabled());
+      } catch (e) {
+        // ignore
+      }
+      try {
+        if (geomanInstance && geomanInstance.control && geomanInstance.control.container) {
+          const container = geomanInstance.control.container;
+          status.isCollapsed = !container.querySelector('.gm-reactive-controls');
+          const buttons = Array.from(container.querySelectorAll('.gm-control-button'));
+          buttons.forEach((btn) => {
+            const pressed = btn.getAttribute('aria-pressed') === 'true'
+              || btn.classList.contains('active')
+              || btn.classList.contains('gm-active');
+            if (pressed) {
+              const label = btn.getAttribute('title')
+                || btn.getAttribute('aria-label')
+                || (btn.textContent ? btn.textContent.trim() : '');
+              if (label) {
+                status.activeButtons.push(label);
+              }
+            }
+          });
+        }
+      } catch (e) {
+        // ignore
+      }
+      return status;
+    }
+
+    function updateAndSyncGeomanStatus() {
+      try {
+        const geomanInstance = map.gm || el._geomanInstance;
+        if (!geomanInstance) return;
+        const status = getGeomanToolbarStatus(geomanInstance);
+        model.set('geoman_status', status);
+        model.save_changes();
+        // Also forward as event for observers if desired
+        const currentEvents = model.get('_js_events') || [];
+        model.set('_js_events', [...currentEvents, { type: 'geoman_status', status }]);
+        model.save_changes();
+      } catch (e) {
+        // ignore
+      }
+    }
 
     const ensureFlatGeobufLibrary = (() => {
       let loaderPromise = null;
@@ -7344,6 +7401,7 @@ function render({ model, el }) {
               if (geomanInstance) {
                 requestAnimationFrame(() => {
                   applyGeomanCollapsedState(geomanInstance, false);
+                  updateAndSyncGeomanStatus();
                 });
               }
             }
@@ -7358,7 +7416,74 @@ function render({ model, el }) {
                   const container = geomanInstance.control.container;
                   const isCollapsed = !container.querySelector('.gm-reactive-controls');
                   applyGeomanCollapsedState(geomanInstance, !isCollapsed);
+                  updateAndSyncGeomanStatus();
                 });
+              }
+            }
+            break;
+
+          case 'getGeomanStatus':
+            // Query and sync current Geoman toolbar status
+            updateAndSyncGeomanStatus();
+            break;
+
+          case 'activateGeomanButton':
+            // Programmatically click a Geoman toolbar button by (partial) name
+            {
+              const targetName = (args[0] || '').toString().toLowerCase();
+              const geomanInstance = map.gm || el._geomanInstance;
+              if (geomanInstance && geomanInstance.control && geomanInstance.control.container) {
+                const container = geomanInstance.control.container;
+                const buttons = Array.from(container.querySelectorAll('.gm-control-button'));
+                let matched = false;
+                for (const btn of buttons) {
+                  const label = (btn.getAttribute('title')
+                    || btn.getAttribute('aria-label')
+                    || (btn.textContent ? btn.textContent.trim() : '')).toLowerCase();
+                  if (label && (label === targetName || label.includes(targetName))) {
+                    btn.click();
+                    matched = true;
+                    break;
+                  }
+                }
+                if (!matched) {
+                  console.warn('Geoman button not found for name:', targetName);
+                }
+                // Sync status after attempted activation
+                requestAnimationFrame(() => updateAndSyncGeomanStatus());
+              }
+            }
+            break;
+
+          case 'deactivateGeomanButton':
+            // Programmatically deactivate (toggle off) a Geoman toolbar button by (partial) name
+            {
+              const targetName = (args[0] || '').toString().toLowerCase();
+              const geomanInstance = map.gm || el._geomanInstance;
+              if (geomanInstance && geomanInstance.control && geomanInstance.control.container) {
+                const container = geomanInstance.control.container;
+                const buttons = Array.from(container.querySelectorAll('.gm-control-button'));
+                let matched = false;
+                for (const btn of buttons) {
+                  const label = (btn.getAttribute('title')
+                    || btn.getAttribute('aria-label')
+                    || (btn.textContent ? btn.textContent.trim() : '')).toLowerCase();
+                  const isActive = btn.getAttribute('aria-pressed') === 'true'
+                    || btn.classList.contains('active')
+                    || btn.classList.contains('gm-active');
+                  if (label && (label === targetName || label.includes(targetName))) {
+                    matched = true;
+                    if (isActive) {
+                      btn.click(); // toggle off
+                    }
+                    break;
+                  }
+                }
+                if (!matched) {
+                  console.warn('Geoman button not found for name:', targetName);
+                }
+                // Sync status after attempted deactivation
+                requestAnimationFrame(() => updateAndSyncGeomanStatus());
               }
             }
             break;

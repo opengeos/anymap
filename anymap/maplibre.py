@@ -97,6 +97,7 @@ class MapLibreMap(MapWidget):
     geoman_data = traitlets.Dict({"type": "FeatureCollection", "features": []}).tag(
         sync=True
     )
+    geoman_status = traitlets.Dict({}).tag(sync=True)
 
     # Define the JavaScript module path
     _esm = _esm_maplibre
@@ -510,6 +511,39 @@ class MapLibreMap(MapWidget):
         if not wrapper_map:
             # Remove the callback entry entirely when no wrappers remain
             del self._interaction_wrappers[callback]
+
+    def get_geoman_status(self) -> Dict[str, Any]:
+        """
+        Get the current Geoman toolbar status synced from the frontend.
+
+        Returns:
+            Dict[str, Any]: Status including keys like 'activeButtons', 'isCollapsed', 'globalEditMode'.
+        """
+        return dict(self.geoman_status or {})
+
+    def refresh_geoman_status(self) -> None:
+        """
+        Request the frontend to refresh and sync the current Geoman toolbar status.
+        """
+        self.call_js_method("getGeomanStatus")
+
+    def activate_geoman_button(self, name: str) -> None:
+        """
+        Programmatically activate/click a Geoman toolbar button by name.
+
+        Args:
+            name: Button name or a unique substring of its label/title (case-insensitive).
+        """
+        self.call_js_method("activateGeomanButton", name)
+
+    def deactivate_geoman_button(self, name: str) -> None:
+        """
+        Programmatically deactivate a Geoman toolbar button by name.
+
+        Args:
+            name: Button name or a unique substring of its label/title (case-insensitive).
+        """
+        self.call_js_method("deactivateGeomanButton", name)
 
     def _repr_html_(self, **kwargs: Any) -> None:
         """
