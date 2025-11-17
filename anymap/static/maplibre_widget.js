@@ -5531,14 +5531,53 @@ function render({ model, el }) {
         lng: e.lngLat.lng,
         lat: e.lngLat.lat
       };
-
-      // Update the clicked trait
+      // Update the clicked trait immediately
       model.set("clicked", clickData);
       model.save_changes();
-
       // Also send as event for backwards compatibility
       sendEvent('click', {
         lngLat: [e.lngLat.lng, e.lngLat.lat],
+        point: [e.point.x, e.point.y]
+      });
+    });
+
+    // Pointer interaction events for Python-side on_interaction()
+    map.on('mousemove', (e) => {
+      sendEvent('mousemove', {
+        lng: e.lngLat.lng,
+        lat: e.lngLat.lat,
+        point: [e.point.x, e.point.y]
+      });
+    });
+
+    map.on('mousedown', (e) => {
+      sendEvent('mousedown', {
+        lng: e.lngLat.lng,
+        lat: e.lngLat.lat,
+        point: [e.point.x, e.point.y]
+      });
+    });
+
+    map.on('mouseup', (e) => {
+      sendEvent('mouseup', {
+        lng: e.lngLat.lng,
+        lat: e.lngLat.lat,
+        point: [e.point.x, e.point.y]
+      });
+    });
+
+    map.on('dblclick', (e) => {
+      sendEvent('dblclick', {
+        lng: e.lngLat.lng,
+        lat: e.lngLat.lat,
+        point: [e.point.x, e.point.y]
+      });
+    });
+
+    map.on('contextmenu', (e) => {
+      sendEvent('contextmenu', {
+        lng: e.lngLat.lng,
+        lat: e.lngLat.lat,
         point: [e.point.x, e.point.y]
       });
     });

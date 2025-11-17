@@ -22,7 +22,7 @@ import pathlib
 import requests
 import sys
 import uuid
-from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
+from typing import Any, Dict, List, Optional, Sequence, Tuple, Union, Callable
 
 import ipywidgets as widgets
 import traitlets
@@ -402,6 +402,114 @@ class MapLibreMap(MapWidget):
         self.container = container
         self.container.sidebar_widgets["Layers"] = self.layer_manager
         return container
+
+    def on_interaction(
+        self,
+        callback: Callable[..., None],
+        types: Optional[List[str]] = None,
+    ) -> None:
+        """
+        Register a unified interaction callback similar to ipyleaflet's on_interaction.
+
+        The callback will be invoked with keyword arguments like:
+            - event: 'interaction'
+            - type: event type (e.g., 'mousemove', 'mousedown', 'mouseup', 'click', 'dblclick', 'contextmenu')
+            - coordinates: [lng, lat] when available
+
+        Example:
+            def handle_map_interaction(**kwargs):
+                print(kwargs)
+
+            m.on_interaction(handle_map_interaction)
+
+        Args:
+            callback: Function that accepts **kwargs for interaction events.
+            types: Optional list of event types to subscribe to. If None, subscribes
+                   to common pointer events.
+        """
+        default_types = [
+            "mousemove",
+            "mousedown",
+            "mouseup",
+            "click",
+            "dblclick",
+            "contextmenu",
+        ]
+        event_types = types if types is not None else default_types
+
+        def _make_wrapper(expected_type: str):
+            def _wrapper(event: Dict[str, Any]) -> None:
+                event_type = event.get("type", expected_type)
+                # Normalize coordinates to [lng, lat] to match MapLibre
+                lat = event.get("lat")
+                lng = event.get("lng")
+                coordinates: Optional[List[float]] = None
+                if lat is not None and lng is not None:
+                    coordinates = [lng, lat]
+                else:
+                    lnglat = event.get("lngLat")
+                    if (
+                        isinstance(lnglat, (list, tuple))
+                        and len(lnglat) == 2
+                        and isinstance(lnglat[0], (int, float))
+                        and isinstance(lnglat[1], (int, float))
+                    ):
+                        # lngLat is already [lng, lat] from JS
+                        coordinates = [lnglat[0], lnglat[1]]
+
+                payload: Dict[str, Any] = {"event": "interaction", "type": event_type}
+                if coordinates is not None:
+                    payload["coordinates"] = coordinates
+
+                # Prefer kwargs-style callback like ipyleaflet; fallback to single dict
+                try:
+                    callback(**payload)
+                except TypeError:
+                    callback(payload)
+
+            return _wrapper
+
+        # Keep track of wrapper functions to allow unobserve later
+        if not hasattr(self, "_interaction_wrappers"):
+            self._interaction_wrappers: Dict[
+                Callable[..., None], Dict[str, Callable[[Dict[str, Any]], None]]
+            ] = {}
+        wrapper_map: Dict[str, Callable[[Dict[str, Any]], None]] = {}
+        for etype in event_types:
+            wrapper = _make_wrapper(etype)
+            self.on_map_event(etype, wrapper)
+            wrapper_map[etype] = wrapper
+        self._interaction_wrappers[callback] = {
+            **self._interaction_wrappers.get(callback, {}),
+            **wrapper_map,
+        }
+
+    def off_interaction(
+        self,
+        callback: Callable[..., None],
+        types: Optional[List[str]] = None,
+    ) -> None:
+        """
+        Unregister a previously registered interaction callback.
+
+        Args:
+            callback: The callback originally passed to on_interaction.
+            types: Optional list of event types to stop observing. If None, all types for this callback are removed.
+        """
+        if not hasattr(self, "_interaction_wrappers"):
+            return
+        wrapper_map = self._interaction_wrappers.get(callback, {})
+        if not wrapper_map:
+            return
+        target_types = types if types is not None else list(wrapper_map.keys())
+        for etype in target_types:
+            wrapper = wrapper_map.get(etype)
+            if wrapper is not None:
+                self.off_map_event(etype, wrapper)
+                del wrapper_map[etype]
+        if not wrapper_map:
+            # Remove the callback entry entirely when no wrappers remain
+            del self._interaction_wrappers[callback]
 
     def _repr_html_(self, **kwargs: Any) -> None:
         """
