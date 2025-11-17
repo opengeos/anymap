@@ -2381,8 +2381,19 @@ class MapLibreMap(MapWidget):
             filename_prefix: Prefix for exported filenames.
             time_format: Format string for timestamp in exported filenames.
             file_ext: File extension for exports (default: "geojson").
-            controls: List of Geoman drawing controls to enable.
-                Defaults to ["point", "polygon", "line_string", "trash"].
+            controls: Dictionary specifying Geoman drawing controls to enable. The dictionary should have keys such as "draw", "edit", and "helper", each mapping to a list of control names to enable.
+                Defaults to:
+                    {
+                        "draw": ["point", "polygon", "line_string"],
+                        "edit": ["edit", "cut", "copy", "merge", "split"],
+                        "helper": ["trash"]
+                    }
+                Example:
+                    controls = {
+                        "draw": ["point", "polygon", "line_string"],
+                        "edit": ["edit", "cut", "copy", "merge", "split"],
+                        "helper": ["trash"]
+                    }
             geoman_position: Position of Geoman control on map.
             widget_position: Position of property editor widget on map.
             widget_label: Label for the property editor widget panel.
