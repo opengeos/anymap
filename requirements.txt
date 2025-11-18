@@ -1,4 +1,5 @@
 anywidget>=0.9.0
+duckdb>=1.4.2
 geopandas
 ipyvuetify
 ipywidgets>=8.0.0

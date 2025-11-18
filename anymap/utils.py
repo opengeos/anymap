@@ -30,6 +30,9 @@ import requests
 import warnings
 from typing import Optional, Dict, Any, Union, List, Tuple
 
+import geopandas as gpd
+import pandas as pd
+
 
 def _in_colab_shell() -> bool:
     """Check if the code is running in a Google Colab shell."""
@@ -1360,3 +1363,101 @@ def geojson_bounds(geojson: dict) -> Optional[list]:
         geojson = json.loads(geojson)
 
     return list(shapely.bounds(shapely.from_geojson(json.dumps(geojson))))
+
+
+def geojson_to_duckdb(
+    geojson_data: Union[dict, str], table_name: str, con: Any, overwrite: bool = True
+) -> None:
+    """Convert a GeoJSON FeatureCollection to a DuckDB table.
+
+    Args:
+        geojson_data: GeoJSON FeatureCollection as a dict or filepath as a string.
+        table_name: Name of the DuckDB table to create.
+        con: The DuckDB connection object.
+        overwrite: If True, replace existing table. If False, create only if not exists.
+            Defaults to True.
+    """
+    # Load GeoJSON into a GeoDataFrame
+
+    if isinstance(geojson_data, str):
+        if geojson_data.endswith(".parquet"):
+            geojson_data = gpd.read_parquet(geojson_data)
+        else:
+            geojson_data = gpd.read_file(geojson_data)
+
+    gdf = gpd.GeoDataFrame.from_features(geojson_data["features"])
+
+    # Optional: If you want to convert geometries to well-known text (WKT)
+    gdf["geometry"] = gdf["geometry"].apply(lambda geom: geom.wkt)
+
+    # Write to DuckDB
+    if overwrite:
+        con.execute(
+            f"CREATE OR REPLACE TABLE {table_name} AS SELECT * EXCLUDE (geometry), ST_GeomFromText(geometry) AS geometry FROM gdf"
+        )
+    else:
+        con.execute(
+            f"CREATE TABLE IF NOT EXISTS {table_name} AS SELECT * EXCLUDE (geometry), ST_GeomFromText(geometry) AS geometry FROM gdf"
+        )
+
+
+def _escape_single_quotes(geojson_str: str) -> str:
+    """Escape single quotes in a string by doubling them.
+
+    This is useful for safely embedding strings in SQL queries that use single-quoted
+    string literals.
+
+    Args:
+        geojson_str: The string to escape.
+
+    Returns:
+        The string with all single quotes doubled (e.g., "'" becomes "''").
+    """
+    return geojson_str.replace("'", "''")
+
+
+def geojson_intersect_duckdb(
+    geojson: dict,
+    table_name: str,
+    con: Any,
+    geom_column: str = "geometry",
+    crs: str = "EPSG:4326",
+    distance: float = None,
+    distance_unit: str = "meters",
+) -> pd.DataFrame:
+    """Query features from a DuckDB table that intersect with a GeoJSON geometry.
+
+    This function performs a spatial intersection query against a DuckDB table with
+    spatial data, returning all features that intersect with the provided GeoJSON geometry.
+
+    Args:
+        geojson: A GeoJSON geometry object (e.g., Polygon, Point, LineString).
+        table_name: Name of the DuckDB table containing spatial data.
+        con: The DuckDB connection object.
+
+    Returns:
+        A pandas DataFrame containing features that intersect with the given geometry.
+        The geometry column is returned as Well-Known Text (WKT). Returns an empty
+        DataFrame with the same column structure if no features intersect.
+    """
+    from shapely import wkt
+
+    # Converting GeoJSON to string and escaping single quotes
+    geojson_str = _escape_single_quotes(json.dumps(geojson))
+    if distance is not None:
+        distance_str = f"ST_DWithin({geom_column}, ST_GeomFromGeoJSON('{geojson_str}'), {distance}, '{distance_unit}')"
+    else:
+        distance_str = (
+            f"ST_Intersects({geom_column}, ST_GeomFromGeoJSON('{geojson_str}'))"
+        )
+    query = f"""
+        SELECT * EXCLUDE ({geom_column}), ST_AsText({geom_column}) AS {geom_column}
+        FROM {table_name}
+        WHERE {distance_str};
+    """
+
+    df = con.sql(query).df()
+
+    df[geom_column] = df[geom_column].apply(lambda x: wkt.loads(x))
+    gdf = gpd.GeoDataFrame(df, geometry=df[geom_column], crs=crs)
+    return gdf

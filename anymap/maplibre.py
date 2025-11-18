@@ -30,6 +30,7 @@ from IPython.display import display
 
 from .base import MapWidget
 
+
 try:
     import geopandas as gpd
 
@@ -1511,6 +1512,7 @@ class MapLibreMap(MapWidget):
         name: Optional[str] = None,
         fit_bounds: bool = True,
         visible: bool = True,
+        opacity: float = 1.0,
         before_id: Optional[str] = None,
         source_args: Optional[Dict] = None,
         **kwargs: Any,
@@ -1533,6 +1535,7 @@ class MapLibreMap(MapWidget):
             fit_bounds: Whether to adjust the viewport of the map to fit the
                 bounds of the data. Defaults to True.
             visible: Whether the layer is visible or not. Defaults to True.
+            opacity: The opacity of the layer. Defaults to 1.0.
             before_id: The ID of an existing layer before which the new layer
                 should be inserted.
             source_args: Additional keyword arguments that are passed to the
@@ -1542,7 +1545,11 @@ class MapLibreMap(MapWidget):
         import geopandas as gpd
 
         if not isinstance(data, gpd.GeoDataFrame):
-            data = gpd.read_file(data).__geo_interface__
+            if isinstance(data, str) and data.endswith(".parquet"):
+                data = gpd.read_parquet(data)
+                data = data.__geo_interface__
+            else:
+                data = gpd.read_file(data).__geo_interface__
         else:
             data = data.__geo_interface__
 
@@ -1554,6 +1561,7 @@ class MapLibreMap(MapWidget):
             name=name,
             fit_bounds=fit_bounds,
             visible=visible,
+            opacity=opacity,
             before_id=before_id,
             source_args=source_args,
             **kwargs,
@@ -2360,6 +2368,17 @@ class MapLibreMap(MapWidget):
         """
 
         return self.geoman_data
+
+    def get_geoman_data_as_gdf(self, crs: str = "EPSG:4326") -> gpd.GeoDataFrame:
+        """Return the current Geoman feature collection as a GeoDataFrame.
+
+        Args:
+            crs: The CRS of the GeoDataFrame. Defaults to "EPSG:4326".
+        Returns:
+            A GeoDataFrame containing the current Geoman feature collection.
+        """
+
+        return gpd.GeoDataFrame.from_features(self.geoman_data["features"], crs=crs)
 
     def collapse_geoman_control(self) -> None:
         """Collapse the Geoman draw control toolbar."""
@@ -3273,6 +3292,8 @@ class MapLibreMap(MapWidget):
         basemap: str,
         layer_id: Optional[str] = None,
         before_id: Optional[str] = None,
+        visible: Optional[bool] = True,
+        **kwargs: Any,
     ) -> None:
         """Add a basemap to the map using xyzservices providers.
 
@@ -3282,6 +3303,8 @@ class MapLibreMap(MapWidget):
             layer_id: Optional ID for the basemap layer. If None, uses basemap name.
             before_id: Optional layer ID to insert this layer before.
                       If None, layer is added on top.
+            visible: Whether the layer should be visible initially.
+            **kwargs: Additional parameters passed to the basemap layer.
 
         Raises:
             ValueError: If the specified basemap is not available.
@@ -3310,6 +3333,8 @@ class MapLibreMap(MapWidget):
             source_url=tile_url,
             paint={"raster-opacity": 1.0},
             before_id=before_id,
+            visible=visible,
+            **kwargs,
         )
 
     def add_draw_control(
