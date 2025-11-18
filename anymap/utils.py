@@ -1458,6 +1458,8 @@ def geojson_intersect_duckdb(
 
     df = con.sql(query).df()
 
-    df[geom_column] = df[geom_column].apply(lambda x: wkt.loads(x))
+    if not df.empty:
+
+        df[geom_column] = df[geom_column].apply(lambda x: wkt.loads(x))
     gdf = gpd.GeoDataFrame(df, geometry=df[geom_column], crs=crs)
     return gdf
