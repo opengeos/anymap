@@ -30,6 +30,7 @@ import requests
 import warnings
 from typing import Optional, Dict, Any, Union, List, Tuple
 
+import duckdb
 import geopandas as gpd
 import pandas as pd
 
@@ -1340,6 +1341,40 @@ def download_file(
     return os.path.abspath(output)
 
 
+def df_to_gdf(
+    df: pd.DataFrame,
+    geometry: str = "geometry",
+    src_crs: str = "EPSG:4326",
+    dst_crs: str = None,
+    **kwargs: Any,
+) -> gpd.GeoDataFrame:
+    """
+    Converts a pandas DataFrame to a GeoPandas GeoDataFrame.
+
+    Args:
+        df: The pandas DataFrame to convert.
+        geometry: The name of the geometry column in the DataFrame.
+        src_crs: The coordinate reference system (CRS) of the GeoDataFrame. Default is "EPSG:4326".
+        dst_crs: The target CRS of the GeoDataFrame. Default is None
+        **kwargs: Additional keyword arguments to be passed to the GeoDataFrame constructor.
+
+    Returns:
+        The converted GeoPandas GeoDataFrame.
+    """
+    import geopandas as gpd
+    from shapely import wkt
+
+    # Convert the geometry column to Shapely geometry objects
+    df[geometry] = df[geometry].apply(lambda x: wkt.loads(x))
+
+    # Convert the pandas DataFrame to a GeoPandas GeoDataFrame
+    gdf = gpd.GeoDataFrame(df, geometry=geometry, crs=src_crs, **kwargs)
+    if dst_crs is not None and dst_crs != src_crs:
+        gdf = gdf.to_crs(dst_crs)
+
+    return gdf
+
+
 def geojson_bounds(geojson: dict) -> Optional[list]:
     """
     Calculate the bounds of a GeoJSON object.
@@ -1377,6 +1412,8 @@ def geojson_to_duckdb(
         overwrite: If True, replace existing table. If False, create only if not exists.
             Defaults to True.
     """
+    duckdb_install_extensions(con)
+
     # Load GeoJSON into a GeoDataFrame
 
     if isinstance(geojson_data, str):
@@ -1392,13 +1429,166 @@ def geojson_to_duckdb(
 
     # Write to DuckDB
     if overwrite:
-        con.execute(
-            f"CREATE OR REPLACE TABLE {table_name} AS SELECT * EXCLUDE (geometry), ST_GeomFromText(geometry) AS geometry FROM gdf"
-        )
+        overwrite_str = "CREATE OR REPLACE TABLE"
     else:
-        con.execute(
-            f"CREATE TABLE IF NOT EXISTS {table_name} AS SELECT * EXCLUDE (geometry), ST_GeomFromText(geometry) AS geometry FROM gdf"
-        )
+        overwrite_str = "CREATE TABLE IF NOT EXISTS"
+    con.execute(
+        f"{overwrite_str} {table_name} AS SELECT * EXCLUDE (geometry), ST_GeomFromText(geometry) AS geometry FROM gdf"
+    )
+
+
+def duckdb_to_geojson(
+    table_name: str,
+    con: Any,
+    output: str = None,
+    src_crs: str = "EPSG:4326",
+    dst_crs: str = "EPSG:4326",
+    columns: Optional[List[str]] = None,
+):
+    """Convert a DuckDB table to a GeoJSON file.
+
+    Args:
+        table_name: Name of the DuckDB table to convert.
+        con: The DuckDB connection object.
+        output: The path to the output file.
+        src_crs: The CRS of the GeoDataFrame.
+        dst_crs: The target CRS of the GeoDataFrame.
+        columns: The columns to include in the output.
+    """
+
+    duckdb_install_extensions(con)
+
+    geom_column = get_duckdb_geometry_column_name(table_name, con)
+
+    if columns is not None:
+        columns_str = ", ".join(columns) + ", "
+    else:
+        columns = get_duckdb_table_columns(table_name, con, exclude_struct=True)
+        columns.remove(geom_column)
+        columns_str = ", ".join(columns) + ", "
+
+    if output is not None:
+        query = f"COPY (SELECT {columns_str} {geom_column} FROM {table_name}) TO '{output}' WITH (FORMAT GDAL, DRIVER 'GeoJSON')"
+        con.sql(query)
+    else:
+
+        df = con.sql(
+            f"SELECT {columns_str} ST_AsText({geom_column}) AS {geom_column} FROM {table_name}"
+        ).df()
+        gdf = df_to_gdf(df, geometry=geom_column, src_crs=src_crs, dst_crs=dst_crs)
+        return gdf.__geo_interface__
+
+
+def duckdb_to_gdf(
+    table_name: str,
+    con: Any,
+    columns: Optional[List[str]] = None,
+    src_crs: str = "EPSG:4326",
+    dst_crs: str = "EPSG:4326",
+) -> gpd.GeoDataFrame:
+    """Convert a DuckDB table to a GeoPandas GeoDataFrame.
+
+    Args:
+        table_name: Name of the DuckDB table to convert.
+        con: The DuckDB connection object.
+        columns: The columns to include in the output.
+        src_crs: The CRS of the GeoDataFrame.
+        dst_crs: The target CRS of the GeoDataFrame.
+    """
+    duckdb_install_extensions(con)
+    geom_column = get_duckdb_geometry_column_name(table_name, con)
+
+    # Prepare the columns string
+    if columns is not None:
+        columns_str = ", ".join(columns) + ", "
+    else:
+        columns_str = f"* EXCLUDE ({geom_column}), "
+
+    # Ensure geometry column is included
+    query = f"SELECT {columns_str} ST_AsText({geom_column}) AS {geom_column} FROM {table_name}"
+
+    # Execute the SQL query
+    df = con.sql(query).df()
+    gdf = df_to_gdf(df, geometry=geom_column, src_crs=src_crs, dst_crs=dst_crs)
+    return gdf
+
+
+def vector_to_duckdb(
+    data: Union[dict, str], table_name: str, con: Any, overwrite: bool = True
+) -> None:
+    """Convert a vector data to a DuckDB table.
+
+    Args:
+        data: Vector data as a dict or filepath as a string.
+        table_name: Name of the DuckDB table to create.
+        con: The DuckDB connection object.
+        overwrite: If True, replace existing table. If False, create only if not exists.
+            Defaults to True.
+    """
+    duckdb_install_extensions(con)
+
+    if overwrite:
+        overwrite_str = "CREATE OR REPLACE TABLE"
+    else:
+        overwrite_str = "CREATE TABLE IF NOT EXISTS"
+
+    if isinstance(data, str):
+        if data.endswith(".parquet"):
+            query = (
+                f"{overwrite_str} {table_name} AS SELECT * FROM read_parquet('{data}')"
+            )
+        else:
+            query = f"{overwrite_str} {table_name} AS SELECT * FROM ST_Read('{data}')"
+
+        con.sql(query)
+    elif isinstance(data, dict):
+        geojson_to_duckdb(data, table_name, con, overwrite)
+    elif isinstance(data, gpd.GeoDataFrame):
+        geojson_to_duckdb(data.__geo_interface__, table_name, con, overwrite)
+    else:
+        raise ValueError(f"Unsupported data type: {type(data)}")
+
+
+def duckdb_to_vector(
+    table_name: str, con: Any, output: str, driver: str = None
+) -> None:
+    """Convert a DuckDB table to a vector file.
+
+    Args:
+        table_name: Name of the DuckDB table to convert.
+        con: The DuckDB connection object.
+        output: The path to the output file.
+        driver: The GDAL driver to use.
+    """
+    duckdb_install_extensions(con)
+
+    columns = get_duckdb_table_columns(table_name, con, exclude_struct=True)
+
+    columns_str = ", ".join(columns) + " "
+
+    if isinstance(output, str):
+        if output.lower().endswith(".parquet"):
+            con.sql(f"COPY {table_name} TO '{output}' (FORMAT 'PARQUET')")
+        elif output.lower().endswith(".geojson"):
+            con.sql(
+                f"COPY (SELECT {columns_str} FROM {table_name}) TO '{output}' WITH (FORMAT GDAL, DRIVER 'GeoJSON')"
+            )
+        elif output.lower().endswith(".shp"):
+            con.sql(
+                f"COPY (SELECT {columns_str} FROM {table_name}) TO '{output}' WITH (FORMAT GDAL, DRIVER 'ESRI Shapefile')"
+            )
+        elif output.lower().endswith(".gpkg "):
+            con.sql(
+                f"COPY (SELECT {columns_str} FROM {table_name}) TO '{output}' WITH (FORMAT GDAL, DRIVER 'GPKG')"
+            )
+        elif driver is not None:
+            con.sql(
+                f"COPY (SELECT {columns_str} FROM {table_name}) TO '{output}' WITH (FORMAT GDAL, DRIVER '{driver}')"
+            )
+        else:
+            raise ValueError(
+                f"Unsupported output format: {output}. Use .parquet, .geojson, .shp, .gpkg, or specify a driver."
+            )
 
 
 def _escape_single_quotes(geojson_str: str) -> str:
@@ -1420,7 +1610,6 @@ def geojson_intersect_duckdb(
     geojson: dict,
     table_name: str,
     con: Any,
-    geom_column: str = "geometry",
     crs: str = "EPSG:4326",
     distance: float = None,
     distance_unit: str = "meters",
@@ -1434,7 +1623,9 @@ def geojson_intersect_duckdb(
         geojson: A GeoJSON geometry object (e.g., Polygon, Point, LineString).
         table_name: Name of the DuckDB table containing spatial data.
         con: The DuckDB connection object.
-
+        crs: The CRS of the GeoJSON geometry.
+        distance: The distance in the distance unit to filter features.
+        distance_unit: The unit of the distance.
     Returns:
         A pandas DataFrame containing features that intersect with the given geometry.
         The geometry column is returned as Well-Known Text (WKT). Returns an empty
@@ -1442,8 +1633,12 @@ def geojson_intersect_duckdb(
     """
     from shapely import wkt
 
+    duckdb_install_extensions(con)
+
     # Converting GeoJSON to string and escaping single quotes
     geojson_str = _escape_single_quotes(json.dumps(geojson))
+
+    geom_column = get_duckdb_geometry_column_name(table_name, con)
     if distance is not None:
         distance_str = f"ST_DWithin({geom_column}, ST_GeomFromGeoJSON('{geojson_str}'), {distance}, '{distance_unit}')"
     else:
@@ -1463,3 +1658,82 @@ def geojson_intersect_duckdb(
         df[geom_column] = df[geom_column].apply(lambda x: wkt.loads(x))
     gdf = gpd.GeoDataFrame(df, geometry=df[geom_column], crs=crs)
     return gdf
+
+
+def get_crs(filepath: str) -> str:
+    """Get the CRS of a file.
+
+    Args:
+        filepath: The path to the file.
+
+    Returns:
+        The CRS of the file.
+    """
+    con = duckdb.connect()
+    duckdb_install_extensions(con)
+
+    result = con.sql(
+        f"""
+SELECT CONCAT(layers[1].geometry_fields[1].crs.auth_name, ':', layers[1].geometry_fields[1].crs.auth_code) AS crs_string
+FROM ST_Read_Meta('{filepath}')
+"""
+    ).fetchone()
+
+    if result is None:
+        return None
+    else:
+        return result[0]
+
+
+def get_duckdb_geometry_column_name(table_name: str, con: Any) -> str:
+    """Get the name of the geometry column in a DuckDB table.
+
+    Args:
+        table_name: Name of the DuckDB table.
+        con: The DuckDB connection object.
+
+    Returns:
+        The name of the geometry column.
+    """
+    columns = con.sql(f"DESCRIBE {table_name}").df()["column_name"].tolist()
+    if "geometry" in columns:
+        return "geometry"
+    elif "geom" in columns:
+        return "geom"
+    else:
+        raise ValueError(f"No geometry column found in table {table_name}")
+
+
+def duckdb_install_extensions(con: Any, extensions: Optional[List[str]] = None) -> None:
+    """Install extensions in a DuckDB connection.
+
+    Args:
+        con: The DuckDB connection object.
+        extensions: The list of extensions to install.
+    """
+    if extensions is None:
+        extensions = ["spatial", "httpfs"]
+    for extension in extensions:
+        con.install_extension(extension)
+        con.load_extension(extension)
+
+
+def get_duckdb_table_columns(
+    table_name: str, con: Any, exclude_struct: bool = True
+) -> List[str]:
+    """Get the columns of a DuckDB table.
+
+    Args:
+        table_name: Name of the DuckDB table.
+        con: The DuckDB connection object.
+
+    Returns:
+        The columns of the DuckDB table.
+    """
+
+    df = con.sql(f"DESCRIBE {table_name}").df()
+
+    if exclude_struct:
+        df = df[~df["column_type"].str.contains("STRUCT")]
+
+    return df["column_name"].tolist()
