@@ -8393,7 +8393,16 @@ function render({ model, el }) {
                         document.head.appendChild(s);
                       });
                     }
-                    const geojson = window.osmtogeojson(osmJson, { flatProperties: true });
+                    let geojson = null;
+                    if (typeof window.osmtogeojson === 'function') {
+                      geojson = window.osmtogeojson(osmJson, { flatProperties: true });
+                    } else if (typeof convertOsmTransportToGeoJsonLite === 'function') {
+                      console.warn('osmtogeojson unavailable, using convertOsmTransportToGeoJsonLite fallback');
+                      geojson = convertOsmTransportToGeoJsonLite(osmJson);
+                    } else {
+                      console.warn('Neither osmtogeojson nor convertOsmTransportToGeoJsonLite are available; cannot convert OSM data.');
+                      return;
+                    }
                     if (geojson && geojson.type === 'FeatureCollection') {
                       importGeomanData(geojson);
                     }
