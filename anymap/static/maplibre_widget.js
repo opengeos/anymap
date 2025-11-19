@@ -4288,7 +4288,7 @@ function render({ model, el }) {
                 try {
                   importGeomanData(collection);
                 } catch (e) {
-                  console.warn('Failed to import OSM transport GeoJSON into Geoman:', e);
+                  console.warn('Failed to import OSM transport GeoJSON into Geoman: ' + (e && e.message ? e.message : e));
                 }
               } finally {
                 hideOsmLoading();
