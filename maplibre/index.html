@@ -2706,6 +2706,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.load_osm_transport_to_geoman" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        load_osm_transport_to_geoman()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.load_terra_draw_data" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4214,6 +4225,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.load_osm_transport_to_geoman" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        load_osm_transport_to_geoman()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.load_terra_draw_data" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5275,6 +5297,41 @@ data sources, custom styling, and interactive features.</p>
 <span class="sd">            name: Button name or a unique substring of its label/title (case-insensitive).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;deactivateGeomanButton&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+    <span class="c1"># ---------------------------------------------------------------------</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_osm_transport_to_geoman</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">bbox</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">keys</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Search OSM transportation data (node, way, relation) within a bbox and import</span>
+<span class="sd">        the results into the Geoman control for editing.</span>
+
+<span class="sd">        This triggers a frontend Overpass API query and **replaces** the current Geoman</span>
+<span class="sd">        editable features with the fetched GeoJSON. **This is a destructive operation:**</span>
+<span class="sd">        any existing editable features will be permanently removed and replaced.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            There is currently no way to append features; this method always replaces</span>
+<span class="sd">            all existing Geoman editable features. If you wish to preserve your current</span>
+<span class="sd">            work, please save or export it before calling this method.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            bbox: Optional [west, south, east, north] (WGS84). If None, uses map bounds.</span>
+<span class="sd">            keys: Optional list of OSM keys to include, default [&#39;highway&#39;, &#39;railway&#39;].</span>
+<span class="sd">            timeout: Overpass API timeout in seconds (default 25).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">bbox</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">bbox</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">))</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">bbox</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;bbox must be [west, south, east, north].&quot;</span><span class="p">)</span>
+            <span class="n">options</span><span class="p">[</span><span class="s2">&quot;bbox&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">bbox</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">keys</span><span class="p">:</span>
+            <span class="n">options</span><span class="p">[</span><span class="s2">&quot;keys&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">timeout</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">options</span><span class="p">[</span><span class="s2">&quot;timeout&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;loadOsmTransportToGeoman&quot;</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
 
     <span class="c1"># ---------------------------------------------------------------------</span>
     <span class="c1"># Geoman &quot;Union&quot; Mode (free implementation using GeoPandas/Shapely)</span>
@@ -18569,6 +18626,104 @@ It initializes the MapScene object that connects MapLibre GL JS with Three.js.</
 
     <span class="c1"># Send to JavaScript</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;loadDrawData&quot;</span><span class="p">,</span> <span class="n">geojson_data</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="anymap.maplibre.MapLibreMap.load_osm_transport_to_geoman" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">load_osm_transport_to_geoman</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bbox</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span></code>
+
+
+<a href="#anymap.maplibre.MapLibreMap.load_osm_transport_to_geoman" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Search OSM transportation data (node, way, relation) within a bbox and import
+the results into the Geoman control for editing.</p>
+<p>This triggers a frontend Overpass API query and <strong>replaces</strong> the current Geoman
+editable features with the fetched GeoJSON. <strong>This is a destructive operation:</strong>
+any existing editable features will be permanently removed and replaced.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>There is currently no way to append features; this method always replaces
+all existing Geoman editable features. If you wish to preserve your current
+work, please save or export it before calling this method.</p>
+</div>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>bbox</code></td>
+        <td><code>Optional[List[float]]</code></td>
+        <td><p>Optional [west, south, east, north] (WGS84). If None, uses map bounds.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>keys</code></td>
+        <td><code>Optional[List[str]]</code></td>
+        <td><p>Optional list of OSM keys to include, default ['highway', 'railway'].</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>timeout</code></td>
+        <td><code>int</code></td>
+        <td><p>Overpass API timeout in seconds (default 25).</p></td>
+        <td><code>25</code></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>anymap/maplibre.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">load_osm_transport_to_geoman</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">bbox</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">keys</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Search OSM transportation data (node, way, relation) within a bbox and import</span>
+<span class="sd">    the results into the Geoman control for editing.</span>
+
+<span class="sd">    This triggers a frontend Overpass API query and **replaces** the current Geoman</span>
+<span class="sd">    editable features with the fetched GeoJSON. **This is a destructive operation:**</span>
+<span class="sd">    any existing editable features will be permanently removed and replaced.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        There is currently no way to append features; this method always replaces</span>
+<span class="sd">        all existing Geoman editable features. If you wish to preserve your current</span>
+<span class="sd">        work, please save or export it before calling this method.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        bbox: Optional [west, south, east, north] (WGS84). If None, uses map bounds.</span>
+<span class="sd">        keys: Optional list of OSM keys to include, default [&#39;highway&#39;, &#39;railway&#39;].</span>
+<span class="sd">        timeout: Overpass API timeout in seconds (default 25).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">options</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="n">bbox</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">bbox</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">))</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">bbox</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;bbox must be [west, south, east, north].&quot;</span><span class="p">)</span>
+        <span class="n">options</span><span class="p">[</span><span class="s2">&quot;bbox&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">bbox</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">keys</span><span class="p">:</span>
+        <span class="n">options</span><span class="p">[</span><span class="s2">&quot;keys&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">timeout</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">options</span><span class="p">[</span><span class="s2">&quot;timeout&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;loadOsmTransportToGeoman&quot;</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
 </code></pre></div>
         </details>
     </div>
