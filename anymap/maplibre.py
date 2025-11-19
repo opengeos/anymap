@@ -110,7 +110,7 @@ class MapLibreMap(MapWidget):
         zoom: float = 1.0,
         style: Union[str, Dict[str, Any]] = "dark-matter",
         width: str = "100%",
-        height: str = "600px",
+        height: str = "650px",
         bearing: float = 0.0,
         pitch: float = 0.0,
         controls: Dict[str, str] = {
@@ -135,7 +135,7 @@ class MapLibreMap(MapWidget):
             zoom: Initial zoom level (typically 0-20). Default is 1.0.
             style: MapLibre style URL string or style object dictionary.
             width: Widget width as CSS string (e.g., "100%", "800px").
-            height: Widget height as CSS string (e.g., "600px", "50vh").
+            height: Widget height as CSS string (e.g., "650px", "50vh").
             bearing: Map bearing (rotation) in degrees (0-360).
             pitch: Map pitch (tilt) in degrees (0-60).
             controls: Dictionary of control names and their positions. Default is {
