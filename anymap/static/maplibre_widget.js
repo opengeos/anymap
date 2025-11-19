@@ -4190,7 +4190,11 @@ function render({ model, el }) {
                 }
               }
               if (!osmJson) {
-                throw lastErr || new Error('All Overpass endpoints failed');
+                const endpointList = endpoints.join(', ');
+                const lastErrMsg = lastErr && lastErr.message ? lastErr.message : String(lastErr);
+                throw new Error(
+                  `All Overpass endpoints failed. Tried: ${endpointList}. Last error: ${lastErrMsg}`
+                );
               }
               // Try full converter; fall back to lite converter for transport use-cases
               const loaded = await ensureOsmToGeojsonLoaded();
