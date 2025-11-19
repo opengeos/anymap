@@ -546,6 +546,147 @@ class MapLibreMap(MapWidget):
         """
         self.call_js_method("deactivateGeomanButton", name)
 
+    # ---------------------------------------------------------------------
+    # Geoman "Union" Mode (free implementation using GeoPandas/Shapely)
+    # ---------------------------------------------------------------------
+    def _union_geoman_features_by_ids(self, feature_ids: List[Union[str, int]]) -> None:
+        """
+        Internal helper to union two Geoman features by their IDs and update geoman_data.
+        """
+        if not HAS_GEOPANDAS:
+            raise ImportError("GeoPandas is required for union operations.")
+
+        from shapely.geometry import shape, mapping  # type: ignore
+        from shapely.ops import unary_union  # type: ignore
+
+        features = list(self.geoman_data.get("features", []))
+        if len(features) == 0:
+            return
+
+        # Build ID -> index map (fallback to index if 'id' missing)
+        id_to_index: Dict[Union[str, int], int] = {}
+        for idx, feat in enumerate(features):
+            fid = feat.get("id", idx)
+            id_to_index[fid] = idx
+
+        # Resolve indices and geometries
+        indices: List[int] = []
+        for fid in feature_ids:
+            if fid in id_to_index:
+                indices.append(id_to_index[fid])
+
+        if len(indices) < 2:
+            return
+
+        # Collect geometries to union
+        geoms = []
+        props = []
+        for idx in indices[:2]:
+            feat = features[idx]
+            try:
+                geom = shape(feat.get("geometry"))
+                geoms.append(geom)
+                props.append(dict(feat.get("properties", {})))
+            except Exception:
+                # Skip invalid geometry
+                pass
+
+        if len(geoms) < 2:
+            return
+
+        # Union geometries
+        merged = unary_union(geoms)
+        if merged.is_empty:
+            return
+
+        # Create new feature; keep properties from the first feature
+        new_feature = {
+            "type": "Feature",
+            "id": str(uuid.uuid4()),
+            "properties": props[0] if props else {},
+            "geometry": mapping(merged),
+        }
+
+        # Remove original features and append merged
+        keep = [f for i, f in enumerate(features) if i not in indices[:2]]
+        keep.append(new_feature)
+
+        # Sync back to widget
+        self.geoman_data = {"type": "FeatureCollection", "features": keep}
+
+    def enable_geoman_union_mode(self) -> None:
+        """
+        Enable a simple 'union mode' without Geoman Pro.
+
+        Behavior:
+            - On each map click, finds the first Geoman polygon under the click.
+            - When two polygons have been clicked, unions them into a single feature,
+              removes the originals, and adds the merged polygon back.
+        """
+        if not HAS_GEOPANDAS:
+            raise ImportError("GeoPandas is required for union mode.")
+
+        import geopandas as gpd  # type: ignore
+        from shapely.geometry import Point  # type: ignore
+
+        self._union_mode_enabled = True
+        self._union_selected_ids: List[Union[str, int]] = []
+
+        def _union_click_handler(**kwargs: Any) -> None:
+            if kwargs.get("type") != "click" or not self._union_mode_enabled:
+                return
+            coords = kwargs.get("coordinates")
+            if not coords or not isinstance(coords, (list, tuple)) or len(coords) != 2:
+                return
+            lng, lat = coords  # coordinates are [lng, lat]
+
+            features = self.geoman_data.get("features", [])
+            if not features:
+                return
+            try:
+                gdf = gpd.GeoDataFrame.from_features(features, crs="EPSG:4326")
+            except Exception:
+                return
+
+            if gdf.empty or gdf.geometry.isna().all():
+                return
+
+            pt = Point(lng, lat)
+            # Prefer contains; fallback to intersects
+            mask = gdf.geometry.contains(pt) | gdf.geometry.intersects(pt)
+            cand = gdf[mask]
+            if cand.empty:
+                return
+
+            # Take the first candidate
+            idx = int(cand.index[0])
+            fid = features[idx].get("id", idx)
+            if fid in self._union_selected_ids:
+                return
+            self._union_selected_ids.append(fid)
+
+            if len(self._union_selected_ids) >= 2:
+                try:
+                    self._union_geoman_features_by_ids(self._union_selected_ids[:2])
+                finally:
+                    self._union_selected_ids = []
+
+        # Store and register the interaction handler
+        self._union_click_callback = _union_click_handler
+        self.on_interaction(self._union_click_callback, types=["click"])
+
+    def disable_geoman_union_mode(self) -> None:
+        """
+        Disable the simple 'union mode' and unregister the click handler.
+        """
+        if getattr(self, "_union_click_callback", None):
+            try:
+                self.off_interaction(self._union_click_callback, types=["click"])
+            except Exception:
+                pass
+        self._union_mode_enabled = False
+        self._union_selected_ids = []
+
     def _repr_html_(self, **kwargs: Any) -> None:
         """
         Displays the map in an IPython environment.
