@@ -4104,6 +4104,18 @@ function render({ model, el }) {
                       btn.classList.add('gm-active');
                       btn.style.boxShadow = '0 0 0 2px rgba(33,150,243,0.8) inset';
                       btn.style.backgroundColor = 'rgba(33, 150, 243, 0.15)';
+                      // If split is on, turn it off to avoid conflicts
+                      try {
+                        if (typeof splitCtrl !== 'undefined' && splitCtrl?._button?.getAttribute('aria-pressed') === 'true') {
+                          splitCtrl.setPressed(false);
+                          const currentEvents = this._model.get("_js_events") || [];
+                          this._model.set("_js_events", [
+                            ...currentEvents,
+                            { type: 'geoman_split_toggled', enabled: false }
+                          ]);
+                          this._model.save_changes();
+                        }
+                      } catch (_e) {}
                     } else {
                       btn.setAttribute('aria-pressed', 'false');
                       btn.classList.remove('gm-active');
@@ -4176,6 +4188,278 @@ function render({ model, el }) {
               map.addControl(unionCtrl, position);
               el._unionControl = unionCtrl;
 
+              // Add Split toggle control (free split mode)
+              class SplitToggleControl {
+                constructor(geomanInstance, modelRef) {
+                  this._geomanInstance = geomanInstance;
+                  this._model = modelRef;
+                  this._container = null;
+                  this._button = null;
+                  this._map = null;
+                  this._active = false;
+                  this._splitCoords = [];
+                  this._onClick = null;
+                  this._onDblClick = null;
+                  this._onKeyDown = null;
+                  this._keyTarget = null;
+                }
+                onAdd(mapRef) {
+                  this._map = mapRef;
+                  const container = document.createElement('div');
+                  container.className = 'maplibregl-ctrl maplibregl-ctrl-group gm-split-ctrl';
+                  const btn = document.createElement('button');
+                  btn.type = 'button';
+                  btn.className = 'maplibregl-ctrl-icon gm-split-button';
+                  btn.setAttribute('title', 'Split');
+                  btn.setAttribute('aria-label', 'Split');
+                  btn.setAttribute('aria-pressed', 'false');
+                  btn.innerHTML = `
+                    <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3" fill="#E0E0E0" stroke="#000" stroke-opacity="0.6" stroke-width="0.6"/>
+                      <polyline points="4,20 12,12 20,4" fill="none" stroke="#1976D2" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <circle cx="12" cy="12" r="2" fill="#90CAF9" stroke="#0D47A1" stroke-width="0.8"/>
+                    </svg>
+                  `;
+                  btn.style.display = 'flex';
+                  btn.style.alignItems = 'center';
+                  btn.style.justifyContent = 'center';
+
+                  this._updateDrawSource = () => {
+                    const srcId = 'split-draw';
+                    const lineId = 'split-draw-line';
+                    const pointId = 'split-draw-points';
+                    const fc = this._splitCoords.length >= 2
+                      ? {
+                          type: 'FeatureCollection',
+                          features: [
+                            {
+                              type: 'Feature',
+                              geometry: { type: 'LineString', coordinates: this._splitCoords },
+                              properties: {}
+                            },
+                            ...this._splitCoords.map(c => ({
+                              type: 'Feature',
+                              geometry: { type: 'Point', coordinates: c },
+                              properties: {}
+                            }))
+                          ]
+                        }
+                      : { type: 'FeatureCollection', features: this._splitCoords.map(c => ({
+                          type: 'Feature',
+                          geometry: { type: 'Point', coordinates: c },
+                          properties: {}
+                        })) };
+                    if (this._map.getSource(srcId)) {
+                      try {
+                        this._map.getSource(srcId).setData(fc);
+                      } catch (e) {
+                        try {
+                          this._map.removeLayer(lineId);
+                          this._map.removeLayer(pointId);
+                        } catch (_err) {}
+                        try {
+                          this._map.removeSource(srcId);
+                        } catch (_err2) {}
+                        this._map.addSource(srcId, { type: 'geojson', data: fc });
+                      }
+                    } else {
+                      this._map.addSource(srcId, { type: 'geojson', data: fc });
+                    }
+                    if (!this._map.getLayer(lineId)) {
+                      try {
+                        this._map.addLayer({
+                          id: lineId,
+                          type: 'line',
+                          source: srcId,
+                          filter: ['==', ['geometry-type'], 'LineString'],
+                          paint: {
+                            'line-color': '#2196F3',
+                            'line-width': 3
+                          }
+                        });
+                      } catch (_e) {}
+                    }
+                    if (!this._map.getLayer(pointId)) {
+                      try {
+                        this._map.addLayer({
+                          id: pointId,
+                          type: 'circle',
+                          source: srcId,
+                          filter: ['==', ['geometry-type'], 'Point'],
+                          paint: {
+                            'circle-radius': 4,
+                            'circle-color': '#64B5F6',
+                            'circle-stroke-color': '#1565C0',
+                            'circle-stroke-width': 1.5
+                          }
+                        });
+                      } catch (_e) {}
+                    }
+                  };
+
+                  this._clearDrawSource = () => {
+                    const srcId = 'split-draw';
+                    const lineId = 'split-draw-line';
+                    const pointId = 'split-draw-points';
+                    if (this._map.getSource(srcId)) {
+                      try { this._map.removeLayer(lineId); } catch (_e) {}
+                      try { this._map.removeLayer(pointId); } catch (_e) {}
+                      try { this._map.removeSource(srcId); } catch (_e) {}
+                    }
+                  };
+
+                  this._cleanupListeners = () => {
+                    if (this._onClick) { this._map.off('click', this._onClick); this._onClick = null; }
+                    if (this._onDblClick) { this._map.off('dblclick', this._onDblClick); this._onDblClick = null; }
+                    if (this._onKeyDown && this._keyTarget) {
+                      try { this._keyTarget.removeEventListener('keydown', this._onKeyDown); } catch (_e) {}
+                      this._onKeyDown = null;
+                      this._keyTarget = null;
+                    }
+                    try { this._map.doubleClickZoom && this._map.doubleClickZoom.enable(); } catch (_e) {}
+                  };
+
+                  this.finishSplit = () => {
+                    if (this._splitCoords.length >= 2) {
+                      try {
+                        const currentEvents = this._model.get("_js_events") || [];
+                        this._model.set("_js_events", [
+                          ...currentEvents,
+                          { type: 'geoman_split_line', coordinates: this._splitCoords }
+                        ]);
+                        this._model.save_changes();
+                      } catch (evtErr) {
+                        console.warn('Failed to notify split line:', evtErr);
+                      }
+                    }
+                    this._splitCoords = [];
+                    this._clearDrawSource();
+                    this._cleanupListeners();
+                    this.setPressed(false);
+                  };
+
+                  this.setPressed = (pressed) => {
+                    if (pressed) {
+                      btn.setAttribute('aria-pressed', 'true');
+                      btn.classList.add('gm-active');
+                      btn.style.boxShadow = '0 0 0 2px rgba(33,150,243,0.8) inset';
+                      btn.style.backgroundColor = 'rgba(33, 150, 243, 0.15)';
+                      this._active = true;
+                      // Deactivate other tools except snapping
+                      const container = this._geomanInstance?.control?.container;
+                      if (container) {
+                        const buttons = Array.from(container.querySelectorAll('.gm-control-button'));
+                        const getButtonLabel = (buttonEl) =>
+                          (buttonEl.getAttribute('title')
+                            || buttonEl.getAttribute('aria-label')
+                            || (buttonEl.textContent ? buttonEl.textContent.trim() : '')).toLowerCase();
+                        const isActiveButton = (buttonEl) =>
+                          buttonEl.getAttribute('aria-pressed') === 'true'
+                          || buttonEl.classList.contains('active')
+                          || buttonEl.classList.contains('gm-active');
+                        buttons.forEach((b) => {
+                          const label = getButtonLabel(b);
+                          const isSnap = label.includes('snap');
+                          if (!isSnap && isActiveButton(b)) b.click();
+                        });
+                      }
+                      // If union is on, turn it off
+                      try {
+                        if (unionCtrl?._button?.getAttribute('aria-pressed') === 'true') {
+                          unionCtrl.setPressed(false);
+                          const currentEvents = this._model.get("_js_events") || [];
+                          this._model.set("_js_events", [
+                            ...currentEvents,
+                            { type: 'geoman_union_toggled', enabled: false }
+                          ]);
+                          this._model.save_changes();
+                        }
+                      } catch (_e) {}
+
+                      // Start drawing
+                      this._splitCoords = [];
+                      try { this._map.doubleClickZoom && this._map.doubleClickZoom.disable(); } catch (_e) {}
+                      this._onClick = (e) => {
+                        this._splitCoords.push([e.lngLat.lng, e.lngLat.lat]);
+                        this._updateDrawSource();
+                      };
+                      this._onDblClick = () => this.finishSplit();
+                      this._map.on('click', this._onClick);
+                      this._map.on('dblclick', this._onDblClick);
+                      // Keyboard support
+                      const keyTarget = this._map.getCanvas ? this._map.getCanvas() : null;
+                      if (keyTarget) {
+                        try { if (!keyTarget.hasAttribute('tabindex')) keyTarget.setAttribute('tabindex', '0'); } catch (_e) {}
+                        this._keyTarget = keyTarget;
+                        this._onKeyDown = (ev) => {
+                          const key = ev.key || ev.code;
+                          if (key === 'Enter') {
+                            ev.preventDefault();
+                            this.finishSplit();
+                          } else if (key === 'Escape' || key === 'Esc') {
+                            ev.preventDefault();
+                            this._splitCoords = [];
+                            this._clearDrawSource();
+                            this._cleanupListeners();
+                            this.setPressed(false);
+                          }
+                        };
+                        keyTarget.addEventListener('keydown', this._onKeyDown);
+                      }
+                    } else {
+                      btn.setAttribute('aria-pressed', 'false');
+                      btn.classList.remove('gm-active');
+                      btn.style.boxShadow = '';
+                      btn.style.backgroundColor = '';
+                      this._active = false;
+                      this._cleanupListeners();
+                      this._splitCoords = [];
+                      this._clearDrawSource();
+                    }
+                  };
+
+                  btn.addEventListener('click', () => {
+                    const currentlyPressed = btn.getAttribute('aria-pressed') === 'true';
+                    const next = !currentlyPressed;
+                    this.setPressed(next);
+                    try {
+                      const currentEvents = this._model.get("_js_events") || [];
+                      this._model.set("_js_events", [
+                        ...currentEvents,
+                        { type: 'geoman_split_toggled', enabled: next }
+                      ]);
+                      this._model.save_changes();
+                    } catch (evtErr) {
+                      console.warn('Failed to notify split toggle:', evtErr);
+                    }
+                  });
+
+                  container.appendChild(btn);
+                  this._container = container;
+                  this._button = btn;
+                  return container;
+                }
+                onRemove() {
+                  this._cleanupListeners();
+                  if (this._container && this._container.parentNode) {
+                    this._container.parentNode.removeChild(this._container);
+                  }
+                  this._map = undefined;
+                }
+              }
+              const splitCtrl = new SplitToggleControl(instance, model);
+              // Initialize split control without adding a separate control container
+              try {
+                splitCtrl.onAdd(map);
+                // Append the split button into the existing union control group to form a single grouped control
+                if (unionCtrl && unionCtrl._container && splitCtrl._button) {
+                  unionCtrl._container.appendChild(splitCtrl._button);
+                  // Point the split control's container to the union container for consistent cleanup/styling
+                  splitCtrl._container = unionCtrl._container;
+                }
+              } catch (_e) {}
+              el._splitControl = splitCtrl;
+
               // Observe Geoman toolbar and auto-deactivate Union when another tool turns active
               try {
                 const geomanContainer = instance?.control?.container;
@@ -4195,16 +4479,29 @@ function render({ model, el }) {
                       const isSnap = label.includes('snap');
                       return !isSnap && isActiveButton(b);
                     });
-                    if (activeNonSnap && unionCtrl?._button?.getAttribute('aria-pressed') === 'true') {
-                      unionCtrl.setPressed(false);
-                      try {
-                        const currentEvents = model.get("_js_events") || [];
-                        model.set("_js_events", [
-                          ...currentEvents,
-                          { type: 'geoman_union_toggled', enabled: false }
-                        ]);
-                        model.save_changes();
-                      } catch (_e) {}
+                    if (activeNonSnap) {
+                      if (unionCtrl?._button?.getAttribute('aria-pressed') === 'true') {
+                        unionCtrl.setPressed(false);
+                        try {
+                          const currentEvents = model.get("_js_events") || [];
+                          model.set("_js_events", [
+                            ...currentEvents,
+                            { type: 'geoman_union_toggled', enabled: false }
+                          ]);
+                          model.save_changes();
+                        } catch (_e) {}
+                      }
+                      if (splitCtrl?._button?.getAttribute('aria-pressed') === 'true') {
+                        splitCtrl.setPressed(false);
+                        try {
+                          const currentEvents = model.get("_js_events") || [];
+                          model.set("_js_events", [
+                            ...currentEvents,
+                            { type: 'geoman_split_toggled', enabled: false }
+                          ]);
+                          model.save_changes();
+                        } catch (_e2) {}
+                      }
                     }
                   });
                   observer.observe(geomanContainer, { attributes: true, subtree: true, attributeFilter: ['class', 'aria-pressed'] });

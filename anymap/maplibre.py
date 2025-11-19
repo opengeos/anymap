@@ -254,6 +254,15 @@ class MapLibreMap(MapWidget):
             self.on_map_event("geoman_union_toggled", self._handle_geoman_union_toggle)
         except Exception:
             pass
+        # Listen for split mode events coming from the toolbar button/drawing in JS
+        try:
+            self.on_map_event("geoman_split_toggled", self._handle_geoman_split_toggle)  # type: ignore[attr-defined]
+        except Exception:
+            pass
+        try:
+            self.on_map_event("geoman_split_line", self._handle_geoman_split_line)  # type: ignore[attr-defined]
+        except Exception:
+            pass
 
     def get_style(self) -> Dict:
         """
@@ -762,6 +771,140 @@ class MapLibreMap(MapWidget):
             self.enable_geoman_union_mode()
         else:
             self.disable_geoman_union_mode()
+
+    # ---------------------------------------------------------------------
+    # Geoman "Split" Mode (free implementation using GeoPandas/Shapely)
+    # ---------------------------------------------------------------------
+    def _split_geoman_features_by_line(self, coordinates: List[List[float]]) -> None:
+        """
+        Split polygons and lines by a user-drawn line and replace originals with parts.
+
+        Args:
+            coordinates: List of [lng, lat] pairs defining the split LineString in EPSG:4326.
+        """
+        if not HAS_GEOPANDAS:
+            raise ImportError("GeoPandas is required for split operations.")
+
+        from shapely.geometry import shape, mapping, LineString  # type: ignore
+        from shapely.ops import split as split_geom  # type: ignore
+
+        if not coordinates or len(coordinates) < 2:
+            return
+
+        try:
+            splitter = LineString(coordinates)
+        except Exception:
+            return
+
+        features = list(self.geoman_data.get("features", []))
+        if len(features) == 0:
+            return
+
+        new_features: List[Dict[str, Any]] = []
+
+        for idx, feat in enumerate(features):
+            try:
+                geom = shape(feat.get("geometry"))
+            except Exception:
+                new_features.append(feat)
+                continue
+
+            geom_type = geom.geom_type
+            # Only split polygons and lines
+            if geom_type not in (
+                "Polygon",
+                "MultiPolygon",
+                "LineString",
+                "MultiLineString",
+            ):
+                new_features.append(feat)
+                continue
+
+            try:
+                if not geom.intersects(splitter):
+                    new_features.append(feat)
+                    continue
+                result = split_geom(geom, splitter)
+            except Exception:
+                # If splitting fails, keep original
+                new_features.append(feat)
+                continue
+
+            # Collect pieces of same dimensionality as original
+            pieces: List[Any] = []
+            for g in getattr(result, "geoms", []):
+                if (
+                    geom_type in ("Polygon", "MultiPolygon")
+                    and g.geom_type == "Polygon"
+                ):
+                    if not g.is_empty and g.area > 0:
+                        pieces.append(g)
+                elif (
+                    geom_type in ("LineString", "MultiLineString")
+                    and g.geom_type == "LineString"
+                ):
+                    if not g.is_empty and g.length > 0:
+                        pieces.append(g)
+
+            if len(pieces) >= 2:
+                props = feat.get("properties", {}) or {}
+                for part in pieces:
+                    new_features.append(
+                        {
+                            "type": "Feature",
+                            "id": str(uuid.uuid4()),
+                            "properties": dict(props),
+                            "geometry": mapping(part),
+                        }
+                    )
+            else:
+                # Not effectively split; keep original
+                new_features.append(feat)
+
+        # Sync back to widget
+        self.geoman_data = {"type": "FeatureCollection", "features": new_features}
+
+    def enable_geoman_split_mode(self) -> None:
+        """Enable free split mode."""
+        if not HAS_GEOPANDAS:
+            raise ImportError("GeoPandas is required for split mode.")
+        # Turning on split mode; union off to avoid conflicts
+        try:
+            self.disable_geoman_union_mode()
+        except Exception:
+            pass
+        self._split_mode_enabled = True
+
+    def disable_geoman_split_mode(self) -> None:
+        """Disable free split mode."""
+        self._split_mode_enabled = False
+
+    def _handle_geoman_split_toggle(self, event: Dict[str, Any]) -> None:
+        enabled = bool(event.get("enabled"))
+        if enabled:
+            self.enable_geoman_split_mode()
+        else:
+            self.disable_geoman_split_mode()
+
+    def _handle_geoman_split_line(self, event: Dict[str, Any]) -> None:
+        if not getattr(self, "_split_mode_enabled", False):
+            return
+        coords = event.get("coordinates")
+        if not isinstance(coords, list) or len(coords) < 2:
+            return
+        # Basic validation of coordinate pairs
+        cleaned: List[List[float]] = []
+        for c in coords:
+            if isinstance(c, (list, tuple)) and len(c) == 2:
+                try:
+                    lng = float(c[0])
+                    lat = float(c[1])
+                except Exception:
+                    continue
+                cleaned.append([lng, lat])
+        if len(cleaned) < 2:
+            return
+        self._split_geoman_features_by_line(cleaned)
 
     def _repr_html_(self, **kwargs: Any) -> None:
         """
