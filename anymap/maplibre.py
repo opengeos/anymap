@@ -571,9 +571,14 @@ class MapLibreMap(MapWidget):
         Search OSM transportation data (node, way, relation) within a bbox and import
         the results into the Geoman control for editing.
 
-        This triggers a frontend Overpass API query and replaces the current Geoman
-        editable features with the fetched GeoJSON.
+        This triggers a frontend Overpass API query and **replaces** the current Geoman
+        editable features with the fetched GeoJSON. **This is a destructive operation:**
+        any existing editable features will be permanently removed and replaced.
 
+        Note:
+            There is currently no way to append features; this method always replaces
+            all existing Geoman editable features. If you wish to preserve your current
+            work, please save or export it before calling this method.
         Args:
             bbox: Optional [west, south, east, north] (WGS84). If None, uses map bounds.
             keys: Optional list of OSM keys to include, default ['highway', 'railway'].
