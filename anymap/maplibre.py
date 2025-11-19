@@ -561,6 +561,41 @@ class MapLibreMap(MapWidget):
         self.call_js_method("deactivateGeomanButton", name)
 
     # ---------------------------------------------------------------------
+    def load_osm_transport_to_geoman(
+        self,
+        bbox: Optional[List[float]] = None,
+        keys: Optional[List[str]] = None,
+        timeout: int = 25,
+    ) -> None:
+        """
+        Search OSM transportation data (node, way, relation) within a bbox and import
+        the results into the Geoman control for editing.
+
+        This triggers a frontend Overpass API query and **replaces** the current Geoman
+        editable features with the fetched GeoJSON. **This is a destructive operation:**
+        any existing editable features will be permanently removed and replaced.
+
+        Note:
+            There is currently no way to append features; this method always replaces
+            all existing Geoman editable features. If you wish to preserve your current
+            work, please save or export it before calling this method.
+        Args:
+            bbox: Optional [west, south, east, north] (WGS84). If None, uses map bounds.
+            keys: Optional list of OSM keys to include, default ['highway', 'railway'].
+            timeout: Overpass API timeout in seconds (default 25).
+        """
+        options: Dict[str, Any] = {}
+        if bbox is not None:
+            if not (isinstance(bbox, (list, tuple)) and len(bbox) == 4):
+                raise ValueError("bbox must be [west, south, east, north].")
+            options["bbox"] = list(bbox)
+        if keys:
+            options["keys"] = list(keys)
+        if timeout is not None:
+            options["timeout"] = int(timeout)
+        self.call_js_method("loadOsmTransportToGeoman", options)
+
+    # ---------------------------------------------------------------------
     # Geoman "Union" Mode (free implementation using GeoPandas/Shapely)
     # ---------------------------------------------------------------------
     def _union_geoman_features_by_ids(self, feature_ids: List[Union[str, int]]) -> None:

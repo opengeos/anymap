@@ -4067,6 +4067,240 @@ function render({ model, el }) {
             // Sync initial toolbar status
             updateAndSyncGeomanStatus();
 
+            // Helpers for OSM transport loading into Geoman
+            async function ensureOsmToGeojsonLoaded() {
+              if (typeof window.osmtogeojson === 'function') return true;
+              const tried = [];
+              const sources = [
+                'https://cdn.jsdelivr.net/npm/osmtogeojson@3.0.0/osmtogeojson.min.js',
+                'https://cdn.jsdelivr.net/npm/osmtogeojson@3.0.0/osmtogeojson.js',
+                'https://unpkg.com/osmtogeojson@3.0.0/dist/osmtogeojson.min.js',
+                'https://unpkg.com/osmtogeojson@3.0.0/osmtogeojson.js'
+              ];
+              for (const src of sources) {
+                try {
+                  if (typeof window.osmtogeojson === 'function') return true;
+                  const s = document.createElement('script');
+                  s.src = src;
+                  s.async = true;
+                  s.defer = true;
+                  s.setAttribute('data-osm2geojson', 'true');
+                  await new Promise((resolve, reject) => {
+                    s.onload = resolve;
+                    s.onerror = reject;
+                    document.head.appendChild(s);
+                  });
+                  if (typeof window.osmtogeojson === 'function') return true;
+                } catch (e) {
+                  tried.push(src);
+                }
+              }
+              return false;
+            }
+
+            function convertOsmTransportToGeoJsonLite(osmJson, keys) {
+              try {
+                const keySet = new Set(Array.isArray(keys) && keys.length ? keys : ['highway', 'railway']);
+                const features = [];
+                const pushFeature = (geom, props) => {
+                  if (!geom || !geom.type) return;
+                  features.push({
+                    type: 'Feature',
+                    properties: props || {},
+                    geometry: geom
+                  });
+                };
+                const hasTransportTag = (tags) => {
+                  if (!tags) return false;
+                  for (const k of keySet) {
+                    if (Object.prototype.hasOwnProperty.call(tags, k)) return true;
+                  }
+                  return false;
+                };
+                const elements = Array.isArray(osmJson?.elements) ? osmJson.elements : [];
+                // Group relation members to build MultiLineStrings
+                for (const el of elements) {
+                  if (!hasTransportTag(el.tags)) continue;
+                  const props = { ...(el.tags || {}), _osm_id: el.id, _osm_type: el.type };
+                  if (el.type === 'node' && typeof el.lon === 'number' && typeof el.lat === 'number') {
+                    pushFeature({ type: 'Point', coordinates: [el.lon, el.lat] }, props);
+                  } else if (el.type === 'way' && Array.isArray(el.geometry) && el.geometry.length >= 2) {
+                    const coords = el.geometry.map((p) => [p.lon, p.lat]);
+                    pushFeature({ type: 'LineString', coordinates: coords }, props);
+                  } else if (el.type === 'relation' && Array.isArray(el.members)) {
+                    const lines = [];
+                    for (const m of el.members) {
+                      if (m.type === 'way' && Array.isArray(m.geometry) && m.geometry.length >= 2) {
+                        lines.push(m.geometry.map((p) => [p.lon, p.lat]));
+                      }
+                    }
+                    if (lines.length === 1) {
+                      pushFeature({ type: 'LineString', coordinates: lines[0] }, props);
+                    } else if (lines.length > 1) {
+                      pushFeature({ type: 'MultiLineString', coordinates: lines }, props);
+                    }
+                  }
+                }
+                return { type: 'FeatureCollection', features };
+              } catch (e) {
+                console.warn('Lite OSM->GeoJSON conversion failed:', e);
+                return { type: 'FeatureCollection', features: [] };
+              }
+            }
+
+            async function fetchOsmTransportGeoJSON(bbox, options = {}) {
+              const keys = Array.isArray(options.keys) && options.keys.length ? options.keys : ['highway', 'railway'];
+              const timeout = options.timeout || 25;
+              const [w, s, e, n] = bbox;
+              // Transform bbox from GeoJSON format [west, south, east, north]
+              // to Overpass API format (s,w,n,e): south,west,north,east
+              const bboxStr = `${s},${w},${n},${e}`;
+              const body = [
+                `[out:json][timeout:${timeout}];`,
+                '(',
+                ...keys.flatMap((k) => [
+                  `node["${k}"](${bboxStr});`,
+                  `way["${k}"](${bboxStr});`,
+                  `relation["${k}"](${bboxStr});`,
+                ]),
+                ');',
+                'out body geom;'
+              ].join('');
+              const endpoints = [
+                'https://overpass-api.de/api/interpreter',
+                'https://overpass.kumi.systems/api/interpreter',
+                'https://overpass.openstreetmap.ru/api/interpreter',
+                'https://overpass.osm.ch/api/interpreter'
+              ];
+              let osmJson = null;
+              let lastErr = null;
+              for (const url of endpoints) {
+                try {
+                  const resp = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+                    body: new URLSearchParams({ data: body }).toString(),
+                  });
+                  if (!resp.ok) throw new Error(`Overpass error ${resp.status}`);
+                  osmJson = await resp.json();
+                  break;
+                } catch (e) {
+                  lastErr = e;
+                  continue;
+                }
+              }
+              if (!osmJson) {
+                const endpointList = endpoints.join(', ');
+                const lastErrMsg = lastErr && lastErr.message ? lastErr.message : String(lastErr);
+                throw new Error(
+                  `All Overpass endpoints failed. Tried: ${endpointList}. Last error: ${lastErrMsg}`
+                );
+              }
+              // Try full converter; fall back to lite converter for transport use-cases
+              const loaded = await ensureOsmToGeojsonLoaded();
+              if (loaded && typeof window.osmtogeojson === 'function') {
+                try {
+                  return window.osmtogeojson(osmJson, { flatProperties: true });
+                } catch (e) {
+                  console.warn('osmtogeojson conversion failed, using lite converter:', e);
+                }
+              }
+              return convertOsmTransportToGeoJsonLite(osmJson, keys);
+            }
+
+            // Loading overlay for OSM operations
+            function showOsmLoading(text) {
+              try {
+                const mapContainer = map.getContainer ? map.getContainer() : el;
+                if (!mapContainer) return null;
+                let overlay = mapContainer.querySelector('.gm-osm-loading');
+                if (!overlay) {
+                  overlay = document.createElement('div');
+                  overlay.className = 'gm-osm-loading';
+                  overlay.style.position = 'absolute';
+                  overlay.style.top = '10px';
+                  overlay.style.left = '10px';
+                  overlay.style.zIndex = '1000';
+                  overlay.style.background = 'rgba(255,255,255,0.92)';
+                  overlay.style.border = '1px solid rgba(0,0,0,0.15)';
+                  overlay.style.borderRadius = '6px';
+                  overlay.style.padding = '6px 10px';
+                  overlay.style.display = 'flex';
+                  overlay.style.alignItems = 'center';
+                  overlay.style.gap = '8px';
+                  overlay.style.boxShadow = '0 1px 3px rgba(0,0,0,0.2)';
+                  const spinner = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                  spinner.setAttribute('width', '18');
+                  spinner.setAttribute('height', '18');
+                  spinner.setAttribute('viewBox', '0 0 50 50');
+                  const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                  circle.setAttribute('cx', '25');
+                  circle.setAttribute('cy', '25');
+                  circle.setAttribute('r', '20');
+                  circle.setAttribute('fill', 'none');
+                  circle.setAttribute('stroke', '#1976D2');
+                  circle.setAttribute('stroke-width', '5');
+                  circle.setAttribute('stroke-linecap', 'round');
+                  const anim = document.createElementNS('http://www.w3.org/2000/svg', 'animateTransform');
+                  anim.setAttribute('attributeName', 'transform');
+                  anim.setAttribute('type', 'rotate');
+                  anim.setAttribute('from', '0 25 25');
+                  anim.setAttribute('to', '360 25 25');
+                  anim.setAttribute('dur', '0.9s');
+                  anim.setAttribute('repeatCount', 'indefinite');
+                  circle.appendChild(anim);
+                  spinner.appendChild(circle);
+                  const label = document.createElement('span');
+                  label.className = 'gm-osm-loading-text';
+                  label.style.fontSize = '12px';
+                  label.style.color = '#333';
+                  label.textContent = text || 'Loading OSM…';
+                  overlay.appendChild(spinner);
+                  overlay.appendChild(label);
+                  mapContainer.appendChild(overlay);
+                } else {
+                  const label = overlay.querySelector('.gm-osm-loading-text');
+                  if (label) label.textContent = text || 'Loading OSM…';
+                }
+                return overlay;
+              } catch (_e) {
+                return null;
+              }
+            }
+            function hideOsmLoading() {
+              try {
+                const mapContainer = map.getContainer ? map.getContainer() : el;
+                if (!mapContainer) return;
+                const overlay = mapContainer.querySelector('.gm-osm-loading');
+                if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
+              } catch (_e) {}
+            }
+
+            async function loadOsmTransportToGeoman(opts = {}) {
+              const geomanInstance = map.gm || el._geomanInstance;
+              if (!geomanInstance) return;
+              let bbox = opts.bbox;
+              if (!Array.isArray(bbox) || bbox.length !== 4) {
+                const b = map.getBounds();
+                bbox = [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()];
+              }
+              const keys = Array.isArray(opts.keys) ? opts.keys : undefined;
+              showOsmLoading('Loading OSM…');
+              try {
+                const data = await fetchOsmTransportGeoJSON(bbox, { keys, timeout: opts.timeout });
+                const collection = data && data.type === 'FeatureCollection'
+                  ? data
+                  : { type: 'FeatureCollection', features: [] };
+                try {
+                  importGeomanData(collection);
+                } catch (e) {
+                  console.warn('Failed to import OSM transport GeoJSON into Geoman: ' + (e && e.message ? e.message : e));
+                }
+              } finally {
+                hideOsmLoading();
+              }
+            }
+
             // Add a separate Union toggle control beneath the Geoman control
             try {
               class UnionToggleControl {
@@ -4459,6 +4693,85 @@ function render({ model, el }) {
                 }
               } catch (_e) {}
               el._splitControl = splitCtrl;
+
+              // Add OSM Transport load control (button appended into union group)
+              try {
+                class OsmTransportControl {
+                  constructor(geomanInstance) {
+                    this._geomanInstance = geomanInstance;
+                    this._container = null;
+                    this._button = null;
+                    this._map = null;
+                  }
+                  onAdd(mapRef) {
+                    this._map = mapRef;
+                    const container = unionCtrl && unionCtrl._container
+                      ? unionCtrl._container
+                      : document.createElement('div');
+                    if (!unionCtrl || !unionCtrl._container) {
+                      container.className = 'maplibregl-ctrl maplibregl-ctrl-group gm-osm-ctrl';
+                    }
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'maplibregl-ctrl-icon gm-osm-button';
+                    btn.setAttribute('title', 'Load OSM Transport');
+                    btn.setAttribute('aria-label', 'Load OSM Transport');
+                    btn.innerHTML = `
+                      <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <!-- Network lines -->
+                        <polyline points="4,18 10,12 16,14 20,6" fill="none" stroke="#1976D2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <!-- Nodes -->
+                        <circle cx="4" cy="18" r="2.2" fill="#00AA55" stroke="#0D4D2A" stroke-width="0.8"/>
+                        <circle cx="10" cy="12" r="2.2" fill="#00AA55" stroke="#0D4D2A" stroke-width="0.8"/>
+                        <circle cx="16" cy="14" r="2.2" fill="#00AA55" stroke="#0D4D2A" stroke-width="0.8"/>
+                        <circle cx="20" cy="6" r="2.2" fill="#00AA55" stroke="#0D4D2A" stroke-width="0.8"/>
+                      </svg>
+                    `;
+                    btn.style.display = 'flex';
+                    btn.style.alignItems = 'center';
+                    btn.style.justifyContent = 'center';
+                    btn.addEventListener('click', async () => {
+                      try {
+                        // Deactivate other tools except snapping
+                        const containerEl = this._geomanInstance?.control?.container;
+                        if (containerEl) {
+                          const buttons = Array.from(containerEl.querySelectorAll('.gm-control-button'));
+                          const getButtonLabel = (b) => ((b.getAttribute('title') || b.getAttribute('aria-label') || (b.textContent ? b.textContent.trim() : '')).toLowerCase());
+                          const isActiveButton = (b) => b.getAttribute('aria-pressed') === 'true' || b.classList.contains('active') || b.classList.contains('gm-active');
+                          buttons.forEach((b) => {
+                            const label = getButtonLabel(b);
+                            const isSnap = label.includes('snap');
+                            if (!isSnap && isActiveButton(b)) b.click();
+                          });
+                        }
+                        await loadOsmTransportToGeoman({});
+                      } catch (err) {
+                        console.warn('Failed to load OSM transport:', err);
+                      }
+                    });
+                    container.appendChild(btn);
+                    this._container = container;
+                    this._button = btn;
+                    return container;
+                  }
+                  onRemove() {
+                    try {
+                      if (this._container && this._button && this._button.parentNode === this._container) {
+                        this._container.removeChild(this._button);
+                      }
+                    } catch (_e) {}
+                    this._map = undefined;
+                  }
+                }
+                const osmCtrl = new OsmTransportControl(instance);
+                try {
+                  osmCtrl.onAdd(map);
+                  // The guard `if (!unionCtrl || !unionCtrl._container)` always evaluates to false.
+                  // Therefore, the block is unreachable and has been removed.
+                  // If needed, add logic here to handle cases when unionCtrl is not present.
+                } catch (_e) {}
+                el._osmTransportControl = osmCtrl;
+              } catch (_e) {}
 
               // Observe Geoman toolbar and auto-deactivate Union when another tool turns active
               try {
@@ -8033,6 +8346,76 @@ function render({ model, el }) {
                 }
                 // Sync status after attempted deactivation
                 requestAnimationFrame(() => updateAndSyncGeomanStatus());
+              }
+            }
+            break;
+
+          case 'loadOsmTransportToGeoman':
+            // Fetch OSM transport features in bbox and import into Geoman
+            {
+              const opts = args[0] || {};
+              // Reuse helper defined during Geoman initialization
+              if (typeof loadOsmTransportToGeoman === 'function') {
+                loadOsmTransportToGeoman(opts).catch((e) => {
+                  console.warn('loadOsmTransportToGeoman failed:', e);
+                });
+              } else {
+                // Fallback: compute bbox and try minimal inline fetch/import
+                (async () => {
+                  try {
+                    const b = map.getBounds();
+                    const bbox = Array.isArray(opts?.bbox) && opts.bbox.length === 4
+                      ? opts.bbox
+                      : [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()];
+                    const keys = Array.isArray(opts?.keys) && opts.keys.length ? opts.keys : ['highway', 'railway'];
+                    const [w, s, e, n] = bbox;
+                    const bboxStr = `${s},${w},${n},${e}`;
+                    const body = [
+                      `[out:json][timeout:${opts?.timeout || 25}];`,
+                      '(',
+                      ...keys.flatMap((k) => [
+                        `node["${k}"](${bboxStr});`,
+                        `way["${k}"](${bboxStr});`,
+                        `relation["${k}"](${bboxStr});`,
+                      ]),
+                      ');',
+                      'out body geom;'
+                    ].join('');
+                    const url = 'https://overpass-api.de/api/interpreter';
+                    const resp = await fetch(url, {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+                      body: new URLSearchParams({ data: body }).toString(),
+                    });
+                    if (!resp.ok) throw new Error(`Overpass error ${resp.status}`);
+                    const osmJson = await resp.json();
+                    // Try to load converter
+                    if (typeof window.osmtogeojson !== 'function') {
+                      const s = document.createElement('script');
+                      s.src = 'https://cdn.jsdelivr.net/npm/osmtogeojson@3.0.0/osmtogeojson.min.js';
+                      await new Promise((resolve, reject) => {
+                        s.onload = resolve;
+                        s.onerror = reject;
+                        document.head.appendChild(s);
+                      });
+                    }
+                    let geojson = null;
+                    if (typeof window.osmtogeojson === 'function') {
+                      geojson = window.osmtogeojson(osmJson, { flatProperties: true });
+                    } else if (typeof convertOsmTransportToGeoJsonLite === 'function') {
+                      console.warn('osmtogeojson unavailable, using convertOsmTransportToGeoJsonLite fallback');
+                      geojson = convertOsmTransportToGeoJsonLite(osmJson);
+                    } else {
+                      console.warn('Neither osmtogeojson nor convertOsmTransportToGeoJsonLite are available; cannot convert OSM data.');
+                      return;
+                    }
+                    if (geojson && geojson.type === 'FeatureCollection') {
+                      importGeomanData(geojson);
+                    }
+                  } catch (e) {
+                    console.warn('Inline OSM transport import failed:', e);
+                  }
+                })();
               }
             }
             break;
