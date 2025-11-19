@@ -1248,7 +1248,9 @@ class MapLibreMap(MapWidget):
                 layer["min-zoom"] = layer.pop("minzoom")
             if "maxzoom" in layer:
                 layer["max-zoom"] = layer.pop("maxzoom")
-            layer = utils.replace_top_level_hyphens(layer)
+            # MapLibre expects hyphenated keys like 'source-layer', 'text-field', etc.
+            # Convert any underscore_keys to hyphen-keys recursively for JS compatibility.
+            layer = utils.replace_underscores_in_keys(layer)
 
         if "name" in kwargs and layer_id is None:
             layer_id = kwargs.pop("name")
@@ -3246,36 +3248,51 @@ class MapLibreMap(MapWidget):
 
         # Add default layers if none provided
         if layers is None:
-            layers = [
-                {
-                    "id": f"{layer_id}_landuse",
-                    "source": source_id,
-                    "source-layer": "landuse",
-                    "type": "fill",
-                    "paint": {"fill-color": "steelblue", "fill-opacity": 0.5},
-                },
-                {
-                    "id": f"{layer_id}_roads",
-                    "source": source_id,
-                    "source-layer": "roads",
-                    "type": "line",
-                    "paint": {"line-color": "black", "line-width": 1},
-                },
-                {
-                    "id": f"{layer_id}_buildings",
-                    "source": source_id,
-                    "source-layer": "buildings",
-                    "type": "fill",
-                    "paint": {"fill-color": "gray", "fill-opacity": 0.7},
-                },
-                {
-                    "id": f"{layer_id}_water",
-                    "source": source_id,
-                    "source-layer": "water",
-                    "type": "fill",
-                    "paint": {"fill-color": "lightblue", "fill-opacity": 0.8},
-                },
-            ]
+            url_lower = pmtiles_url.lower()
+            # Heuristic defaults:
+            # - If this looks like an Overture Buildings dataset, add only the buildings layer.
+            # - Otherwise, fall back to a simple protomaps-style set.
+            if "buildings" in url_lower:
+                layers = [
+                    {
+                        "id": f"{layer_id}_buildings",
+                        "source": source_id,
+                        "source-layer": "buildings",
+                        "type": "fill",
+                        "paint": {"fill-color": "gray", "fill-opacity": 0.7},
+                    }
+                ]
+            else:
+                layers = [
+                    {
+                        "id": f"{layer_id}_landuse",
+                        "source": source_id,
+                        "source-layer": "landuse",
+                        "type": "fill",
+                        "paint": {"fill-color": "steelblue", "fill-opacity": 0.5},
+                    },
+                    {
+                        "id": f"{layer_id}_roads",
+                        "source": source_id,
+                        "source-layer": "roads",
+                        "type": "line",
+                        "paint": {"line-color": "black", "line-width": 1},
+                    },
+                    {
+                        "id": f"{layer_id}_buildings",
+                        "source": source_id,
+                        "source-layer": "buildings",
+                        "type": "fill",
+                        "paint": {"fill-color": "gray", "fill-opacity": 0.7},
+                    },
+                    {
+                        "id": f"{layer_id}_water",
+                        "source": source_id,
+                        "source-layer": "water",
+                        "type": "fill",
+                        "paint": {"fill-color": "lightblue", "fill-opacity": 0.8},
+                    },
+                ]
 
         # Add all layers
         for layer_config in layers:
