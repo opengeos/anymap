@@ -7,7 +7,7 @@ state management, and provides common mapping functionality.
 
 import anywidget
 import traitlets
-from typing import Dict, List, Any, Optional, Callable, Union
+from typing import Dict, Any, Optional, Callable
 
 
 class MapWidget(anywidget.AnyWidget):
@@ -89,6 +89,35 @@ class MapWidget(anywidget.AnyWidget):
             self._event_handlers[event_type] = []
         self._event_handlers[event_type].append(callback)
 
+    def off_map_event(
+        self,
+        event_type: Optional[str] = None,
+        callback: Optional[Callable[[Dict[str, Any]], None]] = None,
+    ) -> None:
+        """Unregister map event callbacks.
+
+        Args:
+            event_type: Specific event type to target. If None, applies to all types.
+            callback: Specific callback to remove. If None, removes all callbacks for the event type(s).
+        """
+        if event_type is None:
+            # Apply to all registered event types
+            if callback is None:
+                self._event_handlers = {}
+            else:
+                for etype, handlers in list(self._event_handlers.items()):
+                    self._event_handlers[etype] = [
+                        h for h in handlers if h is not callback
+                    ]
+        else:
+            if event_type in self._event_handlers:
+                if callback is None:
+                    self._event_handlers[event_type] = []
+                else:
+                    self._event_handlers[event_type] = [
+                        h for h in self._event_handlers[event_type] if h is not callback
+                    ]
+
     @traitlets.observe("_js_events")
     def _handle_js_events(self, change: Dict[str, Any]) -> None:
         """Handle events from JavaScript.
@@ -102,6 +131,9 @@ class MapWidget(anywidget.AnyWidget):
             if event_type in self._event_handlers:
                 for handler in self._event_handlers[event_type]:
                     handler(event)
+        # Clear processed events to avoid re-processing the same events on subsequent updates
+        if events:
+            self._js_events = []
 
     def set_center(self, lng: float, lat: float) -> None:
         """Set the map center coordinates.

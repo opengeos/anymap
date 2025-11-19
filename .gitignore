@@ -9,6 +9,8 @@ private/
 docs/examples/*.html
 *.html
 *.tif
+*.parquet
+*earthquakes.*
 
 # C extensions
 *.so

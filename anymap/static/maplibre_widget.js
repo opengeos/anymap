@@ -3936,31 +3936,9 @@ function render({ model, el }) {
       try {
         const collection = el._pendingGeomanData;
 
-        // Clear/replace features in all Geoman sources
-        // Drawn features may be in different sources initially
-        if (geomanInstance.features.setSourceGeoJson) {
-          const sources = ['gm_main', 'gm_temporary', 'gm_standby'];
-          let successCount = 0;
-
-          sources.forEach(sourceName => {
-            try {
-              geomanInstance.features.setSourceGeoJson({
-                geoJson: collection,
-                sourceName: sourceName
-              });
-              successCount++;
-            } catch (sourceError) {
-              // Source might not exist, which is okay
-            }
-          });
-
-          if (successCount === 0) {
-            deleteAndImportFeatures(geomanInstance, collection);
-          }
-        } else {
-          // Use delete/import approach if setSourceGeoJson not available
-          deleteAndImportFeatures(geomanInstance, collection);
-        }
+        // Always use delete/import approach to ensure features are editable
+        // setSourceGeoJson doesn't make features properly editable
+        deleteAndImportFeatures(geomanInstance, collection);
 
         el._pendingGeomanData = null;
         if (!skipExport) {
@@ -3996,6 +3974,12 @@ function render({ model, el }) {
         // Import new features if any
         if (collection.features.length > 0) {
           geomanInstance.features.importGeoJson(collection);
+
+          // Disable global edit mode after import so vertices are hidden by default
+          // User will need to select individual features to edit them
+          if (geomanInstance.globalEditModeEnabled && geomanInstance.globalEditModeEnabled()) {
+            geomanInstance.disableGlobalEditMode();
+          }
         }
       }
     };
@@ -4068,6 +4052,8 @@ function render({ model, el }) {
 
               // Always schedule an export on any Geoman event; debounced above
               scheduleGeomanExport();
+            // Update status for Python
+            updateAndSyncGeomanStatus();
             };
 
             instance.setGlobalEventsListener(geomanListener);
@@ -4077,6 +4063,455 @@ function render({ model, el }) {
               importGeomanData(el._pendingGeomanData);
             } else {
               exportGeomanData();
+            }
+            // Sync initial toolbar status
+            updateAndSyncGeomanStatus();
+
+            // Add a separate Union toggle control beneath the Geoman control
+            try {
+              class UnionToggleControl {
+                constructor(geomanInstance, modelRef) {
+                  this._geomanInstance = geomanInstance;
+                  this._model = modelRef;
+                  this._container = null;
+                  this._button = null;
+                }
+                onAdd(mapRef) {
+                  this._map = mapRef;
+                  const container = document.createElement('div');
+                  container.className = 'maplibregl-ctrl maplibregl-ctrl-group gm-union-ctrl';
+                  const btn = document.createElement('button');
+                  btn.type = 'button';
+                  btn.className = 'maplibregl-ctrl-icon gm-union-button';
+                  btn.setAttribute('title', 'Union');
+                  btn.setAttribute('aria-label', 'Union');
+                  btn.setAttribute('aria-pressed', 'false');
+                  // Simple union SVG icon
+                  btn.innerHTML = `
+                    <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                      <rect x="3.5" y="6" width="10.5" height="10.5" rx="2" ry="2" fill="#00E5FF" stroke="#000" stroke-opacity="0.85" stroke-width="0.8"/>
+                      <rect x="9.5" y="4" width="10.5" height="10.5" rx="2" ry="2" fill="#FF4081" stroke="#000" stroke-opacity="0.85" stroke-width="0.8"/>
+                      <rect x="9" y="9" width="6" height="6" fill="#FFEB3B" stroke="#000" stroke-opacity="0.9" stroke-width="0.6"/>
+                    </svg>
+                  `;
+                  btn.style.display = 'flex';
+                  btn.style.alignItems = 'center';
+                  btn.style.justifyContent = 'center';
+
+                  this.setPressed = (pressed) => {
+                    if (pressed) {
+                      btn.setAttribute('aria-pressed', 'true');
+                      btn.classList.add('gm-active');
+                      btn.style.boxShadow = '0 0 0 2px rgba(33,150,243,0.8) inset';
+                      btn.style.backgroundColor = 'rgba(33, 150, 243, 0.15)';
+                      // If split is on, turn it off to avoid conflicts
+                      try {
+                        if (typeof splitCtrl !== 'undefined' && splitCtrl?._button?.getAttribute('aria-pressed') === 'true') {
+                          splitCtrl.setPressed(false);
+                          const currentEvents = this._model.get("_js_events") || [];
+                          this._model.set("_js_events", [
+                            ...currentEvents,
+                            { type: 'geoman_split_toggled', enabled: false }
+                          ]);
+                          this._model.save_changes();
+                        }
+                      } catch (_e) {}
+                    } else {
+                      btn.setAttribute('aria-pressed', 'false');
+                      btn.classList.remove('gm-active');
+                      btn.style.boxShadow = '';
+                      btn.style.backgroundColor = '';
+                    }
+                  };
+
+                  const isActiveButton = (buttonEl) => {
+                    return buttonEl.getAttribute('aria-pressed') === 'true'
+                      || buttonEl.classList.contains('active')
+                      || buttonEl.classList.contains('gm-active');
+                  };
+
+                  const getButtonLabel = (buttonEl) => {
+                    return (buttonEl.getAttribute('title')
+                      || buttonEl.getAttribute('aria-label')
+                      || (buttonEl.textContent ? buttonEl.textContent.trim() : '')).toLowerCase();
+                  };
+
+                  const deactivateOtherToolsExceptSnap = () => {
+                    const container = this._geomanInstance?.control?.container;
+                    if (!container) return;
+                    const buttons = Array.from(container.querySelectorAll('.gm-control-button'));
+                    buttons.forEach((b) => {
+                      const label = getButtonLabel(b);
+                      const isSnap = label.includes('snap');
+                      if (!isSnap && isActiveButton(b)) {
+                        // Toggle off
+                        b.click();
+                      }
+                    });
+                  };
+
+                  btn.addEventListener('click', () => {
+                    const currentlyPressed = btn.getAttribute('aria-pressed') === 'true';
+                    const next = !currentlyPressed;
+                    this.setPressed(next);
+                    if (next) {
+                      // Deactivate other tools except snapping
+                      deactivateOtherToolsExceptSnap();
+                    }
+                    // Notify Python
+                    try {
+                      const currentEvents = this._model.get("_js_events") || [];
+                      this._model.set("_js_events", [
+                        ...currentEvents,
+                        { type: 'geoman_union_toggled', enabled: next }
+                      ]);
+                      this._model.save_changes();
+                    } catch (evtErr) {
+                      console.warn('Failed to notify union toggle:', evtErr);
+                    }
+                  });
+
+                  container.appendChild(btn);
+                  this._container = container;
+                  this._button = btn;
+                  return container;
+                }
+                onRemove() {
+                  if (this._container && this._container.parentNode) {
+                    this._container.parentNode.removeChild(this._container);
+                  }
+                  this._map = undefined;
+                }
+              }
+              const unionCtrl = new UnionToggleControl(instance, model);
+              // Place in same corner as Geoman; adding after Geoman stacks beneath
+              map.addControl(unionCtrl, position);
+              el._unionControl = unionCtrl;
+
+              // Add Split toggle control (free split mode)
+              class SplitToggleControl {
+                constructor(geomanInstance, modelRef) {
+                  this._geomanInstance = geomanInstance;
+                  this._model = modelRef;
+                  this._container = null;
+                  this._button = null;
+                  this._map = null;
+                  this._active = false;
+                  this._splitCoords = [];
+                  this._onClick = null;
+                  this._onDblClick = null;
+                  this._onKeyDown = null;
+                  this._keyTarget = null;
+                }
+                onAdd(mapRef) {
+                  this._map = mapRef;
+                  const container = document.createElement('div');
+                  container.className = 'maplibregl-ctrl maplibregl-ctrl-group gm-split-ctrl';
+                  const btn = document.createElement('button');
+                  btn.type = 'button';
+                  btn.className = 'maplibregl-ctrl-icon gm-split-button';
+                  btn.setAttribute('title', 'Split');
+                  btn.setAttribute('aria-label', 'Split');
+                  btn.setAttribute('aria-pressed', 'false');
+                  btn.innerHTML = `
+                    <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3" fill="#E0E0E0" stroke="#000" stroke-opacity="0.6" stroke-width="0.6"/>
+                      <polyline points="4,20 12,12 20,4" fill="none" stroke="#1976D2" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <circle cx="12" cy="12" r="2" fill="#90CAF9" stroke="#0D47A1" stroke-width="0.8"/>
+                    </svg>
+                  `;
+                  btn.style.display = 'flex';
+                  btn.style.alignItems = 'center';
+                  btn.style.justifyContent = 'center';
+
+                  this._updateDrawSource = () => {
+                    const srcId = 'split-draw';
+                    const lineId = 'split-draw-line';
+                    const pointId = 'split-draw-points';
+                    const fc = this._splitCoords.length >= 2
+                      ? {
+                          type: 'FeatureCollection',
+                          features: [
+                            {
+                              type: 'Feature',
+                              geometry: { type: 'LineString', coordinates: this._splitCoords },
+                              properties: {}
+                            },
+                            ...this._splitCoords.map(c => ({
+                              type: 'Feature',
+                              geometry: { type: 'Point', coordinates: c },
+                              properties: {}
+                            }))
+                          ]
+                        }
+                      : { type: 'FeatureCollection', features: this._splitCoords.map(c => ({
+                          type: 'Feature',
+                          geometry: { type: 'Point', coordinates: c },
+                          properties: {}
+                        })) };
+                    if (this._map.getSource(srcId)) {
+                      try {
+                        this._map.getSource(srcId).setData(fc);
+                      } catch (e) {
+                        try {
+                          this._map.removeLayer(lineId);
+                          this._map.removeLayer(pointId);
+                        } catch (_err) {}
+                        try {
+                          this._map.removeSource(srcId);
+                        } catch (_err2) {}
+                        this._map.addSource(srcId, { type: 'geojson', data: fc });
+                      }
+                    } else {
+                      this._map.addSource(srcId, { type: 'geojson', data: fc });
+                    }
+                    if (!this._map.getLayer(lineId)) {
+                      try {
+                        this._map.addLayer({
+                          id: lineId,
+                          type: 'line',
+                          source: srcId,
+                          filter: ['==', ['geometry-type'], 'LineString'],
+                          paint: {
+                            'line-color': '#2196F3',
+                            'line-width': 3
+                          }
+                        });
+                      } catch (_e) {}
+                    }
+                    if (!this._map.getLayer(pointId)) {
+                      try {
+                        this._map.addLayer({
+                          id: pointId,
+                          type: 'circle',
+                          source: srcId,
+                          filter: ['==', ['geometry-type'], 'Point'],
+                          paint: {
+                            'circle-radius': 4,
+                            'circle-color': '#64B5F6',
+                            'circle-stroke-color': '#1565C0',
+                            'circle-stroke-width': 1.5
+                          }
+                        });
+                      } catch (_e) {}
+                    }
+                  };
+
+                  this._clearDrawSource = () => {
+                    const srcId = 'split-draw';
+                    const lineId = 'split-draw-line';
+                    const pointId = 'split-draw-points';
+                    if (this._map.getSource(srcId)) {
+                      try { this._map.removeLayer(lineId); } catch (_e) {}
+                      try { this._map.removeLayer(pointId); } catch (_e) {}
+                      try { this._map.removeSource(srcId); } catch (_e) {}
+                    }
+                  };
+
+                  this._cleanupListeners = () => {
+                    if (this._onClick) { this._map.off('click', this._onClick); this._onClick = null; }
+                    if (this._onDblClick) { this._map.off('dblclick', this._onDblClick); this._onDblClick = null; }
+                    if (this._onKeyDown && this._keyTarget) {
+                      try { this._keyTarget.removeEventListener('keydown', this._onKeyDown); } catch (_e) {}
+                      this._onKeyDown = null;
+                      this._keyTarget = null;
+                    }
+                    try { this._map.doubleClickZoom && this._map.doubleClickZoom.enable(); } catch (_e) {}
+                  };
+
+                  this.finishSplit = () => {
+                    if (this._splitCoords.length >= 2) {
+                      try {
+                        const currentEvents = this._model.get("_js_events") || [];
+                        this._model.set("_js_events", [
+                          ...currentEvents,
+                          { type: 'geoman_split_line', coordinates: this._splitCoords }
+                        ]);
+                        this._model.save_changes();
+                      } catch (evtErr) {
+                        console.warn('Failed to notify split line:', evtErr);
+                      }
+                    }
+                    this._splitCoords = [];
+                    this._clearDrawSource();
+                    this._cleanupListeners();
+                    this.setPressed(false);
+                  };
+
+                  this.setPressed = (pressed) => {
+                    if (pressed) {
+                      btn.setAttribute('aria-pressed', 'true');
+                      btn.classList.add('gm-active');
+                      btn.style.boxShadow = '0 0 0 2px rgba(33,150,243,0.8) inset';
+                      btn.style.backgroundColor = 'rgba(33, 150, 243, 0.15)';
+                      this._active = true;
+                      // Deactivate other tools except snapping
+                      const container = this._geomanInstance?.control?.container;
+                      if (container) {
+                        const buttons = Array.from(container.querySelectorAll('.gm-control-button'));
+                        const getButtonLabel = (buttonEl) =>
+                          (buttonEl.getAttribute('title')
+                            || buttonEl.getAttribute('aria-label')
+                            || (buttonEl.textContent ? buttonEl.textContent.trim() : '')).toLowerCase();
+                        const isActiveButton = (buttonEl) =>
+                          buttonEl.getAttribute('aria-pressed') === 'true'
+                          || buttonEl.classList.contains('active')
+                          || buttonEl.classList.contains('gm-active');
+                        buttons.forEach((b) => {
+                          const label = getButtonLabel(b);
+                          const isSnap = label.includes('snap');
+                          if (!isSnap && isActiveButton(b)) b.click();
+                        });
+                      }
+                      // If union is on, turn it off
+                      try {
+                        if (unionCtrl?._button?.getAttribute('aria-pressed') === 'true') {
+                          unionCtrl.setPressed(false);
+                          const currentEvents = this._model.get("_js_events") || [];
+                          this._model.set("_js_events", [
+                            ...currentEvents,
+                            { type: 'geoman_union_toggled', enabled: false }
+                          ]);
+                          this._model.save_changes();
+                        }
+                      } catch (_e) {}
+
+                      // Start drawing
+                      this._splitCoords = [];
+                      try { this._map.doubleClickZoom && this._map.doubleClickZoom.disable(); } catch (_e) {}
+                      this._onClick = (e) => {
+                        this._splitCoords.push([e.lngLat.lng, e.lngLat.lat]);
+                        this._updateDrawSource();
+                      };
+                      this._onDblClick = () => this.finishSplit();
+                      this._map.on('click', this._onClick);
+                      this._map.on('dblclick', this._onDblClick);
+                      // Keyboard support
+                      const keyTarget = this._map.getCanvas ? this._map.getCanvas() : null;
+                      if (keyTarget) {
+                        try { if (!keyTarget.hasAttribute('tabindex')) keyTarget.setAttribute('tabindex', '0'); } catch (_e) {}
+                        this._keyTarget = keyTarget;
+                        this._onKeyDown = (ev) => {
+                          const key = ev.key || ev.code;
+                          if (key === 'Enter') {
+                            ev.preventDefault();
+                            this.finishSplit();
+                          } else if (key === 'Escape' || key === 'Esc') {
+                            ev.preventDefault();
+                            this._splitCoords = [];
+                            this._clearDrawSource();
+                            this._cleanupListeners();
+                            this.setPressed(false);
+                          }
+                        };
+                        keyTarget.addEventListener('keydown', this._onKeyDown);
+                      }
+                    } else {
+                      btn.setAttribute('aria-pressed', 'false');
+                      btn.classList.remove('gm-active');
+                      btn.style.boxShadow = '';
+                      btn.style.backgroundColor = '';
+                      this._active = false;
+                      this._cleanupListeners();
+                      this._splitCoords = [];
+                      this._clearDrawSource();
+                    }
+                  };
+
+                  btn.addEventListener('click', () => {
+                    const currentlyPressed = btn.getAttribute('aria-pressed') === 'true';
+                    const next = !currentlyPressed;
+                    this.setPressed(next);
+                    try {
+                      const currentEvents = this._model.get("_js_events") || [];
+                      this._model.set("_js_events", [
+                        ...currentEvents,
+                        { type: 'geoman_split_toggled', enabled: next }
+                      ]);
+                      this._model.save_changes();
+                    } catch (evtErr) {
+                      console.warn('Failed to notify split toggle:', evtErr);
+                    }
+                  });
+
+                  container.appendChild(btn);
+                  this._container = container;
+                  this._button = btn;
+                  return container;
+                }
+                onRemove() {
+                  this._cleanupListeners();
+                  if (this._container && this._container.parentNode) {
+                    this._container.parentNode.removeChild(this._container);
+                  }
+                  this._map = undefined;
+                }
+              }
+              const splitCtrl = new SplitToggleControl(instance, model);
+              // Initialize split control without adding a separate control container
+              try {
+                splitCtrl.onAdd(map);
+                // Append the split button into the existing union control group to form a single grouped control
+                if (unionCtrl && unionCtrl._container && splitCtrl._button) {
+                  unionCtrl._container.appendChild(splitCtrl._button);
+                  // Point the split control's container to the union container for consistent cleanup/styling
+                  splitCtrl._container = unionCtrl._container;
+                }
+              } catch (_e) {}
+              el._splitControl = splitCtrl;
+
+              // Observe Geoman toolbar and auto-deactivate Union when another tool turns active
+              try {
+                const geomanContainer = instance?.control?.container;
+                const isActiveButton = (buttonEl) =>
+                  buttonEl.getAttribute('aria-pressed') === 'true'
+                  || buttonEl.classList.contains('active')
+                  || buttonEl.classList.contains('gm-active');
+                const getButtonLabel = (buttonEl) =>
+                  (buttonEl.getAttribute('title')
+                    || buttonEl.getAttribute('aria-label')
+                    || (buttonEl.textContent ? buttonEl.textContent.trim() : '')).toLowerCase();
+                if (geomanContainer) {
+                  const observer = new MutationObserver(() => {
+                    const buttons = Array.from(geomanContainer.querySelectorAll('.gm-control-button'));
+                    const activeNonSnap = buttons.some((b) => {
+                      const label = getButtonLabel(b);
+                      const isSnap = label.includes('snap');
+                      return !isSnap && isActiveButton(b);
+                    });
+                    if (activeNonSnap) {
+                      if (unionCtrl?._button?.getAttribute('aria-pressed') === 'true') {
+                        unionCtrl.setPressed(false);
+                        try {
+                          const currentEvents = model.get("_js_events") || [];
+                          model.set("_js_events", [
+                            ...currentEvents,
+                            { type: 'geoman_union_toggled', enabled: false }
+                          ]);
+                          model.save_changes();
+                        } catch (_e) {}
+                      }
+                      if (splitCtrl?._button?.getAttribute('aria-pressed') === 'true') {
+                        splitCtrl.setPressed(false);
+                        try {
+                          const currentEvents = model.get("_js_events") || [];
+                          model.set("_js_events", [
+                            ...currentEvents,
+                            { type: 'geoman_split_toggled', enabled: false }
+                          ]);
+                          model.save_changes();
+                        } catch (_e2) {}
+                      }
+                    }
+                  });
+                  observer.observe(geomanContainer, { attributes: true, subtree: true, attributeFilter: ['class', 'aria-pressed'] });
+                  el._unionObserver = observer;
+                }
+              } catch (obsErr) {
+                console.warn('Failed to observe Geoman toolbar for union toggle sync:', obsErr);
+              }
+            } catch (e) {
+              console.warn('Failed to add Union toggle control:', e);
             }
 
             if (typeof initialCollapsed === 'boolean') {
@@ -4121,6 +4556,59 @@ function render({ model, el }) {
 
     model.on("change:geoman_data", geomanModelListener);
     el._geomanModelListener = geomanModelListener;
+
+    // Helpers to query Geoman toolbar status and sync to Python
+    function getGeomanToolbarStatus(geomanInstance) {
+      const status = {
+        activeButtons: [],
+        isCollapsed: null,
+        globalEditMode: false,
+      };
+      try {
+        status.globalEditMode = !!(geomanInstance.globalEditModeEnabled && geomanInstance.globalEditModeEnabled());
+      } catch (e) {
+        // ignore
+      }
+      try {
+        if (geomanInstance && geomanInstance.control && geomanInstance.control.container) {
+          const container = geomanInstance.control.container;
+          status.isCollapsed = !container.querySelector('.gm-reactive-controls');
+          const buttons = Array.from(container.querySelectorAll('.gm-control-button'));
+          buttons.forEach((btn) => {
+            const pressed = btn.getAttribute('aria-pressed') === 'true'
+              || btn.classList.contains('active')
+              || btn.classList.contains('gm-active');
+            if (pressed) {
+              const label = btn.getAttribute('title')
+                || btn.getAttribute('aria-label')
+                || (btn.textContent ? btn.textContent.trim() : '');
+              if (label) {
+                status.activeButtons.push(label);
+              }
+            }
+          });
+        }
+      } catch (e) {
+        // ignore
+      }
+      return status;
+    }
+
+    function updateAndSyncGeomanStatus() {
+      try {
+        const geomanInstance = map.gm || el._geomanInstance;
+        if (!geomanInstance) return;
+        const status = getGeomanToolbarStatus(geomanInstance);
+        model.set('geoman_status', status);
+        model.save_changes();
+        // Also forward as event for observers if desired
+        const currentEvents = model.get('_js_events') || [];
+        model.set('_js_events', [...currentEvents, { type: 'geoman_status', status }]);
+        model.save_changes();
+      } catch (e) {
+        // ignore
+      }
+    }
 
     const ensureFlatGeobufLibrary = (() => {
       let loaderPromise = null;
@@ -5547,14 +6035,53 @@ function render({ model, el }) {
         lng: e.lngLat.lng,
         lat: e.lngLat.lat
       };
-
-      // Update the clicked trait
+      // Update the clicked trait immediately
       model.set("clicked", clickData);
       model.save_changes();
-
       // Also send as event for backwards compatibility
       sendEvent('click', {
         lngLat: [e.lngLat.lng, e.lngLat.lat],
+        point: [e.point.x, e.point.y]
+      });
+    });
+
+    // Pointer interaction events for Python-side on_interaction()
+    map.on('mousemove', (e) => {
+      sendEvent('mousemove', {
+        lng: e.lngLat.lng,
+        lat: e.lngLat.lat,
+        point: [e.point.x, e.point.y]
+      });
+    });
+
+    map.on('mousedown', (e) => {
+      sendEvent('mousedown', {
+        lng: e.lngLat.lng,
+        lat: e.lngLat.lat,
+        point: [e.point.x, e.point.y]
+      });
+    });
+
+    map.on('mouseup', (e) => {
+      sendEvent('mouseup', {
+        lng: e.lngLat.lng,
+        lat: e.lngLat.lat,
+        point: [e.point.x, e.point.y]
+      });
+    });
+
+    map.on('dblclick', (e) => {
+      sendEvent('dblclick', {
+        lng: e.lngLat.lng,
+        lat: e.lngLat.lat,
+        point: [e.point.x, e.point.y]
+      });
+    });
+
+    map.on('contextmenu', (e) => {
+      sendEvent('contextmenu', {
+        lng: e.lngLat.lng,
+        lat: e.lngLat.lat,
         point: [e.point.x, e.point.y]
       });
     });
@@ -7322,6 +7849,7 @@ function render({ model, el }) {
               if (geomanInstance) {
                 requestAnimationFrame(() => {
                   applyGeomanCollapsedState(geomanInstance, false);
+                  updateAndSyncGeomanStatus();
                 });
               }
             }
@@ -7336,7 +7864,175 @@ function render({ model, el }) {
                   const container = geomanInstance.control.container;
                   const isCollapsed = !container.querySelector('.gm-reactive-controls');
                   applyGeomanCollapsedState(geomanInstance, !isCollapsed);
+                  updateAndSyncGeomanStatus();
                 });
+              }
+            }
+            break;
+
+          case 'setUnionSelection':
+            // Highlight selected Geoman features by IDs using a temporary GeoJSON source/layers
+            {
+              const selectedIds = Array.isArray(args[0]) ? args[0] : [];
+              const data = model.get('geoman_data') || { type: 'FeatureCollection', features: [] };
+              const selectedFeatures = (data.features || []).filter(f => selectedIds.includes(f.id));
+              const fc = { type: 'FeatureCollection', features: selectedFeatures };
+
+              const srcId = 'union-selection';
+              const fillId = 'union-selection-fill';
+              const lineId = 'union-selection-line';
+              const pointId = 'union-selection-point';
+
+              // Add or update source
+              if (map.getSource(srcId)) {
+                try {
+                  map.getSource(srcId).setData(fc);
+                } catch (e) {
+                  console.warn('Failed to update union selection source, recreating:', e);
+                  try {
+                    map.removeLayer(fillId);
+                    map.removeLayer(lineId);
+                    map.removeLayer(pointId);
+                  } catch (_err) {}
+                  try {
+                    map.removeSource(srcId);
+                  } catch (_err2) {}
+                  map.addSource(srcId, { type: 'geojson', data: fc });
+                }
+              } else {
+                map.addSource(srcId, { type: 'geojson', data: fc });
+              }
+
+              // Ensure highlight layers exist
+              if (!map.getLayer(fillId)) {
+                try {
+                  map.addLayer({
+                    id: fillId,
+                    type: 'fill',
+                    source: srcId,
+                    filter: ['==', ['geometry-type'], 'Polygon'],
+                    paint: {
+                      'fill-color': '#ffd54f',
+                      'fill-opacity': 0.35
+                    }
+                  });
+                } catch (e) {
+                  console.warn('Failed to add union selection fill layer:', e);
+                }
+              }
+              if (!map.getLayer(lineId)) {
+                try {
+                  map.addLayer({
+                    id: lineId,
+                    type: 'line',
+                    source: srcId,
+                    filter: ['==', ['geometry-type'], 'LineString'],
+                    paint: {
+                      'line-color': '#ffca28',
+                      'line-width': 4
+                    }
+                  });
+                } catch (e) {
+                  console.warn('Failed to add union selection line layer:', e);
+                }
+              }
+              if (!map.getLayer(pointId)) {
+                try {
+                  map.addLayer({
+                    id: pointId,
+                    type: 'circle',
+                    source: srcId,
+                    filter: ['==', ['geometry-type'], 'Point'],
+                    paint: {
+                      'circle-radius': 6,
+                      'circle-color': '#ffb300',
+                      'circle-stroke-color': '#ff6f00',
+                      'circle-stroke-width': 2
+                    }
+                  });
+                } catch (e) {
+                  console.warn('Failed to add union selection point layer:', e);
+                }
+              }
+            }
+            break;
+
+          case 'clearUnionSelection':
+            // Clear highlight by setting empty FeatureCollection; keep layers for reuse
+            {
+              const srcId = 'union-selection';
+              if (map.getSource(srcId)) {
+                try {
+                  map.getSource(srcId).setData({ type: 'FeatureCollection', features: [] });
+                } catch (e) {
+                  console.warn('Failed to clear union selection source:', e);
+                }
+              }
+            }
+            break;
+
+          case 'getGeomanStatus':
+            // Query and sync current Geoman toolbar status
+            updateAndSyncGeomanStatus();
+            break;
+
+          case 'activateGeomanButton':
+            // Programmatically click a Geoman toolbar button by (partial) name
+            {
+              const targetName = (args[0] || '').toString().toLowerCase();
+              const geomanInstance = map.gm || el._geomanInstance;
+              if (geomanInstance && geomanInstance.control && geomanInstance.control.container) {
+                const container = geomanInstance.control.container;
+                const buttons = Array.from(container.querySelectorAll('.gm-control-button'));
+                let matched = false;
+                for (const btn of buttons) {
+                  const label = (btn.getAttribute('title')
+                    || btn.getAttribute('aria-label')
+                    || (btn.textContent ? btn.textContent.trim() : '')).toLowerCase();
+                  if (label && (label === targetName || label.includes(targetName))) {
+                    btn.click();
+                    matched = true;
+                    break;
+                  }
+                }
+                if (!matched) {
+                  console.warn('Geoman button not found for name:', targetName);
+                }
+                // Sync status after attempted activation
+                requestAnimationFrame(() => updateAndSyncGeomanStatus());
+              }
+            }
+            break;
+
+          case 'deactivateGeomanButton':
+            // Programmatically deactivate (toggle off) a Geoman toolbar button by (partial) name
+            {
+              const targetName = (args[0] || '').toString().toLowerCase();
+              const geomanInstance = map.gm || el._geomanInstance;
+              if (geomanInstance && geomanInstance.control && geomanInstance.control.container) {
+                const container = geomanInstance.control.container;
+                const buttons = Array.from(container.querySelectorAll('.gm-control-button'));
+                let matched = false;
+                for (const btn of buttons) {
+                  const label = (btn.getAttribute('title')
+                    || btn.getAttribute('aria-label')
+                    || (btn.textContent ? btn.textContent.trim() : '')).toLowerCase();
+                  const isActive = btn.getAttribute('aria-pressed') === 'true'
+                    || btn.classList.contains('active')
+                    || btn.classList.contains('gm-active');
+                  if (label && (label === targetName || label.includes(targetName))) {
+                    matched = true;
+                    if (isActive) {
+                      btn.click(); // toggle off
+                    }
+                    break;
+                  }
+                }
+                if (!matched) {
+                  console.warn('Geoman button not found for name:', targetName);
+                }
+                // Sync status after attempted deactivation
+                requestAnimationFrame(() => updateAndSyncGeomanStatus());
               }
             }
             break;

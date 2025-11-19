@@ -22,13 +22,14 @@ import pathlib
 import requests
 import sys
 import uuid
-from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
+from typing import Any, Dict, List, Optional, Sequence, Tuple, Union, Callable
 
 import ipywidgets as widgets
 import traitlets
 from IPython.display import display
 
 from .base import MapWidget
+
 
 try:
     import geopandas as gpd
@@ -97,6 +98,7 @@ class MapLibreMap(MapWidget):
     geoman_data = traitlets.Dict({"type": "FeatureCollection", "features": []}).tag(
         sync=True
     )
+    geoman_status = traitlets.Dict({}).tag(sync=True)
 
     # Define the JavaScript module path
     _esm = _esm_maplibre
@@ -108,7 +110,7 @@ class MapLibreMap(MapWidget):
         zoom: float = 1.0,
         style: Union[str, Dict[str, Any]] = "dark-matter",
         width: str = "100%",
-        height: str = "600px",
+        height: str = "650px",
         bearing: float = 0.0,
         pitch: float = 0.0,
         controls: Dict[str, str] = {
@@ -133,7 +135,7 @@ class MapLibreMap(MapWidget):
             zoom: Initial zoom level (typically 0-20). Default is 1.0.
             style: MapLibre style URL string or style object dictionary.
             width: Widget width as CSS string (e.g., "100%", "800px").
-            height: Widget height as CSS string (e.g., "600px", "50vh").
+            height: Widget height as CSS string (e.g., "650px", "50vh").
             bearing: Map bearing (rotation) in degrees (0-360).
             pitch: Map pitch (tilt) in degrees (0-60).
             controls: Dictionary of control names and their positions. Default is {
@@ -247,6 +249,20 @@ class MapLibreMap(MapWidget):
         self._flatgeobuf_defaults: Dict[str, Any] = {}
         if add_sidebar:
             self._ipython_display_ = self._patched_display
+        # Listen for union toggle events coming from the toolbar button in JS
+        try:
+            self.on_map_event("geoman_union_toggled", self._handle_geoman_union_toggle)
+        except Exception:
+            pass
+        # Listen for split mode events coming from the toolbar button/drawing in JS
+        try:
+            self.on_map_event("geoman_split_toggled", self._handle_geoman_split_toggle)  # type: ignore[attr-defined]
+        except Exception:
+            pass
+        try:
+            self.on_map_event("geoman_split_line", self._handle_geoman_split_line)  # type: ignore[attr-defined]
+        except Exception:
+            pass
 
     def get_style(self) -> Dict:
         """
@@ -402,6 +418,493 @@ class MapLibreMap(MapWidget):
         self.container = container
         self.container.sidebar_widgets["Layers"] = self.layer_manager
         return container
+
+    def on_interaction(
+        self,
+        callback: Callable[..., None],
+        types: Optional[List[str]] = None,
+    ) -> None:
+        """
+        Register a unified interaction callback similar to ipyleaflet's on_interaction.
+
+        The callback will be invoked with keyword arguments like:
+            - event: 'interaction'
+            - type: event type (e.g., 'mousemove', 'mousedown', 'mouseup', 'click', 'dblclick', 'contextmenu')
+            - coordinates: [lng, lat] when available
+
+        Example:
+            def handle_map_interaction(**kwargs):
+                print(kwargs)
+
+            m.on_interaction(handle_map_interaction)
+
+        Args:
+            callback: Function that accepts **kwargs for interaction events.
+            types: Optional list of event types to subscribe to. If None, subscribes
+                   to common pointer events.
+        """
+        default_types = [
+            "mousemove",
+            "mousedown",
+            "mouseup",
+            "click",
+            "dblclick",
+            "contextmenu",
+        ]
+        event_types = types if types is not None else default_types
+
+        def _make_wrapper(expected_type: str):
+            def _wrapper(event: Dict[str, Any]) -> None:
+                event_type = event.get("type", expected_type)
+                # Normalize coordinates to [lng, lat] to match MapLibre
+                lat = event.get("lat")
+                lng = event.get("lng")
+                coordinates: Optional[List[float]] = None
+                if lat is not None and lng is not None:
+                    coordinates = [lng, lat]
+                else:
+                    lnglat = event.get("lngLat")
+                    if (
+                        isinstance(lnglat, (list, tuple))
+                        and len(lnglat) == 2
+                        and isinstance(lnglat[0], (int, float))
+                        and isinstance(lnglat[1], (int, float))
+                    ):
+                        # lngLat is already [lng, lat] from JS
+                        coordinates = [lnglat[0], lnglat[1]]
+
+                payload: Dict[str, Any] = {"event": "interaction", "type": event_type}
+                if coordinates is not None:
+                    payload["coordinates"] = coordinates
+
+                # Prefer kwargs-style callback like ipyleaflet; fallback to single dict
+                try:
+                    callback(**payload)
+                except TypeError:
+                    callback(payload)
+
+            return _wrapper
+
+        # Keep track of wrapper functions to allow unobserve later
+        if not hasattr(self, "_interaction_wrappers"):
+            self._interaction_wrappers: Dict[
+                Callable[..., None], Dict[str, Callable[[Dict[str, Any]], None]]
+            ] = {}
+        wrapper_map: Dict[str, Callable[[Dict[str, Any]], None]] = {}
+        for etype in event_types:
+            wrapper = _make_wrapper(etype)
+            self.on_map_event(etype, wrapper)
+            wrapper_map[etype] = wrapper
+        self._interaction_wrappers[callback] = {
+            **self._interaction_wrappers.get(callback, {}),
+            **wrapper_map,
+        }
+
+    def off_interaction(
+        self,
+        callback: Callable[..., None],
+        types: Optional[List[str]] = None,
+    ) -> None:
+        """
+        Unregister a previously registered interaction callback.
+
+        Args:
+            callback: The callback originally passed to on_interaction.
+            types: Optional list of event types to stop observing. If None, all types for this callback are removed.
+        """
+        if not hasattr(self, "_interaction_wrappers"):
+            return
+        wrapper_map = self._interaction_wrappers.get(callback, {})
+        if not wrapper_map:
+            return
+        target_types = types if types is not None else list(wrapper_map.keys())
+        for etype in target_types:
+            wrapper = wrapper_map.get(etype)
+            if wrapper is not None:
+                self.off_map_event(etype, wrapper)
+                del wrapper_map[etype]
+        if not wrapper_map:
+            # Remove the callback entry entirely when no wrappers remain
+            del self._interaction_wrappers[callback]
+
+    def get_geoman_status(self) -> Dict[str, Any]:
+        """
+        Get the current Geoman toolbar status synced from the frontend.
+
+        Returns:
+            Dict[str, Any]: Status including keys like 'activeButtons', 'isCollapsed', 'globalEditMode'.
+        """
+        return dict(self.geoman_status or {})
+
+    def refresh_geoman_status(self) -> None:
+        """
+        Request the frontend to refresh and sync the current Geoman toolbar status.
+        """
+        self.call_js_method("getGeomanStatus")
+
+    def activate_geoman_button(self, name: str) -> None:
+        """
+        Programmatically activate/click a Geoman toolbar button by name.
+
+        Args:
+            name: Button name or a unique substring of its label/title (case-insensitive).
+        """
+        self.call_js_method("activateGeomanButton", name)
+
+    def deactivate_geoman_button(self, name: str) -> None:
+        """
+        Programmatically deactivate a Geoman toolbar button by name.
+
+        Args:
+            name: Button name or a unique substring of its label/title (case-insensitive).
+        """
+        self.call_js_method("deactivateGeomanButton", name)
+
+    # ---------------------------------------------------------------------
+    # Geoman "Union" Mode (free implementation using GeoPandas/Shapely)
+    # ---------------------------------------------------------------------
+    def _union_geoman_features_by_ids(self, feature_ids: List[Union[str, int]]) -> None:
+        """
+        Internal helper to union/merge two Geoman features by their IDs and update geoman_data.
+        Supports polygons and lines. Polygons are dissolved via unary_union.
+        Lines are merged via linemerge(unary_union(...)).
+        """
+        if not HAS_GEOPANDAS:
+            raise ImportError("GeoPandas is required for union operations.")
+
+        from shapely.geometry import shape, mapping  # type: ignore
+        from shapely.ops import unary_union, linemerge  # type: ignore
+
+        features = list(self.geoman_data.get("features", []))
+        if len(features) == 0:
+            return
+
+        # Build ID -> index map (fallback to index if 'id' missing)
+        id_to_index: Dict[Union[str, int], int] = {}
+        for idx, feat in enumerate(features):
+            fid = feat.get("id", idx)
+            id_to_index[fid] = idx
+
+        # Resolve indices and geometries
+        indices: List[int] = []
+        for fid in feature_ids:
+            if fid in id_to_index:
+                indices.append(id_to_index[fid])
+
+        if len(indices) < 2:
+            return
+
+        # Collect geometries to union/merge
+        geoms: List[Any] = []
+        props: List[Dict[str, Any]] = []
+        geom_types: List[str] = []
+        for idx in indices[:2]:
+            feat = features[idx]
+            try:
+                geom = shape(feat.get("geometry"))
+                geoms.append(geom)
+                props.append(dict(feat.get("properties", {})))
+                geom_types.append(geom.geom_type)
+            except Exception:
+                # Skip invalid geometry
+                pass
+
+        if len(geoms) < 2:
+            return
+
+        # Determine operation based on geometry type (use first as reference)
+        primary_type = geom_types[0].lower()
+        secondary_type = geom_types[1].lower()
+        # If types mismatch (e.g., line vs polygon), skip to avoid odd GeometryCollection
+        if ("line" in primary_type and "line" not in secondary_type) or (
+            "polygon" in primary_type and "polygon" not in secondary_type
+        ):
+            return
+
+        # Merge geometries
+        if "line" in primary_type:
+            merged = linemerge(unary_union(geoms))
+        else:
+            merged = unary_union(geoms)
+
+        if merged.is_empty:
+            return
+
+        # Create new feature; keep properties from the first feature
+        new_feature = {
+            "type": "Feature",
+            "id": str(uuid.uuid4()),
+            "properties": props[0] if props else {},
+            "geometry": mapping(merged),
+        }
+
+        # Remove original features and append merged
+        keep = [f for i, f in enumerate(features) if i not in indices[:2]]
+        keep.append(new_feature)
+
+        # Sync back to widget
+        self.geoman_data = {"type": "FeatureCollection", "features": keep}
+
+    def enable_geoman_union_mode(self, distance_tolerance: float = 1e-4) -> None:
+        """
+        Enable a simple 'union mode' without Geoman Pro that works for polygons and lines.
+
+        Behavior:
+            - On each map click, finds the first Geoman polygon under the click.
+            - For lines, selects the closest line within distance_tolerance degrees.
+            - When two features of the same type have been clicked, merges them into a single feature,
+              removes the originals, and adds the merged polygon back.
+        Args:
+            distance_tolerance: Max angular distance (degrees) to consider a line selected
+                                when clicking near it. Default ~1e-4 (~11 m at equator).
+        """
+        if not HAS_GEOPANDAS:
+            raise ImportError("GeoPandas is required for union mode.")
+
+        import geopandas as gpd  # type: ignore
+        from shapely.geometry import Point  # type: ignore
+
+        self._union_mode_enabled = True
+        self._union_selected_ids: List[Union[str, int]] = []
+        self._union_expected_geom_type: Optional[str] = None
+        self._union_distance_tolerance = float(distance_tolerance)
+
+        def _union_click_handler(**kwargs: Any) -> None:
+            if kwargs.get("type") != "click" or not self._union_mode_enabled:
+                return
+            coords = kwargs.get("coordinates")
+            if not coords or not isinstance(coords, (list, tuple)) or len(coords) != 2:
+                return
+            lng, lat = coords  # coordinates are [lng, lat]
+
+            features = self.geoman_data.get("features", [])
+            if not features:
+                return
+            try:
+                gdf = gpd.GeoDataFrame.from_features(features, crs="EPSG:4326")
+            except Exception:
+                return
+
+            if gdf.empty or gdf.geometry.isna().all():
+                return
+
+            pt = Point(lng, lat)
+            # Prefer polygon hit-testing first
+            cand = gdf[gdf.geometry.geom_type.isin(["Polygon", "MultiPolygon"])]
+            poly_mask = cand.geometry.contains(pt) | cand.geometry.intersects(pt)
+            cand = cand[poly_mask]
+            selected_idx: Optional[int] = None
+            selected_type: Optional[str] = None
+            if not cand.empty:
+                selected_idx = int(cand.index[0])
+                selected_type = "polygon"
+            else:
+                # For lines, pick the nearest within tolerance
+                lines = gdf[
+                    gdf.geometry.geom_type.isin(["LineString", "MultiLineString"])
+                ]
+                if not lines.empty:
+                    # Compute distance to point; choose min
+                    distances = lines.geometry.distance(pt)
+                    min_dist = float(distances.min())
+                    if min_dist <= self._union_distance_tolerance:
+                        selected_idx = int(distances.idxmin())
+                        selected_type = "line"
+                    else:
+                        return
+                else:
+                    return
+
+            # Respect expected type: first selection sets it, subsequent must match
+            if self._union_expected_geom_type is None:
+                self._union_expected_geom_type = selected_type
+            elif selected_type != self._union_expected_geom_type:
+                return
+
+            idx = selected_idx
+            fid = features[idx].get("id", idx)  # type: ignore[arg-type]
+            if fid in self._union_selected_ids:
+                return
+            self._union_selected_ids.append(fid)
+            # Update visual highlight
+            try:
+                self.call_js_method("setUnionSelection", list(self._union_selected_ids))
+            except Exception:
+                pass
+
+            if len(self._union_selected_ids) >= 2:
+                try:
+                    self._union_geoman_features_by_ids(self._union_selected_ids[:2])
+                finally:
+                    self._union_selected_ids = []
+                    self._union_expected_geom_type = None
+                    try:
+                        self.call_js_method("clearUnionSelection")
+                    except Exception:
+                        pass
+
+        # Store and register the interaction handler
+        self._union_click_callback = _union_click_handler
+        self.on_interaction(self._union_click_callback, types=["click"])
+
+    def disable_geoman_union_mode(self) -> None:
+        """
+        Disable the simple 'union mode' and unregister the click handler.
+        """
+        if getattr(self, "_union_click_callback", None):
+            try:
+                self.off_interaction(self._union_click_callback, types=["click"])
+            except Exception:
+                pass
+        self._union_mode_enabled = False
+        self._union_selected_ids = []
+        self._union_expected_geom_type = None
+        try:
+            self.call_js_method("clearUnionSelection")
+        except Exception:
+            pass
+
+    # Event bridge from JS button to Python toggle
+    def _handle_geoman_union_toggle(self, event: Dict[str, Any]) -> None:
+        enabled = bool(event.get("enabled"))
+        if enabled:
+            self.enable_geoman_union_mode()
+        else:
+            self.disable_geoman_union_mode()
+
+    # ---------------------------------------------------------------------
+    # Geoman "Split" Mode (free implementation using GeoPandas/Shapely)
+    # ---------------------------------------------------------------------
+    def _split_geoman_features_by_line(self, coordinates: List[List[float]]) -> None:
+        """
+        Split polygons and lines by a user-drawn line and replace originals with parts.
+
+        Args:
+            coordinates: List of [lng, lat] pairs defining the split LineString in EPSG:4326.
+        """
+        if not HAS_GEOPANDAS:
+            raise ImportError("GeoPandas is required for split operations.")
+
+        from shapely.geometry import shape, mapping, LineString  # type: ignore
+        from shapely.ops import split as split_geom  # type: ignore
+
+        if not coordinates or len(coordinates) < 2:
+            return
+
+        try:
+            splitter = LineString(coordinates)
+        except Exception:
+            return
+
+        features = list(self.geoman_data.get("features", []))
+        if len(features) == 0:
+            return
+
+        new_features: List[Dict[str, Any]] = []
+
+        for idx, feat in enumerate(features):
+            try:
+                geom = shape(feat.get("geometry"))
+            except Exception:
+                new_features.append(feat)
+                continue
+
+            geom_type = geom.geom_type
+            # Only split polygons and lines
+            if geom_type not in (
+                "Polygon",
+                "MultiPolygon",
+                "LineString",
+                "MultiLineString",
+            ):
+                new_features.append(feat)
+                continue
+
+            try:
+                if not geom.intersects(splitter):
+                    new_features.append(feat)
+                    continue
+                result = split_geom(geom, splitter)
+            except Exception:
+                # If splitting fails, keep original
+                new_features.append(feat)
+                continue
+
+            # Collect pieces of same dimensionality as original
+            pieces: List[Any] = []
+            for g in getattr(result, "geoms", []):
+                if (
+                    geom_type in ("Polygon", "MultiPolygon")
+                    and g.geom_type == "Polygon"
+                ):
+                    if not g.is_empty and g.area > 0:
+                        pieces.append(g)
+                elif (
+                    geom_type in ("LineString", "MultiLineString")
+                    and g.geom_type == "LineString"
+                ):
+                    if not g.is_empty and g.length > 0:
+                        pieces.append(g)
+
+            if len(pieces) >= 2:
+                props = feat.get("properties", {}) or {}
+                for part in pieces:
+                    new_features.append(
+                        {
+                            "type": "Feature",
+                            "id": str(uuid.uuid4()),
+                            "properties": dict(props),
+                            "geometry": mapping(part),
+                        }
+                    )
+            else:
+                # Not effectively split; keep original
+                new_features.append(feat)
+
+        # Sync back to widget
+        self.geoman_data = {"type": "FeatureCollection", "features": new_features}
+
+    def enable_geoman_split_mode(self) -> None:
+        """Enable free split mode."""
+        if not HAS_GEOPANDAS:
+            raise ImportError("GeoPandas is required for split mode.")
+        # Turning on split mode; union off to avoid conflicts
+        try:
+            self.disable_geoman_union_mode()
+        except Exception:
+            pass
+        self._split_mode_enabled = True
+
+    def disable_geoman_split_mode(self) -> None:
+        """Disable free split mode."""
+        self._split_mode_enabled = False
+
+    def _handle_geoman_split_toggle(self, event: Dict[str, Any]) -> None:
+        enabled = bool(event.get("enabled"))
+        if enabled:
+            self.enable_geoman_split_mode()
+        else:
+            self.disable_geoman_split_mode()
+
+    def _handle_geoman_split_line(self, event: Dict[str, Any]) -> None:
+        if not getattr(self, "_split_mode_enabled", False):
+            return
+        coords = event.get("coordinates")
+        if not isinstance(coords, list) or len(coords) < 2:
+            return
+        # Basic validation of coordinate pairs
+        cleaned: List[List[float]] = []
+        for c in coords:
+            if isinstance(c, (list, tuple)) and len(c) == 2:
+                try:
+                    lng = float(c[0])
+                    lat = float(c[1])
+                except Exception:
+                    continue
+                cleaned.append([lng, lat])
+        if len(cleaned) < 2:
+            return
+        self._split_geoman_features_by_line(cleaned)
 
     def _repr_html_(self, **kwargs: Any) -> None:
         """
@@ -1105,7 +1608,9 @@ class MapLibreMap(MapWidget):
                 layer["min-zoom"] = layer.pop("minzoom")
             if "maxzoom" in layer:
                 layer["max-zoom"] = layer.pop("maxzoom")
-            layer = utils.replace_top_level_hyphens(layer)
+            # MapLibre expects hyphenated keys like 'source-layer', 'text-field', etc.
+            # Convert any underscore_keys to hyphen-keys recursively for JS compatibility.
+            layer = utils.replace_underscores_in_keys(layer)
 
         if "name" in kwargs and layer_id is None:
             layer_id = kwargs.pop("name")
@@ -1381,6 +1886,7 @@ class MapLibreMap(MapWidget):
         name: Optional[str] = None,
         fit_bounds: bool = True,
         visible: bool = True,
+        opacity: float = 1.0,
         before_id: Optional[str] = None,
         source_args: Optional[Dict] = None,
         **kwargs: Any,
@@ -1403,6 +1909,7 @@ class MapLibreMap(MapWidget):
             fit_bounds: Whether to adjust the viewport of the map to fit the
                 bounds of the data. Defaults to True.
             visible: Whether the layer is visible or not. Defaults to True.
+            opacity: The opacity of the layer. Defaults to 1.0.
             before_id: The ID of an existing layer before which the new layer
                 should be inserted.
             source_args: Additional keyword arguments that are passed to the
@@ -1412,7 +1919,11 @@ class MapLibreMap(MapWidget):
         import geopandas as gpd
 
         if not isinstance(data, gpd.GeoDataFrame):
-            data = gpd.read_file(data).__geo_interface__
+            if isinstance(data, str) and data.endswith(".parquet"):
+                data = gpd.read_parquet(data)
+                data = data.__geo_interface__
+            else:
+                data = gpd.read_file(data).__geo_interface__
         else:
             data = data.__geo_interface__
 
@@ -1424,6 +1935,7 @@ class MapLibreMap(MapWidget):
             name=name,
             fit_bounds=fit_bounds,
             visible=visible,
+            opacity=opacity,
             before_id=before_id,
             source_args=source_args,
             **kwargs,
@@ -2231,6 +2743,17 @@ class MapLibreMap(MapWidget):
 
         return self.geoman_data
 
+    def get_geoman_data_as_gdf(self, crs: str = "EPSG:4326") -> gpd.GeoDataFrame:
+        """Return the current Geoman feature collection as a GeoDataFrame.
+
+        Args:
+            crs: The CRS of the GeoDataFrame. Defaults to "EPSG:4326".
+        Returns:
+            A GeoDataFrame containing the current Geoman feature collection.
+        """
+
+        return gpd.GeoDataFrame.from_features(self.geoman_data["features"], crs=crs)
+
     def collapse_geoman_control(self) -> None:
         """Collapse the Geoman draw control toolbar."""
 
@@ -2245,6 +2768,486 @@ class MapLibreMap(MapWidget):
         """Toggle the Geoman draw control toolbar between collapsed and expanded states."""
 
         self.call_js_method("toggleGeomanControl")
+
+    def add_vector_editor(
+        self,
+        filename: Union[str, Dict[str, Any], "gpd.GeoDataFrame"],
+        properties: Optional[Dict[str, Any]] = None,
+        out_dir: Optional[str] = None,
+        filename_prefix: str = "",
+        time_format: str = "%Y%m%dT%H%M%S",
+        file_ext: str = "geojson",
+        controls: Optional[Dict[str, Any]] = None,
+        geoman_position: str = "top-left",
+        widget_position: str = "top-right",
+        widget_label: str = "Vector Editor",
+        widget_icon: str = "✎",
+        fit_bounds_options: Optional[Dict] = None,
+        **kwargs: Any,
+    ) -> str:
+        """Add an interactive vector editor with property assignment capabilities.
+
+        This method creates an interactive interface for editing vector features and
+        assigning properties to them. It loads existing vector data, adds a Geoman
+        drawing control, and provides a widget panel for editing feature properties.
+
+        Args:
+            filename: Vector data source - can be:
+                - File path (GeoJSON, shapefile, etc.)
+                - URL to remote GeoJSON
+                - GeoJSON dictionary
+                - GeoDataFrame
+            properties: Dictionary defining editable properties where keys are property
+                names and values define the input type:
+                - List/tuple: Creates dropdown with these options
+                - int: Creates integer input with this default value
+                - float: Creates float input with this default value
+                - str: Creates text input with this default value
+                If None, properties are inferred from the data.
+            out_dir: Directory for exported files. Defaults to current directory.
+            filename_prefix: Prefix for exported filenames.
+            time_format: Format string for timestamp in exported filenames.
+            file_ext: File extension for exports (default: "geojson").
+            controls: Dictionary specifying Geoman drawing controls to enable. The dictionary should have keys such as "draw", "edit", and "helper", each mapping to a list of control names to enable.
+                Defaults to:
+                    {
+                        "draw": ["point", "polygon", "line_string"],
+                        "edit": ["edit", "cut", "copy", "merge", "split"],
+                        "helper": ["trash"]
+                    }
+                Example:
+                    controls = {
+                        "draw": ["point", "polygon", "line_string"],
+                        "edit": ["edit", "cut", "copy", "merge", "split"],
+                        "helper": ["trash"]
+                    }
+            geoman_position: Position of Geoman control on map.
+            widget_position: Position of property editor widget on map.
+            widget_label: Label for the property editor widget panel.
+            widget_icon: Icon for the property editor toggle button.
+            fit_bounds_options: Options passed to fit_bounds().
+            **kwargs: Additional arguments passed to add_geoman_control().
+
+        Returns:
+            str: The control ID of the added widget control.
+
+        Example:
+            >>> m = MapLibreMap()
+            >>> m.add_basemap("Esri.WorldImagery")
+            >>> url = "https://example.com/buildings.geojson"
+            >>> properties = {
+            ...     "class": ["residential", "commercial", "industrial"],
+            ...     "height": 0.0,
+            ...     "floors": 1
+            ... }
+            >>> control_id = m.add_vector_editor(url, properties=properties)
+        """
+        from datetime import datetime
+        import os
+
+        if not HAS_GEOPANDAS:
+            raise ImportError(
+                "geopandas is required for add_vector_editor. "
+                "Install it with: pip install geopandas"
+            )
+
+        import geopandas as gpd
+
+        # Load vector data
+        if isinstance(filename, str):
+            # Check if it's a URL or file path
+            if filename.startswith(("http://", "https://")):
+                gdf = gpd.read_file(filename)
+            else:
+                _, ext = os.path.splitext(filename)
+                ext = ext.lower()
+                if ext in [".parquet", ".pq", ".geoparquet"]:
+                    gdf = gpd.read_parquet(filename)
+                else:
+                    gdf = gpd.read_file(filename)
+        elif isinstance(filename, dict):
+            gdf = gpd.GeoDataFrame.from_features(filename, crs="EPSG:4326")
+        elif isinstance(filename, gpd.GeoDataFrame):
+            gdf = filename
+        else:
+            raise ValueError(
+                "filename must be a string (path/URL), dict (GeoJSON), or GeoDataFrame"
+            )
+
+        # Ensure WGS84
+        gdf = gdf.to_crs(epsg=4326)
+
+        # Set output directory
+        if out_dir is None:
+            out_dir = os.getcwd()
+
+        # Infer properties from GeoDataFrame if not provided
+        if properties is None:
+            properties = {}
+            dtypes = gdf.dtypes.to_dict()
+            for key, value in dtypes.items():
+                if key != "geometry":
+                    if value == "object":
+                        if gdf[key].nunique() < 10:
+                            properties[key] = gdf[key].unique().tolist()
+                        else:
+                            properties[key] = ""
+                    elif value in ["int32", "int64"]:
+                        properties[key] = 0
+                    elif value in ["float32", "float64"]:
+                        properties[key] = 0.0
+                    elif value == "bool":
+                        properties[key] = gdf[key].unique().tolist()
+                    else:
+                        properties[key] = ""
+
+        # Select only property columns plus geometry
+        columns = list(properties.keys())
+        gdf = gdf[columns + ["geometry"]]
+        geojson = gdf.__geo_interface__
+
+        # Get bounds and fit map
+        bounds = utils.geojson_bounds(geojson)
+        if bounds is not None:
+            # Transform flat bounds [minx, miny, maxx, maxy] to [[minx, miny], [maxx, maxy]]
+            self.fit_bounds([[bounds[0], bounds[1]], [bounds[2], bounds[3]]])
+        # else: bounds is None, skip fitting bounds
+        # Prepare GeoJSON features for Geoman with proper IDs
+        geoman_geojson = {"type": "FeatureCollection", "features": []}
+
+        for idx, feature in enumerate(geojson["features"]):
+            # Create a unique ID for each feature
+            feature_id = f"feature-{uuid.uuid4().hex[:8]}"
+
+            # Determine the Geoman shape type from geometry
+            geom_type = feature["geometry"]["type"]
+            if geom_type == "Point":
+                gm_shape = "marker"
+            elif geom_type in ["Polygon", "MultiPolygon"]:
+                gm_shape = "polygon"
+            elif geom_type in ["LineString", "MultiLineString"]:
+                gm_shape = "line"
+            else:
+                gm_shape = "polygon"
+
+            # Create Geoman-compatible feature with preserved properties
+            # Start with original properties, then add Geoman-specific ones
+            feature_properties = feature.get("properties", {}).copy()
+            feature_properties["__gm_id"] = feature_id
+            feature_properties["__gm_shape"] = gm_shape
+
+            geoman_feature = {
+                "type": "Feature",
+                "id": feature_id,
+                "properties": feature_properties,
+                "geometry": feature["geometry"],
+            }
+
+            geoman_geojson["features"].append(geoman_feature)
+
+        # Set default controls if not provided
+        if controls is None:
+            controls = {
+                "draw": {
+                    "point": {"active": True},
+                    "polygon": {"active": True},
+                    "line_string": {"active": True},
+                },
+                "edit": {
+                    "change": {"active": False},  # Disable edit mode button
+                    "trash": {"active": True},  # Keep delete button
+                },
+                "helper": {
+                    "click_to_edit": {"active": True}  # Enable click-to-edit mode
+                },
+            }
+
+        # Add Geoman control first
+        self.add_geoman_control(position=geoman_position, controls=controls, **kwargs)
+
+        # Now load the features into Geoman (will be editable with JS fix)
+        self.set_geoman_data(geoman_geojson)
+
+        # Initialize feature properties storage
+        # Map Geoman feature IDs to properties from GeoDataFrame
+        draw_features = {}
+        for idx, (row_idx, row) in enumerate(gdf.iterrows()):
+            # Get the corresponding Geoman feature ID
+            feature_id = geoman_geojson["features"][idx]["id"]
+
+            feature_props = {}
+            for prop in properties.keys():
+                if prop in gdf.columns:
+                    val = row[prop]
+                    # Convert numpy/pandas types to Python native types
+                    if hasattr(val, "item"):
+                        val = val.item()
+                    feature_props[prop] = val
+                else:
+                    # Use default value from properties
+                    if isinstance(properties[prop], (list, tuple)):
+                        feature_props[prop] = properties[prop][0]
+                    else:
+                        feature_props[prop] = properties[prop]
+            draw_features[feature_id] = feature_props
+
+        # Store on map instance
+        if not hasattr(self, "draw_features"):
+            self.draw_features = {}
+        self.draw_features.update(draw_features)
+
+        # Expand dropdown options to include values from loaded GeoDataFrame
+        for key, values in properties.items():
+            if isinstance(values, (list, tuple)) and key in gdf.columns:
+                # Get unique values from the loaded data
+                existing_values = set(gdf[key].dropna().unique())
+
+                # Merge with provided options
+                options_set = set(values)
+                merged_options = options_set.union(existing_values)
+                merged_list = [val for val in values if val in merged_options]
+                for val in sorted(existing_values):
+                    if val not in options_set:
+                        merged_list.append(val)
+                properties[key] = merged_list
+
+        # Create property editing widgets
+        prop_widgets = widgets.VBox()
+        output = widgets.Output()
+
+        # Add a label to show which feature is selected
+        feature_label = widgets.HTML(
+            value="<p style='margin:5px 0; color:#666; font-size:12px;'>No feature selected</p>"
+        )
+
+        for key, values in properties.items():
+            if isinstance(values, (list, tuple)):
+                prop_widget = widgets.Dropdown(
+                    options=values,
+                    description=key,
+                    style={"description_width": "initial"},
+                )
+            elif isinstance(values, int):
+                prop_widget = widgets.IntText(
+                    value=values,
+                    description=key,
+                    style={"description_width": "initial"},
+                )
+            elif isinstance(values, float):
+                prop_widget = widgets.FloatText(
+                    value=values,
+                    description=key,
+                    style={"description_width": "initial"},
+                )
+            else:
+                prop_widget = widgets.Text(
+                    value=str(values),
+                    description=key,
+                    style={"description_width": "initial"},
+                )
+            prop_widgets.children += (prop_widget,)
+
+        # Create buttons
+        button_layout = widgets.Layout(width="100px")
+        save_btn = widgets.Button(
+            description="Save",
+            button_style="primary",
+            layout=button_layout,
+            tooltip="Save current feature properties",
+        )
+        export_btn = widgets.Button(
+            description="Export",
+            button_style="success",
+            layout=button_layout,
+            tooltip="Export all features to file",
+        )
+        reset_btn = widgets.Button(
+            description="Reset",
+            button_style="warning",
+            layout=button_layout,
+            tooltip="Reset to default values",
+        )
+
+        # Track currently selected feature for property editing
+        current_feature_id = {"id": None}
+
+        # Create a dropdown to select features
+        feature_selector = widgets.Dropdown(
+            options=[],
+            description="Select Feature:",
+            style={"description_width": "initial"},
+            layout=widgets.Layout(width="100%", margin="5px 0"),
+        )
+
+        # Update feature selector when geoman_data changes
+        def update_feature_list(change):
+            """Update the feature dropdown when features change."""
+            geoman_data = change["new"]
+            if geoman_data and "features" in geoman_data:
+                features = geoman_data["features"]
+                if len(features) > 0:
+                    # Create options: (label, feature_id)
+                    options = [
+                        (f"Feature {idx + 1}", f.get("id"))
+                        for idx, f in enumerate(features)
+                        if f.get("id")
+                    ]
+                    feature_selector.options = options
+
+                    # If no feature selected yet, select the first one
+                    if current_feature_id["id"] is None and len(options) > 0:
+                        feature_selector.value = options[0][1]
+                else:
+                    feature_selector.options = []
+                    current_feature_id["id"] = None
+                    feature_label.value = "<p style='margin:5px 0; color:#666; font-size:12px;'>No features available</p>"
+            else:
+                feature_selector.options = []
+                current_feature_id["id"] = None
+                feature_label.value = "<p style='margin:5px 0; color:#666; font-size:12px;'>No features available</p>"
+
+        self.observe(update_feature_list, names="geoman_data")
+
+        # When user selects a feature from dropdown
+        def on_feature_selected(change):
+            """Update property widgets when user selects a feature."""
+            feature_id = change["new"]
+            if not feature_id:
+                return
+
+            current_feature_id["id"] = feature_id
+            feature_label.value = f"<p style='margin:5px 0; color:#0066cc; font-size:12px;'><b>Editing:</b> {feature_id}</p>"
+
+            # Initialize properties for new features
+            if feature_id not in self.draw_features:
+                self.draw_features[feature_id] = {}
+                for key, values in properties.items():
+                    if isinstance(values, (list, tuple)):
+                        self.draw_features[feature_id][key] = values[0]
+                    else:
+                        self.draw_features[feature_id][key] = values
+
+            # Update widgets with feature's current properties
+            feature_props = self.draw_features[feature_id]
+            for prop_widget in prop_widgets.children:
+                key = prop_widget.description
+                if key in feature_props:
+                    value = feature_props[key]
+                    # For dropdowns, only set if value is in options
+                    if hasattr(prop_widget, "options"):
+                        if value in prop_widget.options:
+                            prop_widget.value = value
+                        elif len(prop_widget.options) > 0:
+                            prop_widget.value = prop_widget.options[0]
+                    else:
+                        prop_widget.value = value
+
+        feature_selector.observe(on_feature_selected, names="value")
+
+        # Trigger initial update
+        update_feature_list({"new": self.geoman_data})
+
+        # Save button handler
+        def on_save_click(b):
+            output.clear_output()
+            feature_id = current_feature_id["id"]
+            if feature_id is not None:
+                # Save widget values to feature properties
+                for prop_widget in prop_widgets.children:
+                    key = prop_widget.description
+                    self.draw_features[feature_id][key] = prop_widget.value
+                with output:
+                    print("✓ Feature properties saved")
+            else:
+                with output:
+                    print(
+                        "⚠ No feature selected. Click on a feature to edit it or draw a new one."
+                    )
+
+        save_btn.on_click(on_save_click)
+
+        # Export button handler
+        def on_export_click(b):
+            output.clear_output()
+            current_time = datetime.now().strftime(time_format)
+            export_filename = os.path.join(
+                out_dir, f"{filename_prefix}{current_time}.{file_ext}"
+            )
+
+            # Update feature collection with saved properties
+            geoman_data = self.geoman_data
+            if geoman_data and "features" in geoman_data:
+                for idx, feature in enumerate(geoman_data["features"]):
+                    feature_id = feature.get("id")
+                    if feature_id and feature_id in self.draw_features:
+                        # Merge Geoman properties with our custom properties
+                        props = dict(feature.get("properties", {}))
+                        props.update(self.draw_features[feature_id])
+                        geoman_data["features"][idx]["properties"] = props
+
+                # Export to file
+                export_gdf = gpd.GeoDataFrame.from_features(
+                    geoman_data, crs="EPSG:4326"
+                )
+                export_gdf.to_file(export_filename, driver="GeoJSON")
+
+                with output:
+                    print(f"✓ Exported: {os.path.basename(export_filename)}")
+            else:
+                with output:
+                    print("⚠ No features to export")
+
+        export_btn.on_click(on_export_click)
+
+        # Reset button handler
+        def on_reset_click(b):
+            output.clear_output()
+            for prop_widget in prop_widgets.children:
+                key = prop_widget.description
+                if key in properties:
+                    if isinstance(properties[key], (list, tuple)):
+                        prop_widget.value = properties[key][0]
+                    else:
+                        prop_widget.value = properties[key]
+            with output:
+                print("✓ Reset to defaults")
+
+        reset_btn.on_click(on_reset_click)
+
+        # Create main widget container
+        info_label = widgets.HTML(
+            value="<i>Select a feature from the dropdown to edit its properties</i>",
+            layout=widgets.Layout(margin="0 0 5px 0"),
+        )
+
+        button_box = widgets.HBox(
+            [save_btn, export_btn, reset_btn],
+            layout=widgets.Layout(margin="10px 0"),
+        )
+
+        main_widget = widgets.VBox(
+            [
+                info_label,
+                feature_selector,
+                feature_label,
+                prop_widgets,
+                button_box,
+                output,
+            ],
+            layout=widgets.Layout(padding="10px"),
+        )
+
+        # Add widget control to map
+        control_id = self.add_widget_control(
+            main_widget,
+            label=widget_label,
+            icon=widget_icon,
+            position=widget_position,
+            collapsed=True,
+            panel_width=320,
+        )
+
+        return control_id
 
     def add_measures_control(
         self,
@@ -2617,36 +3620,51 @@ class MapLibreMap(MapWidget):
 
         # Add default layers if none provided
         if layers is None:
-            layers = [
-                {
-                    "id": f"{layer_id}_landuse",
-                    "source": source_id,
-                    "source-layer": "landuse",
-                    "type": "fill",
-                    "paint": {"fill-color": "steelblue", "fill-opacity": 0.5},
-                },
-                {
-                    "id": f"{layer_id}_roads",
-                    "source": source_id,
-                    "source-layer": "roads",
-                    "type": "line",
-                    "paint": {"line-color": "black", "line-width": 1},
-                },
-                {
-                    "id": f"{layer_id}_buildings",
-                    "source": source_id,
-                    "source-layer": "buildings",
-                    "type": "fill",
-                    "paint": {"fill-color": "gray", "fill-opacity": 0.7},
-                },
-                {
-                    "id": f"{layer_id}_water",
-                    "source": source_id,
-                    "source-layer": "water",
-                    "type": "fill",
-                    "paint": {"fill-color": "lightblue", "fill-opacity": 0.8},
-                },
-            ]
+            url_lower = pmtiles_url.lower()
+            # Heuristic defaults:
+            # - If this looks like an Overture Buildings dataset, add only the buildings layer.
+            # - Otherwise, fall back to a simple protomaps-style set.
+            if "buildings" in url_lower:
+                layers = [
+                    {
+                        "id": f"{layer_id}_buildings",
+                        "source": source_id,
+                        "source-layer": "buildings",
+                        "type": "fill",
+                        "paint": {"fill-color": "gray", "fill-opacity": 0.7},
+                    }
+                ]
+            else:
+                layers = [
+                    {
+                        "id": f"{layer_id}_landuse",
+                        "source": source_id,
+                        "source-layer": "landuse",
+                        "type": "fill",
+                        "paint": {"fill-color": "steelblue", "fill-opacity": 0.5},
+                    },
+                    {
+                        "id": f"{layer_id}_roads",
+                        "source": source_id,
+                        "source-layer": "roads",
+                        "type": "line",
+                        "paint": {"line-color": "black", "line-width": 1},
+                    },
+                    {
+                        "id": f"{layer_id}_buildings",
+                        "source": source_id,
+                        "source-layer": "buildings",
+                        "type": "fill",
+                        "paint": {"fill-color": "gray", "fill-opacity": 0.7},
+                    },
+                    {
+                        "id": f"{layer_id}_water",
+                        "source": source_id,
+                        "source-layer": "water",
+                        "type": "fill",
+                        "paint": {"fill-color": "lightblue", "fill-opacity": 0.8},
+                    },
+                ]
 
         # Add all layers
         for layer_config in layers:
@@ -2663,6 +3681,8 @@ class MapLibreMap(MapWidget):
         basemap: str,
         layer_id: Optional[str] = None,
         before_id: Optional[str] = None,
+        visible: Optional[bool] = True,
+        **kwargs: Any,
     ) -> None:
         """Add a basemap to the map using xyzservices providers.
 
@@ -2672,6 +3692,8 @@ class MapLibreMap(MapWidget):
             layer_id: Optional ID for the basemap layer. If None, uses basemap name.
             before_id: Optional layer ID to insert this layer before.
                       If None, layer is added on top.
+            visible: Whether the layer should be visible initially.
+            **kwargs: Additional parameters passed to the basemap layer.
 
         Raises:
             ValueError: If the specified basemap is not available.
@@ -2700,6 +3722,8 @@ class MapLibreMap(MapWidget):
             source_url=tile_url,
             paint={"raster-opacity": 1.0},
             before_id=before_id,
+            visible=visible,
+            **kwargs,
         )
 
     def add_draw_control(
