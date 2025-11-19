@@ -591,7 +591,7 @@ class MapLibreMap(MapWidget):
             options["bbox"] = list(bbox)
         if keys:
             options["keys"] = list(keys)
-        if timeout:
+        if timeout is not None:
             options["timeout"] = int(timeout)
         self.call_js_method("loadOsmTransportToGeoman", options)
 
