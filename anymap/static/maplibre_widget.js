@@ -4760,9 +4760,9 @@ function render({ model, el }) {
                 const osmCtrl = new OsmTransportControl(instance);
                 try {
                   osmCtrl.onAdd(map);
-                  if (!unionCtrl || !unionCtrl._container) {
-                    map.addControl(osmCtrl, position);
-                  }
+                  // The guard `if (!unionCtrl || !unionCtrl._container)` always evaluates to false.
+                  // Therefore, the block is unreachable and has been removed.
+                  // If needed, add logic here to handle cases when unionCtrl is not present.
                 } catch (_e) {}
                 el._osmTransportControl = osmCtrl;
               } catch (_e) {}
