@@ -551,13 +551,15 @@ class MapLibreMap(MapWidget):
     # ---------------------------------------------------------------------
     def _union_geoman_features_by_ids(self, feature_ids: List[Union[str, int]]) -> None:
         """
-        Internal helper to union two Geoman features by their IDs and update geoman_data.
+        Internal helper to union/merge two Geoman features by their IDs and update geoman_data.
+        Supports polygons and lines. Polygons are dissolved via unary_union.
+        Lines are merged via linemerge(unary_union(...)).
         """
         if not HAS_GEOPANDAS:
             raise ImportError("GeoPandas is required for union operations.")
 
         from shapely.geometry import shape, mapping  # type: ignore
-        from shapely.ops import unary_union  # type: ignore
+        from shapely.ops import unary_union, linemerge  # type: ignore
 
         features = list(self.geoman_data.get("features", []))
         if len(features) == 0:
@@ -578,15 +580,17 @@ class MapLibreMap(MapWidget):
         if len(indices) < 2:
             return
 
-        # Collect geometries to union
-        geoms = []
-        props = []
+        # Collect geometries to union/merge
+        geoms: List[Any] = []
+        props: List[Dict[str, Any]] = []
+        geom_types: List[str] = []
         for idx in indices[:2]:
             feat = features[idx]
             try:
                 geom = shape(feat.get("geometry"))
                 geoms.append(geom)
                 props.append(dict(feat.get("properties", {})))
+                geom_types.append(geom.geom_type)
             except Exception:
                 # Skip invalid geometry
                 pass
@@ -594,8 +598,21 @@ class MapLibreMap(MapWidget):
         if len(geoms) < 2:
             return
 
-        # Union geometries
-        merged = unary_union(geoms)
+        # Determine operation based on geometry type (use first as reference)
+        primary_type = geom_types[0].lower()
+        secondary_type = geom_types[1].lower()
+        # If types mismatch (e.g., line vs polygon), skip to avoid odd GeometryCollection
+        if ("line" in primary_type and "line" not in secondary_type) or (
+            "polygon" in primary_type and "polygon" not in secondary_type
+        ):
+            return
+
+        # Merge geometries
+        if "line" in primary_type:
+            merged = linemerge(unary_union(geoms))
+        else:
+            merged = unary_union(geoms)
+
         if merged.is_empty:
             return
 
@@ -614,14 +631,18 @@ class MapLibreMap(MapWidget):
         # Sync back to widget
         self.geoman_data = {"type": "FeatureCollection", "features": keep}
 
-    def enable_geoman_union_mode(self) -> None:
+    def enable_geoman_union_mode(self, distance_tolerance: float = 1e-4) -> None:
         """
-        Enable a simple 'union mode' without Geoman Pro.
+        Enable a simple 'union mode' without Geoman Pro that works for polygons and lines.
 
         Behavior:
             - On each map click, finds the first Geoman polygon under the click.
-            - When two polygons have been clicked, unions them into a single feature,
+            - For lines, selects the closest line within distance_tolerance degrees.
+            - When two features of the same type have been clicked, merges them into a single feature,
               removes the originals, and adds the merged polygon back.
+        Args:
+            distance_tolerance: Max angular distance (degrees) to consider a line selected
+                                when clicking near it. Default ~1e-4 (~11 m at equator).
         """
         if not HAS_GEOPANDAS:
             raise ImportError("GeoPandas is required for union mode.")
@@ -631,6 +652,8 @@ class MapLibreMap(MapWidget):
 
         self._union_mode_enabled = True
         self._union_selected_ids: List[Union[str, int]] = []
+        self._union_expected_geom_type: Optional[str] = None
+        self._union_distance_tolerance = float(distance_tolerance)
 
         def _union_click_handler(**kwargs: Any) -> None:
             if kwargs.get("type") != "click" or not self._union_mode_enabled:
@@ -652,24 +675,59 @@ class MapLibreMap(MapWidget):
                 return
 
             pt = Point(lng, lat)
-            # Prefer contains; fallback to intersects
-            mask = gdf.geometry.contains(pt) | gdf.geometry.intersects(pt)
-            cand = gdf[mask]
-            if cand.empty:
+            # Prefer polygon hit-testing first
+            cand = gdf[gdf.geometry.geom_type.isin(["Polygon", "MultiPolygon"])]
+            poly_mask = cand.geometry.contains(pt) | cand.geometry.intersects(pt)
+            cand = cand[poly_mask]
+            selected_idx: Optional[int] = None
+            selected_type: Optional[str] = None
+            if not cand.empty:
+                selected_idx = int(cand.index[0])
+                selected_type = "polygon"
+            else:
+                # For lines, pick the nearest within tolerance
+                lines = gdf[
+                    gdf.geometry.geom_type.isin(["LineString", "MultiLineString"])
+                ]
+                if not lines.empty:
+                    # Compute distance to point; choose min
+                    distances = lines.geometry.distance(pt)
+                    min_dist = float(distances.min())
+                    if min_dist <= self._union_distance_tolerance:
+                        selected_idx = int(distances.idxmin())
+                        selected_type = "line"
+                    else:
+                        return
+                else:
+                    return
+
+            # Respect expected type: first selection sets it, subsequent must match
+            if self._union_expected_geom_type is None:
+                self._union_expected_geom_type = selected_type
+            elif selected_type != self._union_expected_geom_type:
                 return
 
-            # Take the first candidate
-            idx = int(cand.index[0])
-            fid = features[idx].get("id", idx)
+            idx = selected_idx
+            fid = features[idx].get("id", idx)  # type: ignore[arg-type]
             if fid in self._union_selected_ids:
                 return
             self._union_selected_ids.append(fid)
+            # Update visual highlight
+            try:
+                self.call_js_method("setUnionSelection", list(self._union_selected_ids))
+            except Exception:
+                pass
 
             if len(self._union_selected_ids) >= 2:
                 try:
                     self._union_geoman_features_by_ids(self._union_selected_ids[:2])
                 finally:
                     self._union_selected_ids = []
+                    self._union_expected_geom_type = None
+                    try:
+                        self.call_js_method("clearUnionSelection")
+                    except Exception:
+                        pass
 
         # Store and register the interaction handler
         self._union_click_callback = _union_click_handler
@@ -686,6 +744,11 @@ class MapLibreMap(MapWidget):
                 pass
         self._union_mode_enabled = False
         self._union_selected_ids = []
+        self._union_expected_geom_type = None
+        try:
+            self.call_js_method("clearUnionSelection")
+        except Exception:
+            pass
 
     def _repr_html_(self, **kwargs: Any) -> None:
         """

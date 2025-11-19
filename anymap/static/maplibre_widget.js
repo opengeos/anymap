@@ -7422,6 +7422,107 @@ function render({ model, el }) {
             }
             break;
 
+          case 'setUnionSelection':
+            // Highlight selected Geoman features by IDs using a temporary GeoJSON source/layers
+            {
+              const selectedIds = Array.isArray(args[0]) ? args[0] : [];
+              const data = model.get('geoman_data') || { type: 'FeatureCollection', features: [] };
+              const selectedFeatures = (data.features || []).filter(f => selectedIds.includes(f.id));
+              const fc = { type: 'FeatureCollection', features: selectedFeatures };
+
+              const srcId = 'union-selection';
+              const fillId = 'union-selection-fill';
+              const lineId = 'union-selection-line';
+              const pointId = 'union-selection-point';
+
+              // Add or update source
+              if (map.getSource(srcId)) {
+                try {
+                  map.getSource(srcId).setData(fc);
+                } catch (e) {
+                  console.warn('Failed to update union selection source, recreating:', e);
+                  try {
+                    map.removeLayer(fillId);
+                    map.removeLayer(lineId);
+                    map.removeLayer(pointId);
+                  } catch (_err) {}
+                  try {
+                    map.removeSource(srcId);
+                  } catch (_err2) {}
+                  map.addSource(srcId, { type: 'geojson', data: fc });
+                }
+              } else {
+                map.addSource(srcId, { type: 'geojson', data: fc });
+              }
+
+              // Ensure highlight layers exist
+              if (!map.getLayer(fillId)) {
+                try {
+                  map.addLayer({
+                    id: fillId,
+                    type: 'fill',
+                    source: srcId,
+                    filter: ['==', ['geometry-type'], 'Polygon'],
+                    paint: {
+                      'fill-color': '#ffd54f',
+                      'fill-opacity': 0.35
+                    }
+                  });
+                } catch (e) {
+                  console.warn('Failed to add union selection fill layer:', e);
+                }
+              }
+              if (!map.getLayer(lineId)) {
+                try {
+                  map.addLayer({
+                    id: lineId,
+                    type: 'line',
+                    source: srcId,
+                    filter: ['==', ['geometry-type'], 'LineString'],
+                    paint: {
+                      'line-color': '#ffca28',
+                      'line-width': 4
+                    }
+                  });
+                } catch (e) {
+                  console.warn('Failed to add union selection line layer:', e);
+                }
+              }
+              if (!map.getLayer(pointId)) {
+                try {
+                  map.addLayer({
+                    id: pointId,
+                    type: 'circle',
+                    source: srcId,
+                    filter: ['==', ['geometry-type'], 'Point'],
+                    paint: {
+                      'circle-radius': 6,
+                      'circle-color': '#ffb300',
+                      'circle-stroke-color': '#ff6f00',
+                      'circle-stroke-width': 2
+                    }
+                  });
+                } catch (e) {
+                  console.warn('Failed to add union selection point layer:', e);
+                }
+              }
+            }
+            break;
+
+          case 'clearUnionSelection':
+            // Clear highlight by setting empty FeatureCollection; keep layers for reuse
+            {
+              const srcId = 'union-selection';
+              if (map.getSource(srcId)) {
+                try {
+                  map.getSource(srcId).setData({ type: 'FeatureCollection', features: [] });
+                } catch (e) {
+                  console.warn('Failed to clear union selection source:', e);
+                }
+              }
+            }
+            break;
+
           case 'getGeomanStatus':
             // Query and sync current Geoman toolbar status
             updateAndSyncGeomanStatus();
