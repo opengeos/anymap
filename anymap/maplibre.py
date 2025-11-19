@@ -249,6 +249,11 @@ class MapLibreMap(MapWidget):
         self._flatgeobuf_defaults: Dict[str, Any] = {}
         if add_sidebar:
             self._ipython_display_ = self._patched_display
+        # Listen for union toggle events coming from the toolbar button in JS
+        try:
+            self.on_map_event("geoman_union_toggled", self._handle_geoman_union_toggle)
+        except Exception:
+            pass
 
     def get_style(self) -> Dict:
         """
@@ -749,6 +754,14 @@ class MapLibreMap(MapWidget):
             self.call_js_method("clearUnionSelection")
         except Exception:
             pass
+
+    # Event bridge from JS button to Python toggle
+    def _handle_geoman_union_toggle(self, event: Dict[str, Any]) -> None:
+        enabled = bool(event.get("enabled"))
+        if enabled:
+            self.enable_geoman_union_mode()
+        else:
+            self.disable_geoman_union_mode()
 
     def _repr_html_(self, **kwargs: Any) -> None:
         """

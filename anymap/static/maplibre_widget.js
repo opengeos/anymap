@@ -4067,6 +4067,156 @@ function render({ model, el }) {
             // Sync initial toolbar status
             updateAndSyncGeomanStatus();
 
+            // Add a separate Union toggle control beneath the Geoman control
+            try {
+              class UnionToggleControl {
+                constructor(geomanInstance, modelRef) {
+                  this._geomanInstance = geomanInstance;
+                  this._model = modelRef;
+                  this._container = null;
+                  this._button = null;
+                }
+                onAdd(mapRef) {
+                  this._map = mapRef;
+                  const container = document.createElement('div');
+                  container.className = 'maplibregl-ctrl maplibregl-ctrl-group gm-union-ctrl';
+                  const btn = document.createElement('button');
+                  btn.type = 'button';
+                  btn.className = 'maplibregl-ctrl-icon gm-union-button';
+                  btn.setAttribute('title', 'Union');
+                  btn.setAttribute('aria-label', 'Union');
+                  btn.setAttribute('aria-pressed', 'false');
+                  // Simple union SVG icon
+                  btn.innerHTML = `
+                    <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                      <rect x="3.5" y="6" width="10.5" height="10.5" rx="2" ry="2" fill="#00E5FF" stroke="#000" stroke-opacity="0.85" stroke-width="0.8"/>
+                      <rect x="9.5" y="4" width="10.5" height="10.5" rx="2" ry="2" fill="#FF4081" stroke="#000" stroke-opacity="0.85" stroke-width="0.8"/>
+                      <rect x="9" y="9" width="6" height="6" fill="#FFEB3B" stroke="#000" stroke-opacity="0.9" stroke-width="0.6"/>
+                    </svg>
+                  `;
+                  btn.style.display = 'flex';
+                  btn.style.alignItems = 'center';
+                  btn.style.justifyContent = 'center';
+
+                  this.setPressed = (pressed) => {
+                    if (pressed) {
+                      btn.setAttribute('aria-pressed', 'true');
+                      btn.classList.add('gm-active');
+                      btn.style.boxShadow = '0 0 0 2px rgba(255,235,59,0.8) inset';
+                      btn.style.backgroundColor = 'rgba(255, 235, 59, 0.15)';
+                    } else {
+                      btn.setAttribute('aria-pressed', 'false');
+                      btn.classList.remove('gm-active');
+                      btn.style.boxShadow = '';
+                      btn.style.backgroundColor = '';
+                    }
+                  };
+
+                  const isActiveButton = (buttonEl) => {
+                    return buttonEl.getAttribute('aria-pressed') === 'true'
+                      || buttonEl.classList.contains('active')
+                      || buttonEl.classList.contains('gm-active');
+                  };
+
+                  const getButtonLabel = (buttonEl) => {
+                    return (buttonEl.getAttribute('title')
+                      || buttonEl.getAttribute('aria-label')
+                      || (buttonEl.textContent ? buttonEl.textContent.trim() : '')).toLowerCase();
+                  };
+
+                  const deactivateOtherToolsExceptSnap = () => {
+                    const container = this._geomanInstance?.control?.container;
+                    if (!container) return;
+                    const buttons = Array.from(container.querySelectorAll('.gm-control-button'));
+                    buttons.forEach((b) => {
+                      const label = getButtonLabel(b);
+                      const isSnap = label.includes('snap');
+                      if (!isSnap && isActiveButton(b)) {
+                        // Toggle off
+                        b.click();
+                      }
+                    });
+                  };
+
+                  btn.addEventListener('click', () => {
+                    const currentlyPressed = btn.getAttribute('aria-pressed') === 'true';
+                    const next = !currentlyPressed;
+                    this.setPressed(next);
+                    if (next) {
+                      // Deactivate other tools except snapping
+                      deactivateOtherToolsExceptSnap();
+                    }
+                    // Notify Python
+                    try {
+                      const currentEvents = this._model.get("_js_events") || [];
+                      this._model.set("_js_events", [
+                        ...currentEvents,
+                        { type: 'geoman_union_toggled', enabled: next }
+                      ]);
+                      this._model.save_changes();
+                    } catch (evtErr) {
+                      console.warn('Failed to notify union toggle:', evtErr);
+                    }
+                  });
+
+                  container.appendChild(btn);
+                  this._container = container;
+                  this._button = btn;
+                  return container;
+                }
+                onRemove() {
+                  if (this._container && this._container.parentNode) {
+                    this._container.parentNode.removeChild(this._container);
+                  }
+                  this._map = undefined;
+                }
+              }
+              const unionCtrl = new UnionToggleControl(instance, model);
+              // Place in same corner as Geoman; adding after Geoman stacks beneath
+              map.addControl(unionCtrl, position);
+              el._unionControl = unionCtrl;
+
+              // Observe Geoman toolbar and auto-deactivate Union when another tool turns active
+              try {
+                const geomanContainer = instance?.control?.container;
+                const isActiveButton = (buttonEl) =>
+                  buttonEl.getAttribute('aria-pressed') === 'true'
+                  || buttonEl.classList.contains('active')
+                  || buttonEl.classList.contains('gm-active');
+                const getButtonLabel = (buttonEl) =>
+                  (buttonEl.getAttribute('title')
+                    || buttonEl.getAttribute('aria-label')
+                    || (buttonEl.textContent ? buttonEl.textContent.trim() : '')).toLowerCase();
+                if (geomanContainer) {
+                  const observer = new MutationObserver(() => {
+                    const buttons = Array.from(geomanContainer.querySelectorAll('.gm-control-button'));
+                    const activeNonSnap = buttons.some((b) => {
+                      const label = getButtonLabel(b);
+                      const isSnap = label.includes('snap');
+                      return !isSnap && isActiveButton(b);
+                    });
+                    if (activeNonSnap && unionCtrl?._button?.getAttribute('aria-pressed') === 'true') {
+                      unionCtrl.setPressed(false);
+                      try {
+                        const currentEvents = model.get("_js_events") || [];
+                        model.set("_js_events", [
+                          ...currentEvents,
+                          { type: 'geoman_union_toggled', enabled: false }
+                        ]);
+                        model.save_changes();
+                      } catch (_e) {}
+                    }
+                  });
+                  observer.observe(geomanContainer, { attributes: true, subtree: true, attributeFilter: ['class', 'aria-pressed'] });
+                  el._unionObserver = observer;
+                }
+              } catch (obsErr) {
+                console.warn('Failed to observe Geoman toolbar for union toggle sync:', obsErr);
+              }
+            } catch (e) {
+              console.warn('Failed to add Union toggle control:', e);
+            }
+
             if (typeof initialCollapsed === 'boolean') {
               requestAnimationFrame(() => {
                 applyGeomanCollapsedState(instance, initialCollapsed);
