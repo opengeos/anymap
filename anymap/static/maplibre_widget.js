@@ -4152,6 +4152,8 @@ function render({ model, el }) {
               const keys = Array.isArray(options.keys) && options.keys.length ? options.keys : ['highway', 'railway'];
               const timeout = options.timeout || 25;
               const [w, s, e, n] = bbox;
+              // Transform bbox from GeoJSON format [west, south, east, north]
+              // to Overpass API format (s,w,n,e): south,west,north,east
               const bboxStr = `${s},${w},${n},${e}`;
               const body = [
                 `[out:json][timeout:${timeout}];`,
