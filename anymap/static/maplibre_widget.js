@@ -4088,7 +4088,7 @@ function render({ model, el }) {
                   btn.setAttribute('aria-pressed', 'false');
                   // Simple union SVG icon
                   btn.innerHTML = `
-                    <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                       <rect x="3.5" y="6" width="10.5" height="10.5" rx="2" ry="2" fill="#00E5FF" stroke="#000" stroke-opacity="0.85" stroke-width="0.8"/>
                       <rect x="9.5" y="4" width="10.5" height="10.5" rx="2" ry="2" fill="#FF4081" stroke="#000" stroke-opacity="0.85" stroke-width="0.8"/>
                       <rect x="9" y="9" width="6" height="6" fill="#FFEB3B" stroke="#000" stroke-opacity="0.9" stroke-width="0.6"/>
@@ -4102,8 +4102,8 @@ function render({ model, el }) {
                     if (pressed) {
                       btn.setAttribute('aria-pressed', 'true');
                       btn.classList.add('gm-active');
-                      btn.style.boxShadow = '0 0 0 2px rgba(255,235,59,0.8) inset';
-                      btn.style.backgroundColor = 'rgba(255, 235, 59, 0.15)';
+                      btn.style.boxShadow = '0 0 0 2px rgba(33,150,243,0.8) inset';
+                      btn.style.backgroundColor = 'rgba(33, 150, 243, 0.15)';
                     } else {
                       btn.setAttribute('aria-pressed', 'false');
                       btn.classList.remove('gm-active');
