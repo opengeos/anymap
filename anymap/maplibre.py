@@ -2723,17 +2723,17 @@ class MapLibreMap(MapWidget):
                 under the pointer. Larger values make selection easier (default 8 for
                 click, 6 for hover if not specified).
             paint: Optional styling config for a mirrored, read-only GeoJSON layer
-                that reflects the current ``geoman_data`` for visualization. All keys 
+                that reflects the current ``geoman_data`` for visualization. All keys
                 are optional. Structure:
                 {
                     "line": { ... MapLibre line paint ... },     # For LineString/MultiLineString
-                    "fill": { ... MapLibre fill paint ... },     # For Polygon/MultiPolygon  
+                    "fill": { ... MapLibre fill paint ... },     # For Polygon/MultiPolygon
                     "point": { ... MapLibre circle paint ... }   # For Point/MultiPoint
                 }
-                The mirrored layer shows the final saved geometry, not intermediate 
-                editing states. You can use data-driven expressions here, e.g. 
-                line color by ["get","highway"]. Note: If your paint styles are too 
-                similar to Geoman's default editing styles, features may be visually 
+                The mirrored layer shows the final saved geometry, not intermediate
+                editing states. You can use data-driven expressions here, e.g.
+                line color by ["get","highway"]. Note: If your paint styles are too
+                similar to Geoman's default editing styles, features may be visually
                 difficult to distinguish during editing.
             paint_above_geoman: If True (default), place the mirrored style layers
                 above Geoman’s edit layers; set False to draw beneath them.
