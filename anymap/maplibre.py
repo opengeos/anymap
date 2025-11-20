@@ -2698,6 +2698,8 @@ class MapLibreMap(MapWidget):
         show_info_box: Optional[bool] = None,
         info_box_mode: str = "click",
         info_box_tolerance: Optional[int] = None,
+        paint: Optional[Dict[str, Any]] = None,
+        paint_above_geoman: bool = True,
     ) -> None:
         """Add the MapLibre-Geoman drawing and editing toolkit.
 
@@ -2720,6 +2722,21 @@ class MapLibreMap(MapWidget):
             info_box_tolerance: Pixel search tolerance when detecting a feature
                 under the pointer. Larger values make selection easier (default 8 for
                 click, 6 for hover if not specified).
+            paint: Optional styling config for a mirrored, read-only GeoJSON layer
+                that reflects the current ``geoman_data`` for visualization. All keys
+                are optional. Structure:
+                {
+                    "line": { ... MapLibre line paint ... },     # For LineString/MultiLineString
+                    "fill": { ... MapLibre fill paint ... },     # For Polygon/MultiPolygon
+                    "point": { ... MapLibre circle paint ... }   # For Point/MultiPoint
+                }
+                The mirrored layer shows the final saved geometry, not intermediate
+                editing states. You can use data-driven expressions here, e.g.
+                line color by ["get","highway"]. Note: If your paint styles are too
+                similar to Geoman's default editing styles, features may be visually
+                difficult to distinguish during editing.
+            paint_above_geoman: If True (default), place the mirrored style layers
+                above Geoman’s edit layers; set False to draw beneath them.
         """
 
         geoman_config: Dict[str, Any] = dict(geoman_options or {})
@@ -2752,6 +2769,9 @@ class MapLibreMap(MapWidget):
             control_options["info_box_mode"] = str(info_box_mode)
         if info_box_tolerance is not None:
             control_options["info_box_tolerance"] = int(info_box_tolerance)
+        if paint:
+            control_options["geoman_paint"] = dict(paint)
+            control_options["geoman_paint_above"] = bool(paint_above_geoman)
 
         control_key = f"geoman_{position}"
         current_controls = dict(self._controls)
