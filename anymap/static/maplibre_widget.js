@@ -4107,38 +4107,42 @@ function render({ model, el }) {
                   if (content) content.textContent = '';
                 }
               };
-              const sqr = (n) => n * n;
-              const dist2 = (a, b) => sqr(a.x - b.x) + sqr(a.y - b.y);
-              const distToSegment2 = (p, a, b) => {
-                const vx = b.x - a.x, vy = b.y - a.y;
-                const wx = p.x - a.x, wy = p.y - a.y;
-                const c1 = vx * wx + vy * wy;
-                if (c1 <= 0) return dist2(p, a);
-                const c2 = vx * vx + vy * vy;
-                if (c2 <= c1) return dist2(p, b);
-                const t = c1 / (c2 || 1e-12);
-                const proj = { x: a.x + t * vx, y: a.y + t * vy };
-                return dist2(p, proj);
-              };
-              const pointInRing = (pt, ring) => {
-                let inside = false;
-                for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
-                  const xi = ring[i][0], yi = ring[i][1];
-                  const xj = ring[j][0], yj = ring[j][1];
-                  const intersect = ((yi > pt[1]) !== (yj > pt[1])) &&
-                    (pt[0] < (xj - xi) * (pt[1] - yi) / ((yj - yi) || 1e-12) + xi);
-                  if (intersect) inside = !inside;
-                }
-                return inside;
-              };
-              const pointInPolygon = (pt, poly) => {
-                if (!Array.isArray(poly) || poly.length === 0) return false;
-                if (!pointInRing(pt, poly[0])) return false;
-                for (let h = 1; h < poly.length; h++) {
-                  if (pointInRing(pt, poly[h])) return false;
-                }
-                return true;
-              };
+// Geometry helper functions (shared)
+const sqr = (n) => n * n;
+const dist2 = (a, b) => sqr(a.x - b.x) + sqr(a.y - b.y);
+const distToSegment2 = (p, a, b) => {
+  const vx = b.x - a.x, vy = b.y - a.y;
+  const wx = p.x - a.x, wy = p.y - a.y;
+  const c1 = vx * wx + vy * wy;
+  if (c1 <= 0) return dist2(p, a);
+  const c2 = vx * vx + vy * vy;
+  if (c2 <= c1) return dist2(p, b);
+  const t = c1 / (c2 || 1e-12);
+  const proj = { x: a.x + t * vx, y: a.y + t * vy };
+  return dist2(p, proj);
+};
+const pointInRing = (pt, ring) => {
+  let inside = false;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+    const xi = ring[i][0], yi = ring[i][1];
+    const xj = ring[j][0], yj = ring[j][1];
+    const intersect = ((yi > pt[1]) !== (yj > pt[1])) &&
+      (pt[0] < (xj - xi) * (pt[1] - yi) / ((yj - yi) || 1e-12) + xi);
+    if (intersect) inside = !inside;
+  }
+  return inside;
+};
+const pointInPolygon = (pt, poly) => {
+  if (!Array.isArray(poly) || poly.length === 0) return false;
+  if (!pointInRing(pt, poly[0])) return false;
+  for (let h = 1; h < poly.length; h++) {
+    if (pointInRing(pt, poly[h])) return false;
+  }
+  return true;
+};
+// END geometry helpers
+
+// (Remove local definitions from showEarly/hideEarly logic)
               const earlyLookup = (lngLat) => {
                 try {
                   const data = model.get('geoman_data') || { type: 'FeatureCollection', features: [] };
