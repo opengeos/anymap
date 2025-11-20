@@ -7458,6 +7458,8 @@ data sources, custom styling, and interactive features.</p>
         <span class="n">show_info_box</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">info_box_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;click&quot;</span><span class="p">,</span>
         <span class="n">info_box_tolerance</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">paint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">paint_above_geoman</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add the MapLibre-Geoman drawing and editing toolkit.</span>
 
@@ -7480,6 +7482,21 @@ data sources, custom styling, and interactive features.</p>
 <span class="sd">            info_box_tolerance: Pixel search tolerance when detecting a feature</span>
 <span class="sd">                under the pointer. Larger values make selection easier (default 8 for</span>
 <span class="sd">                click, 6 for hover if not specified).</span>
+<span class="sd">            paint: Optional styling config for a mirrored, read-only GeoJSON layer</span>
+<span class="sd">                that reflects the current ``geoman_data`` for visualization. All keys</span>
+<span class="sd">                are optional. Structure:</span>
+<span class="sd">                {</span>
+<span class="sd">                    &quot;line&quot;: { ... MapLibre line paint ... },     # For LineString/MultiLineString</span>
+<span class="sd">                    &quot;fill&quot;: { ... MapLibre fill paint ... },     # For Polygon/MultiPolygon</span>
+<span class="sd">                    &quot;point&quot;: { ... MapLibre circle paint ... }   # For Point/MultiPoint</span>
+<span class="sd">                }</span>
+<span class="sd">                The mirrored layer shows the final saved geometry, not intermediate</span>
+<span class="sd">                editing states. You can use data-driven expressions here, e.g.</span>
+<span class="sd">                line color by [&quot;get&quot;,&quot;highway&quot;]. Note: If your paint styles are too</span>
+<span class="sd">                similar to Geoman&#39;s default editing styles, features may be visually</span>
+<span class="sd">                difficult to distinguish during editing.</span>
+<span class="sd">            paint_above_geoman: If True (default), place the mirrored style layers</span>
+<span class="sd">                above Geoman’s edit layers; set False to draw beneath them.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">geoman_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">geoman_options</span> <span class="ow">or</span> <span class="p">{})</span>
@@ -7512,6 +7529,9 @@ data sources, custom styling, and interactive features.</p>
             <span class="n">control_options</span><span class="p">[</span><span class="s2">&quot;info_box_mode&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">info_box_mode</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">info_box_tolerance</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">control_options</span><span class="p">[</span><span class="s2">&quot;info_box_tolerance&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">info_box_tolerance</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">paint</span><span class="p">:</span>
+            <span class="n">control_options</span><span class="p">[</span><span class="s2">&quot;geoman_paint&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">paint</span><span class="p">)</span>
+            <span class="n">control_options</span><span class="p">[</span><span class="s2">&quot;geoman_paint_above&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">paint_above_geoman</span><span class="p">)</span>
 
         <span class="n">control_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;geoman_</span><span class="si">{</span><span class="n">position</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="n">current_controls</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_controls</span><span class="p">)</span>
@@ -12577,7 +12597,7 @@ GeoJSON source.</p></td>
 
 
 <h3 id="anymap.maplibre.MapLibreMap.add_geoman_control" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">add_geoman_control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s1">&#39;top-left&#39;</span><span class="p">,</span> <span class="n">geoman_options</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">controls</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">collapsed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_info_box</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">info_box_mode</span><span class="o">=</span><span class="s1">&#39;click&#39;</span><span class="p">,</span> <span class="n">info_box_tolerance</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">add_geoman_control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s1">&#39;top-left&#39;</span><span class="p">,</span> <span class="n">geoman_options</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">controls</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">collapsed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_info_box</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">info_box_mode</span><span class="o">=</span><span class="s1">&#39;click&#39;</span><span class="p">,</span> <span class="n">info_box_tolerance</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">paint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">paint_above_geoman</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code>
 
 
 <a href="#anymap.maplibre.MapLibreMap.add_geoman_control" class="headerlink" title="Permanent link">&para;</a></h3>
@@ -12655,6 +12675,31 @@ under the pointer. Larger values make selection easier (default 8 for
 click, 6 for hover if not specified).</p></td>
         <td><code>None</code></td>
       </tr>
+      <tr>
+        <td><code>paint</code></td>
+        <td><code>Optional[Dict[str, Any]]</code></td>
+        <td><p>Optional styling config for a mirrored, read-only GeoJSON layer
+that reflects the current <code>geoman_data</code> for visualization. All keys
+are optional. Structure:
+{
+    "line": { ... MapLibre line paint ... },     # For LineString/MultiLineString
+    "fill": { ... MapLibre fill paint ... },     # For Polygon/MultiPolygon
+    "point": { ... MapLibre circle paint ... }   # For Point/MultiPoint
+}
+The mirrored layer shows the final saved geometry, not intermediate
+editing states. You can use data-driven expressions here, e.g.
+line color by ["get","highway"]. Note: If your paint styles are too
+similar to Geoman's default editing styles, features may be visually
+difficult to distinguish during editing.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>paint_above_geoman</code></td>
+        <td><code>bool</code></td>
+        <td><p>If True (default), place the mirrored style layers
+above Geoman’s edit layers; set False to draw beneath them.</p></td>
+        <td><code>True</code></td>
+      </tr>
   </tbody>
 </table>
         <details class="quote">
@@ -12669,6 +12714,8 @@ click, 6 for hover if not specified).</p></td>
     <span class="n">show_info_box</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">info_box_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;click&quot;</span><span class="p">,</span>
     <span class="n">info_box_tolerance</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">paint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">paint_above_geoman</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add the MapLibre-Geoman drawing and editing toolkit.</span>
 
@@ -12691,6 +12738,21 @@ click, 6 for hover if not specified).</p></td>
 <span class="sd">        info_box_tolerance: Pixel search tolerance when detecting a feature</span>
 <span class="sd">            under the pointer. Larger values make selection easier (default 8 for</span>
 <span class="sd">            click, 6 for hover if not specified).</span>
+<span class="sd">        paint: Optional styling config for a mirrored, read-only GeoJSON layer</span>
+<span class="sd">            that reflects the current ``geoman_data`` for visualization. All keys</span>
+<span class="sd">            are optional. Structure:</span>
+<span class="sd">            {</span>
+<span class="sd">                &quot;line&quot;: { ... MapLibre line paint ... },     # For LineString/MultiLineString</span>
+<span class="sd">                &quot;fill&quot;: { ... MapLibre fill paint ... },     # For Polygon/MultiPolygon</span>
+<span class="sd">                &quot;point&quot;: { ... MapLibre circle paint ... }   # For Point/MultiPoint</span>
+<span class="sd">            }</span>
+<span class="sd">            The mirrored layer shows the final saved geometry, not intermediate</span>
+<span class="sd">            editing states. You can use data-driven expressions here, e.g.</span>
+<span class="sd">            line color by [&quot;get&quot;,&quot;highway&quot;]. Note: If your paint styles are too</span>
+<span class="sd">            similar to Geoman&#39;s default editing styles, features may be visually</span>
+<span class="sd">            difficult to distinguish during editing.</span>
+<span class="sd">        paint_above_geoman: If True (default), place the mirrored style layers</span>
+<span class="sd">            above Geoman’s edit layers; set False to draw beneath them.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">geoman_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">geoman_options</span> <span class="ow">or</span> <span class="p">{})</span>
@@ -12723,6 +12785,9 @@ click, 6 for hover if not specified).</p></td>
         <span class="n">control_options</span><span class="p">[</span><span class="s2">&quot;info_box_mode&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">info_box_mode</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">info_box_tolerance</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">control_options</span><span class="p">[</span><span class="s2">&quot;info_box_tolerance&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">info_box_tolerance</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">paint</span><span class="p">:</span>
+        <span class="n">control_options</span><span class="p">[</span><span class="s2">&quot;geoman_paint&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">paint</span><span class="p">)</span>
+        <span class="n">control_options</span><span class="p">[</span><span class="s2">&quot;geoman_paint_above&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">paint_above_geoman</span><span class="p">)</span>
 
     <span class="n">control_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;geoman_</span><span class="si">{</span><span class="n">position</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="n">current_controls</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_controls</span><span class="p">)</span>
