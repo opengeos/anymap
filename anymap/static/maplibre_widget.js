@@ -4026,7 +4026,7 @@ function render({ model, el }) {
         try {
           setTimeout(() => {
             try {
-              if (el._geomanEventListener || !el._gmShowInfoBox) return;
+              if (el._geomanEventListener) return;
               // Minimal early ensure/hit-test using only geoman_data
               const ensureEarlyBox = () => {
                 const container = map.getContainer ? map.getContainer() : el;
