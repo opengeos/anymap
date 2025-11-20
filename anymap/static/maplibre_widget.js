@@ -4009,6 +4009,11 @@ function render({ model, el }) {
       const initialCollapsed = Object.prototype.hasOwnProperty.call(controlOptions, 'collapsed')
         ? controlOptions.collapsed
         : undefined;
+      const showInfoBox = Boolean(controlOptions && controlOptions.show_info_box);
+      const infoBoxMode = (controlOptions && controlOptions.info_box_mode) || 'click';
+      const infoBoxTolerance = Number(controlOptions && controlOptions.info_box_tolerance);
+      el._gmShowInfoBox = showInfoBox;
+      el._gmInfoMode = infoBoxMode;
 
       el._controls.set(controlKey, { type: 'geoman', pending: true });
 
@@ -4016,11 +4021,582 @@ function render({ model, el }) {
         // Use v0.5.0 synchronous constructor API
         const instance = new GeomanConstructor(map, geomanOptions);
 
+        // Fallback: if Geoman doesn't emit gm:loaded promptly, attach info box handlers early
+        try {
+          setTimeout(() => {
+            try {
+              if (el._geomanEventListener || !el._gmShowInfoBox) return;
+              // Minimal early ensure/hit-test using only geoman_data
+              const ensureEarlyBox = () => {
+                const container = map.getContainer ? map.getContainer() : el;
+                if (!container) return null;
+                let box = container.querySelector('.gm-info-box');
+                if (!box) {
+                  box = document.createElement('div');
+                  box.className = 'gm-info-box';
+                  box.style.position = 'absolute';
+                  box.style.bottom = '10px';
+                  box.style.right = '10px';
+                  box.style.zIndex = '1000';
+                  box.style.background = 'rgba(255,255,255,0.95)';
+                  box.style.border = '1px solid rgba(0,0,0,0.15)';
+                  box.style.borderRadius = '6px';
+                  box.style.padding = '6px 10px';
+                  box.style.minWidth = '160px';
+                  box.style.maxWidth = '280px';
+                  box.style.boxShadow = '0 1px 3px rgba(0,0,0,0.2)';
+                  box.style.fontSize = '12px';
+                  box.style.color = '#333';
+                  box.style.display = 'none';
+                  const title = document.createElement('div');
+                  title.style.fontWeight = '600';
+                  title.style.marginBottom = '4px';
+                  title.textContent = 'Feature info';
+                  const content = document.createElement('div');
+                  content.className = 'gm-info-box-content';
+                  box.appendChild(title);
+                  box.appendChild(content);
+                  container.appendChild(box);
+                }
+                return box;
+              };
+              const showEarly = (props) => {
+                const box = ensureEarlyBox();
+                if (!box) return;
+                const content = box.querySelector('.gm-info-box-content');
+                if (content) {
+                  content.innerHTML = '';
+                  const entries = Object.entries(props || {});
+                  if (entries.length === 0) {
+                    const none = document.createElement('div');
+                    none.textContent = 'No properties';
+                    content.appendChild(none);
+                  } else {
+                    const list = document.createElement('div');
+                    entries.slice(0, 16).forEach(([k, v]) => {
+                      const row = document.createElement('div');
+                      const kEl = document.createElement('span');
+                      kEl.style.color = '#555';
+                      kEl.textContent = `${k}: `;
+                      const vEl = document.createElement('span');
+                      vEl.style.color = '#111';
+                      try { vEl.textContent = typeof v === 'object' ? JSON.stringify(v) : String(v); }
+                      catch (_e) { vEl.textContent = String(v); }
+                      row.appendChild(kEl); row.appendChild(vEl); list.appendChild(row);
+                    });
+                    if (entries.length > 16) {
+                      const more = document.createElement('div');
+                      more.style.color = '#777';
+                      more.style.marginTop = '4px';
+                      more.textContent = `(+${entries.length - 16} more)`;
+                      list.appendChild(more);
+                    }
+                    content.appendChild(list);
+                  }
+                }
+                box.style.display = 'block';
+              };
+              const hideEarly = () => {
+                const container = map.getContainer ? map.getContainer() : el;
+                if (!container) return;
+                const box = container.querySelector('.gm-info-box');
+                if (box) {
+                  box.style.display = 'none';
+                  const content = box.querySelector('.gm-info-box-content');
+                  if (content) content.textContent = '';
+                }
+              };
+              const sqr = (n) => n * n;
+              const dist2 = (a, b) => sqr(a.x - b.x) + sqr(a.y - b.y);
+              const distToSegment2 = (p, a, b) => {
+                const vx = b.x - a.x, vy = b.y - a.y;
+                const wx = p.x - a.x, wy = p.y - a.y;
+                const c1 = vx * wx + vy * wy;
+                if (c1 <= 0) return dist2(p, a);
+                const c2 = vx * vx + vy * vy;
+                if (c2 <= c1) return dist2(p, b);
+                const t = c1 / (c2 || 1e-12);
+                const proj = { x: a.x + t * vx, y: a.y + t * vy };
+                return dist2(p, proj);
+              };
+              const pointInRing = (pt, ring) => {
+                let inside = false;
+                for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+                  const xi = ring[i][0], yi = ring[i][1];
+                  const xj = ring[j][0], yj = ring[j][1];
+                  const intersect = ((yi > pt[1]) !== (yj > pt[1])) &&
+                    (pt[0] < (xj - xi) * (pt[1] - yi) / ((yj - yi) || 1e-12) + xi);
+                  if (intersect) inside = !inside;
+                }
+                return inside;
+              };
+              const pointInPolygon = (pt, poly) => {
+                if (!Array.isArray(poly) || poly.length === 0) return false;
+                if (!pointInRing(pt, poly[0])) return false;
+                for (let h = 1; h < poly.length; h++) {
+                  if (pointInRing(pt, poly[h])) return false;
+                }
+                return true;
+              };
+              const earlyLookup = (lngLat) => {
+                try {
+                  const data = model.get('geoman_data') || { type: 'FeatureCollection', features: [] };
+                  const features = Array.isArray(data.features) ? data.features : [];
+                  if (!features.length) return null;
+                  const pt = map.project([lngLat.lng, lngLat.lat]);
+                  const tol = Number.isFinite(el._gmInfoTolerance) ? Math.max(1, Number(el._gmInfoTolerance)) : 8;
+                  const threshold2 = tol * tol;
+                  let best = null;
+                  let bestScore = Infinity;
+                  for (const f of features) {
+                    if (!f || !f.geometry) continue;
+                    const g = f.geometry;
+                    if (g.type === 'Point') {
+                      const p = map.project(g.coordinates);
+                      const d2 = dist2(pt, p);
+                      if (d2 <= threshold2 && d2 < bestScore) { best = f.properties || {}; bestScore = d2; }
+                    } else if (g.type === 'MultiPoint') {
+                      for (const c of g.coordinates || []) {
+                        const p = map.project(c);
+                        const d2 = dist2(pt, p);
+                        if (d2 <= threshold2 && d2 < bestScore) { best = f.properties || {}; bestScore = d2; }
+                      }
+                    } else if (g.type === 'LineString') {
+                      const coords = g.coordinates || [];
+                      for (let i = 1; i < coords.length; i++) {
+                        const a = map.project(coords[i - 1]), b = map.project(coords[i]);
+                        const d2 = distToSegment2(pt, a, b);
+                        if (d2 <= threshold2 && d2 < bestScore) { best = f.properties || {}; bestScore = d2; }
+                      }
+                    } else if (g.type === 'MultiLineString') {
+                      for (const line of g.coordinates || []) {
+                        for (let i = 1; i < line.length; i++) {
+                          const a = map.project(line[i - 1]), b = map.project(line[i]);
+                          const d2 = distToSegment2(pt, a, b);
+                          if (d2 <= threshold2 && d2 < bestScore) { best = f.properties || {}; bestScore = d2; }
+                        }
+                      }
+                    } else if (g.type === 'Polygon') {
+                      if (pointInPolygon([lngLat.lng, lngLat.lat], g.coordinates)) return f.properties || {};
+                    } else if (g.type === 'MultiPolygon') {
+                      for (const poly of g.coordinates || []) {
+                        if (pointInPolygon([lngLat.lng, lngLat.lat], poly)) return f.properties || {};
+                      }
+                    }
+                  }
+                  return best;
+                } catch (_e) { return null; }
+              };
+              const onEarlyClick = (e) => {
+                if (!el._gmShowInfoBox || el._gmInfoMode === 'hover') return;
+                const props = earlyLookup(e.lngLat);
+                if (props) showEarly(props); else hideEarly();
+              };
+              const onEarlyMove = (e) => {
+                if (!el._gmShowInfoBox || el._gmInfoMode !== 'hover') return;
+                const props = earlyLookup(e.lngLat);
+                if (props) showEarly(props); else hideEarly();
+              };
+              map.on('click', onEarlyClick);
+              map.on('mousemove', onEarlyMove);
+              el._gmInfoHandlers = { move: onEarlyMove, click: onEarlyClick };
+            } catch (_err) {}
+          }, 400);
+        } catch (_e) {}
+
         // Wait for gm:loaded event to ensure adapter is fully initialized
         map.once('gm:loaded', () => {
           try {
             el._geomanInstance = instance;
             el._controls.set(controlKey, instance);
+
+            // Info box UI (optional)
+            let infoBoxEl = null;
+            const ensureInfoBox = () => {
+              if (!el._gmShowInfoBox) return null;
+              if (infoBoxEl && infoBoxEl.isConnected) return infoBoxEl;
+              try {
+                const container = map.getContainer ? map.getContainer() : el;
+                if (!container) return null;
+                const box = document.createElement('div');
+                box.className = 'gm-info-box';
+                box.style.position = 'absolute';
+                box.style.bottom = '10px';
+                box.style.right = '10px';
+                box.style.zIndex = '1000';
+                box.style.background = 'rgba(255,255,255,0.95)';
+                box.style.border = '1px solid rgba(0,0,0,0.15)';
+                box.style.borderRadius = '6px';
+                box.style.padding = '6px 10px';
+                box.style.minWidth = '160px';
+                box.style.maxWidth = '280px';
+                box.style.boxShadow = '0 1px 3px rgba(0,0,0,0.2)';
+                box.style.fontSize = '12px';
+                box.style.color = '#333';
+                box.style.display = 'none';
+                const title = document.createElement('div');
+                title.style.fontWeight = '600';
+                title.style.marginBottom = '4px';
+                title.textContent = 'Feature info';
+                const content = document.createElement('div');
+                content.className = 'gm-info-box-content';
+                box.appendChild(title);
+                box.appendChild(content);
+                container.appendChild(box);
+                infoBoxEl = box;
+                return box;
+              } catch (_e) {
+                return null;
+              }
+            };
+            const hideInfoBox = () => {
+              if (infoBoxEl) {
+                infoBoxEl.style.display = 'none';
+                const content = infoBoxEl.querySelector('.gm-info-box-content');
+                if (content) content.textContent = '';
+              }
+            };
+            el._gmEnsureInfoBox = ensureInfoBox;
+            el._gmHideInfoBox = hideInfoBox;
+            const showInfoBoxWithProps = (props) => {
+              const box = ensureInfoBox();
+              if (!box) return;
+              const entries = Object.entries(props || {});
+              const content = box.querySelector('.gm-info-box-content');
+              if (content) {
+                content.innerHTML = '';
+                if (entries.length === 0) {
+                  const none = document.createElement('div');
+                  none.textContent = 'No properties';
+                  content.appendChild(none);
+                } else {
+                  const list = document.createElement('div');
+                  for (const [k, v] of entries.slice(0, 16)) {
+                    const row = document.createElement('div');
+                    const keyEl = document.createElement('span');
+                    keyEl.style.color = '#555';
+                    keyEl.textContent = `${k}: `;
+                    const valEl = document.createElement('span');
+                    valEl.style.color = '#111';
+                    try {
+                      valEl.textContent = typeof v === 'object' ? JSON.stringify(v) : String(v);
+                    } catch (_e) {
+                      valEl.textContent = String(v);
+                    }
+                    row.appendChild(keyEl);
+                    row.appendChild(valEl);
+                    list.appendChild(row);
+                  }
+                  if (entries.length > 16) {
+                    const more = document.createElement('div');
+                    more.style.color = '#777';
+                    more.style.marginTop = '4px';
+                    more.textContent = `(+${entries.length - 16} more)`;
+                    list.appendChild(more);
+                  }
+                  content.appendChild(list);
+                }
+              }
+              box.style.display = 'block';
+            };
+            const findPropsForFeatureId = (fid) => {
+              if (!fid) return null;
+              try {
+                const data = model.get('geoman_data') || { type: 'FeatureCollection', features: [] };
+                const f = (data.features || []).find((x) => {
+                  if (!x) return false;
+                  const idOk = x.id === fid || String(x.id) === String(fid);
+                  const gmOk = x.properties && (x.properties.__gm_id === fid || String(x.properties.__gm_id) === String(fid));
+                  return idOk || gmOk;
+                });
+                if (f && f.properties) return f.properties;
+              } catch (_e2) {}
+              return null;
+            };
+
+            // Heuristic helpers to detect current selection when Geoman doesn't provide id in payload
+            const getSelectedFeatureIds = () => {
+              try {
+                const geomanInstance = map.gm || el._geomanInstance;
+                const featuresApi = geomanInstance?.features;
+                if (!featuresApi) return [];
+                if (typeof featuresApi.getSelectedIds === 'function') {
+                  const ids = featuresApi.getSelectedIds();
+                  if (Array.isArray(ids)) return ids;
+                }
+                if (typeof featuresApi.getSelected === 'function') {
+                  const sel = featuresApi.getSelected();
+                  if (Array.isArray(sel) && sel.length > 0) {
+                    const ids = sel.map((f) => {
+                      const gj = f?.geojson || f?.feature || f;
+                      return (f && (f.id || f.featureId)) || gj?.id || gj?.properties?.__gm_id || null;
+                    }).filter((x) => x != null);
+                    if (ids.length > 0) return ids;
+                  }
+                  if (sel && Array.isArray(sel.features)) {
+                    const ids = sel.features.map((f) => {
+                      return (f && (f.id || (f.properties && f.properties.__gm_id))) || null;
+                    }).filter((x) => x != null);
+                    if (ids.length > 0) return ids;
+                  }
+                }
+                const selectedIds =
+                  featuresApi.selectedIds ||
+                  featuresApi.selection?.selectedIds ||
+                  featuresApi.selection?.ids ||
+                  [];
+                if (Array.isArray(selectedIds) && selectedIds.length > 0) return selectedIds;
+                const store = featuresApi.featureStore;
+                if (store && typeof store.forEach === 'function') {
+                  const ids = [];
+                  store.forEach((val, key) => {
+                    if (!val) return;
+                    const isSelected =
+                      val.selected || val.isSelected || (val.state && (val.state.selected || val.state.isSelected));
+                    if (isSelected) {
+                      const gj = val.geojson || val;
+                      const gmId = gj?.properties && gj.properties.__gm_id;
+                      ids.push(gmId != null ? gmId : key);
+                    }
+                  });
+                  if (ids.length > 0) return ids;
+                }
+              } catch (_e) {}
+              return [];
+            };
+
+            let _infoUpdateTimer = null;
+            const updateInfoFromCurrentSelection = (force = false) => {
+              if (!el._gmShowInfoBox) return;
+              if (!force) {
+                if (_infoUpdateTimer) return;
+                _infoUpdateTimer = setTimeout(() => {
+                  _infoUpdateTimer = null;
+                  updateInfoFromCurrentSelection(true);
+                }, 120);
+                return;
+              }
+              try {
+                const ids = getSelectedFeatureIds();
+                if (Array.isArray(ids) && ids.length > 0) {
+                  const props = findPropsForFeatureId(ids[0]);
+                  if (props && Object.keys(props).length > 0) {
+                    showInfoBoxWithProps(props);
+                  } else {
+                    showInfoBoxWithProps({});
+                  }
+                }
+              } catch (_e) {}
+            };
+
+            // Determine feature properties at a point using only geoman_data
+            const updateInfoFromEventPoint = (ev, force = false) => {
+              if (!el._gmShowInfoBox || !ev || !ev.lngLat) return;
+              if (!force) {
+                if (_infoUpdateTimer) return;
+                _infoUpdateTimer = setTimeout(() => {
+                  _infoUpdateTimer = null;
+                  updateInfoFromEventPoint(ev, true);
+                }, 120);
+                return;
+              }
+              // Geometry helpers (inline)
+              const sqr = (n) => n * n;
+              const dist2 = (a, b) => sqr(a.x - b.x) + sqr(a.y - b.y);
+              const distToSegment2 = (p, a, b) => {
+                const vx = b.x - a.x;
+                const vy = b.y - a.y;
+                const wx = p.x - a.x;
+                const wy = p.y - a.y;
+                const c1 = vx * wx + vy * wy;
+                if (c1 <= 0) return dist2(p, a);
+                const c2 = vx * vx + vy * vy;
+                if (c2 <= c1) return dist2(p, b);
+                const t = c1 / (c2 || 1e-12);
+                const proj = { x: a.x + t * vx, y: a.y + t * vy };
+                return dist2(p, proj);
+              };
+              const pointInRing = (pt, ring) => {
+                let inside = false;
+                for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+                  const xi = ring[i][0], yi = ring[i][1];
+                  const xj = ring[j][0], yj = ring[j][1];
+                  const intersect = ((yi > pt[1]) !== (yj > pt[1])) &&
+                    (pt[0] < (xj - xi) * (pt[1] - yi) / ((yj - yi) || 1e-12) + xi);
+                  if (intersect) inside = !inside;
+                }
+                return inside;
+              };
+              const pointInPolygon = (pt, poly) => {
+                if (!Array.isArray(poly) || poly.length === 0) return false;
+                if (!pointInRing(pt, poly[0])) return false;
+                for (let h = 1; h < poly.length; h++) {
+                  if (pointInRing(pt, poly[h])) return false;
+                }
+                return true;
+              };
+              const flashInfoGeometry = (geometry) => {
+                try {
+                  if (!geometry) return;
+                  const srcId = 'gm-info-flash-src';
+                  const fillId = 'gm-info-flash-fill';
+                  const lineId = 'gm-info-flash-line';
+                  const pointId = 'gm-info-flash-point';
+                  const fc = { type: 'FeatureCollection', features: [{ type: 'Feature', properties: {}, geometry }] };
+                  if (map.getSource(srcId)) {
+                    map.getSource(srcId).setData(fc);
+                  } else {
+                    map.addSource(srcId, { type: 'geojson', data: fc });
+                  }
+                  // Fill (polygons)
+                  if (!map.getLayer(fillId)) {
+                    try {
+                      map.addLayer({
+                        id: fillId,
+                        type: 'fill',
+                        source: srcId,
+                        filter: ['==', ['geometry-type'], 'Polygon'],
+                        paint: {
+                          'fill-color': '#fff176',
+                          'fill-opacity': 0.45
+                        }
+                      });
+                    } catch (_e) {}
+                  }
+                  // Line (lines + polygon outlines)
+                  if (!map.getLayer(lineId)) {
+                    try {
+                      map.addLayer({
+                        id: lineId,
+                        type: 'line',
+                        source: srcId,
+                        filter: ['any', ['==', ['geometry-type'], 'LineString'], ['==', ['geometry-type'], 'Polygon']],
+                        paint: {
+                          'line-color': '#fdd835',
+                          'line-width': 4
+                        }
+                      });
+                    } catch (_e2) {}
+                  }
+                  // Points
+                  if (!map.getLayer(pointId)) {
+                    try {
+                      map.addLayer({
+                        id: pointId,
+                        type: 'circle',
+                        source: srcId,
+                        filter: ['==', ['geometry-type'], 'Point'],
+                        paint: {
+                          'circle-radius': 7,
+                          'circle-color': '#ffca28',
+                          'circle-stroke-color': '#f57f17',
+                          'circle-stroke-width': 2
+                        }
+                      });
+                    } catch (_e3) {}
+                  }
+                  // Auto clear after a short delay
+                  setTimeout(() => {
+                    try {
+                      if (map.getSource(srcId)) {
+                        map.getSource(srcId).setData({ type: 'FeatureCollection', features: [] });
+                      }
+                    } catch (_e4) {}
+                  }, 700);
+                } catch (_flashErr) {}
+              };
+              try {
+                const data = model.get('geoman_data') || { type: 'FeatureCollection', features: [] };
+                const features = Array.isArray(data.features) ? data.features : [];
+                const clickPoint = map.project([ev.lngLat.lng, ev.lngLat.lat]);
+                const tol = Number.isFinite(el._gmInfoTolerance)
+                  ? Math.max(1, Number(el._gmInfoTolerance))
+                  : (el._gmInfoMode === 'hover' ? 6 : 8);
+                const threshold2 = tol * tol;
+                let best = null;
+                let bestGeom = null;
+                let bestScore = Infinity;
+                for (const f of features) {
+                  if (!f || !f.geometry) continue;
+                  const g = f.geometry;
+                  if (g.type === 'Point') {
+                    const p = map.project(g.coordinates);
+                    const d2 = dist2(clickPoint, p);
+                    if (d2 <= threshold2 && d2 < bestScore) {
+                      best = f.properties || {};
+                      bestGeom = g;
+                      bestScore = d2;
+                    }
+                  } else if (g.type === 'MultiPoint') {
+                    for (const c of g.coordinates || []) {
+                      const p = map.project(c);
+                      const d2 = dist2(clickPoint, p);
+                      if (d2 <= threshold2 && d2 < bestScore) {
+                        best = f.properties || {};
+                        bestGeom = { type: 'Point', coordinates: c };
+                        bestScore = d2;
+                      }
+                    }
+                  } else if (g.type === 'LineString') {
+                    const coords = g.coordinates || [];
+                    for (let i = 1; i < coords.length; i++) {
+                      const a = map.project(coords[i - 1]);
+                      const b = map.project(coords[i]);
+                      const d2 = distToSegment2(clickPoint, a, b);
+                      if (d2 <= threshold2 && d2 < bestScore) {
+                        best = f.properties || {};
+                        bestGeom = g;
+                        bestScore = d2;
+                      }
+                    }
+                  } else if (g.type === 'MultiLineString') {
+                    for (const line of g.coordinates || []) {
+                      for (let i = 1; i < line.length; i++) {
+                        const a = map.project(line[i - 1]);
+                        const b = map.project(line[i]);
+                        const d2 = distToSegment2(clickPoint, a, b);
+                        if (d2 <= threshold2 && d2 < bestScore) {
+                          best = f.properties || {};
+                          bestGeom = g;
+                          bestScore = d2;
+                        }
+                      }
+                    }
+                  } else if (g.type === 'Polygon') {
+                    const pt = [ev.lngLat.lng, ev.lngLat.lat];
+                    if (pointInPolygon(pt, g.coordinates)) {
+                      best = f.properties || {};
+                      bestGeom = g;
+                      bestScore = 0;
+                      break;
+                    }
+                  } else if (g.type === 'MultiPolygon') {
+                    const pt = [ev.lngLat.lng, ev.lngLat.lat];
+                    let hit = false;
+                    for (const poly of g.coordinates || []) {
+                      if (pointInPolygon(pt, poly)) { hit = true; break; }
+                    }
+                    if (hit) {
+                      best = f.properties || {};
+                      bestGeom = g;
+                      bestScore = 0;
+                      break;
+                    }
+                  }
+                }
+                if (best) {
+                  showInfoBoxWithProps(best);
+                  // Flash highlight only on explicit clicks (force === true)
+                  if (force && bestGeom) {
+                    flashInfoGeometry(bestGeom);
+                  }
+                } else {
+                  hideInfoBox();
+                }
+              } catch (_e) {
+                // ignore
+              }
+            };
 
             // Debounced exporter to avoid excessive trait churn while drawing
             let geomanExportTimer = null;
@@ -4054,10 +4630,109 @@ function render({ model, el }) {
               scheduleGeomanExport();
             // Update status for Python
             updateAndSyncGeomanStatus();
+
+              // Update info box only when explicitly using event mode (disabled by default)
+              if (el._gmShowInfoBox && (el._gmInfoMode === 'event')) {
+                try {
+                  // Heuristics to extract a feature id from event payload
+                  const p = event?.payload || {};
+                  let fid = p.id || p.featureId || p.feature?.id || p.target?.id;
+                  // Also try __gm_id if present
+                  if (!fid && p && p.feature && p.feature.properties && p.feature.properties.__gm_id) {
+                    fid = p.feature.properties.__gm_id;
+                  }
+                  if (!fid && Array.isArray(p.features) && p.features.length > 0) {
+                    const f0 = p.features[0];
+                    fid = f0?.id || (f0?.properties && f0.properties.__gm_id);
+                  }
+                  // Try direct properties from payload first
+                  const directProps =
+                    (p && p.properties) ||
+                    (p && p.feature && p.feature.properties) ||
+                    (Array.isArray(p.features) && p.features[0] && p.features[0].properties) ||
+                    null;
+                  if (directProps && Object.keys(directProps).length > 0) {
+                    showInfoBoxWithProps(directProps);
+                  } else if (fid != null) {
+                    const props = findPropsForFeatureId(fid);
+                    if (props && Object.keys(props).length > 0) {
+                      showInfoBoxWithProps(props);
+                    } else {
+                      // If there are no properties, show an empty state rather than hiding immediately
+                      showInfoBoxWithProps({});
+                    }
+                  } else {
+                    // For generic events (e.g., toolbar toggles), do not hide aggressively.
+                    // Only hide on explicit clear/reset events if we can detect them.
+                    const name = (event && (event.name || event.type)) || '';
+                    if (name.includes('clear') || name.includes('delete') || name.includes('unselect')) {
+                      hideInfoBox();
+                    }
+                    // Attempt to read current selection when no fid present
+                    updateInfoFromCurrentSelection();
+                  }
+                } catch (_e) {
+                  // ignore info box errors
+                }
+              }
             };
 
-            instance.setGlobalEventsListener(geomanListener);
-            el._geomanEventListener = geomanListener;
+            // Boost info box updates on selection/edit/move events by name match
+            const originalGeomanListener = geomanListener;
+            const enhancedListener = (ev) => {
+              originalGeomanListener(ev);
+              try {
+                const nm = (ev && (ev.name || ev.type) || '').toLowerCase();
+                if (
+                  nm.includes('select') ||
+                  nm.includes('edit') ||
+                  nm.includes('move') ||
+                  nm.includes('change') ||
+                  nm.includes('drag') ||
+                  nm.includes('vertex') ||
+                  nm.includes('update')
+                ) {
+                  updateInfoFromCurrentSelection(true);
+                }
+              } catch (_e) {}
+            };
+
+            // Use enhanced listener that forces selection refresh on relevant events
+            instance.setGlobalEventsListener(enhancedListener);
+            el._geomanEventListener = enhancedListener;
+
+            // Attach info-box listeners according to mode: click (default) or hover
+            try {
+              // Persist tolerance and mode for later use
+              el._gmInfoMode = infoBoxMode;
+              el._gmInfoTolerance = Number.isFinite(infoBoxTolerance) ? infoBoxTolerance : undefined;
+
+              // Provide a reusable attach function for external callers (e.g., after data load)
+              el._gmAttachInfoHandlers = () => {
+                try {
+                  // Clean up any previous handlers
+                  if (el._gmInfoHandlers) {
+                    const h = el._gmInfoHandlers;
+                    try { if (h.move) map.off('mousemove', h.move); } catch (_e) {}
+                    try { if (h.click) map.off('click', h.click); } catch (_e2) {}
+                    el._gmInfoHandlers = null;
+                  }
+                  const onMove = (e) => updateInfoFromEventPoint(e);
+                  const onClick = (e) => updateInfoFromEventPoint(e, true);
+                  if (el._gmInfoMode === 'hover') {
+                    map.on('mousemove', onMove);
+                  } else {
+                    map.on('click', onClick);
+                  }
+                  el._gmInfoHandlers = { move: onMove, click: onClick };
+                } catch (_e3) {}
+              };
+              // Expose a direct updater for convenience
+              el._gmUpdateInfoFromEvent = (e, force = false) => updateInfoFromEventPoint(e, force);
+
+              // Attach now
+              el._gmAttachInfoHandlers();
+            } catch (_e) {}
 
             if (el._pendingGeomanData) {
               importGeomanData(el._pendingGeomanData);
@@ -4865,6 +5540,13 @@ function render({ model, el }) {
 
       // Import data set from Python without re-exporting to avoid feedback loops
       importGeomanData(model.get("geoman_data"), true);
+
+    // Ensure info box handlers are active after data loads using the exposed attach function
+    try {
+      if (el._gmShowInfoBox && typeof el._gmAttachInfoHandlers === 'function' && !el._gmInfoHandlers) {
+        el._gmAttachInfoHandlers();
+      }
+    } catch (_e) {}
     };
 
     model.on("change:geoman_data", geomanModelListener);
@@ -5647,6 +6329,9 @@ function render({ model, el }) {
                   position,
                   geoman_options: controlOptions?.geoman_options || {},
                   collapsed: controlOptions?.collapsed,
+                  show_info_box: controlOptions?.show_info_box,
+                  info_box_mode: controlOptions?.info_box_mode,
+                  info_box_tolerance: controlOptions?.info_box_tolerance,
                 });
                 return;
               }
@@ -8287,6 +8972,20 @@ function render({ model, el }) {
           case 'getGeomanStatus':
             // Query and sync current Geoman toolbar status
             updateAndSyncGeomanStatus();
+            break;
+
+          case 'setGeomanInfoBoxEnabled':
+            {
+              const enabled = Boolean(args[0]);
+              el._gmShowInfoBox = enabled;
+              try {
+                if (enabled) {
+                  if (typeof el._gmEnsureInfoBox === 'function') el._gmEnsureInfoBox();
+                } else {
+                  if (typeof el._gmHideInfoBox === 'function') el._gmHideInfoBox();
+                }
+              } catch (_e) {}
+            }
             break;
 
           case 'activateGeomanButton':
