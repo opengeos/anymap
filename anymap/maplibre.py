@@ -2713,8 +2713,8 @@ class MapLibreMap(MapWidget):
             collapsed: Whether the toolbar UI should start collapsed. Use
                 ``None`` to defer to the underlying configuration.
             show_info_box: If True, show an info box that displays the properties
-                of the currently selected feature while editing existing Geoman features.
-                Defaults to None (no change in frontend default).
+                of the currently selected feature when clicking or hovering over any feature
+                in the Geoman layer, not just during editing. Defaults to None (no change in frontend default).
             info_box_mode: 'click' to show info only after clicking a feature (default),
                 or 'hover' to show on mouse hover.
             info_box_tolerance: Pixel search tolerance when detecting a feature
