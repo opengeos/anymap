@@ -3922,11 +3922,7 @@ function render({ model, el }) {
         model.set("geoman_data", exported);
         model.save_changes();
         // Update mirrored style source if present
-        try {
-          if (el._geomanStyle && map.getSource(el._geomanStyle.srcId)) {
-            map.getSource(el._geomanStyle.srcId).setData(exported || { type: 'FeatureCollection', features: [] });
-          }
-        } catch (_e) {}
+        refreshGeomanStyleLayers(exported);
       } catch (error) {
         console.error('[Geoman Export] Failed to export Geoman features:', error);
       }
