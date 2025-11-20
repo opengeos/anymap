@@ -4227,7 +4227,7 @@ const pointInPolygon = (pt, poly) => {
               console.warn('[Geoman] Invalid paint config: expected object, got', typeof stylePaint);
               stylePaint = null;
             }
-            const paintAbove = controlOptions.geoman_paint_above !== false; // default true
+            const paintAbove = !!(controlOptions && controlOptions.geoman_paint_above); // default false
 
             // Info box UI (optional)
             let infoBoxEl = null;
@@ -4411,6 +4411,15 @@ const pointInPolygon = (pt, poly) => {
                   map.getSource(srcId).setData(collection || { type: 'FeatureCollection', features: [] });
                 }
               } catch (_e) {}
+            };
+            const setGeomanMirrorVisibility = (visible) => {
+              if (!el._geomanStyle) return;
+              const { fillId, lineId, pointId } = el._geomanStyle;
+              const vis = visible ? 'visible' : 'none';
+              try { if (map.getLayer(fillId)) map.setLayoutProperty(fillId, 'visibility', vis); } catch (_e) {}
+              try { if (map.getLayer(lineId)) map.setLayoutProperty(lineId, 'visibility', vis); } catch (_e) {}
+              try { if (map.getLayer(pointId)) map.setLayoutProperty(pointId, 'visibility', vis); } catch (_e) {}
+              el._geomanMirrorVisible = !!visible;
             };
             if (stylePaint) ensureGeomanStyleLayers(stylePaint);
             const findPropsForFeatureId = (fid) => {
@@ -4824,12 +4833,19 @@ const pointInPolygon = (pt, poly) => {
               // Provide a reusable attach function for external callers (e.g., after data load)
               el._gmAttachInfoHandlers = () => {
                 try {
-                  // Clean up any previous handler
+                  // Clean up any previous handlers
                   if (el._gmInfoHandler) {
                     const { eventType, handler } = el._gmInfoHandler;
                     try { map.off(eventType, handler); } catch (_e) {}
                     el._gmInfoHandler = null;
                   }
+                  if (el._gmInfoDomHandler) {
+                    const { eventType, handler } = el._gmInfoDomHandler;
+                    try { map.getCanvasContainer().removeEventListener(eventType, handler, true); } catch (_e) {}
+                    el._gmInfoDomHandler = null;
+                  }
+
+                  // Map-level handler (bubbles)
                   let eventType, handler;
                   if (el._gmInfoMode === 'hover') {
                     eventType = 'mousemove';
@@ -4840,6 +4856,22 @@ const pointInPolygon = (pt, poly) => {
                   }
                   map.on(eventType, handler);
                   el._gmInfoHandler = { eventType, handler };
+
+                  // DOM capture handler (in case Geoman stops propagation)
+                  const domEvent = (el._gmInfoMode === 'hover') ? 'mousemove' : 'click';
+                  const domHandler = (ev) => {
+                    try {
+                      if (!el._gmShowInfoBox) return;
+                      const rect = map.getCanvas().getBoundingClientRect();
+                      const x = ev.clientX - rect.left;
+                      const y = ev.clientY - rect.top;
+                      const lngLat = map.unproject([x, y]);
+                      if (!lngLat) return;
+                      updateInfoFromEventPoint({ lngLat }, domEvent === 'click');
+                    } catch (_e) {}
+                  };
+                  map.getCanvasContainer().addEventListener(domEvent, domHandler, true);
+                  el._gmInfoDomHandler = { eventType: domEvent, handler: domHandler };
                 } catch (_e3) {}
               };
               // Expose a direct updater for convenience
@@ -5492,6 +5524,93 @@ const pointInPolygon = (pt, poly) => {
               } catch (_e) {}
               el._splitControl = splitCtrl;
 
+              // Add Info toggle control (enable/disable info box interaction)
+              try {
+                class InfoToggleControl {
+                  constructor(modelRef) {
+                    this._model = modelRef;
+                    this._container = null;
+                    this._button = null;
+                    this._map = null;
+                  }
+                  setPressed(pressed) {
+                    if (!this._button) return;
+                    this._button.setAttribute('aria-pressed', pressed ? 'true' : 'false');
+                    if (pressed) {
+                      this._button.classList.add('gm-active');
+                      this._button.style.boxShadow = '0 0 0 2px rgba(33,150,243,0.8) inset';
+                      this._button.style.backgroundColor = 'rgba(33, 150, 243, 0.15)';
+                    } else {
+                      this._button.classList.remove('gm-active');
+                      this._button.style.boxShadow = '';
+                      this._button.style.backgroundColor = '';
+                    }
+                  }
+                  onAdd(mapRef) {
+                    this._map = mapRef;
+                    const container = (unionCtrl && unionCtrl._container) ? unionCtrl._container : document.createElement('div');
+                    if (!unionCtrl || !unionCtrl._container) {
+                      container.className = 'maplibregl-ctrl maplibregl-ctrl-group gm-info-ctrl';
+                    }
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'maplibregl-ctrl-icon gm-info-button';
+                    btn.setAttribute('title', 'Toggle Info');
+                    btn.setAttribute('aria-label', 'Toggle Info');
+                    btn.setAttribute('aria-pressed', (el._gmShowInfoBox ? 'true' : 'false'));
+                    btn.innerHTML = `
+                      <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <circle cx="12" cy="12" r="9" fill="#ffffff" stroke="#1976D2" stroke-width="1.2"/>
+                        <text x="12" y="16" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#1976D2">i</text>
+                      </svg>
+                    `;
+                    btn.style.display = 'flex';
+                    btn.style.alignItems = 'center';
+                    btn.style.justifyContent = 'center';
+                    this._button = btn;
+                    this.setPressed(!!el._gmShowInfoBox);
+                    btn.addEventListener('click', () => {
+                      const next = !(el._gmShowInfoBox === true);
+                      el._gmShowInfoBox = next;
+                      this.setPressed(next);
+                      try {
+                        if (!next && typeof el._gmHideInfoBox === 'function') {
+                          el._gmHideInfoBox();
+                        }
+                        if (typeof el._gmAttachInfoHandlers === 'function') {
+                          el._gmAttachInfoHandlers();
+                        }
+                        // Ensure mirror visible when info is enabled and no edit tool active
+                        try {
+                          if (stylePaint) setGeomanMirrorVisibility(true);
+                        } catch (_eVis2) {}
+                        const events = model.get("_js_events") || [];
+                        model.set("_js_events", [...events, { type: 'geoman_info_toggled', enabled: next }]);
+                        model.save_changes();
+                      } catch (_e) {}
+                    });
+                    container.appendChild(btn);
+                    this._container = container;
+                    return container;
+                  }
+                  onRemove() {
+                    if (this._container && this._button && this._button.parentNode === this._container) {
+                      this._container.removeChild(this._button);
+                    }
+                    this._map = undefined;
+                  }
+                }
+                const infoCtrl = new InfoToggleControl(model);
+                try {
+                  infoCtrl.onAdd(map);
+                  if (unionCtrl && unionCtrl._container && infoCtrl._button) {
+                    unionCtrl._container.appendChild(infoCtrl._button);
+                    infoCtrl._container = unionCtrl._container;
+                  }
+                } catch (_e) {}
+                el._infoControl = infoCtrl;
+              } catch (_e) {}
+
               // Add OSM Transport load control (button appended into union group)
               try {
                 class OsmTransportControl {
@@ -5612,6 +5731,24 @@ const pointInPolygon = (pt, poly) => {
                           ]);
                           model.save_changes();
                         } catch (_e2) {}
+                      }
+                      // Also disable info mode to prevent interference with edit/delete tools
+                      if (el._gmShowInfoBox) {
+                        el._gmShowInfoBox = false;
+                        try {
+                          if (el._infoControl && el._infoControl._button) {
+                            el._infoControl.setPressed(false);
+                          }
+                          if (typeof el._gmHideInfoBox === 'function') {
+                            el._gmHideInfoBox();
+                          }
+                          const currentEvents = model.get("_js_events") || [];
+                          model.set("_js_events", [
+                            ...currentEvents,
+                            { type: 'geoman_info_toggled', enabled: false }
+                          ]);
+                          model.save_changes();
+                        } catch (_e3) {}
                       }
                     }
                   });

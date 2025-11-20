@@ -2699,7 +2699,7 @@ class MapLibreMap(MapWidget):
         info_box_mode: str = "click",
         info_box_tolerance: Optional[int] = None,
         paint: Optional[Dict[str, Any]] = None,
-        paint_above_geoman: bool = True,
+        paint_above_geoman: bool = False,
     ) -> None:
         """Add the MapLibre-Geoman drawing and editing toolkit.
 
