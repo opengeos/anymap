@@ -3921,6 +3921,15 @@ function render({ model, el }) {
         el._geomanSyncFromJs = true;
         model.set("geoman_data", exported);
         model.save_changes();
+        // Update mirrored style source if present
+        try {
+          if (el._geomanStyle) {
+            const srcId = el._geomanStyle.srcId;
+            if (map.getSource(srcId)) {
+              map.getSource(srcId).setData(exported || { type: 'FeatureCollection', features: [] });
+            }
+          }
+        } catch (_e) {}
       } catch (error) {
         console.error('[Geoman Export] Failed to export Geoman features:', error);
       }
@@ -3944,6 +3953,15 @@ function render({ model, el }) {
         if (!skipExport) {
           exportGeomanData();
         }
+        // Also update mirrored style source if present
+        try {
+          if (el._geomanStyle) {
+            const srcId = el._geomanStyle.srcId;
+            if (map.getSource(srcId)) {
+              map.getSource(srcId).setData(collection || { type: 'FeatureCollection', features: [] });
+            }
+          }
+        } catch (_e) {}
       } catch (error) {
         console.error('Failed to import Geoman data:', error);
       }
@@ -4214,6 +4232,8 @@ const pointInPolygon = (pt, poly) => {
           try {
             el._geomanInstance = instance;
             el._controls.set(controlKey, instance);
+            const stylePaint = controlOptions.geoman_paint || null;
+            const paintAbove = controlOptions.geoman_paint_above !== false; // default true
 
             // Info box UI (optional)
             let infoBoxEl = null;
@@ -4603,6 +4623,103 @@ const pointInPolygon = (pt, poly) => {
               }
             };
 
+            // Mirrored style layers for visualizing geoman_data with custom paint
+            const ensureGeomanStyleLayers = (paintConfig) => {
+              if (!paintConfig) return;
+              const srcId = 'geoman-style-src';
+              const fillId = 'geoman-style-fill';
+              const lineId = 'geoman-style-line';
+              const pointId = 'geoman-style-point';
+              try {
+                if (!map.getSource(srcId)) {
+                  map.addSource(srcId, { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+                }
+              } catch (_e) {}
+              // Decide placement: above (default) or below Geoman internal layers
+              let beforeId = undefined;
+              if (!paintAbove) {
+                try {
+                  const layers = (map.getStyle() && map.getStyle().layers) || [];
+                  for (const ly of layers) {
+                    const id = (ly && ly.id) || '';
+                    if (id && (id.startsWith('gm-') || id.includes('geoman') || id.includes('gm'))) {
+                      beforeId = id; // place below first Geoman layer
+                      break;
+                    }
+                  }
+                } catch (_e2) {}
+              }
+              if (!map.getLayer(fillId)) {
+                try {
+                  const layer = {
+                    id: fillId,
+                    type: 'fill',
+                    source: srcId,
+                    filter: ['any',
+                      ['==', ['geometry-type'], 'Polygon'],
+                      ['==', ['geometry-type'], 'MultiPolygon']
+                    ],
+                    paint: Object.assign({
+                      'fill-color': '#90caf9',
+                      'fill-opacity': 0.2
+                    }, (paintConfig.fill || {}))
+                  };
+                  if (beforeId) map.addLayer(layer, beforeId); else map.addLayer(layer);
+                } catch (_e3) {}
+              }
+              if (!map.getLayer(lineId)) {
+                try {
+                  const layer = {
+                    id: lineId,
+                    type: 'line',
+                    source: srcId,
+                    filter: ['any',
+                      ['==', ['geometry-type'], 'LineString'],
+                      ['==', ['geometry-type'], 'MultiLineString']
+                    ],
+                    paint: Object.assign({
+                      'line-color': '#42a5f5',
+                      'line-width': 2.5
+                    }, (paintConfig.line || {}))
+                  };
+                  if (beforeId) map.addLayer(layer, beforeId); else map.addLayer(layer);
+                } catch (_e4) {}
+              }
+              if (!map.getLayer(pointId)) {
+                try {
+                  const layer = {
+                    id: pointId,
+                    type: 'circle',
+                    source: srcId,
+                    filter: ['any',
+                      ['==', ['geometry-type'], 'Point'],
+                      ['==', ['geometry-type'], 'MultiPoint']
+                    ],
+                    paint: Object.assign({
+                      'circle-radius': 5,
+                      'circle-color': '#1976d2',
+                      'circle-stroke-color': '#0d47a1',
+                      'circle-stroke-width': 1.5
+                    }, (paintConfig.point || {}))
+                  };
+                  if (beforeId) map.addLayer(layer, beforeId); else map.addLayer(layer);
+                } catch (_e5) {}
+              }
+              el._geomanStyle = { srcId, fillId, lineId, pointId };
+            };
+            const refreshGeomanStyleLayers = (collection) => {
+              try {
+                if (!stylePaint || !el._geomanStyle) return;
+                const srcId = el._geomanStyle.srcId;
+                if (map.getSource(srcId)) {
+                  map.getSource(srcId).setData(collection || { type: 'FeatureCollection', features: [] });
+                }
+              } catch (_e) {}
+            };
+            if (stylePaint) {
+              ensureGeomanStyleLayers(stylePaint);
+            }
+
             // Debounced exporter to avoid excessive trait churn while drawing
             let geomanExportTimer = null;
             const scheduleGeomanExport = () => {
@@ -4745,6 +4862,14 @@ const pointInPolygon = (pt, poly) => {
             } else {
               exportGeomanData();
             }
+            // Also reflect current data into style source once available
+            try {
+              const initialData = model.get('geoman_data') || { type: 'FeatureCollection', features: [] };
+              if (stylePaint) {
+                ensureGeomanStyleLayers(stylePaint);
+                refreshGeomanStyleLayers(initialData);
+              }
+            } catch (_e) {}
             // Sync initial toolbar status
             updateAndSyncGeomanStatus();
 
@@ -6338,6 +6463,8 @@ const pointInPolygon = (pt, poly) => {
                   show_info_box: controlOptions?.show_info_box,
                   info_box_mode: controlOptions?.info_box_mode,
                   info_box_tolerance: controlOptions?.info_box_tolerance,
+                  geoman_paint: controlOptions?.geoman_paint,
+                  geoman_paint_above: controlOptions?.geoman_paint_above,
                 });
                 return;
               }
