@@ -561,6 +561,17 @@ class MapLibreMap(MapWidget):
         self.call_js_method("deactivateGeomanButton", name)
 
     # ---------------------------------------------------------------------
+    def set_geoman_info_box_enabled(self, enabled: bool) -> None:
+        """
+        Enable or disable the Geoman info box at runtime.
+
+        Args:
+            enabled: True to show the info box when selecting/editing features;
+                     False to hide it.
+        """
+        self.call_js_method("setGeomanInfoBoxEnabled", bool(enabled))
+
+    # ---------------------------------------------------------------------
     def load_osm_transport_to_geoman(
         self,
         bbox: Optional[List[float]] = None,
@@ -2684,6 +2695,9 @@ class MapLibreMap(MapWidget):
         settings: Optional[Dict[str, Any]] = None,
         controls: Optional[Dict[str, Any]] = None,
         collapsed: Optional[bool] = False,
+        show_info_box: Optional[bool] = None,
+        info_box_mode: str = "click",
+        info_box_tolerance: Optional[int] = None,
     ) -> None:
         """Add the MapLibre-Geoman drawing and editing toolkit.
 
@@ -2698,6 +2712,14 @@ class MapLibreMap(MapWidget):
                 button configuration overrides.
             collapsed: Whether the toolbar UI should start collapsed. Use
                 ``None`` to defer to the underlying configuration.
+            show_info_box: If True, show an info box that displays the properties
+                of the currently selected feature when clicking or hovering over any feature
+                in the Geoman layer, not just during editing. Defaults to None (no change in frontend default).
+            info_box_mode: 'click' to show info only after clicking a feature (default),
+                or 'hover' to show on mouse hover.
+            info_box_tolerance: Pixel search tolerance when detecting a feature
+                under the pointer. Larger values make selection easier (default 8 for
+                click, 6 for hover if not specified).
         """
 
         geoman_config: Dict[str, Any] = dict(geoman_options or {})
@@ -2724,6 +2746,12 @@ class MapLibreMap(MapWidget):
         control_options: Dict[str, Any] = {"position": position}
         if geoman_config:
             control_options["geoman_options"] = geoman_config
+        if show_info_box is not None:
+            control_options["show_info_box"] = bool(show_info_box)
+        if info_box_mode:
+            control_options["info_box_mode"] = str(info_box_mode)
+        if info_box_tolerance is not None:
+            control_options["info_box_tolerance"] = int(info_box_tolerance)
 
         control_key = f"geoman_{position}"
         current_controls = dict(self._controls)
@@ -2736,6 +2764,13 @@ class MapLibreMap(MapWidget):
         self.controls["geoman"] = position
 
         self.call_js_method("addControl", "geoman", control_options)
+
+        # If Geoman is already initialized, ensure the info box setting is applied at runtime
+        if show_info_box is not None:
+            try:
+                self.call_js_method("setGeomanInfoBoxEnabled", bool(show_info_box))
+            except Exception:
+                pass
 
         if collapsed is not None:
             if collapsed:
