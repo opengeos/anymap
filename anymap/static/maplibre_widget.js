@@ -4222,7 +4222,11 @@ const pointInPolygon = (pt, poly) => {
           try {
             el._geomanInstance = instance;
             el._controls.set(controlKey, instance);
-            const stylePaint = controlOptions.geoman_paint || null;
+            let stylePaint = controlOptions.geoman_paint || null;
+            if (stylePaint && typeof stylePaint !== 'object') {
+              console.warn('[Geoman] Invalid paint config: expected object, got', typeof stylePaint);
+              stylePaint = null;
+            }
             const paintAbove = controlOptions.geoman_paint_above !== false; // default true
 
             // Info box UI (optional)
