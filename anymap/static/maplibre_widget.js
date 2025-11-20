@@ -4014,6 +4014,7 @@ function render({ model, el }) {
       const infoBoxTolerance = Number(controlOptions && controlOptions.info_box_tolerance);
       el._gmShowInfoBox = showInfoBox;
       el._gmInfoMode = infoBoxMode;
+      el._gmInfoTolerance = infoBoxTolerance;
 
       el._controls.set(controlKey, { type: 'geoman', pending: true });
 
