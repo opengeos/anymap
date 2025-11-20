@@ -4315,12 +4315,13 @@ const pointInPolygon = (pt, poly) => {
               box.style.display = 'block';
             };
             // Mirrored style layers for visualizing geoman_data with custom paint
-            const ensureGeomanStyleLayers = (paintConfig) => {
+            // Accept a unique key (e.g., position or controlKey) to avoid ID conflicts
+            const ensureGeomanStyleLayers = (paintConfig, controlKey = 'default') => {
               if (!paintConfig) return;
-              const srcId = 'geoman-style-src';
-              const fillId = 'geoman-style-fill';
-              const lineId = 'geoman-style-line';
-              const pointId = 'geoman-style-point';
+              const srcId = `geoman-style-src-${controlKey}`;
+              const fillId = `geoman-style-fill-${controlKey}`;
+              const lineId = `geoman-style-line-${controlKey}`;
+              const pointId = `geoman-style-point-${controlKey}`;
               try {
                 if (!map.getSource(srcId)) {
                   map.addSource(srcId, { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
