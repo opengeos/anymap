@@ -4710,21 +4710,22 @@ function render({ model, el }) {
               // Provide a reusable attach function for external callers (e.g., after data load)
               el._gmAttachInfoHandlers = () => {
                 try {
-                  // Clean up any previous handlers
-                  if (el._gmInfoHandlers) {
-                    const h = el._gmInfoHandlers;
-                    try { if (h.move) map.off('mousemove', h.move); } catch (_e) {}
-                    try { if (h.click) map.off('click', h.click); } catch (_e2) {}
-                    el._gmInfoHandlers = null;
+                  // Clean up any previous handler
+                  if (el._gmInfoHandler) {
+                    const { eventType, handler } = el._gmInfoHandler;
+                    try { map.off(eventType, handler); } catch (_e) {}
+                    el._gmInfoHandler = null;
                   }
-                  const onMove = (e) => updateInfoFromEventPoint(e);
-                  const onClick = (e) => updateInfoFromEventPoint(e, true);
+                  let eventType, handler;
                   if (el._gmInfoMode === 'hover') {
-                    map.on('mousemove', onMove);
+                    eventType = 'mousemove';
+                    handler = (e) => updateInfoFromEventPoint(e);
                   } else {
-                    map.on('click', onClick);
+                    eventType = 'click';
+                    handler = (e) => updateInfoFromEventPoint(e, true);
                   }
-                  el._gmInfoHandlers = { move: onMove, click: onClick };
+                  map.on(eventType, handler);
+                  el._gmInfoHandler = { eventType, handler };
                 } catch (_e3) {}
               };
               // Expose a direct updater for convenience
