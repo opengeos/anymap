@@ -3877,7 +3877,8 @@ function render({ model, el }) {
       zoom: model.get("zoom"),
       bearing: model.get("bearing"),
       pitch: model.get("pitch"),
-      antialias: model.get("antialias")
+      antialias: model.get("antialias"),
+      doubleClickZoom: model.get("double_click_zoom")
     });
 
     // Force default cursor for all map interactions
@@ -5380,7 +5381,17 @@ const pointInPolygon = (pt, poly) => {
                       this._onKeyDown = null;
                       this._keyTarget = null;
                     }
-                    try { this._map.doubleClickZoom && this._map.doubleClickZoom.enable(); } catch (_e) {}
+                    // Restore double-click zoom to user's preference instead of always enabling
+                    try {
+                      if (this._map.doubleClickZoom) {
+                        const userPreference = this._model.get("double_click_zoom");
+                        if (userPreference) {
+                          this._map.doubleClickZoom.enable();
+                        } else {
+                          this._map.doubleClickZoom.disable();
+                        }
+                      }
+                    } catch (_e) {}
                   };
 
                   this.finishSplit = () => {
