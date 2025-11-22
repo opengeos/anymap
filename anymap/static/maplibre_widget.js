@@ -3923,7 +3923,9 @@ function render({ model, el }) {
         model.set("geoman_data", exported);
         model.save_changes();
         // Update mirrored style source if present
-        refreshGeomanStyleLayers(exported);
+        if (typeof el._refreshGeomanStyleLayers === 'function') {
+          el._refreshGeomanStyleLayers(exported);
+        }
       } catch (error) {
         console.error('[Geoman Export] Failed to export Geoman features:', error);
       }
@@ -4422,6 +4424,9 @@ const pointInPolygon = (pt, poly) => {
               try { if (map.getLayer(pointId)) map.setLayoutProperty(pointId, 'visibility', vis); } catch (_e) {}
               el._geomanMirrorVisible = !!visible;
             };
+            // Store functions on element for access from exportGeomanData
+            el._refreshGeomanStyleLayers = refreshGeomanStyleLayers;
+            el._setGeomanMirrorVisibility = setGeomanMirrorVisibility;
             if (stylePaint) ensureGeomanStyleLayers(stylePaint);
             const findPropsForFeatureId = (fid) => {
               if (!fid) return null;
