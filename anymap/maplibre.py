@@ -5164,3 +5164,165 @@ class MapLibreMap(MapWidget):
                 f.write(html_content)
 
         return html_content
+
+    def add_legend(
+        self,
+        title: str = "Legend",
+        legend_dict: Optional[Dict[str, str]] = None,
+        labels: Optional[List[str]] = None,
+        colors: Optional[List[str]] = None,
+        fontsize: int = 15,
+        bg_color: str = "white",
+        icon: str = "≡",
+        position: str = "bottom-right",
+        collapsed: bool = True,
+        builtin_legend: Optional[str] = None,
+        shape_type: str = "rectangle",
+        **kwargs: Union[str, int, float],
+    ) -> None:
+        """
+        Adds a legend to the map.
+
+        This method allows for the addition of a legend to the map. The legend can be customized with a title,
+        labels, colors, and more. A built-in legend can also be specified.
+
+        Args:
+            title (str, optional): The title of the legend. Defaults to "Legend".
+            legend_dict (Optional[Dict[str, str]], optional): A dictionary with legend items as keys and colors as values.
+                If provided, `labels` and `colors` will be ignored. Defaults to None.
+            labels (Optional[List[str]], optional): A list of legend labels. Defaults to None.
+            colors (Optional[List[str]], optional): A list of colors corresponding to the labels. Defaults to None.
+            fontsize (int, optional): The font size of the legend text. Defaults to 15.
+            bg_color (str, optional): The background color of the legend. Defaults to "white".
+                To make the background transparent, set this to "transparent".
+                To make the background half transparent, set this to "rgba(255, 255, 255, 0.5)".
+            icon (str, optional): The icon of the legend. Defaults to "≡".
+            position (str, optional): The position of the legend on the map. Can be one of "top-left",
+                "top-right", "bottom-left", "bottom-right". Defaults to "bottom-right".
+            collapsed (bool, optional): Whether the legend is collapsed by default. Defaults to True.
+            builtin_legend (Optional[str], optional): The name of a built-in legend to use. Available options: "NLCD", "NWI". Defaults to None.
+            shape_type (str, optional): The shape type of the legend items. Can be one of "rectangle", "circle", or "line". Defaults to "rectangle".
+            **kwargs: Any
+        """
+        if shape_type is not None and shape_type not in ["rectangle", "circle", "line"]:
+            raise ValueError(
+                "shape_type must be one of 'rectangle', 'circle', or 'line'"
+            )
+        import html as html_module
+        from ipywidgets import widgets
+
+        # Built-in legend presets
+        BUILTIN_LEGENDS = {
+            "NLCD": {
+                "11 Open Water": "466b9f",
+                "12 Perennial Ice/Snow": "d1def8",
+                "21 Developed, Open Space": "dec5c5",
+                "22 Developed, Low Intensity": "d99282",
+                "23 Developed, Medium Intensity": "eb0000",
+                "24 Developed High Intensity": "ab0000",
+                "31 Barren Land (Rock/Sand/Clay)": "b3ac9f",
+                "41 Deciduous Forest": "68ab5f",
+                "42 Evergreen Forest": "1c5f2c",
+                "43 Mixed Forest": "b5c58f",
+                "51 Dwarf Scrub": "af963c",
+                "52 Shrub/Scrub": "ccb879",
+                "71 Grassland/Herbaceous": "dfdfc2",
+                "72 Sedge/Herbaceous": "d1d182",
+                "73 Lichens": "a3cc51",
+                "74 Moss": "82ba9e",
+                "81 Pasture/Hay": "dcd939",
+                "82 Cultivated Crops": "ab6c28",
+                "90 Woody Wetlands": "b8d9eb",
+                "95 Emergent Herbaceous Wetlands": "6c9fb8",
+            },
+            "NWI": {
+                "Freshwater Forested/Shrub Wetland": "#008837",
+                "Freshwater Emergent Wetland": "#7FC31C",
+                "Freshwater Pond": "#688CC0",
+                "Estuarine and Marine Wetland": "#66C2A5",
+                "Riverine": "#0190BF",
+                "Lake": "#13007C",
+                "Estuarine and Marine Deepwater": "#007C88",
+                "Other": "#B28656",
+            },
+        }
+
+        # Use builtin legend if specified
+        if builtin_legend is not None:
+            if builtin_legend not in BUILTIN_LEGENDS:
+                print(
+                    f"Warning: builtin_legend '{builtin_legend}' not found. Available: {list(BUILTIN_LEGENDS.keys())}"
+                )
+                return
+            legend_dict = BUILTIN_LEGENDS[builtin_legend]
+
+        # Determine legend items
+        if legend_dict is not None:
+            labels = list(legend_dict.keys())
+            colors = [legend_dict[label] for label in labels]
+        elif labels is not None and colors is not None:
+            if len(labels) != len(colors):
+                print("Error: labels and colors must have the same length")
+                return
+        else:
+            print(
+                "Error: Either legend_dict or both labels and colors must be provided"
+            )
+            return
+
+        # Normalize colors (add # if not present)
+        colors = [f"#{c}" if not c.startswith("#") else c for c in colors]
+
+        # Build legend items as a list of HTML widgets (no title needed - it's in the panel header)
+        legend_items = []
+
+        # Add each legend item
+        for label, color in zip(labels, colors):
+            if shape_type == "circle":
+                shape_html = f'<span style="display: inline-block; width: 20px; height: 20px; background-color: {color}; border-radius: 50%; margin-right: 8px; vertical-align: middle;"></span>'
+            elif shape_type == "line":
+                shape_html = f'<span style="display: inline-block; width: 20px; height: 3px; background-color: {color}; margin-right: 8px; vertical-align: middle;"></span>'
+            else:  # rectangle
+                shape_html = f'<span style="display: inline-block; width: 20px; height: 20px; background-color: {color}; margin-right: 8px; vertical-align: middle;"></span>'
+
+            # Validate fontsize before using it in CSS
+            try:
+                safe_fontsize = int(fontsize)
+                if not (1 <= safe_fontsize <= 100):
+                    safe_fontsize = 14  # default value
+            except (ValueError, TypeError):
+                safe_fontsize = 14  # default value
+
+            item_html = widgets.HTML(
+                value=f'<div style="margin: 0; padding: 0; line-height: 1.4; white-space: nowrap; font-size: {safe_fontsize}px;">{shape_html}{html_module.escape(label)}</div>',
+                layout=widgets.Layout(
+                    margin="0 0 4px 0"
+                ),  # Control spacing between items
+            )
+            legend_items.append(item_html)
+
+        # Create a VBox container for legend items
+        legend_vbox = widgets.VBox(
+            legend_items,
+            layout=widgets.Layout(
+                width="fit-content",
+                max_width="300px",
+                max_height="400px",
+                overflow_y="auto",
+                overflow_x="hidden",
+                padding="8px",
+                border="2px solid grey",
+                border_radius="5px",
+                background_color=bg_color,
+            ),
+        )
+
+        # Add legend as a widget control at the specified position
+        self.add_widget_control(
+            legend_vbox,
+            position=position,
+            label=title,
+            icon=icon,
+            collapsed=collapsed,
+            **kwargs,
+        )
