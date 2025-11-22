@@ -5201,7 +5201,7 @@ class MapLibreMap(MapWidget):
                 "top-right", "bottom-left", "bottom-right". Defaults to "bottom-right".
             collapsed (bool, optional): Whether the legend is collapsed by default. Defaults to True.
             builtin_legend (Optional[str], optional): The name of a built-in legend to use. Defaults to None.
-            shape_type (str, optional): The shape type of the legend items. Can be one of "rectangle", "circle", or "line".
+            shape_type (str, optional): The shape type of the legend items. Can be one of "rectangle", "circle", or "line". Defaults to "rectangle".
             **kwargs: Additional keyword arguments for the add_widget_control method.
         """
         if shape_type is not None and shape_type not in ["rectangle", "circle", "line"]:
