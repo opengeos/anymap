@@ -5597,7 +5597,7 @@ const pointInPolygon = (pt, poly) => {
                     if (this._container && this._button && this._button.parentNode === this._container) {
                       this._container.removeChild(this._button);
                     }
-                    this._map = undefined;
+                    this._map = null;
                   }
                 }
                 const infoCtrl = new InfoToggleControl(model);
