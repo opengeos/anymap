@@ -5285,8 +5285,16 @@ class MapLibreMap(MapWidget):
             else:  # rectangle
                 shape_html = f'<span style="display: inline-block; width: 20px; height: 20px; background-color: {color}; margin-right: 8px; vertical-align: middle;"></span>'
 
+            # Validate fontsize before using it in CSS
+            try:
+                safe_fontsize = int(fontsize)
+                if not (1 <= safe_fontsize <= 100):
+                    safe_fontsize = 14  # default value
+            except (ValueError, TypeError):
+                safe_fontsize = 14  # default value
+
             item_html = widgets.HTML(
-                value=f'<div style="margin: 0; padding: 0; line-height: 1.4; white-space: nowrap; font-size: {fontsize}px;">{shape_html}{html_module.escape(label)}</div>',
+                value=f'<div style="margin: 0; padding: 0; line-height: 1.4; white-space: nowrap; font-size: {safe_fontsize}px;">{shape_html}{html_module.escape(label)}</div>',
                 layout=widgets.Layout(
                     margin="0 0 4px 0"
                 ),  # Control spacing between items
