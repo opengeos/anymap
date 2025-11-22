@@ -2156,6 +2156,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.add_legend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        add_legend()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.add_legend_control" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3679,6 +3690,17 @@
     <span class="md-ellipsis">
       
         add_layer_control()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.add_legend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        add_legend()
       
     </span>
   </a>
@@ -9929,6 +9951,168 @@ data sources, custom styling, and interactive features.</p>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">html_content</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">html_content</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_legend</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Legend&quot;</span><span class="p">,</span>
+        <span class="n">legend_dict</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">labels</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">colors</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">fontsize</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
+        <span class="n">bg_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;white&quot;</span><span class="p">,</span>
+        <span class="n">icon</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;≡&quot;</span><span class="p">,</span>
+        <span class="n">position</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;bottom-right&quot;</span><span class="p">,</span>
+        <span class="n">collapsed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">builtin_legend</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">shape_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;rectangle&quot;</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds a legend to the map.</span>
+
+<span class="sd">        This method allows for the addition of a legend to the map. The legend can be customized with a title,</span>
+<span class="sd">        labels, colors, and more. A built-in legend can also be specified.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            title (str, optional): The title of the legend. Defaults to &quot;Legend&quot;.</span>
+<span class="sd">            legend_dict (Optional[Dict[str, str]], optional): A dictionary with legend items as keys and colors as values.</span>
+<span class="sd">                If provided, `labels` and `colors` will be ignored. Defaults to None.</span>
+<span class="sd">            labels (Optional[List[str]], optional): A list of legend labels. Defaults to None.</span>
+<span class="sd">            colors (Optional[List[str]], optional): A list of colors corresponding to the labels. Defaults to None.</span>
+<span class="sd">            fontsize (int, optional): The font size of the legend text. Defaults to 15.</span>
+<span class="sd">            bg_color (str, optional): The background color of the legend. Defaults to &quot;white&quot;.</span>
+<span class="sd">                To make the background transparent, set this to &quot;transparent&quot;.</span>
+<span class="sd">                To make the background half transparent, set this to &quot;rgba(255, 255, 255, 0.5)&quot;.</span>
+<span class="sd">            icon (str, optional): The icon of the legend. Defaults to &quot;≡&quot;.</span>
+<span class="sd">            position (str, optional): The position of the legend on the map. Can be one of &quot;top-left&quot;,</span>
+<span class="sd">                &quot;top-right&quot;, &quot;bottom-left&quot;, &quot;bottom-right&quot;. Defaults to &quot;bottom-right&quot;.</span>
+<span class="sd">            collapsed (bool, optional): Whether the legend is collapsed by default. Defaults to True.</span>
+<span class="sd">            builtin_legend (Optional[str], optional): The name of a built-in legend to use. Available options: &quot;NLCD&quot;, &quot;NWI&quot;. Defaults to None.</span>
+<span class="sd">            shape_type (str, optional): The shape type of the legend items. Can be one of &quot;rectangle&quot;, &quot;circle&quot;, or &quot;line&quot;. Defaults to &quot;rectangle&quot;.</span>
+<span class="sd">            **kwargs: Any</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">shape_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">shape_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;rectangle&quot;</span><span class="p">,</span> <span class="s2">&quot;circle&quot;</span><span class="p">,</span> <span class="s2">&quot;line&quot;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;shape_type must be one of &#39;rectangle&#39;, &#39;circle&#39;, or &#39;line&#39;&quot;</span>
+            <span class="p">)</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">html</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">html_module</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">ipywidgets</span><span class="w"> </span><span class="kn">import</span> <span class="n">widgets</span>
+
+        <span class="c1"># Built-in legend presets</span>
+        <span class="n">BUILTIN_LEGENDS</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;NLCD&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;11 Open Water&quot;</span><span class="p">:</span> <span class="s2">&quot;466b9f&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;12 Perennial Ice/Snow&quot;</span><span class="p">:</span> <span class="s2">&quot;d1def8&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;21 Developed, Open Space&quot;</span><span class="p">:</span> <span class="s2">&quot;dec5c5&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;22 Developed, Low Intensity&quot;</span><span class="p">:</span> <span class="s2">&quot;d99282&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;23 Developed, Medium Intensity&quot;</span><span class="p">:</span> <span class="s2">&quot;eb0000&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;24 Developed High Intensity&quot;</span><span class="p">:</span> <span class="s2">&quot;ab0000&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;31 Barren Land (Rock/Sand/Clay)&quot;</span><span class="p">:</span> <span class="s2">&quot;b3ac9f&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;41 Deciduous Forest&quot;</span><span class="p">:</span> <span class="s2">&quot;68ab5f&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;42 Evergreen Forest&quot;</span><span class="p">:</span> <span class="s2">&quot;1c5f2c&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;43 Mixed Forest&quot;</span><span class="p">:</span> <span class="s2">&quot;b5c58f&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;51 Dwarf Scrub&quot;</span><span class="p">:</span> <span class="s2">&quot;af963c&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;52 Shrub/Scrub&quot;</span><span class="p">:</span> <span class="s2">&quot;ccb879&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;71 Grassland/Herbaceous&quot;</span><span class="p">:</span> <span class="s2">&quot;dfdfc2&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;72 Sedge/Herbaceous&quot;</span><span class="p">:</span> <span class="s2">&quot;d1d182&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;73 Lichens&quot;</span><span class="p">:</span> <span class="s2">&quot;a3cc51&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;74 Moss&quot;</span><span class="p">:</span> <span class="s2">&quot;82ba9e&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;81 Pasture/Hay&quot;</span><span class="p">:</span> <span class="s2">&quot;dcd939&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;82 Cultivated Crops&quot;</span><span class="p">:</span> <span class="s2">&quot;ab6c28&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;90 Woody Wetlands&quot;</span><span class="p">:</span> <span class="s2">&quot;b8d9eb&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;95 Emergent Herbaceous Wetlands&quot;</span><span class="p">:</span> <span class="s2">&quot;6c9fb8&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;NWI&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;Freshwater Forested/Shrub Wetland&quot;</span><span class="p">:</span> <span class="s2">&quot;#008837&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Freshwater Emergent Wetland&quot;</span><span class="p">:</span> <span class="s2">&quot;#7FC31C&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Freshwater Pond&quot;</span><span class="p">:</span> <span class="s2">&quot;#688CC0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Estuarine and Marine Wetland&quot;</span><span class="p">:</span> <span class="s2">&quot;#66C2A5&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Riverine&quot;</span><span class="p">:</span> <span class="s2">&quot;#0190BF&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Lake&quot;</span><span class="p">:</span> <span class="s2">&quot;#13007C&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Estuarine and Marine Deepwater&quot;</span><span class="p">:</span> <span class="s2">&quot;#007C88&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Other&quot;</span><span class="p">:</span> <span class="s2">&quot;#B28656&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">}</span>
+
+        <span class="c1"># Use builtin legend if specified</span>
+        <span class="k">if</span> <span class="n">builtin_legend</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">builtin_legend</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">BUILTIN_LEGENDS</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Warning: builtin_legend &#39;</span><span class="si">{</span><span class="n">builtin_legend</span><span class="si">}</span><span class="s2">&#39; not found. Available: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">BUILTIN_LEGENDS</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+                <span class="k">return</span>
+            <span class="n">legend_dict</span> <span class="o">=</span> <span class="n">BUILTIN_LEGENDS</span><span class="p">[</span><span class="n">builtin_legend</span><span class="p">]</span>
+
+        <span class="c1"># Determine legend items</span>
+        <span class="k">if</span> <span class="n">legend_dict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">labels</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">legend_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="n">legend_dict</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">labels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">colors</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">colors</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error: labels and colors must have the same length&quot;</span><span class="p">)</span>
+                <span class="k">return</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;Error: Either legend_dict or both labels and colors must be provided&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="c1"># Normalize colors (add # if not present)</span>
+        <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;#</span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">c</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">colors</span><span class="p">]</span>
+
+        <span class="c1"># Build legend items as a list of HTML widgets (no title needed - it&#39;s in the panel header)</span>
+        <span class="n">legend_items</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Add each legend item</span>
+        <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">color</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">colors</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">shape_type</span> <span class="o">==</span> <span class="s2">&quot;circle&quot;</span><span class="p">:</span>
+                <span class="n">shape_html</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&lt;span style=&quot;display: inline-block; width: 20px; height: 20px; background-color: </span><span class="si">{</span><span class="n">color</span><span class="si">}</span><span class="s1">; border-radius: 50%; margin-right: 8px; vertical-align: middle;&quot;&gt;&lt;/span&gt;&#39;</span>
+            <span class="k">elif</span> <span class="n">shape_type</span> <span class="o">==</span> <span class="s2">&quot;line&quot;</span><span class="p">:</span>
+                <span class="n">shape_html</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&lt;span style=&quot;display: inline-block; width: 20px; height: 3px; background-color: </span><span class="si">{</span><span class="n">color</span><span class="si">}</span><span class="s1">; margin-right: 8px; vertical-align: middle;&quot;&gt;&lt;/span&gt;&#39;</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># rectangle</span>
+                <span class="n">shape_html</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&lt;span style=&quot;display: inline-block; width: 20px; height: 20px; background-color: </span><span class="si">{</span><span class="n">color</span><span class="si">}</span><span class="s1">; margin-right: 8px; vertical-align: middle;&quot;&gt;&lt;/span&gt;&#39;</span>
+
+            <span class="c1"># Validate fontsize before using it in CSS</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">safe_fontsize</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">fontsize</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">safe_fontsize</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="p">):</span>
+                    <span class="n">safe_fontsize</span> <span class="o">=</span> <span class="mi">14</span>  <span class="c1"># default value</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
+                <span class="n">safe_fontsize</span> <span class="o">=</span> <span class="mi">14</span>  <span class="c1"># default value</span>
+
+            <span class="n">item_html</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">HTML</span><span class="p">(</span>
+                <span class="n">value</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;&lt;div style=&quot;margin: 0; padding: 0; line-height: 1.4; white-space: nowrap; font-size: </span><span class="si">{</span><span class="n">safe_fontsize</span><span class="si">}</span><span class="s1">px;&quot;&gt;</span><span class="si">{</span><span class="n">shape_html</span><span class="si">}{</span><span class="n">html_module</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">label</span><span class="p">)</span><span class="si">}</span><span class="s1">&lt;/div&gt;&#39;</span><span class="p">,</span>
+                <span class="n">layout</span><span class="o">=</span><span class="n">widgets</span><span class="o">.</span><span class="n">Layout</span><span class="p">(</span>
+                    <span class="n">margin</span><span class="o">=</span><span class="s2">&quot;0 0 4px 0&quot;</span>
+                <span class="p">),</span>  <span class="c1"># Control spacing between items</span>
+            <span class="p">)</span>
+            <span class="n">legend_items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item_html</span><span class="p">)</span>
+
+        <span class="c1"># Create a VBox container for legend items</span>
+        <span class="n">legend_vbox</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">(</span>
+            <span class="n">legend_items</span><span class="p">,</span>
+            <span class="n">layout</span><span class="o">=</span><span class="n">widgets</span><span class="o">.</span><span class="n">Layout</span><span class="p">(</span>
+                <span class="n">width</span><span class="o">=</span><span class="s2">&quot;fit-content&quot;</span><span class="p">,</span>
+                <span class="n">max_width</span><span class="o">=</span><span class="s2">&quot;300px&quot;</span><span class="p">,</span>
+                <span class="n">max_height</span><span class="o">=</span><span class="s2">&quot;400px&quot;</span><span class="p">,</span>
+                <span class="n">overflow_y</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+                <span class="n">overflow_x</span><span class="o">=</span><span class="s2">&quot;hidden&quot;</span><span class="p">,</span>
+                <span class="n">padding</span><span class="o">=</span><span class="s2">&quot;8px&quot;</span><span class="p">,</span>
+                <span class="n">border</span><span class="o">=</span><span class="s2">&quot;2px solid grey&quot;</span><span class="p">,</span>
+                <span class="n">border_radius</span><span class="o">=</span><span class="s2">&quot;5px&quot;</span><span class="p">,</span>
+                <span class="n">background_color</span><span class="o">=</span><span class="n">bg_color</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Add legend as a widget control at the specified position</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_widget_control</span><span class="p">(</span>
+            <span class="n">legend_vbox</span><span class="p">,</span>
+            <span class="n">position</span><span class="o">=</span><span class="n">position</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
+            <span class="n">icon</span><span class="o">=</span><span class="n">icon</span><span class="p">,</span>
+            <span class="n">collapsed</span><span class="o">=</span><span class="n">collapsed</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+        <span class="p">)</span>
 </code></pre></div>
         </details>
 
@@ -13543,6 +13727,282 @@ similar to other controls, and expands when clicked.</p>
 
   </div>
 
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="anymap.maplibre.MapLibreMap.add_legend" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">add_legend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Legend&#39;</span><span class="p">,</span> <span class="n">legend_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">bg_color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="s1">&#39;≡&#39;</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s1">&#39;bottom-right&#39;</span><span class="p">,</span> <span class="n">collapsed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">builtin_legend</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shape_type</span><span class="o">=</span><span class="s1">&#39;rectangle&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+
+<a href="#anymap.maplibre.MapLibreMap.add_legend" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Adds a legend to the map.</p>
+<p>This method allows for the addition of a legend to the map. The legend can be customized with a title,
+labels, colors, and more. A built-in legend can also be specified.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>title</code></td>
+        <td><code>str</code></td>
+        <td><p>The title of the legend. Defaults to "Legend".</p></td>
+        <td><code>&#39;Legend&#39;</code></td>
+      </tr>
+      <tr>
+        <td><code>legend_dict</code></td>
+        <td><code>Optional[Dict[str, str]]</code></td>
+        <td><p>A dictionary with legend items as keys and colors as values.
+If provided, <code>labels</code> and <code>colors</code> will be ignored. Defaults to None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>labels</code></td>
+        <td><code>Optional[List[str]]</code></td>
+        <td><p>A list of legend labels. Defaults to None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>colors</code></td>
+        <td><code>Optional[List[str]]</code></td>
+        <td><p>A list of colors corresponding to the labels. Defaults to None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>fontsize</code></td>
+        <td><code>int</code></td>
+        <td><p>The font size of the legend text. Defaults to 15.</p></td>
+        <td><code>15</code></td>
+      </tr>
+      <tr>
+        <td><code>bg_color</code></td>
+        <td><code>str</code></td>
+        <td><p>The background color of the legend. Defaults to "white".
+To make the background transparent, set this to "transparent".
+To make the background half transparent, set this to "rgba(255, 255, 255, 0.5)".</p></td>
+        <td><code>&#39;white&#39;</code></td>
+      </tr>
+      <tr>
+        <td><code>icon</code></td>
+        <td><code>str</code></td>
+        <td><p>The icon of the legend. Defaults to "≡".</p></td>
+        <td><code>&#39;≡&#39;</code></td>
+      </tr>
+      <tr>
+        <td><code>position</code></td>
+        <td><code>str</code></td>
+        <td><p>The position of the legend on the map. Can be one of "top-left",
+"top-right", "bottom-left", "bottom-right". Defaults to "bottom-right".</p></td>
+        <td><code>&#39;bottom-right&#39;</code></td>
+      </tr>
+      <tr>
+        <td><code>collapsed</code></td>
+        <td><code>bool</code></td>
+        <td><p>Whether the legend is collapsed by default. Defaults to True.</p></td>
+        <td><code>True</code></td>
+      </tr>
+      <tr>
+        <td><code>builtin_legend</code></td>
+        <td><code>Optional[str]</code></td>
+        <td><p>The name of a built-in legend to use. Available options: "NLCD", "NWI". Defaults to None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>shape_type</code></td>
+        <td><code>str</code></td>
+        <td><p>The shape type of the legend items. Can be one of "rectangle", "circle", or "line". Defaults to "rectangle".</p></td>
+        <td><code>&#39;rectangle&#39;</code></td>
+      </tr>
+      <tr>
+        <td><code>**kwargs</code></td>
+        <td><code>Union[str, int, float]</code></td>
+        <td><p>Any</p></td>
+        <td><code>{}</code></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>anymap/maplibre.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_legend</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Legend&quot;</span><span class="p">,</span>
+    <span class="n">legend_dict</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">labels</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">colors</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">fontsize</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
+    <span class="n">bg_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;white&quot;</span><span class="p">,</span>
+    <span class="n">icon</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;≡&quot;</span><span class="p">,</span>
+    <span class="n">position</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;bottom-right&quot;</span><span class="p">,</span>
+    <span class="n">collapsed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">builtin_legend</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">shape_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;rectangle&quot;</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Adds a legend to the map.</span>
+
+<span class="sd">    This method allows for the addition of a legend to the map. The legend can be customized with a title,</span>
+<span class="sd">    labels, colors, and more. A built-in legend can also be specified.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        title (str, optional): The title of the legend. Defaults to &quot;Legend&quot;.</span>
+<span class="sd">        legend_dict (Optional[Dict[str, str]], optional): A dictionary with legend items as keys and colors as values.</span>
+<span class="sd">            If provided, `labels` and `colors` will be ignored. Defaults to None.</span>
+<span class="sd">        labels (Optional[List[str]], optional): A list of legend labels. Defaults to None.</span>
+<span class="sd">        colors (Optional[List[str]], optional): A list of colors corresponding to the labels. Defaults to None.</span>
+<span class="sd">        fontsize (int, optional): The font size of the legend text. Defaults to 15.</span>
+<span class="sd">        bg_color (str, optional): The background color of the legend. Defaults to &quot;white&quot;.</span>
+<span class="sd">            To make the background transparent, set this to &quot;transparent&quot;.</span>
+<span class="sd">            To make the background half transparent, set this to &quot;rgba(255, 255, 255, 0.5)&quot;.</span>
+<span class="sd">        icon (str, optional): The icon of the legend. Defaults to &quot;≡&quot;.</span>
+<span class="sd">        position (str, optional): The position of the legend on the map. Can be one of &quot;top-left&quot;,</span>
+<span class="sd">            &quot;top-right&quot;, &quot;bottom-left&quot;, &quot;bottom-right&quot;. Defaults to &quot;bottom-right&quot;.</span>
+<span class="sd">        collapsed (bool, optional): Whether the legend is collapsed by default. Defaults to True.</span>
+<span class="sd">        builtin_legend (Optional[str], optional): The name of a built-in legend to use. Available options: &quot;NLCD&quot;, &quot;NWI&quot;. Defaults to None.</span>
+<span class="sd">        shape_type (str, optional): The shape type of the legend items. Can be one of &quot;rectangle&quot;, &quot;circle&quot;, or &quot;line&quot;. Defaults to &quot;rectangle&quot;.</span>
+<span class="sd">        **kwargs: Any</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">shape_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">shape_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;rectangle&quot;</span><span class="p">,</span> <span class="s2">&quot;circle&quot;</span><span class="p">,</span> <span class="s2">&quot;line&quot;</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;shape_type must be one of &#39;rectangle&#39;, &#39;circle&#39;, or &#39;line&#39;&quot;</span>
+        <span class="p">)</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">html</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">html_module</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ipywidgets</span><span class="w"> </span><span class="kn">import</span> <span class="n">widgets</span>
+
+    <span class="c1"># Built-in legend presets</span>
+    <span class="n">BUILTIN_LEGENDS</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;NLCD&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;11 Open Water&quot;</span><span class="p">:</span> <span class="s2">&quot;466b9f&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;12 Perennial Ice/Snow&quot;</span><span class="p">:</span> <span class="s2">&quot;d1def8&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;21 Developed, Open Space&quot;</span><span class="p">:</span> <span class="s2">&quot;dec5c5&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;22 Developed, Low Intensity&quot;</span><span class="p">:</span> <span class="s2">&quot;d99282&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;23 Developed, Medium Intensity&quot;</span><span class="p">:</span> <span class="s2">&quot;eb0000&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;24 Developed High Intensity&quot;</span><span class="p">:</span> <span class="s2">&quot;ab0000&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;31 Barren Land (Rock/Sand/Clay)&quot;</span><span class="p">:</span> <span class="s2">&quot;b3ac9f&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;41 Deciduous Forest&quot;</span><span class="p">:</span> <span class="s2">&quot;68ab5f&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;42 Evergreen Forest&quot;</span><span class="p">:</span> <span class="s2">&quot;1c5f2c&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;43 Mixed Forest&quot;</span><span class="p">:</span> <span class="s2">&quot;b5c58f&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;51 Dwarf Scrub&quot;</span><span class="p">:</span> <span class="s2">&quot;af963c&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;52 Shrub/Scrub&quot;</span><span class="p">:</span> <span class="s2">&quot;ccb879&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;71 Grassland/Herbaceous&quot;</span><span class="p">:</span> <span class="s2">&quot;dfdfc2&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;72 Sedge/Herbaceous&quot;</span><span class="p">:</span> <span class="s2">&quot;d1d182&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;73 Lichens&quot;</span><span class="p">:</span> <span class="s2">&quot;a3cc51&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;74 Moss&quot;</span><span class="p">:</span> <span class="s2">&quot;82ba9e&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;81 Pasture/Hay&quot;</span><span class="p">:</span> <span class="s2">&quot;dcd939&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;82 Cultivated Crops&quot;</span><span class="p">:</span> <span class="s2">&quot;ab6c28&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;90 Woody Wetlands&quot;</span><span class="p">:</span> <span class="s2">&quot;b8d9eb&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;95 Emergent Herbaceous Wetlands&quot;</span><span class="p">:</span> <span class="s2">&quot;6c9fb8&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;NWI&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;Freshwater Forested/Shrub Wetland&quot;</span><span class="p">:</span> <span class="s2">&quot;#008837&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Freshwater Emergent Wetland&quot;</span><span class="p">:</span> <span class="s2">&quot;#7FC31C&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Freshwater Pond&quot;</span><span class="p">:</span> <span class="s2">&quot;#688CC0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Estuarine and Marine Wetland&quot;</span><span class="p">:</span> <span class="s2">&quot;#66C2A5&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Riverine&quot;</span><span class="p">:</span> <span class="s2">&quot;#0190BF&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Lake&quot;</span><span class="p">:</span> <span class="s2">&quot;#13007C&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Estuarine and Marine Deepwater&quot;</span><span class="p">:</span> <span class="s2">&quot;#007C88&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Other&quot;</span><span class="p">:</span> <span class="s2">&quot;#B28656&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Use builtin legend if specified</span>
+    <span class="k">if</span> <span class="n">builtin_legend</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">builtin_legend</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">BUILTIN_LEGENDS</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Warning: builtin_legend &#39;</span><span class="si">{</span><span class="n">builtin_legend</span><span class="si">}</span><span class="s2">&#39; not found. Available: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">BUILTIN_LEGENDS</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span>
+        <span class="n">legend_dict</span> <span class="o">=</span> <span class="n">BUILTIN_LEGENDS</span><span class="p">[</span><span class="n">builtin_legend</span><span class="p">]</span>
+
+    <span class="c1"># Determine legend items</span>
+    <span class="k">if</span> <span class="n">legend_dict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">legend_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="n">legend_dict</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">labels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">colors</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">colors</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error: labels and colors must have the same length&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;Error: Either legend_dict or both labels and colors must be provided&quot;</span>
+        <span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="c1"># Normalize colors (add # if not present)</span>
+    <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;#</span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">c</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">colors</span><span class="p">]</span>
+
+    <span class="c1"># Build legend items as a list of HTML widgets (no title needed - it&#39;s in the panel header)</span>
+    <span class="n">legend_items</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Add each legend item</span>
+    <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">color</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">colors</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">shape_type</span> <span class="o">==</span> <span class="s2">&quot;circle&quot;</span><span class="p">:</span>
+            <span class="n">shape_html</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&lt;span style=&quot;display: inline-block; width: 20px; height: 20px; background-color: </span><span class="si">{</span><span class="n">color</span><span class="si">}</span><span class="s1">; border-radius: 50%; margin-right: 8px; vertical-align: middle;&quot;&gt;&lt;/span&gt;&#39;</span>
+        <span class="k">elif</span> <span class="n">shape_type</span> <span class="o">==</span> <span class="s2">&quot;line&quot;</span><span class="p">:</span>
+            <span class="n">shape_html</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&lt;span style=&quot;display: inline-block; width: 20px; height: 3px; background-color: </span><span class="si">{</span><span class="n">color</span><span class="si">}</span><span class="s1">; margin-right: 8px; vertical-align: middle;&quot;&gt;&lt;/span&gt;&#39;</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># rectangle</span>
+            <span class="n">shape_html</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&lt;span style=&quot;display: inline-block; width: 20px; height: 20px; background-color: </span><span class="si">{</span><span class="n">color</span><span class="si">}</span><span class="s1">; margin-right: 8px; vertical-align: middle;&quot;&gt;&lt;/span&gt;&#39;</span>
+
+        <span class="c1"># Validate fontsize before using it in CSS</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">safe_fontsize</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">fontsize</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">safe_fontsize</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="p">):</span>
+                <span class="n">safe_fontsize</span> <span class="o">=</span> <span class="mi">14</span>  <span class="c1"># default value</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
+            <span class="n">safe_fontsize</span> <span class="o">=</span> <span class="mi">14</span>  <span class="c1"># default value</span>
+
+        <span class="n">item_html</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">HTML</span><span class="p">(</span>
+            <span class="n">value</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;&lt;div style=&quot;margin: 0; padding: 0; line-height: 1.4; white-space: nowrap; font-size: </span><span class="si">{</span><span class="n">safe_fontsize</span><span class="si">}</span><span class="s1">px;&quot;&gt;</span><span class="si">{</span><span class="n">shape_html</span><span class="si">}{</span><span class="n">html_module</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">label</span><span class="p">)</span><span class="si">}</span><span class="s1">&lt;/div&gt;&#39;</span><span class="p">,</span>
+            <span class="n">layout</span><span class="o">=</span><span class="n">widgets</span><span class="o">.</span><span class="n">Layout</span><span class="p">(</span>
+                <span class="n">margin</span><span class="o">=</span><span class="s2">&quot;0 0 4px 0&quot;</span>
+            <span class="p">),</span>  <span class="c1"># Control spacing between items</span>
+        <span class="p">)</span>
+        <span class="n">legend_items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item_html</span><span class="p">)</span>
+
+    <span class="c1"># Create a VBox container for legend items</span>
+    <span class="n">legend_vbox</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">(</span>
+        <span class="n">legend_items</span><span class="p">,</span>
+        <span class="n">layout</span><span class="o">=</span><span class="n">widgets</span><span class="o">.</span><span class="n">Layout</span><span class="p">(</span>
+            <span class="n">width</span><span class="o">=</span><span class="s2">&quot;fit-content&quot;</span><span class="p">,</span>
+            <span class="n">max_width</span><span class="o">=</span><span class="s2">&quot;300px&quot;</span><span class="p">,</span>
+            <span class="n">max_height</span><span class="o">=</span><span class="s2">&quot;400px&quot;</span><span class="p">,</span>
+            <span class="n">overflow_y</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+            <span class="n">overflow_x</span><span class="o">=</span><span class="s2">&quot;hidden&quot;</span><span class="p">,</span>
+            <span class="n">padding</span><span class="o">=</span><span class="s2">&quot;8px&quot;</span><span class="p">,</span>
+            <span class="n">border</span><span class="o">=</span><span class="s2">&quot;2px solid grey&quot;</span><span class="p">,</span>
+            <span class="n">border_radius</span><span class="o">=</span><span class="s2">&quot;5px&quot;</span><span class="p">,</span>
+            <span class="n">background_color</span><span class="o">=</span><span class="n">bg_color</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Add legend as a widget control at the specified position</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_widget_control</span><span class="p">(</span>
+        <span class="n">legend_vbox</span><span class="p">,</span>
+        <span class="n">position</span><span class="o">=</span><span class="n">position</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
+        <span class="n">icon</span><span class="o">=</span><span class="n">icon</span><span class="p">,</span>
+        <span class="n">collapsed</span><span class="o">=</span><span class="n">collapsed</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
 
 
 
