@@ -5603,10 +5603,8 @@ const pointInPolygon = (pt, poly) => {
                 const infoCtrl = new InfoToggleControl(model);
                 try {
                   infoCtrl.onAdd(map);
-                  if (unionCtrl && unionCtrl._container && infoCtrl._button) {
-                    unionCtrl._container.appendChild(infoCtrl._button);
-                    infoCtrl._container = unionCtrl._container;
-                  }
+                  unionCtrl._container.appendChild(infoCtrl._button);
+                  infoCtrl._container = unionCtrl._container;
                 } catch (_e) {}
                 el._infoControl = infoCtrl;
               } catch (_e) {}
