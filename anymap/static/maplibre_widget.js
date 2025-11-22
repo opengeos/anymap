@@ -4227,7 +4227,7 @@ const pointInPolygon = (pt, poly) => {
               console.warn('[Geoman] Invalid paint config: expected object, got', typeof stylePaint);
               stylePaint = null;
             }
-            const paintAbove = !!(controlOptions && controlOptions.geoman_paint_above); // default false
+            const paintAbove = controlOptions?.geoman_paint_above ?? false; // default false
 
             // Info box UI (optional)
             let infoBoxEl = null;
