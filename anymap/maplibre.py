@@ -68,6 +68,7 @@ class MapLibreMap(MapWidget):
         bearing: Map rotation in degrees (0-360).
         pitch: Map tilt in degrees (0-60).
         antialias: Whether to enable antialiasing for better rendering quality.
+        double_click_zoom: Whether to enable double-click to zoom interaction (default: False).
 
     Example:
         Creating a basic MapLibre map:
@@ -88,6 +89,7 @@ class MapLibreMap(MapWidget):
     bearing = traitlets.Float(0.0).tag(sync=True)
     pitch = traitlets.Float(0.0).tag(sync=True)
     antialias = traitlets.Bool(True).tag(sync=True)
+    double_click_zoom = traitlets.Bool(False).tag(sync=True)
     _draw_data = traitlets.Dict().tag(sync=True)
     _terra_draw_data = traitlets.Dict().tag(sync=True)
     _terra_draw_enabled = traitlets.Bool(False).tag(sync=True)
@@ -110,7 +112,7 @@ class MapLibreMap(MapWidget):
         zoom: float = 1.0,
         style: Union[str, Dict[str, Any]] = "dark-matter",
         width: str = "100%",
-        height: str = "650px",
+        height: str = "680px",
         bearing: float = 0.0,
         pitch: float = 0.0,
         controls: Dict[str, str] = {
@@ -135,7 +137,7 @@ class MapLibreMap(MapWidget):
             zoom: Initial zoom level (typically 0-20). Default is 1.0.
             style: MapLibre style URL string or style object dictionary.
             width: Widget width as CSS string (e.g., "100%", "800px").
-            height: Widget height as CSS string (e.g., "650px", "50vh").
+            height: Widget height as CSS string (e.g., "680px", "50vh").
             bearing: Map bearing (rotation) in degrees (0-360).
             pitch: Map pitch (tilt) in degrees (0-60).
             controls: Dictionary of control names and their positions. Default is {
@@ -2699,7 +2701,7 @@ class MapLibreMap(MapWidget):
         info_box_mode: str = "click",
         info_box_tolerance: Optional[int] = None,
         paint: Optional[Dict[str, Any]] = None,
-        paint_above_geoman: bool = True,
+        paint_above_geoman: bool = False,
     ) -> None:
         """Add the MapLibre-Geoman drawing and editing toolkit.
 

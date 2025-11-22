@@ -3877,7 +3877,8 @@ function render({ model, el }) {
       zoom: model.get("zoom"),
       bearing: model.get("bearing"),
       pitch: model.get("pitch"),
-      antialias: model.get("antialias")
+      antialias: model.get("antialias"),
+      doubleClickZoom: model.get("double_click_zoom")
     });
 
     // Force default cursor for all map interactions
@@ -3922,7 +3923,9 @@ function render({ model, el }) {
         model.set("geoman_data", exported);
         model.save_changes();
         // Update mirrored style source if present
-        refreshGeomanStyleLayers(exported);
+        if (typeof el._refreshGeomanStyleLayers === 'function') {
+          el._refreshGeomanStyleLayers(exported);
+        }
       } catch (error) {
         console.error('[Geoman Export] Failed to export Geoman features:', error);
       }
@@ -4227,7 +4230,7 @@ const pointInPolygon = (pt, poly) => {
               console.warn('[Geoman] Invalid paint config: expected object, got', typeof stylePaint);
               stylePaint = null;
             }
-            const paintAbove = controlOptions.geoman_paint_above !== false; // default true
+            const paintAbove = controlOptions?.geoman_paint_above ?? false; // default false
 
             // Info box UI (optional)
             let infoBoxEl = null;
@@ -4412,6 +4415,18 @@ const pointInPolygon = (pt, poly) => {
                 }
               } catch (_e) {}
             };
+            const setGeomanMirrorVisibility = (visible) => {
+              if (!el._geomanStyle) return;
+              const { fillId, lineId, pointId } = el._geomanStyle;
+              const vis = visible ? 'visible' : 'none';
+              try { if (map.getLayer(fillId)) map.setLayoutProperty(fillId, 'visibility', vis); } catch (_e) {}
+              try { if (map.getLayer(lineId)) map.setLayoutProperty(lineId, 'visibility', vis); } catch (_e) {}
+              try { if (map.getLayer(pointId)) map.setLayoutProperty(pointId, 'visibility', vis); } catch (_e) {}
+              el._geomanMirrorVisible = !!visible;
+            };
+            // Store functions on element for access from exportGeomanData
+            el._refreshGeomanStyleLayers = refreshGeomanStyleLayers;
+            el._setGeomanMirrorVisibility = setGeomanMirrorVisibility;
             if (stylePaint) ensureGeomanStyleLayers(stylePaint);
             const findPropsForFeatureId = (fid) => {
               if (!fid) return null;
@@ -4824,12 +4839,19 @@ const pointInPolygon = (pt, poly) => {
               // Provide a reusable attach function for external callers (e.g., after data load)
               el._gmAttachInfoHandlers = () => {
                 try {
-                  // Clean up any previous handler
+                  // Clean up any previous handlers
                   if (el._gmInfoHandler) {
                     const { eventType, handler } = el._gmInfoHandler;
                     try { map.off(eventType, handler); } catch (_e) {}
                     el._gmInfoHandler = null;
                   }
+                  if (el._gmInfoDomHandler) {
+                    const { eventType, handler } = el._gmInfoDomHandler;
+                    try { map.getCanvasContainer().removeEventListener(eventType, handler, true); } catch (_e) {}
+                    el._gmInfoDomHandler = null;
+                  }
+
+                  // Map-level handler (bubbles)
                   let eventType, handler;
                   if (el._gmInfoMode === 'hover') {
                     eventType = 'mousemove';
@@ -4840,6 +4862,22 @@ const pointInPolygon = (pt, poly) => {
                   }
                   map.on(eventType, handler);
                   el._gmInfoHandler = { eventType, handler };
+
+                  // DOM capture handler (in case Geoman stops propagation)
+                  const domEvent = (el._gmInfoMode === 'hover') ? 'mousemove' : 'click';
+                  const domHandler = (ev) => {
+                    try {
+                      if (!el._gmShowInfoBox) return;
+                      const rect = map.getCanvas().getBoundingClientRect();
+                      const x = ev.clientX - rect.left;
+                      const y = ev.clientY - rect.top;
+                      const lngLat = map.unproject([x, y]);
+                      if (!lngLat) return;
+                      updateInfoFromEventPoint({ lngLat }, domEvent === 'click');
+                    } catch (_e) {}
+                  };
+                  map.getCanvasContainer().addEventListener(domEvent, domHandler, true);
+                  el._gmInfoDomHandler = { eventType: domEvent, handler: domHandler };
                 } catch (_e3) {}
               };
               // Expose a direct updater for convenience
@@ -5348,7 +5386,17 @@ const pointInPolygon = (pt, poly) => {
                       this._onKeyDown = null;
                       this._keyTarget = null;
                     }
-                    try { this._map.doubleClickZoom && this._map.doubleClickZoom.enable(); } catch (_e) {}
+                    // Restore double-click zoom to user's preference instead of always enabling
+                    try {
+                      if (this._map.doubleClickZoom) {
+                        const userPreference = this._model.get("double_click_zoom");
+                        if (userPreference) {
+                          this._map.doubleClickZoom.enable();
+                        } else {
+                          this._map.doubleClickZoom.disable();
+                        }
+                      }
+                    } catch (_e) {}
                   };
 
                   this.finishSplit = () => {
@@ -5492,6 +5540,108 @@ const pointInPolygon = (pt, poly) => {
               } catch (_e) {}
               el._splitControl = splitCtrl;
 
+              // Add Info toggle control (enable/disable info box interaction)
+              try {
+                class InfoToggleControl {
+                  constructor(modelRef) {
+                    this._model = modelRef;
+                    this._container = null;
+                    this._button = null;
+                    this._map = null;
+                  }
+                  setPressed(pressed) {
+                    if (!this._button) return;
+                    this._button.setAttribute('aria-pressed', pressed ? 'true' : 'false');
+                    if (pressed) {
+                      this._button.classList.add('gm-active');
+                      this._button.style.boxShadow = '0 0 0 2px rgba(33,150,243,0.8) inset';
+                      this._button.style.backgroundColor = 'rgba(33, 150, 243, 0.15)';
+                    } else {
+                      this._button.classList.remove('gm-active');
+                      this._button.style.boxShadow = '';
+                      this._button.style.backgroundColor = '';
+                    }
+                  }
+                  onAdd(mapRef) {
+                    this._map = mapRef;
+                    const container = (unionCtrl && unionCtrl._container) ? unionCtrl._container : document.createElement('div');
+                    if (!unionCtrl || !unionCtrl._container) {
+                      container.className = 'maplibregl-ctrl maplibregl-ctrl-group gm-info-ctrl';
+                    }
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'maplibregl-ctrl-icon gm-info-button';
+                    btn.setAttribute('title', 'Toggle Info');
+                    btn.setAttribute('aria-label', 'Toggle Info');
+                    btn.setAttribute('aria-pressed', (el._gmShowInfoBox ? 'true' : 'false'));
+                    btn.innerHTML = `
+                      <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <circle cx="12" cy="12" r="9" fill="#ffffff" stroke="#1976D2" stroke-width="1.2"/>
+                        <text x="12" y="16" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#1976D2">i</text>
+                      </svg>
+                    `;
+                    btn.style.display = 'flex';
+                    btn.style.alignItems = 'center';
+                    btn.style.justifyContent = 'center';
+                    this._button = btn;
+                    this.setPressed(!!el._gmShowInfoBox);
+                    btn.addEventListener('click', () => {
+                      const next = !(el._gmShowInfoBox === true);
+                      el._gmShowInfoBox = next;
+                      this.setPressed(next);
+                      try {
+                        // Deactivate other Geoman tools when info button is enabled
+                        if (next) {
+                          const geomanInstance = map.gm || el._geomanInstance;
+                          const container = geomanInstance?.control?.container;
+                          if (container) {
+                            const buttons = Array.from(container.querySelectorAll('.gm-control-button'));
+                            const getButtonLabel = (b) => ((b.getAttribute('title') || b.getAttribute('aria-label') || (b.textContent ? b.textContent.trim() : '')).toLowerCase());
+                            const isActiveButton = (b) => b.getAttribute('aria-pressed') === 'true' || b.classList.contains('active') || b.classList.contains('gm-active');
+                            buttons.forEach((b) => {
+                              const label = getButtonLabel(b);
+                              const isSnap = label.includes('snap');
+                              if (!isSnap && isActiveButton(b)) {
+                                b.click();
+                              }
+                            });
+                          }
+                        }
+                        if (!next && typeof el._gmHideInfoBox === 'function') {
+                          el._gmHideInfoBox();
+                        }
+                        if (typeof el._gmAttachInfoHandlers === 'function') {
+                          el._gmAttachInfoHandlers();
+                        }
+                        // Ensure mirror visible when info is enabled and no edit tool active
+                        try {
+                          if (stylePaint) setGeomanMirrorVisibility(true);
+                        } catch (_eVis2) {}
+                        const events = model.get("_js_events") || [];
+                        model.set("_js_events", [...events, { type: 'geoman_info_toggled', enabled: next }]);
+                        model.save_changes();
+                      } catch (_e) {}
+                    });
+                    container.appendChild(btn);
+                    this._container = container;
+                    return container;
+                  }
+                  onRemove() {
+                    if (this._container && this._button && this._button.parentNode === this._container) {
+                      this._container.removeChild(this._button);
+                    }
+                    this._map = null;
+                  }
+                }
+                const infoCtrl = new InfoToggleControl(model);
+                try {
+                  infoCtrl.onAdd(map);
+                  unionCtrl._container.appendChild(infoCtrl._button);
+                  infoCtrl._container = unionCtrl._container;
+                } catch (_e) {}
+                el._infoControl = infoCtrl;
+              } catch (_e) {}
+
               // Add OSM Transport load control (button appended into union group)
               try {
                 class OsmTransportControl {
@@ -5543,6 +5693,35 @@ const pointInPolygon = (pt, poly) => {
                           });
                         }
                         await loadOsmTransportToGeoman({});
+
+                        // Workaround: If info button is active, toggle an editing tool then reactivate info
+                        // This ensures info button handlers work with newly loaded features
+                        if (el._gmShowInfoBox && el._infoControl) {
+                          setTimeout(() => {
+                            try {
+                              const containerEl = this._geomanInstance?.control?.container;
+                              if (containerEl) {
+                                // Find the remove/delete button
+                                const buttons = Array.from(containerEl.querySelectorAll('.gm-control-button'));
+                                const getButtonLabel = (b) => ((b.getAttribute('title') || b.getAttribute('aria-label') || (b.textContent ? b.textContent.trim() : '')).toLowerCase());
+                                const removeBtn = buttons.find(b => {
+                                  const label = getButtonLabel(b);
+                                  return label.includes('remov') || label.includes('delete');
+                                });
+                                if (removeBtn) {
+                                  // Activate remove tool briefly
+                                  removeBtn.click();
+                                  // Then reactivate info button
+                                  setTimeout(() => {
+                                    if (el._infoControl && el._infoControl._button) {
+                                      el._infoControl._button.click();
+                                    }
+                                  }, 50);
+                                }
+                              }
+                            } catch (_e) {}
+                          }, 100);
+                        }
                       } catch (err) {
                         console.warn('Failed to load OSM transport:', err);
                       }
@@ -5612,6 +5791,24 @@ const pointInPolygon = (pt, poly) => {
                           ]);
                           model.save_changes();
                         } catch (_e2) {}
+                      }
+                      // Also disable info mode to prevent interference with edit/delete tools
+                      if (el._gmShowInfoBox) {
+                        el._gmShowInfoBox = false;
+                        try {
+                          if (el._infoControl && el._infoControl._button) {
+                            el._infoControl.setPressed(false);
+                          }
+                          if (typeof el._gmHideInfoBox === 'function') {
+                            el._gmHideInfoBox();
+                          }
+                          const currentEvents = model.get("_js_events") || [];
+                          model.set("_js_events", [
+                            ...currentEvents,
+                            { type: 'geoman_info_toggled', enabled: false }
+                          ]);
+                          model.save_changes();
+                        } catch (_e3) {}
                       }
                     }
                   });
