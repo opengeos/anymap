@@ -5590,6 +5590,23 @@ const pointInPolygon = (pt, poly) => {
                       el._gmShowInfoBox = next;
                       this.setPressed(next);
                       try {
+                        // Deactivate other Geoman tools when info button is enabled
+                        if (next) {
+                          const geomanInstance = map.gm || el._geomanInstance;
+                          const container = geomanInstance?.control?.container;
+                          if (container) {
+                            const buttons = Array.from(container.querySelectorAll('.gm-control-button'));
+                            const getButtonLabel = (b) => ((b.getAttribute('title') || b.getAttribute('aria-label') || (b.textContent ? b.textContent.trim() : '')).toLowerCase());
+                            const isActiveButton = (b) => b.getAttribute('aria-pressed') === 'true' || b.classList.contains('active') || b.classList.contains('gm-active');
+                            buttons.forEach((b) => {
+                              const label = getButtonLabel(b);
+                              const isSnap = label.includes('snap');
+                              if (!isSnap && isActiveButton(b)) {
+                                b.click();
+                              }
+                            });
+                          }
+                        }
                         if (!next && typeof el._gmHideInfoBox === 'function') {
                           el._gmHideInfoBox();
                         }
@@ -5676,6 +5693,35 @@ const pointInPolygon = (pt, poly) => {
                           });
                         }
                         await loadOsmTransportToGeoman({});
+
+                        // Workaround: If info button is active, toggle an editing tool then reactivate info
+                        // This ensures info button handlers work with newly loaded features
+                        if (el._gmShowInfoBox && el._infoControl) {
+                          setTimeout(() => {
+                            try {
+                              const containerEl = this._geomanInstance?.control?.container;
+                              if (containerEl) {
+                                // Find the remove/delete button
+                                const buttons = Array.from(containerEl.querySelectorAll('.gm-control-button'));
+                                const getButtonLabel = (b) => ((b.getAttribute('title') || b.getAttribute('aria-label') || (b.textContent ? b.textContent.trim() : '')).toLowerCase());
+                                const removeBtn = buttons.find(b => {
+                                  const label = getButtonLabel(b);
+                                  return label.includes('remov') || label.includes('delete');
+                                });
+                                if (removeBtn) {
+                                  // Activate remove tool briefly
+                                  removeBtn.click();
+                                  // Then reactivate info button
+                                  setTimeout(() => {
+                                    if (el._infoControl && el._infoControl._button) {
+                                      el._infoControl._button.click();
+                                    }
+                                  }, 50);
+                                }
+                              }
+                            } catch (_e) {}
+                          }, 100);
+                        }
                       } catch (err) {
                         console.warn('Failed to load OSM transport:', err);
                       }
