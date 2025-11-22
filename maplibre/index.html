@@ -4802,6 +4802,11 @@ data sources, custom styling, and interactive features.</p>
         <td></td>
         <td><p>Whether to enable antialiasing for better rendering quality.</p></td>
       </tr>
+      <tr>
+        <td><code>double_click_zoom</code></td>
+        <td></td>
+        <td><p>Whether to enable double-click to zoom interaction (default: False).</p></td>
+      </tr>
   </tbody>
 </table>
 <p><strong>Examples:</strong></p>
@@ -4828,6 +4833,7 @@ data sources, custom styling, and interactive features.</p>
 <span class="sd">        bearing: Map rotation in degrees (0-360).</span>
 <span class="sd">        pitch: Map tilt in degrees (0-60).</span>
 <span class="sd">        antialias: Whether to enable antialiasing for better rendering quality.</span>
+<span class="sd">        double_click_zoom: Whether to enable double-click to zoom interaction (default: False).</span>
 
 <span class="sd">    Example:</span>
 <span class="sd">        Creating a basic MapLibre map:</span>
@@ -4848,6 +4854,7 @@ data sources, custom styling, and interactive features.</p>
     <span class="n">bearing</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Float</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">pitch</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Float</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">antialias</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">double_click_zoom</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">_draw_data</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Dict</span><span class="p">()</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">_terra_draw_data</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Dict</span><span class="p">()</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">_terra_draw_enabled</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -4870,7 +4877,7 @@ data sources, custom styling, and interactive features.</p>
         <span class="n">zoom</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
         <span class="n">style</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="s2">&quot;dark-matter&quot;</span><span class="p">,</span>
         <span class="n">width</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;100%&quot;</span><span class="p">,</span>
-        <span class="n">height</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;650px&quot;</span><span class="p">,</span>
+        <span class="n">height</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;680px&quot;</span><span class="p">,</span>
         <span class="n">bearing</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
         <span class="n">pitch</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
         <span class="n">controls</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
@@ -4895,7 +4902,7 @@ data sources, custom styling, and interactive features.</p>
 <span class="sd">            zoom: Initial zoom level (typically 0-20). Default is 1.0.</span>
 <span class="sd">            style: MapLibre style URL string or style object dictionary.</span>
 <span class="sd">            width: Widget width as CSS string (e.g., &quot;100%&quot;, &quot;800px&quot;).</span>
-<span class="sd">            height: Widget height as CSS string (e.g., &quot;650px&quot;, &quot;50vh&quot;).</span>
+<span class="sd">            height: Widget height as CSS string (e.g., &quot;680px&quot;, &quot;50vh&quot;).</span>
 <span class="sd">            bearing: Map bearing (rotation) in degrees (0-360).</span>
 <span class="sd">            pitch: Map pitch (tilt) in degrees (0-60).</span>
 <span class="sd">            controls: Dictionary of control names and their positions. Default is {</span>
@@ -7459,7 +7466,7 @@ data sources, custom styling, and interactive features.</p>
         <span class="n">info_box_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;click&quot;</span><span class="p">,</span>
         <span class="n">info_box_tolerance</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">paint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">paint_above_geoman</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">paint_above_geoman</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add the MapLibre-Geoman drawing and editing toolkit.</span>
 
@@ -10006,6 +10013,7 @@ data sources, custom styling, and interactive features.</p>
 
 
 
+
   <div class="doc doc-object doc-attribute">
 
 
@@ -10126,7 +10134,7 @@ data sources, custom styling, and interactive features.</p>
 
 
 <h3 id="anymap.maplibre.MapLibreMap.__init__" class="doc doc-heading">
-<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;dark-matter&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="s1">&#39;100%&#39;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s1">&#39;650px&#39;</span><span class="p">,</span> <span class="n">bearing</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">pitch</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">controls</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;navigation&#39;</span><span class="p">:</span> <span class="s1">&#39;top-right&#39;</span><span class="p">,</span> <span class="s1">&#39;fullscreen&#39;</span><span class="p">:</span> <span class="s1">&#39;top-right&#39;</span><span class="p">,</span> <span class="s1">&#39;scale&#39;</span><span class="p">:</span> <span class="s1">&#39;bottom-left&#39;</span><span class="p">,</span> <span class="s1">&#39;globe&#39;</span><span class="p">:</span> <span class="s1">&#39;top-right&#39;</span><span class="p">,</span> <span class="s1">&#39;layers&#39;</span><span class="p">:</span> <span class="s1">&#39;top-right&#39;</span><span class="p">},</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;mercator&#39;</span><span class="p">,</span> <span class="n">add_sidebar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sidebar_visible</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sidebar_width</span><span class="o">=</span><span class="mi">360</span><span class="p">,</span> <span class="n">sidebar_args</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layer_manager_expanded</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;dark-matter&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="s1">&#39;100%&#39;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s1">&#39;680px&#39;</span><span class="p">,</span> <span class="n">bearing</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">pitch</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">controls</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;navigation&#39;</span><span class="p">:</span> <span class="s1">&#39;top-right&#39;</span><span class="p">,</span> <span class="s1">&#39;fullscreen&#39;</span><span class="p">:</span> <span class="s1">&#39;top-right&#39;</span><span class="p">,</span> <span class="s1">&#39;scale&#39;</span><span class="p">:</span> <span class="s1">&#39;bottom-left&#39;</span><span class="p">,</span> <span class="s1">&#39;globe&#39;</span><span class="p">:</span> <span class="s1">&#39;top-right&#39;</span><span class="p">,</span> <span class="s1">&#39;layers&#39;</span><span class="p">:</span> <span class="s1">&#39;top-right&#39;</span><span class="p">},</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;mercator&#39;</span><span class="p">,</span> <span class="n">add_sidebar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sidebar_visible</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sidebar_width</span><span class="o">=</span><span class="mi">360</span><span class="p">,</span> <span class="n">sidebar_args</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layer_manager_expanded</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
   <span class="doc doc-properties">
       <small class="doc doc-property doc-property-special"><code>special</code></small>
@@ -10176,8 +10184,8 @@ data sources, custom styling, and interactive features.</p>
       <tr>
         <td><code>height</code></td>
         <td><code>str</code></td>
-        <td><p>Widget height as CSS string (e.g., "650px", "50vh").</p></td>
-        <td><code>&#39;650px&#39;</code></td>
+        <td><p>Widget height as CSS string (e.g., "680px", "50vh").</p></td>
+        <td><code>&#39;680px&#39;</code></td>
       </tr>
       <tr>
         <td><code>bearing</code></td>
@@ -10254,7 +10262,7 @@ data sources, custom styling, and interactive features.</p>
     <span class="n">zoom</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
     <span class="n">style</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="s2">&quot;dark-matter&quot;</span><span class="p">,</span>
     <span class="n">width</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;100%&quot;</span><span class="p">,</span>
-    <span class="n">height</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;650px&quot;</span><span class="p">,</span>
+    <span class="n">height</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;680px&quot;</span><span class="p">,</span>
     <span class="n">bearing</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="n">pitch</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="n">controls</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
@@ -10279,7 +10287,7 @@ data sources, custom styling, and interactive features.</p>
 <span class="sd">        zoom: Initial zoom level (typically 0-20). Default is 1.0.</span>
 <span class="sd">        style: MapLibre style URL string or style object dictionary.</span>
 <span class="sd">        width: Widget width as CSS string (e.g., &quot;100%&quot;, &quot;800px&quot;).</span>
-<span class="sd">        height: Widget height as CSS string (e.g., &quot;650px&quot;, &quot;50vh&quot;).</span>
+<span class="sd">        height: Widget height as CSS string (e.g., &quot;680px&quot;, &quot;50vh&quot;).</span>
 <span class="sd">        bearing: Map bearing (rotation) in degrees (0-360).</span>
 <span class="sd">        pitch: Map pitch (tilt) in degrees (0-60).</span>
 <span class="sd">        controls: Dictionary of control names and their positions. Default is {</span>
@@ -12597,7 +12605,7 @@ GeoJSON source.</p></td>
 
 
 <h3 id="anymap.maplibre.MapLibreMap.add_geoman_control" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">add_geoman_control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s1">&#39;top-left&#39;</span><span class="p">,</span> <span class="n">geoman_options</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">controls</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">collapsed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_info_box</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">info_box_mode</span><span class="o">=</span><span class="s1">&#39;click&#39;</span><span class="p">,</span> <span class="n">info_box_tolerance</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">paint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">paint_above_geoman</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">add_geoman_control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s1">&#39;top-left&#39;</span><span class="p">,</span> <span class="n">geoman_options</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">controls</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">collapsed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_info_box</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">info_box_mode</span><span class="o">=</span><span class="s1">&#39;click&#39;</span><span class="p">,</span> <span class="n">info_box_tolerance</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">paint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">paint_above_geoman</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
 
 
 <a href="#anymap.maplibre.MapLibreMap.add_geoman_control" class="headerlink" title="Permanent link">&para;</a></h3>
@@ -12698,7 +12706,7 @@ difficult to distinguish during editing.</p></td>
         <td><code>bool</code></td>
         <td><p>If True (default), place the mirrored style layers
 above Geoman’s edit layers; set False to draw beneath them.</p></td>
-        <td><code>True</code></td>
+        <td><code>False</code></td>
       </tr>
   </tbody>
 </table>
@@ -12715,7 +12723,7 @@ above Geoman’s edit layers; set False to draw beneath them.</p></td>
     <span class="n">info_box_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;click&quot;</span><span class="p">,</span>
     <span class="n">info_box_tolerance</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">paint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">paint_above_geoman</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">paint_above_geoman</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add the MapLibre-Geoman drawing and editing toolkit.</span>
 
