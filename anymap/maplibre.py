@@ -5204,6 +5204,8 @@ class MapLibreMap(MapWidget):
             shape_type (str, optional): The shape type of the legend items. Can be one of "rectangle", "circle", or "line".
             **kwargs: Additional keyword arguments for the add_widget_control method.
         """
+        if shape_type is not None and shape_type not in ["rectangle", "circle", "line"]:
+            raise ValueError("shape_type must be one of 'rectangle', 'circle', or 'line'")
         import html as html_module
         from ipywidgets import widgets
 
