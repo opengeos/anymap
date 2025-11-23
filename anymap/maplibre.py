@@ -1521,6 +1521,15 @@ class MapLibreMap(MapWidget):
             layer_id: Unique identifier of the layer.
             visible: Whether the layer should be visible.
         """
+        # Check if this is a marker group
+        if layer_id in self.layer_dict:
+            layer_type = self.layer_dict[layer_id].get("type")
+            if layer_type == "marker-group":
+                self.layer_dict[layer_id]["visible"] = visible
+                self.call_js_method("setMarkerGroupVisibility", layer_id, visible)
+                self._update_layer_controls()
+                return
+
         if visible:
             visibility = "visible"
         else:
@@ -1542,6 +1551,15 @@ class MapLibreMap(MapWidget):
             layer_id: Unique identifier of the layer.
             opacity: Opacity value between 0.0 (transparent) and 1.0 (opaque).
         """
+        # Check if this is a marker group
+        if layer_id in self.layer_dict:
+            layer_type = self.layer_dict[layer_id].get("type")
+            if layer_type == "marker-group":
+                self.layer_dict[layer_id]["opacity"] = opacity
+                self.call_js_method("setMarkerGroupOpacity", layer_id, opacity)
+                self._update_layer_controls()
+                return
+
         layer_type = self.get_layer_type(layer_id)
 
         if layer_id == "Background":
@@ -1795,6 +1813,73 @@ class MapLibreMap(MapWidget):
             "options": marker_options,
         }
         self.call_js_method("addMarker", marker_data)
+
+    def add_marker_group(
+        self,
+        layer_id: str,
+        markers: List[Dict[str, Any]],
+        name: Optional[str] = None,
+        visible: bool = True,
+        opacity: float = 1.0,
+    ) -> None:
+        """Add a group of markers as a controllable layer.
+
+        This method adds multiple markers as a single layer that can be controlled
+        through the layer control panel. All markers in the group share the same
+        visibility and opacity settings.
+
+        Args:
+            layer_id: Unique identifier for the marker group layer.
+            markers: List of marker definitions. Each marker should be a dictionary with:
+                - lng (float): Longitude coordinate
+                - lat (float): Latitude coordinate
+                - popup (str, optional): Popup HTML content
+                - tooltip (str, optional): Tooltip HTML content
+                - options (dict, optional): Marker options (color, draggable, etc.)
+                - scale (float, optional): Marker scale factor (default: 1.0)
+            name: Display name for the layer in the layer control.
+                If None, uses layer_id.
+            visible: Whether the marker group should be visible initially.
+            opacity: Initial opacity for all markers in the group (0.0 to 1.0).
+
+        Example:
+            >>> m = MapLibreMap()
+            >>> markers = [
+            ...     {"lng": -122.4, "lat": 37.8, "popup": "San Francisco"},
+            ...     {"lng": -118.2, "lat": 34.0, "popup": "Los Angeles"},
+            ...     {"lng": -122.3, "lat": 47.6, "popup": "Seattle"}
+            ... ]
+            >>> m.add_marker_group("cities", markers, name="West Coast Cities")
+        """
+        display_name = name if name else layer_id
+
+        # Validate markers
+        for i, marker in enumerate(markers):
+            if "lng" not in marker or "lat" not in marker:
+                raise ValueError(
+                    f"Marker at index {i} missing required 'lng' or 'lat' coordinate"
+                )
+
+        # Store in layer_dict for layer control integration
+        self.layer_dict[layer_id] = {
+            "layer": {"id": layer_id, "type": "marker-group"},
+            "visible": visible,
+            "opacity": opacity,
+            "name": display_name,
+            "type": "marker-group",
+        }
+
+        # Update layer controls
+        self._update_layer_controls()
+
+        # Send to JavaScript
+        marker_group_data = {
+            "layerId": layer_id,
+            "markers": markers,
+            "visible": visible,
+            "opacity": opacity,
+        }
+        self.call_js_method("addMarkerGroup", marker_group_data)
 
     def fit_bounds(self, bounds: List[List[float]], padding: int = 50) -> None:
         """Fit the map to given bounds.
@@ -3518,6 +3603,15 @@ class MapLibreMap(MapWidget):
         Args:
             layer_id: Unique identifier for the layer to remove.
         """
+        # Check if this is a marker group
+        if layer_id in self.layer_dict:
+            layer_type = self.layer_dict[layer_id].get("type")
+            if layer_type == "marker-group":
+                self.call_js_method("removeMarkerGroup", layer_id)
+                del self.layer_dict[layer_id]
+                self._update_layer_controls()
+                return
+
         # Remove from JavaScript map
         self.call_js_method("removeLayer", layer_id)
 
