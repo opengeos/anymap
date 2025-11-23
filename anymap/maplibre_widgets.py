@@ -575,31 +575,6 @@ class LayerStyleWidget(widgets.VBox):
                     ),
                 ]
             )
-        elif self.layer_type == "symbol":
-            widgets_list.extend(
-                [
-                    self._create_number_slider(
-                        "Icon Size", "icon-size", 1.0, 0.1, 3.0, 0.1
-                    ),
-                    self._create_number_slider(
-                        "Icon Opacity", "icon-opacity", 1.0, 0, 1, 0.05
-                    ),
-                    self._create_number_slider("Text Size", "text-size", 16, 8, 48, 1),
-                    self._create_color_picker("Text Color", "text-color", "#000000"),
-                    self._create_number_slider(
-                        "Text Opacity", "text-opacity", 1.0, 0, 1, 0.05
-                    ),
-                    self._create_color_picker(
-                        "Text Halo Color", "text-halo-color", "#ffffff"
-                    ),
-                    self._create_number_slider(
-                        "Text Halo Width", "text-halo-width", 1, 0, 5, 0.5
-                    ),
-                    self._create_number_slider(
-                        "Text Halo Blur", "text-halo-blur", 0, 0, 2, 0.1
-                    ),
-                ]
-            )
         else:
             widgets_list.extend(
                 [widgets.HTML(value=f"Layer type {self.layer_type} is not supported.")]
