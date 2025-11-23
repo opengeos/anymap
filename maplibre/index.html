@@ -6206,6 +6206,10 @@ data sources, custom styling, and interactive features.</p>
         <span class="n">panel_width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">320</span><span class="p">,</span>
         <span class="n">panel_min_width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">220</span><span class="p">,</span>
         <span class="n">panel_max_width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">420</span><span class="p">,</span>
+        <span class="n">panel_max_height</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">auto_panel_width</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">header_bg</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">header_text_color</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">control_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -6226,10 +6230,14 @@ data sources, custom styling, and interactive features.</p>
 <span class="sd">            panel_width: Default panel width in pixels.</span>
 <span class="sd">            panel_min_width: Minimum panel width in pixels when resized on the front-end.</span>
 <span class="sd">            panel_max_width: Maximum panel width in pixels when resized on the front-end.</span>
+<span class="sd">            panel_max_height: Maximum panel height. Can be an int (pixels) or a CSS string (e.g., &#39;70vh&#39;, &#39;500px&#39;).</span>
+<span class="sd">                Defaults to None, which uses the JavaScript default of &#39;70vh&#39;.</span>
+<span class="sd">            auto_panel_width: Whether the panel width should be automatically adjusted to the content width. Defaults to False.</span>
+<span class="sd">            header_bg: The background color of the header, like &quot;linear-gradient(135deg,#444,#888)&quot;. Defaults to None.</span>
+<span class="sd">            header_text_color: The text color of the header, like &quot;#fff&quot;. Defaults to None.</span>
 <span class="sd">            control_id: Optional identifier used for duplicate detection and later removal.</span>
 <span class="sd">                If omitted, a unique identifier is generated from the label.</span>
 <span class="sd">            description: Optional tooltip description for the toggle button.</span>
-
 <span class="sd">        Returns:</span>
 <span class="sd">            str: The unique identifier assigned to the widget control.</span>
 
@@ -6266,9 +6274,19 @@ data sources, custom styling, and interactive features.</p>
             <span class="s2">&quot;panelWidth&quot;</span><span class="p">:</span> <span class="n">panel_width</span><span class="p">,</span>
             <span class="s2">&quot;panelMinWidth&quot;</span><span class="p">:</span> <span class="n">panel_min_width</span><span class="p">,</span>
             <span class="s2">&quot;panelMaxWidth&quot;</span><span class="p">:</span> <span class="n">panel_max_width</span><span class="p">,</span>
+            <span class="s2">&quot;autoWidth&quot;</span><span class="p">:</span> <span class="n">auto_panel_width</span><span class="p">,</span>
+            <span class="s2">&quot;headerBg&quot;</span><span class="p">:</span> <span class="n">header_bg</span><span class="p">,</span>
+            <span class="s2">&quot;headerTextColor&quot;</span><span class="p">:</span> <span class="n">header_text_color</span><span class="p">,</span>
             <span class="s2">&quot;control_id&quot;</span><span class="p">:</span> <span class="n">control_id</span><span class="p">,</span>
             <span class="s2">&quot;widget_model_id&quot;</span><span class="p">:</span> <span class="n">widget_id</span><span class="p">,</span>
         <span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">panel_max_height</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">control_options</span><span class="p">[</span><span class="s2">&quot;maxHeight&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">panel_max_height</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">panel_max_height</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+                <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">panel_max_height</span><span class="si">}</span><span class="s2">px&quot;</span>
+            <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">description</span><span class="p">:</span>
             <span class="n">control_options</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">description</span>
@@ -10285,6 +10303,10 @@ data sources, custom styling, and interactive features.</p>
         <span class="n">collapsed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">builtin_legend</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">shape_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;rectangle&quot;</span><span class="p">,</span>
+        <span class="n">header_color</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">header_text_color</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">responsive</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">max_height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">380</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -10309,6 +10331,10 @@ data sources, custom styling, and interactive features.</p>
 <span class="sd">            collapsed (bool, optional): Whether the legend is collapsed by default. Defaults to True.</span>
 <span class="sd">            builtin_legend (Optional[str], optional): The name of a built-in legend to use. Available options: &quot;NLCD&quot;, &quot;NWI&quot;. Defaults to None.</span>
 <span class="sd">            shape_type (str, optional): The shape type of the legend items. Can be one of &quot;rectangle&quot;, &quot;circle&quot;, or &quot;line&quot;. Defaults to &quot;rectangle&quot;.</span>
+<span class="sd">            header_color (str, optional): The background color of the legend header, like &quot;linear-gradient(135deg,#444,#888)&quot;. Defaults to None.</span>
+<span class="sd">            header_text_color (str, optional): The text color of the legend header, like &quot;#fff&quot;. Defaults to None.</span>
+<span class="sd">            responsive (bool, optional): Whether the legend is responsive. Defaults to True.</span>
+<span class="sd">            max_height (int, optional): Maximum height of the legend content area in pixels. Defaults to 380.</span>
 <span class="sd">            **kwargs: Any</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">shape_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">shape_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;rectangle&quot;</span><span class="p">,</span> <span class="s2">&quot;circle&quot;</span><span class="p">,</span> <span class="s2">&quot;line&quot;</span><span class="p">]:</span>
@@ -10409,12 +10435,14 @@ data sources, custom styling, and interactive features.</p>
             <span class="n">legend_items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item_html</span><span class="p">)</span>
 
         <span class="c1"># Create a VBox container for legend items</span>
+        <span class="c1"># Subtract space for panel header (~60px) from panel_max_height</span>
+        <span class="c1"># This ensures the legend content scrolls properly within the panel</span>
+        <span class="n">legend_content_height</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_height</span> <span class="o">-</span> <span class="mi">60</span><span class="p">)</span>
         <span class="n">legend_vbox</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">(</span>
             <span class="n">legend_items</span><span class="p">,</span>
             <span class="n">layout</span><span class="o">=</span><span class="n">widgets</span><span class="o">.</span><span class="n">Layout</span><span class="p">(</span>
                 <span class="n">width</span><span class="o">=</span><span class="s2">&quot;fit-content&quot;</span><span class="p">,</span>
-                <span class="n">max_width</span><span class="o">=</span><span class="s2">&quot;300px&quot;</span><span class="p">,</span>
-                <span class="n">max_height</span><span class="o">=</span><span class="s2">&quot;400px&quot;</span><span class="p">,</span>
+                <span class="n">max_height</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">legend_content_height</span><span class="si">}</span><span class="s2">px&quot;</span><span class="p">,</span>
                 <span class="n">overflow_y</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
                 <span class="n">overflow_x</span><span class="o">=</span><span class="s2">&quot;hidden&quot;</span><span class="p">,</span>
                 <span class="n">padding</span><span class="o">=</span><span class="s2">&quot;8px&quot;</span><span class="p">,</span>
@@ -10424,14 +10452,73 @@ data sources, custom styling, and interactive features.</p>
             <span class="p">),</span>
         <span class="p">)</span>
 
+        <span class="c1"># Determine responsiveness: default to responsive unless user supplied panel_width</span>
+        <span class="k">if</span> <span class="n">responsive</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">auto_flag</span> <span class="o">=</span> <span class="s2">&quot;panel_width&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="s2">&quot;auto_panel_width&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">auto_flag</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">responsive</span><span class="p">)</span>
+
+        <span class="c1"># Build options</span>
+        <span class="n">control_kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">control_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
+                <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="n">title</span><span class="p">,</span>
+                <span class="s2">&quot;icon&quot;</span><span class="p">:</span> <span class="n">icon</span><span class="p">,</span>
+                <span class="s2">&quot;collapsed&quot;</span><span class="p">:</span> <span class="n">collapsed</span><span class="p">,</span>
+                <span class="s2">&quot;header_bg&quot;</span><span class="p">:</span> <span class="n">header_color</span><span class="p">,</span>
+                <span class="s2">&quot;header_text_color&quot;</span><span class="p">:</span> <span class="n">header_text_color</span><span class="p">,</span>
+                <span class="s2">&quot;panel_max_height&quot;</span><span class="p">:</span> <span class="n">max_height</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Configure width behavior based on responsive setting</span>
+        <span class="k">if</span> <span class="n">auto_flag</span><span class="p">:</span>
+            <span class="c1"># Responsive mode: use auto width with min/max constraints</span>
+            <span class="n">control_kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span>
+                <span class="s2">&quot;panel_min_width&quot;</span><span class="p">,</span> <span class="mi">100</span>
+            <span class="p">)</span>  <span class="c1"># Minimum width for legend items (reduced for short text)</span>
+            <span class="n">control_kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span>
+                <span class="s2">&quot;panel_max_width&quot;</span><span class="p">,</span> <span class="mi">500</span>
+            <span class="p">)</span>  <span class="c1"># Reasonable maximum width</span>
+            <span class="n">control_kwargs</span><span class="p">[</span><span class="s2">&quot;auto_panel_width&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Fixed width mode: ensure auto_panel_width is False</span>
+            <span class="n">control_kwargs</span><span class="p">[</span><span class="s2">&quot;auto_panel_width&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="c1"># Use default panel_width if not specified</span>
+            <span class="n">control_kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;panel_width&quot;</span><span class="p">,</span> <span class="mi">320</span><span class="p">)</span>
+
+        <span class="c1"># Extract parameters for add_widget_control</span>
+        <span class="n">widget_control_params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="n">control_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;icon&quot;</span><span class="p">:</span> <span class="n">control_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;icon&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">control_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;position&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;collapsed&quot;</span><span class="p">:</span> <span class="n">control_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;collapsed&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;auto_panel_width&quot;</span><span class="p">:</span> <span class="n">control_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;auto_panel_width&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;header_bg&quot;</span><span class="p">:</span> <span class="n">control_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;header_bg&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+            <span class="s2">&quot;header_text_color&quot;</span><span class="p">:</span> <span class="n">control_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;header_text_color&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+        <span class="p">}</span>
+
+        <span class="c1"># Add panel width parameters if specified</span>
+        <span class="k">if</span> <span class="s2">&quot;panel_width&quot;</span> <span class="ow">in</span> <span class="n">control_kwargs</span><span class="p">:</span>
+            <span class="n">widget_control_params</span><span class="p">[</span><span class="s2">&quot;panel_width&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">control_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;panel_width&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;panel_min_width&quot;</span> <span class="ow">in</span> <span class="n">control_kwargs</span><span class="p">:</span>
+            <span class="n">widget_control_params</span><span class="p">[</span><span class="s2">&quot;panel_min_width&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">control_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span>
+                <span class="s2">&quot;panel_min_width&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;panel_max_width&quot;</span> <span class="ow">in</span> <span class="n">control_kwargs</span><span class="p">:</span>
+            <span class="n">widget_control_params</span><span class="p">[</span><span class="s2">&quot;panel_max_width&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">control_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span>
+                <span class="s2">&quot;panel_max_width&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;panel_max_height&quot;</span> <span class="ow">in</span> <span class="n">control_kwargs</span><span class="p">:</span>
+            <span class="n">widget_control_params</span><span class="p">[</span><span class="s2">&quot;panel_max_height&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">control_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span>
+                <span class="s2">&quot;panel_max_height&quot;</span>
+            <span class="p">)</span>
+
         <span class="c1"># Add legend as a widget control at the specified position</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_widget_control</span><span class="p">(</span>
             <span class="n">legend_vbox</span><span class="p">,</span>
-            <span class="n">position</span><span class="o">=</span><span class="n">position</span><span class="p">,</span>
-            <span class="n">label</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
-            <span class="n">icon</span><span class="o">=</span><span class="n">icon</span><span class="p">,</span>
-            <span class="n">collapsed</span><span class="o">=</span><span class="n">collapsed</span><span class="p">,</span>
-            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">widget_control_params</span><span class="p">,</span>
         <span class="p">)</span>
 </code></pre></div>
         </details>
@@ -14170,7 +14257,7 @@ similar to other controls, and expands when clicked.</p>
 
 
 <h3 id="anymap.maplibre.MapLibreMap.add_legend" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">add_legend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Legend&#39;</span><span class="p">,</span> <span class="n">legend_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">bg_color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="s1">&#39;≡&#39;</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s1">&#39;bottom-right&#39;</span><span class="p">,</span> <span class="n">collapsed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">builtin_legend</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shape_type</span><span class="o">=</span><span class="s1">&#39;rectangle&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">add_legend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Legend&#39;</span><span class="p">,</span> <span class="n">legend_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">bg_color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="s1">&#39;≡&#39;</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s1">&#39;bottom-right&#39;</span><span class="p">,</span> <span class="n">collapsed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">builtin_legend</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shape_type</span><span class="o">=</span><span class="s1">&#39;rectangle&#39;</span><span class="p">,</span> <span class="n">header_color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">header_text_color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">responsive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_height</span><span class="o">=</span><span class="mi">380</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
 
 <a href="#anymap.maplibre.MapLibreMap.add_legend" class="headerlink" title="Permanent link">&para;</a></h3>
@@ -14263,6 +14350,30 @@ To make the background half transparent, set this to "rgba(255, 255, 255, 0.5)".
         <td><code>&#39;rectangle&#39;</code></td>
       </tr>
       <tr>
+        <td><code>header_color</code></td>
+        <td><code>str</code></td>
+        <td><p>The background color of the legend header, like "linear-gradient(135deg,#444,#888)". Defaults to None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>header_text_color</code></td>
+        <td><code>str</code></td>
+        <td><p>The text color of the legend header, like "#fff". Defaults to None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>responsive</code></td>
+        <td><code>bool</code></td>
+        <td><p>Whether the legend is responsive. Defaults to True.</p></td>
+        <td><code>True</code></td>
+      </tr>
+      <tr>
+        <td><code>max_height</code></td>
+        <td><code>int</code></td>
+        <td><p>Maximum height of the legend content area in pixels. Defaults to 380.</p></td>
+        <td><code>380</code></td>
+      </tr>
+      <tr>
         <td><code>**kwargs</code></td>
         <td><code>Union[str, int, float]</code></td>
         <td><p>Any</p></td>
@@ -14285,6 +14396,10 @@ To make the background half transparent, set this to "rgba(255, 255, 255, 0.5)".
     <span class="n">collapsed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">builtin_legend</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">shape_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;rectangle&quot;</span><span class="p">,</span>
+    <span class="n">header_color</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">header_text_color</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">responsive</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">max_height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">380</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -14309,6 +14424,10 @@ To make the background half transparent, set this to "rgba(255, 255, 255, 0.5)".
 <span class="sd">        collapsed (bool, optional): Whether the legend is collapsed by default. Defaults to True.</span>
 <span class="sd">        builtin_legend (Optional[str], optional): The name of a built-in legend to use. Available options: &quot;NLCD&quot;, &quot;NWI&quot;. Defaults to None.</span>
 <span class="sd">        shape_type (str, optional): The shape type of the legend items. Can be one of &quot;rectangle&quot;, &quot;circle&quot;, or &quot;line&quot;. Defaults to &quot;rectangle&quot;.</span>
+<span class="sd">        header_color (str, optional): The background color of the legend header, like &quot;linear-gradient(135deg,#444,#888)&quot;. Defaults to None.</span>
+<span class="sd">        header_text_color (str, optional): The text color of the legend header, like &quot;#fff&quot;. Defaults to None.</span>
+<span class="sd">        responsive (bool, optional): Whether the legend is responsive. Defaults to True.</span>
+<span class="sd">        max_height (int, optional): Maximum height of the legend content area in pixels. Defaults to 380.</span>
 <span class="sd">        **kwargs: Any</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">shape_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">shape_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;rectangle&quot;</span><span class="p">,</span> <span class="s2">&quot;circle&quot;</span><span class="p">,</span> <span class="s2">&quot;line&quot;</span><span class="p">]:</span>
@@ -14409,12 +14528,14 @@ To make the background half transparent, set this to "rgba(255, 255, 255, 0.5)".
         <span class="n">legend_items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item_html</span><span class="p">)</span>
 
     <span class="c1"># Create a VBox container for legend items</span>
+    <span class="c1"># Subtract space for panel header (~60px) from panel_max_height</span>
+    <span class="c1"># This ensures the legend content scrolls properly within the panel</span>
+    <span class="n">legend_content_height</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_height</span> <span class="o">-</span> <span class="mi">60</span><span class="p">)</span>
     <span class="n">legend_vbox</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">(</span>
         <span class="n">legend_items</span><span class="p">,</span>
         <span class="n">layout</span><span class="o">=</span><span class="n">widgets</span><span class="o">.</span><span class="n">Layout</span><span class="p">(</span>
             <span class="n">width</span><span class="o">=</span><span class="s2">&quot;fit-content&quot;</span><span class="p">,</span>
-            <span class="n">max_width</span><span class="o">=</span><span class="s2">&quot;300px&quot;</span><span class="p">,</span>
-            <span class="n">max_height</span><span class="o">=</span><span class="s2">&quot;400px&quot;</span><span class="p">,</span>
+            <span class="n">max_height</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">legend_content_height</span><span class="si">}</span><span class="s2">px&quot;</span><span class="p">,</span>
             <span class="n">overflow_y</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
             <span class="n">overflow_x</span><span class="o">=</span><span class="s2">&quot;hidden&quot;</span><span class="p">,</span>
             <span class="n">padding</span><span class="o">=</span><span class="s2">&quot;8px&quot;</span><span class="p">,</span>
@@ -14424,14 +14545,73 @@ To make the background half transparent, set this to "rgba(255, 255, 255, 0.5)".
         <span class="p">),</span>
     <span class="p">)</span>
 
+    <span class="c1"># Determine responsiveness: default to responsive unless user supplied panel_width</span>
+    <span class="k">if</span> <span class="n">responsive</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">auto_flag</span> <span class="o">=</span> <span class="s2">&quot;panel_width&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="s2">&quot;auto_panel_width&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">auto_flag</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">responsive</span><span class="p">)</span>
+
+    <span class="c1"># Build options</span>
+    <span class="n">control_kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">control_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
+            <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="n">title</span><span class="p">,</span>
+            <span class="s2">&quot;icon&quot;</span><span class="p">:</span> <span class="n">icon</span><span class="p">,</span>
+            <span class="s2">&quot;collapsed&quot;</span><span class="p">:</span> <span class="n">collapsed</span><span class="p">,</span>
+            <span class="s2">&quot;header_bg&quot;</span><span class="p">:</span> <span class="n">header_color</span><span class="p">,</span>
+            <span class="s2">&quot;header_text_color&quot;</span><span class="p">:</span> <span class="n">header_text_color</span><span class="p">,</span>
+            <span class="s2">&quot;panel_max_height&quot;</span><span class="p">:</span> <span class="n">max_height</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Configure width behavior based on responsive setting</span>
+    <span class="k">if</span> <span class="n">auto_flag</span><span class="p">:</span>
+        <span class="c1"># Responsive mode: use auto width with min/max constraints</span>
+        <span class="n">control_kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span>
+            <span class="s2">&quot;panel_min_width&quot;</span><span class="p">,</span> <span class="mi">100</span>
+        <span class="p">)</span>  <span class="c1"># Minimum width for legend items (reduced for short text)</span>
+        <span class="n">control_kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span>
+            <span class="s2">&quot;panel_max_width&quot;</span><span class="p">,</span> <span class="mi">500</span>
+        <span class="p">)</span>  <span class="c1"># Reasonable maximum width</span>
+        <span class="n">control_kwargs</span><span class="p">[</span><span class="s2">&quot;auto_panel_width&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Fixed width mode: ensure auto_panel_width is False</span>
+        <span class="n">control_kwargs</span><span class="p">[</span><span class="s2">&quot;auto_panel_width&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># Use default panel_width if not specified</span>
+        <span class="n">control_kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;panel_width&quot;</span><span class="p">,</span> <span class="mi">320</span><span class="p">)</span>
+
+    <span class="c1"># Extract parameters for add_widget_control</span>
+    <span class="n">widget_control_params</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="n">control_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;icon&quot;</span><span class="p">:</span> <span class="n">control_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;icon&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">control_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;position&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;collapsed&quot;</span><span class="p">:</span> <span class="n">control_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;collapsed&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;auto_panel_width&quot;</span><span class="p">:</span> <span class="n">control_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;auto_panel_width&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;header_bg&quot;</span><span class="p">:</span> <span class="n">control_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;header_bg&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+        <span class="s2">&quot;header_text_color&quot;</span><span class="p">:</span> <span class="n">control_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;header_text_color&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Add panel width parameters if specified</span>
+    <span class="k">if</span> <span class="s2">&quot;panel_width&quot;</span> <span class="ow">in</span> <span class="n">control_kwargs</span><span class="p">:</span>
+        <span class="n">widget_control_params</span><span class="p">[</span><span class="s2">&quot;panel_width&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">control_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;panel_width&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;panel_min_width&quot;</span> <span class="ow">in</span> <span class="n">control_kwargs</span><span class="p">:</span>
+        <span class="n">widget_control_params</span><span class="p">[</span><span class="s2">&quot;panel_min_width&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">control_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span>
+            <span class="s2">&quot;panel_min_width&quot;</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;panel_max_width&quot;</span> <span class="ow">in</span> <span class="n">control_kwargs</span><span class="p">:</span>
+        <span class="n">widget_control_params</span><span class="p">[</span><span class="s2">&quot;panel_max_width&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">control_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span>
+            <span class="s2">&quot;panel_max_width&quot;</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;panel_max_height&quot;</span> <span class="ow">in</span> <span class="n">control_kwargs</span><span class="p">:</span>
+        <span class="n">widget_control_params</span><span class="p">[</span><span class="s2">&quot;panel_max_height&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">control_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span>
+            <span class="s2">&quot;panel_max_height&quot;</span>
+        <span class="p">)</span>
+
     <span class="c1"># Add legend as a widget control at the specified position</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">add_widget_control</span><span class="p">(</span>
         <span class="n">legend_vbox</span><span class="p">,</span>
-        <span class="n">position</span><span class="o">=</span><span class="n">position</span><span class="p">,</span>
-        <span class="n">label</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
-        <span class="n">icon</span><span class="o">=</span><span class="n">icon</span><span class="p">,</span>
-        <span class="n">collapsed</span><span class="o">=</span><span class="n">collapsed</span><span class="p">,</span>
-        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">widget_control_params</span><span class="p">,</span>
     <span class="p">)</span>
 </code></pre></div>
         </details>
@@ -17817,7 +17997,7 @@ Example:
 
 
 <h3 id="anymap.maplibre.MapLibreMap.add_widget_control" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">add_widget_control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">widget</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Tools&#39;</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="s1">&#39;⋮&#39;</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s1">&#39;top-right&#39;</span><span class="p">,</span> <span class="n">collapsed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">panel_width</span><span class="o">=</span><span class="mi">320</span><span class="p">,</span> <span class="n">panel_min_width</span><span class="o">=</span><span class="mi">220</span><span class="p">,</span> <span class="n">panel_max_width</span><span class="o">=</span><span class="mi">420</span><span class="p">,</span> <span class="n">control_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">add_widget_control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">widget</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Tools&#39;</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="s1">&#39;⋮&#39;</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s1">&#39;top-right&#39;</span><span class="p">,</span> <span class="n">collapsed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">panel_width</span><span class="o">=</span><span class="mi">320</span><span class="p">,</span> <span class="n">panel_min_width</span><span class="o">=</span><span class="mi">220</span><span class="p">,</span> <span class="n">panel_max_width</span><span class="o">=</span><span class="mi">420</span><span class="p">,</span> <span class="n">panel_max_height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">auto_panel_width</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">header_bg</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">header_text_color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">control_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
 
 <a href="#anymap.maplibre.MapLibreMap.add_widget_control" class="headerlink" title="Permanent link">&para;</a></h3>
@@ -17890,6 +18070,31 @@ ipywidget content.</p>
         <td><code>420</code></td>
       </tr>
       <tr>
+        <td><code>panel_max_height</code></td>
+        <td><code>Union[int, str]</code></td>
+        <td><p>Maximum panel height. Can be an int (pixels) or a CSS string (e.g., '70vh', '500px').
+Defaults to None, which uses the JavaScript default of '70vh'.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>auto_panel_width</code></td>
+        <td><code>bool</code></td>
+        <td><p>Whether the panel width should be automatically adjusted to the content width. Defaults to False.</p></td>
+        <td><code>False</code></td>
+      </tr>
+      <tr>
+        <td><code>header_bg</code></td>
+        <td><code>Optional[str]</code></td>
+        <td><p>The background color of the header, like "linear-gradient(135deg,#444,#888)". Defaults to None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>header_text_color</code></td>
+        <td><code>Optional[str]</code></td>
+        <td><p>The text color of the header, like "#fff". Defaults to None.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
         <td><code>control_id</code></td>
         <td><code>Optional[str]</code></td>
         <td><p>Optional identifier used for duplicate detection and later removal.
@@ -17947,6 +18152,10 @@ If omitted, a unique identifier is generated from the label.</p></td>
     <span class="n">panel_width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">320</span><span class="p">,</span>
     <span class="n">panel_min_width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">220</span><span class="p">,</span>
     <span class="n">panel_max_width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">420</span><span class="p">,</span>
+    <span class="n">panel_max_height</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">auto_panel_width</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">header_bg</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">header_text_color</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">control_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -17967,10 +18176,14 @@ If omitted, a unique identifier is generated from the label.</p></td>
 <span class="sd">        panel_width: Default panel width in pixels.</span>
 <span class="sd">        panel_min_width: Minimum panel width in pixels when resized on the front-end.</span>
 <span class="sd">        panel_max_width: Maximum panel width in pixels when resized on the front-end.</span>
+<span class="sd">        panel_max_height: Maximum panel height. Can be an int (pixels) or a CSS string (e.g., &#39;70vh&#39;, &#39;500px&#39;).</span>
+<span class="sd">            Defaults to None, which uses the JavaScript default of &#39;70vh&#39;.</span>
+<span class="sd">        auto_panel_width: Whether the panel width should be automatically adjusted to the content width. Defaults to False.</span>
+<span class="sd">        header_bg: The background color of the header, like &quot;linear-gradient(135deg,#444,#888)&quot;. Defaults to None.</span>
+<span class="sd">        header_text_color: The text color of the header, like &quot;#fff&quot;. Defaults to None.</span>
 <span class="sd">        control_id: Optional identifier used for duplicate detection and later removal.</span>
 <span class="sd">            If omitted, a unique identifier is generated from the label.</span>
 <span class="sd">        description: Optional tooltip description for the toggle button.</span>
-
 <span class="sd">    Returns:</span>
 <span class="sd">        str: The unique identifier assigned to the widget control.</span>
 
@@ -18007,9 +18220,19 @@ If omitted, a unique identifier is generated from the label.</p></td>
         <span class="s2">&quot;panelWidth&quot;</span><span class="p">:</span> <span class="n">panel_width</span><span class="p">,</span>
         <span class="s2">&quot;panelMinWidth&quot;</span><span class="p">:</span> <span class="n">panel_min_width</span><span class="p">,</span>
         <span class="s2">&quot;panelMaxWidth&quot;</span><span class="p">:</span> <span class="n">panel_max_width</span><span class="p">,</span>
+        <span class="s2">&quot;autoWidth&quot;</span><span class="p">:</span> <span class="n">auto_panel_width</span><span class="p">,</span>
+        <span class="s2">&quot;headerBg&quot;</span><span class="p">:</span> <span class="n">header_bg</span><span class="p">,</span>
+        <span class="s2">&quot;headerTextColor&quot;</span><span class="p">:</span> <span class="n">header_text_color</span><span class="p">,</span>
         <span class="s2">&quot;control_id&quot;</span><span class="p">:</span> <span class="n">control_id</span><span class="p">,</span>
         <span class="s2">&quot;widget_model_id&quot;</span><span class="p">:</span> <span class="n">widget_id</span><span class="p">,</span>
     <span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">panel_max_height</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">control_options</span><span class="p">[</span><span class="s2">&quot;maxHeight&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">panel_max_height</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">panel_max_height</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+            <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">panel_max_height</span><span class="si">}</span><span class="s2">px&quot;</span>
+        <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">description</span><span class="p">:</span>
         <span class="n">control_options</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">description</span>
