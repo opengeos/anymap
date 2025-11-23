@@ -4829,6 +4829,11 @@ data sources, custom styling, and interactive features.</p>
         <td></td>
         <td><p>Whether to enable double-click to zoom interaction (default: False).</p></td>
       </tr>
+      <tr>
+        <td><code>request_headers</code></td>
+        <td></td>
+        <td><p>Custom HTTP headers to include in tile requests (e.g., {"Authorization": "Bearer token"}).</p></td>
+      </tr>
   </tbody>
 </table>
 <p><strong>Examples:</strong></p>
@@ -4856,6 +4861,7 @@ data sources, custom styling, and interactive features.</p>
 <span class="sd">        pitch: Map tilt in degrees (0-60).</span>
 <span class="sd">        antialias: Whether to enable antialiasing for better rendering quality.</span>
 <span class="sd">        double_click_zoom: Whether to enable double-click to zoom interaction (default: False).</span>
+<span class="sd">        request_headers: Custom HTTP headers to include in tile requests (e.g., {&quot;Authorization&quot;: &quot;Bearer token&quot;}).</span>
 
 <span class="sd">    Example:</span>
 <span class="sd">        Creating a basic MapLibre map:</span>
@@ -4877,6 +4883,7 @@ data sources, custom styling, and interactive features.</p>
     <span class="n">pitch</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Float</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">antialias</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">double_click_zoom</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">request_headers</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Dict</span><span class="p">({})</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">_draw_data</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Dict</span><span class="p">()</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">_terra_draw_data</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Dict</span><span class="p">()</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">_terra_draw_enabled</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -10241,6 +10248,7 @@ data sources, custom styling, and interactive features.</p>
     </div>
 
   </div>
+
 
 
 
