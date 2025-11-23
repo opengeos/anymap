@@ -5726,8 +5726,11 @@ const pointInPolygon = (pt, poly) => {
                             }, 50);
                           }
                         }
-                        if (!next && typeof el._gmHideInfoBox === 'function') {
-                          el._gmHideInfoBox();
+                        if (!next) {
+                          this._activatingWorkaround = false;
+                          if (typeof el._gmHideInfoBox === 'function') {
+                            el._gmHideInfoBox();
+                          }
                         }
                         if (typeof el._gmAttachInfoHandlers === 'function') {
                           el._gmAttachInfoHandlers();
