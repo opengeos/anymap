@@ -569,13 +569,13 @@
                     widthSlider.value = String(initialWidth);
                     const widthValue = document.createElement('span');
                     widthValue.className = 'width-value';
-                    widthValue.textContent = `${{initialWidth}}px`;
+                    widthValue.textContent = `${initialWidth}px`;
                     widthSlider.className = 'width-slider';
                     widthSlider.addEventListener('input', () => {{
                         const w = parseInt(widthSlider.value, 10);
-                        this.panel.style.minWidth = `${{w}}px`;
-                        this.panel.style.maxWidth = `${{w}}px`;
-                        widthValue.textContent = `${{w}}px`;
+                        this.panel.style.minWidth = `${w}px`;
+                        this.panel.style.maxWidth = `${w}px`;
+                        widthValue.textContent = `${w}px`;
                     }});
                     widthRow.appendChild(widthLabel);
                     widthRow.appendChild(widthSlider);
