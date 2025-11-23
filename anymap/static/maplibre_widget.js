@@ -1232,8 +1232,19 @@ class LayerControl {
       this.layerStates[layerId].visible = visible;
     }
 
-    // Call map's visibility method
-    this.map.setLayoutProperty(layerId, 'visibility', visible ? 'visible' : 'none');
+    // Check if this is a marker group
+    if (this.widgetEl._markerGroups && this.widgetEl._markerGroups.has(layerId)) {
+      const markerGroup = this.widgetEl._markerGroups.get(layerId);
+      if (markerGroup) {
+        markerGroup.forEach((marker) => {
+          const markerEl = marker.getElement();
+          markerEl.style.display = visible ? '' : 'none';
+        });
+      }
+    } else {
+      // Regular layer - call map's visibility method
+      this.map.setLayoutProperty(layerId, 'visibility', visible ? 'visible' : 'none');
+    }
 
     // Sync back to Python
     this.model.set('_js_events', [...this.model.get('_js_events'), {
@@ -1250,37 +1261,48 @@ class LayerControl {
       this.layerStates[layerId].opacity = opacity;
     }
 
-    // Apply opacity to map layer
-    const layer = this.map.getLayer(layerId);
-    if (layer) {
-      const layerType = layer.type;
-      let opacityProperty;
-
-      switch (layerType) {
-        case 'fill':
-          opacityProperty = 'fill-opacity';
-          break;
-        case 'line':
-          opacityProperty = 'line-opacity';
-          break;
-        case 'circle':
-          opacityProperty = 'circle-opacity';
-          break;
-        case 'symbol':
-          this.map.setPaintProperty(layerId, 'icon-opacity', opacity);
-          this.map.setPaintProperty(layerId, 'text-opacity', opacity);
-          return;
-        case 'raster':
-          opacityProperty = 'raster-opacity';
-          break;
-        case 'background':
-          opacityProperty = 'background-opacity';
-          break;
-        default:
-          opacityProperty = `${layerType}-opacity`;
+    // Check if this is a marker group
+    if (this.widgetEl._markerGroups && this.widgetEl._markerGroups.has(layerId)) {
+      const markerGroup = this.widgetEl._markerGroups.get(layerId);
+      if (markerGroup) {
+        markerGroup.forEach((marker) => {
+          const markerEl = marker.getElement();
+          markerEl.style.opacity = opacity;
+        });
       }
+    } else {
+      // Regular layer - apply opacity to map layer
+      const layer = this.map.getLayer(layerId);
+      if (layer) {
+        const layerType = layer.type;
+        let opacityProperty;
 
-      this.map.setPaintProperty(layerId, opacityProperty, opacity);
+        switch (layerType) {
+          case 'fill':
+            opacityProperty = 'fill-opacity';
+            break;
+          case 'line':
+            opacityProperty = 'line-opacity';
+            break;
+          case 'circle':
+            opacityProperty = 'circle-opacity';
+            break;
+          case 'symbol':
+            this.map.setPaintProperty(layerId, 'icon-opacity', opacity);
+            this.map.setPaintProperty(layerId, 'text-opacity', opacity);
+            return;
+          case 'raster':
+            opacityProperty = 'raster-opacity';
+            break;
+          case 'background':
+            opacityProperty = 'background-opacity';
+            break;
+          default:
+            opacityProperty = `${layerType}-opacity`;
+        }
+
+        this.map.setPaintProperty(layerId, opacityProperty, opacity);
+      }
     }
 
     // Sync back to Python
@@ -1447,7 +1469,7 @@ class LayerControl {
         this.layerStates[layerId] = {
           visible: layerInfo.visible !== false,
           opacity: layerInfo.opacity || 1.0,
-          name: layerId
+          name: layerInfo.name || layerId
         };
 
         // Add to target layers if not filtering
@@ -1657,6 +1679,8 @@ class LayerControl {
       return;
     }
 
+    const isMarkerGroup = this.widgetEl._markerGroups && this.widgetEl._markerGroups.has(layerId);
+
     if (hasOptions) {
       button.disabled = false;
       button.title = `Style ${state.name || layerId}`;
@@ -1676,6 +1700,10 @@ class LayerControl {
       button.setAttribute('aria-label', 'Show legend');
       this.legendButtonRef = button;
       this.setLegendButtonState(this.isLegendControlPresent());
+    } else if (isMarkerGroup) {
+      button.disabled = true;
+      button.title = 'Styling not available for marker groups';
+      button.setAttribute('aria-label', 'Styling not available for marker groups');
     } else {
       button.disabled = true;
       button.title = 'Styling not available for this layer';
@@ -1684,6 +1712,10 @@ class LayerControl {
 
   hasStyleOptions(layerId) {
     if (!this.map || layerId === 'Background') {
+      return false;
+    }
+    // Marker groups don't have style options
+    if (this.widgetEl._markerGroups && this.widgetEl._markerGroups.has(layerId)) {
       return false;
     }
     try {
@@ -1700,7 +1732,10 @@ class LayerControl {
 
   createStyleButton(layerId, state) {
     const hasOptions = this.hasStyleOptions(layerId);
-    if (!hasOptions && layerId !== 'Background') {
+    const isMarkerGroup = this.widgetEl._markerGroups && this.widgetEl._markerGroups.has(layerId);
+
+    // Don't create button for non-marker-group layers without options (except Background)
+    if (!hasOptions && layerId !== 'Background' && !isMarkerGroup) {
       return null;
     }
 
@@ -1710,6 +1745,7 @@ class LayerControl {
     button.title = `Style ${state.name || layerId}`;
     button.setAttribute('aria-label', `Style ${state.name || layerId}`);
     button.innerHTML = '&#9881;';
+
     if (!hasOptions) {
       if (layerId === 'Background') {
         button.disabled = false;
@@ -1722,6 +1758,11 @@ class LayerControl {
         });
         this.legendButtonRef = button;
         this.setLegendButtonState(this.isLegendControlPresent());
+      } else if (isMarkerGroup) {
+        // Marker groups: show disabled button for consistency
+        button.disabled = true;
+        button.title = 'Styling not available for marker groups';
+        button.setAttribute('aria-label', 'Styling not available for marker groups');
       } else {
         button.disabled = true;
         button.title = 'Styling not available for this layer';
@@ -2856,6 +2897,12 @@ function render({ model, el }) {
     el._markers.forEach(marker => marker.remove());
     el._markers = [];
   }
+  if (el._markerGroups) {
+    el._markerGroups.forEach(markerGroup => {
+      markerGroup.forEach(marker => marker.remove());
+    });
+    el._markerGroups.clear();
+  }
   if (el._geomanInstance && typeof el._geomanInstance.destroy === 'function') {
     try {
       el._geomanInstance.destroy({ removeSources: true });
@@ -3902,6 +3949,7 @@ function render({ model, el }) {
     // Store map instance for cleanup
     el._map = map;
     el._markers = [];
+    el._markerGroups = new Map(); // Track marker groups by layer ID
     el._controls = new Map(); // Track added controls by type and position
     el._drawControl = null; // Track draw control instance
     el._terraDrawControl = null; // Track Terra Draw control instance
@@ -7687,6 +7735,128 @@ const pointInPolygon = (pt, poly) => {
             el._markers.push(marker);
             break;
 
+          case 'addMarkerGroup':
+            const groupData = args[0];
+            const layerId = groupData.layerId;
+            const markers = groupData.markers || [];
+            const groupVisible = groupData.visible !== false;
+            const groupOpacity = groupData.opacity !== undefined ? groupData.opacity : 1.0;
+
+            // Create array to store markers in this group
+            const markerGroup = [];
+
+            // Create each marker in the group
+            markers.forEach((markerDef) => {
+              const markerOpts = markerDef.options || {};
+              const markerScale = markerOpts.scale || 1.0;
+              delete markerOpts.scale;
+
+              const groupMarker = new maplibregl.Marker(markerOpts)
+                .setLngLat([markerDef.lng, markerDef.lat])
+                .addTo(map);
+
+              // Apply scale
+              if (markerScale !== 1.0) {
+                const markerEl = groupMarker.getElement();
+                const markerInner = markerEl.querySelector('svg') || markerEl.firstElementChild;
+                if (markerInner) {
+                  markerInner.style.transform = `scale(${markerScale})`;
+                  markerInner.style.transformOrigin = 'center center';
+                }
+              }
+
+              // Apply opacity
+              if (groupOpacity !== 1.0) {
+                const markerEl = groupMarker.getElement();
+                markerEl.style.opacity = groupOpacity;
+              }
+
+              // Apply visibility
+              if (!groupVisible) {
+                const markerEl = groupMarker.getElement();
+                markerEl.style.display = 'none';
+              }
+
+              // Add popup if provided
+              if (markerDef.popup) {
+                const popup = new maplibregl.Popup().setHTML(markerDef.popup);
+                groupMarker.setPopup(popup);
+              }
+
+              // Add tooltip if provided
+              if (markerDef.tooltip) {
+                const tooltip = new maplibregl.Popup({
+                  closeButton: false,
+                  closeOnClick: false,
+                  className: 'marker-tooltip'
+                }).setHTML(markerDef.tooltip);
+
+                const markerEl = groupMarker.getElement();
+                markerEl.addEventListener('mouseenter', () => {
+                  tooltip.setLngLat([markerDef.lng, markerDef.lat]).addTo(map);
+                });
+                markerEl.addEventListener('mouseleave', () => {
+                  tooltip.remove();
+                });
+              }
+
+              markerGroup.push(groupMarker);
+            });
+
+            // Store the marker group
+            el._markerGroups.set(layerId, markerGroup);
+
+            // Trigger layer control to update and show the new marker group
+            // Find any layer control instances and trigger checkForNewLayers
+            if (el._controls) {
+              el._controls.forEach((control) => {
+                if (control && typeof control.checkForNewLayers === 'function') {
+                  setTimeout(() => {
+                    control.checkForNewLayers();
+                  }, 50);
+                }
+              });
+            }
+            break;
+
+          case 'setMarkerGroupVisibility':
+            const markerGroupVisLayerId = args[0];
+            const markerGroupVisible = args[1];
+            const visMarkerGroup = el._markerGroups.get(markerGroupVisLayerId);
+
+            if (visMarkerGroup) {
+              visMarkerGroup.forEach((marker) => {
+                const markerEl = marker.getElement();
+                markerEl.style.display = markerGroupVisible ? '' : 'none';
+              });
+            }
+            break;
+
+          case 'setMarkerGroupOpacity':
+            const markerGroupOpacityLayerId = args[0];
+            const markerGroupOpacity = args[1];
+            const opacityMarkerGroup = el._markerGroups.get(markerGroupOpacityLayerId);
+
+            if (opacityMarkerGroup) {
+              opacityMarkerGroup.forEach((marker) => {
+                const markerEl = marker.getElement();
+                markerEl.style.opacity = markerGroupOpacity;
+              });
+            }
+            break;
+
+          case 'removeMarkerGroup':
+            const markerGroupRemoveLayerId = args[0];
+            const removeMarkerGroup = el._markerGroups.get(markerGroupRemoveLayerId);
+
+            if (removeMarkerGroup) {
+              // Remove all markers in the group from the map
+              removeMarkerGroup.forEach((marker) => marker.remove());
+              // Remove the group from tracking
+              el._markerGroups.delete(markerGroupRemoveLayerId);
+            }
+            break;
+
           case 'fitBounds':
             const [bounds, options] = args;
             // bounds are already in [[lng,lat], [lng,lat]] format
@@ -10125,6 +10295,12 @@ const pointInPolygon = (pt, poly) => {
       if (el._markers) {
         el._markers.forEach(marker => marker.remove());
         el._markers = [];
+      }
+      if (el._markerGroups) {
+        el._markerGroups.forEach(markerGroup => {
+          markerGroup.forEach(marker => marker.remove());
+        });
+        el._markerGroups.clear();
       }
       if (el._controls) {
         el._controls.clear();
