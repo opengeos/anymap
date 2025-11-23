@@ -1326,6 +1326,7 @@ class MapLibreMap(MapWidget):
         panel_width: int = 320,
         panel_min_width: int = 220,
         panel_max_width: int = 420,
+        panel_max_height: Optional[Union[int, str]] = None,
         auto_panel_width: bool = False,
         header_bg: Optional[str] = None,
         header_text_color: Optional[str] = None,
@@ -1349,6 +1350,8 @@ class MapLibreMap(MapWidget):
             panel_width: Default panel width in pixels.
             panel_min_width: Minimum panel width in pixels when resized on the front-end.
             panel_max_width: Maximum panel width in pixels when resized on the front-end.
+            panel_max_height: Maximum panel height. Can be an int (pixels) or a CSS string (e.g., '70vh', '500px').
+                Defaults to None, which uses the JavaScript default of '70vh'.
             auto_panel_width: Whether the panel width should be automatically adjusted to the content width. Defaults to False.
             header_bg: The background color of the header, like "linear-gradient(135deg,#444,#888)". Defaults to None.
             header_text_color: The text color of the header, like "#fff". Defaults to None.
@@ -1397,6 +1400,13 @@ class MapLibreMap(MapWidget):
             "control_id": control_id,
             "widget_model_id": widget_id,
         }
+
+        if panel_max_height is not None:
+            control_options["maxHeight"] = (
+                panel_max_height
+                if isinstance(panel_max_height, str)
+                else f"{panel_max_height}px"
+            )
 
         if description:
             control_options["description"] = description
@@ -5416,6 +5426,7 @@ class MapLibreMap(MapWidget):
         header_color: Optional[str] = None,
         header_text_color: Optional[str] = None,
         responsive: Optional[bool] = True,
+        max_height: int = 380,
         **kwargs: Union[str, int, float],
     ) -> None:
         """
@@ -5443,6 +5454,7 @@ class MapLibreMap(MapWidget):
             header_color (str, optional): The background color of the legend header, like "linear-gradient(135deg,#444,#888)". Defaults to None.
             header_text_color (str, optional): The text color of the legend header, like "#fff". Defaults to None.
             responsive (bool, optional): Whether the legend is responsive. Defaults to True.
+            max_height (int, optional): Maximum height of the legend content area in pixels. Defaults to 380.
             **kwargs: Any
         """
         if shape_type is not None and shape_type not in ["rectangle", "circle", "line"]:
@@ -5543,12 +5555,14 @@ class MapLibreMap(MapWidget):
             legend_items.append(item_html)
 
         # Create a VBox container for legend items
+        # Subtract space for panel header (~60px) from panel_max_height
+        # This ensures the legend content scrolls properly within the panel
+        legend_content_height = max(100, max_height - 60)
         legend_vbox = widgets.VBox(
             legend_items,
             layout=widgets.Layout(
                 width="fit-content",
-                # Allow content to define its width; no artificial max
-                max_height="400px",
+                max_height=f"{legend_content_height}px",
                 overflow_y="auto",
                 overflow_x="hidden",
                 padding="8px",
@@ -5574,6 +5588,7 @@ class MapLibreMap(MapWidget):
                 "collapsed": collapsed,
                 "header_bg": header_color,
                 "header_text_color": header_text_color,
+                "panel_max_height": max_height,
             }
         )
 
@@ -5614,6 +5629,10 @@ class MapLibreMap(MapWidget):
         if "panel_max_width" in control_kwargs:
             widget_control_params["panel_max_width"] = control_kwargs.pop(
                 "panel_max_width"
+            )
+        if "panel_max_height" in control_kwargs:
+            widget_control_params["panel_max_height"] = control_kwargs.pop(
+                "panel_max_height"
             )
 
         # Add legend as a widget control at the specified position
