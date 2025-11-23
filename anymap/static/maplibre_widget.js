@@ -5634,6 +5634,7 @@ const pointInPolygon = (pt, poly) => {
                     this._container = null;
                     this._button = null;
                     this._map = null;
+                    this._activatingWorkaround = false;
                   }
                   setPressed(pressed) {
                     if (!this._button) return;
@@ -5691,6 +5692,38 @@ const pointInPolygon = (pt, poly) => {
                                 b.click();
                               }
                             });
+                          }
+                          // Workaround: Briefly activate then deactivate remove button
+                          // This initializes handlers so info button works on first click
+                          if (!this._activatingWorkaround) {
+                            this._activatingWorkaround = true;
+                            setTimeout(() => {
+                              try {
+                                const geomanInstance = map.gm || el._geomanInstance;
+                                const containerEl = geomanInstance?.control?.container;
+                                if (containerEl) {
+                                  const buttons = Array.from(containerEl.querySelectorAll('.gm-control-button'));
+                                  const getButtonLabel = (b) => ((b.getAttribute('title') || b.getAttribute('aria-label') || (b.textContent ? b.textContent.trim() : '')).toLowerCase());
+                                  const removeBtn = buttons.find(b => {
+                                    const label = getButtonLabel(b);
+                                    return label.includes('remov') || label.includes('delete');
+                                  });
+                                  if (removeBtn) {
+                                    // Activate remove tool briefly to initialize handlers
+                                    removeBtn.click();
+                                    // Then deactivate it immediately
+                                    setTimeout(() => {
+                                      removeBtn.click();
+                                      this._activatingWorkaround = false;
+                                    }, 50);
+                                  } else {
+                                    this._activatingWorkaround = false;
+                                  }
+                                }
+                              } catch (_e) {
+                                this._activatingWorkaround = false;
+                              }
+                            }, 50);
                           }
                         }
                         if (!next && typeof el._gmHideInfoBox === 'function') {
@@ -5879,7 +5912,8 @@ const pointInPolygon = (pt, poly) => {
                         } catch (_e2) {}
                       }
                       // Also disable info mode to prevent interference with edit/delete tools
-                      if (el._gmShowInfoBox) {
+                      // Skip this if we're running the info button initialization workaround
+                      if (el._gmShowInfoBox && !(el._infoControl && el._infoControl._activatingWorkaround)) {
                         el._gmShowInfoBox = false;
                         try {
                           if (el._infoControl && el._infoControl._button) {
