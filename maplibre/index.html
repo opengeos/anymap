@@ -6558,6 +6558,7 @@ data sources, custom styling, and interactive features.</p>
         <span class="n">lng</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">lat</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">popup</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">tooltip</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -6566,7 +6567,10 @@ data sources, custom styling, and interactive features.</p>
 <span class="sd">        Args:</span>
 <span class="sd">            lng: Longitude coordinate for the marker.</span>
 <span class="sd">            lat: Latitude coordinate for the marker.</span>
-<span class="sd">            popup: Optional popup text to display when marker is clicked.</span>
+<span class="sd">            popup: Optional popup HTML to display when marker is clicked.</span>
+<span class="sd">                Supports HTML content including images.</span>
+<span class="sd">            tooltip: Optional tooltip HTML to display when hovering over marker.</span>
+<span class="sd">                Supports HTML content including images.</span>
 <span class="sd">            options: Optional marker options forwarded to MapLibre GL JS.</span>
 <span class="sd">                This supports properties like color, draggable, and opacity.</span>
 <span class="sd">            scale: Scale factor for marker size (default: 1.0, range: 0.1 to 3.0).</span>
@@ -6579,6 +6583,7 @@ data sources, custom styling, and interactive features.</p>
         <span class="n">marker_data</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;coordinates&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">lng</span><span class="p">,</span> <span class="n">lat</span><span class="p">],</span>
             <span class="s2">&quot;popup&quot;</span><span class="p">:</span> <span class="n">popup</span><span class="p">,</span>
+            <span class="s2">&quot;tooltip&quot;</span><span class="p">:</span> <span class="n">tooltip</span><span class="p">,</span>
             <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="n">marker_options</span><span class="p">,</span>
         <span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addMarker&quot;</span><span class="p">,</span> <span class="n">marker_data</span><span class="p">)</span>
@@ -14535,7 +14540,7 @@ search interface for finding locations and can display markers for search result
 
 
 <h3 id="anymap.maplibre.MapLibreMap.add_marker" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">add_marker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lng</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">popup</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">add_marker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lng</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">popup</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tooltip</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span></code>
 
 
 <a href="#anymap.maplibre.MapLibreMap.add_marker" class="headerlink" title="Permanent link">&para;</a></h3>
@@ -14570,7 +14575,15 @@ search interface for finding locations and can display markers for search result
       <tr>
         <td><code>popup</code></td>
         <td><code>Optional[str]</code></td>
-        <td><p>Optional popup text to display when marker is clicked.</p></td>
+        <td><p>Optional popup HTML to display when marker is clicked.
+Supports HTML content including images.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>tooltip</code></td>
+        <td><code>Optional[str]</code></td>
+        <td><p>Optional tooltip HTML to display when hovering over marker.
+Supports HTML content including images.</p></td>
         <td><code>None</code></td>
       </tr>
       <tr>
@@ -14596,6 +14609,7 @@ For example, 0.5 makes the marker half size, 2.0 makes it double size.</p></td>
     <span class="n">lng</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">lat</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">popup</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">tooltip</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -14604,7 +14618,10 @@ For example, 0.5 makes the marker half size, 2.0 makes it double size.</p></td>
 <span class="sd">    Args:</span>
 <span class="sd">        lng: Longitude coordinate for the marker.</span>
 <span class="sd">        lat: Latitude coordinate for the marker.</span>
-<span class="sd">        popup: Optional popup text to display when marker is clicked.</span>
+<span class="sd">        popup: Optional popup HTML to display when marker is clicked.</span>
+<span class="sd">            Supports HTML content including images.</span>
+<span class="sd">        tooltip: Optional tooltip HTML to display when hovering over marker.</span>
+<span class="sd">            Supports HTML content including images.</span>
 <span class="sd">        options: Optional marker options forwarded to MapLibre GL JS.</span>
 <span class="sd">            This supports properties like color, draggable, and opacity.</span>
 <span class="sd">        scale: Scale factor for marker size (default: 1.0, range: 0.1 to 3.0).</span>
@@ -14617,6 +14634,7 @@ For example, 0.5 makes the marker half size, 2.0 makes it double size.</p></td>
     <span class="n">marker_data</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;coordinates&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">lng</span><span class="p">,</span> <span class="n">lat</span><span class="p">],</span>
         <span class="s2">&quot;popup&quot;</span><span class="p">:</span> <span class="n">popup</span><span class="p">,</span>
+        <span class="s2">&quot;tooltip&quot;</span><span class="p">:</span> <span class="n">tooltip</span><span class="p">,</span>
         <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="n">marker_options</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addMarker&quot;</span><span class="p">,</span> <span class="n">marker_data</span><span class="p">)</span>
