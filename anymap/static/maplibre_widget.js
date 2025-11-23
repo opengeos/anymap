@@ -7748,8 +7748,7 @@ const pointInPolygon = (pt, poly) => {
             // Create each marker in the group
             markers.forEach((markerDef) => {
               const markerOpts = markerDef.options || {};
-              const markerScale = markerOpts.scale || 1.0;
-              delete markerOpts.scale;
+              const markerScale = markerDef.scale || 1.0;
 
               const groupMarker = new maplibregl.Marker(markerOpts)
                 .setLngLat([markerDef.lng, markerDef.lat])
