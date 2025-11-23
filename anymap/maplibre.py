@@ -1326,6 +1326,9 @@ class MapLibreMap(MapWidget):
         panel_width: int = 320,
         panel_min_width: int = 220,
         panel_max_width: int = 420,
+        auto_panel_width: bool = False,
+        header_bg: Optional[str] = None,
+        header_text_color: Optional[str] = None,
         control_id: Optional[str] = None,
         description: Optional[str] = None,
     ) -> str:
@@ -1386,6 +1389,9 @@ class MapLibreMap(MapWidget):
             "panelWidth": panel_width,
             "panelMinWidth": panel_min_width,
             "panelMaxWidth": panel_max_width,
+            "autoWidth": auto_panel_width,
+            "headerBg": header_bg,
+            "headerTextColor": header_text_color,
             "control_id": control_id,
             "widget_model_id": widget_id,
         }
@@ -5405,6 +5411,9 @@ class MapLibreMap(MapWidget):
         collapsed: bool = True,
         builtin_legend: Optional[str] = None,
         shape_type: str = "rectangle",
+        header_color: Optional[str] = None,
+        header_text_color: Optional[str] = None,
+        responsive: Optional[bool] = True,
         **kwargs: Union[str, int, float],
     ) -> None:
         """
@@ -5533,7 +5542,7 @@ class MapLibreMap(MapWidget):
             legend_items,
             layout=widgets.Layout(
                 width="fit-content",
-                max_width="300px",
+                # Allow content to define its width; no artificial max
                 max_height="400px",
                 overflow_y="auto",
                 overflow_x="hidden",
@@ -5544,12 +5553,66 @@ class MapLibreMap(MapWidget):
             ),
         )
 
+        # Determine responsiveness: default to responsive unless user supplied panel_width
+        if responsive is None:
+            auto_flag = "panel_width" not in kwargs and "auto_panel_width" not in kwargs
+        else:
+            auto_flag = bool(responsive)
+
+        # Build options
+        control_kwargs: Dict[str, Union[str, int, float, bool]] = dict(kwargs)
+        control_kwargs.update(
+            {
+                "position": position,
+                "label": title,
+                "icon": icon,
+                "collapsed": collapsed,
+                "header_bg": header_color,
+                "header_text_color": header_text_color,
+            }
+        )
+
+        # Configure width behavior based on responsive setting
+        if auto_flag:
+            # Responsive mode: use auto width with min/max constraints
+            control_kwargs.setdefault(
+                "panel_min_width", 100
+            )  # Minimum width for legend items (reduced for short text)
+            control_kwargs.setdefault(
+                "panel_max_width", 500
+            )  # Reasonable maximum width
+            control_kwargs["auto_panel_width"] = True
+        else:
+            # Fixed width mode: ensure auto_panel_width is False
+            control_kwargs["auto_panel_width"] = False
+            # Use default panel_width if not specified
+            control_kwargs.setdefault("panel_width", 320)
+
+        # Extract parameters for add_widget_control
+        widget_control_params = {
+            "label": control_kwargs.pop("label"),
+            "icon": control_kwargs.pop("icon"),
+            "position": control_kwargs.pop("position"),
+            "collapsed": control_kwargs.pop("collapsed"),
+            "auto_panel_width": control_kwargs.pop("auto_panel_width"),
+            "header_bg": control_kwargs.pop("header_bg", None),
+            "header_text_color": control_kwargs.pop("header_text_color", None),
+        }
+
+        # Add panel width parameters if specified
+        if "panel_width" in control_kwargs:
+            widget_control_params["panel_width"] = control_kwargs.pop("panel_width")
+        if "panel_min_width" in control_kwargs:
+            widget_control_params["panel_min_width"] = control_kwargs.pop(
+                "panel_min_width"
+            )
+        if "panel_max_width" in control_kwargs:
+            widget_control_params["panel_max_width"] = control_kwargs.pop(
+                "panel_max_width"
+            )
+
         # Add legend as a widget control at the specified position
         self.add_widget_control(
             legend_vbox,
-            position=position,
-            label=title,
-            icon=icon,
-            collapsed=collapsed,
-            **kwargs,
+            **widget_control_params,
         )

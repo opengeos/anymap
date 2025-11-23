@@ -2689,6 +2689,7 @@ class WidgetPanelControl {
     this.panelWidth = options.panelWidth || 320;
     this.panelMinWidth = options.panelMinWidth || 220;
     this.panelMaxWidth = options.panelMaxWidth || 420;
+    this.autoWidth = Boolean(options.autoWidth);
 
     this.container = document.createElement('div');
     this.container.className = 'maplibregl-ctrl maplibregl-ctrl-group maplibregl-ctrl-widget-panel';
@@ -2713,7 +2714,12 @@ class WidgetPanelControl {
     this.panel.className = 'widget-panel';
     this.panel.style.minWidth = `${this.panelMinWidth}px`;
     this.panel.style.maxWidth = `${this.panelMaxWidth}px`;
-    this.panel.style.width = `${this.panelWidth}px`;
+    // Width behaviour: fixed width or intrinsic shrink-to-fit
+    if (this.autoWidth) {
+      this.panel.style.width = 'max-content';
+    } else {
+      this.panel.style.width = `${this.panelWidth}px`;
+    }
     this.panel.style.maxHeight = options.maxHeight || '70vh';
 
     if (this.position.startsWith('top')) {
@@ -2739,15 +2745,23 @@ class WidgetPanelControl {
     if (this.collapsed) {
       this.panel.style.display = 'none';
     } else {
+      this.panel.style.display = this.autoWidth ? 'inline-block' : 'block';
       this.panel.classList.add('expanded');
     }
 
     const header = document.createElement('div');
     header.className = 'widget-panel-header';
+    // Allow overriding the default header background/text colors
+    if (options.headerBg) {
+      header.style.background = options.headerBg;
+    }
 
     const title = document.createElement('span');
     title.className = 'widget-panel-title';
     title.textContent = options.label || 'Widget Panel';
+    if (options.headerTextColor) {
+      header.style.color = options.headerTextColor;
+    }
     header.appendChild(title);
 
     const closeButton = document.createElement('button');
@@ -2762,6 +2776,10 @@ class WidgetPanelControl {
 
     this.content = document.createElement('div');
     this.content.className = 'widget-panel-content';
+    if (this.autoWidth) {
+      // Prevent content from stretching to container width so measurements reflect intrinsic size
+      this.content.style.display = 'inline-block';
+    }
     this.panel.appendChild(this.content);
 
     this.container.appendChild(this.panel);
@@ -2803,6 +2821,17 @@ class WidgetPanelControl {
         view.trigger('displayed');
       }
       this.content.classList.add('widget-panel-content-loaded');
+      if (this.autoWidth) {
+        // Ensure the widget root doesn't force 100% width
+        try {
+          view.el.style.display = 'inline-block';
+          view.el.style.width = 'auto';
+          view.el.style.maxWidth = 'none';
+          view.el.style.flex = '0 0 auto';
+          view.el.style.alignSelf = 'flex-start';
+        } catch (_) {}
+        this.updateAutoWidth();
+      }
     } catch (error) {
       console.error('Failed to attach widget panel view:', error);
     }
@@ -2832,9 +2861,13 @@ class WidgetPanelControl {
       return;
     }
     this.collapsed = false;
-    this.panel.style.display = 'block';
+    this.panel.style.display = this.autoWidth ? 'inline-block' : 'block';
     requestAnimationFrame(() => {
       this.panel.classList.add('expanded');
+      if (this.autoWidth) {
+        // Recalculate after shown to get accurate measurements
+        setTimeout(() => this.updateAutoWidth(), 0);
+      }
     });
     this.button.setAttribute('aria-expanded', 'true');
   }
@@ -2860,10 +2893,28 @@ class WidgetPanelControl {
 
   onRemove() {
     this.disposeWidgetView();
+    // No observers kept for auto width
     if (this.container && this.container.parentNode) {
       this.container.parentNode.removeChild(this.container);
     }
     this.map = null;
+  }
+
+  updateAutoWidth() {
+    if (!this.autoWidth) return;
+
+    // Use max-content to fit content width, but respect min/max constraints
+    this.panel.style.width = 'max-content';
+    this.panel.style.minWidth = `${this.panelMinWidth}px`;
+    this.panel.style.maxWidth = `${this.panelMaxWidth}px`;
+
+    // Ensure content doesn't cause horizontal overflow
+    if (this.content) {
+      this.content.style.maxWidth = `${this.panelMaxWidth - 20}px`; // Account for padding
+      this.content.style.overflowX = 'hidden'; // Prevent horizontal scrollbar
+      this.content.style.width = 'fit-content';
+      this.content.style.minWidth = '0';
+    }
   }
 }
 

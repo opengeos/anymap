@@ -319,7 +319,7 @@
 }
 
 .maplibregl-ctrl-widget-panel .widget-panel-title {
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.15px;
 }
@@ -345,7 +345,61 @@
   padding: 8px 10px;
   max-height: 60vh;
   overflow-y: auto;
+  overflow-x: hidden; /* Prevent horizontal scrollbar */
   background: #f9fbfd;
+}
+
+/* Responsive legend content styling */
+.maplibregl-ctrl-widget-panel .widget-panel-content.widget-panel-content-loaded {
+  /* Ensure legend items don't force panel expansion beyond max width */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Legend item styling for better text handling */
+.maplibregl-ctrl-widget-panel .widget-panel-content .jupyter-widgets {
+  width: fit-content !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  display: block !important; /* Ensure block layout for proper stacking */
+}
+
+.maplibregl-ctrl-widget-panel .widget-panel-content .widget-vbox {
+  width: fit-content !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  display: block !important; /* Keep block display for proper vertical stacking */
+}
+
+/* Ensure HTML widgets within legend size to content but stack vertically */
+.maplibregl-ctrl-widget-panel .widget-panel-content .widget-html {
+  width: fit-content !important; /* Size to content, not full width */
+  max-width: 100% !important;
+  display: block !important; /* Block display for vertical stacking */
+  box-sizing: border-box !important;
+}
+
+/* Ensure legend items stack vertically within the VBox */
+.maplibregl-ctrl-widget-panel .widget-panel-content .widget-vbox > .widget-html {
+  margin-bottom: 4px !important; /* Consistent spacing between items */
+}
+
+.maplibregl-ctrl-widget-panel .widget-panel-content .widget-vbox > .widget-html:last-child {
+  margin-bottom: 0 !important; /* No margin on last item */
+}
+
+/* Ensure the VBox itself doesn't force full width on children */
+.maplibregl-ctrl-widget-panel .widget-panel-content .widget-vbox {
+  flex-direction: column !important; /* Force vertical stacking */
+  align-items: flex-start !important; /* Align items to start, not stretch */
+}
+
+/* Style the individual legend item content divs */
+.maplibregl-ctrl-widget-panel .widget-panel-content .widget-html div {
+  white-space: nowrap !important; /* Prevent text wrapping within legend items */
+  overflow: hidden !important; /* Hide any overflow */
+  text-overflow: ellipsis !important; /* Add ellipsis for very long text */
+  max-width: 100% !important;
 }
 
 .layer-control-item {
