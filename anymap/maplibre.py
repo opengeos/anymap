@@ -69,6 +69,7 @@ class MapLibreMap(MapWidget):
         pitch: Map tilt in degrees (0-60).
         antialias: Whether to enable antialiasing for better rendering quality.
         double_click_zoom: Whether to enable double-click to zoom interaction (default: False).
+        request_headers: Custom HTTP headers to include in tile requests (e.g., {"Authorization": "Bearer token"}).
 
     Example:
         Creating a basic MapLibre map:
@@ -90,6 +91,7 @@ class MapLibreMap(MapWidget):
     pitch = traitlets.Float(0.0).tag(sync=True)
     antialias = traitlets.Bool(True).tag(sync=True)
     double_click_zoom = traitlets.Bool(False).tag(sync=True)
+    request_headers = traitlets.Dict({}).tag(sync=True)
     _draw_data = traitlets.Dict().tag(sync=True)
     _terra_draw_data = traitlets.Dict().tag(sync=True)
     _terra_draw_enabled = traitlets.Bool(False).tag(sync=True)

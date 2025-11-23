@@ -3878,7 +3878,19 @@ function render({ model, el }) {
       bearing: model.get("bearing"),
       pitch: model.get("pitch"),
       antialias: model.get("antialias"),
-      doubleClickZoom: model.get("double_click_zoom")
+      doubleClickZoom: model.get("double_click_zoom"),
+      transformRequest: (url, resourceType) => {
+        // Add custom headers if specified
+        const customHeaders = model.get("request_headers");
+        if (customHeaders && Object.keys(customHeaders).length > 0) {
+          return {
+            url: url,
+            headers: customHeaders
+          };
+        }
+        // Return undefined to use default behavior
+        return undefined;
+      }
     });
 
     // Force default cursor for all map interactions
