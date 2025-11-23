@@ -1036,6 +1036,14 @@ class LayerControl {
     // Create icon
     const icon = document.createElement('span');
     icon.className = 'layer-control-icon';
+    // Stroke-based inline SVG “layers” glyph (robust against background/foreground colors)
+    icon.innerHTML =
+      '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false" ' +
+      'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+      '<polygon points="12 3 3 8.25 12 13.5 21 8.25 12 3"></polygon>' +
+      '<polyline points="3 12.75 12 18 21 12.75"></polyline>' +
+      '<polyline points="3 17.25 12 22 21 17.25"></polyline>' +
+      '</svg>';
     this.button.appendChild(icon);
 
     // Create panel

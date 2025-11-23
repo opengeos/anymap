@@ -202,6 +202,7 @@
   justify-content: center;
   cursor: default !important;
   outline: none;
+  color: #1f2a37 !important; /* force icon to be dark even if parent sets white */
 }
 
 .maplibregl-ctrl-layer-control button:hover {
@@ -215,15 +216,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  line-height: 0;
 }
 
 .maplibregl-ctrl-layer-control .layer-control-icon::before {
-  content: '';
-  width: 14px;
-  height: 2px;
-  background-color: #333;
-  border-radius: 1px;
-  box-shadow: 0 -4px 0 #333, 0 4px 0 #333;
+  content: none;
+}
+
+.maplibregl-ctrl-layer-control .layer-control-icon svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+  stroke: currentColor;
+  fill: none;
 }
 
 .layer-control-panel {
