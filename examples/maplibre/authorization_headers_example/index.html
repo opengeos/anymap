@@ -2611,7 +2611,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">anymap</span>
 
 <span class="c1"># Create a map with authorization headers</span>
-<span class="n">m</span> <span class="o">=</span> <span class="n">anymap</span><span class="o">.</span><span class="n">MapLibreMap</span><span class="p">(</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">anymap</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span>
     <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">74.0060</span><span class="p">,</span> <span class="mf">40.7128</span><span class="p">],</span>
     <span class="n">zoom</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
     <span class="n">request_headers</span><span class="o">=</span><span class="p">{</span><span class="s2">"Authorization"</span><span class="p">:</span> <span class="s2">"Bearer YOUR_TOKEN_HERE"</span><span class="p">},</span>
@@ -2622,7 +2622,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <div class="clipboard-copy-txt" id="cell-1">import anymap
 
 # Create a map with authorization headers
-m = anymap.MapLibreMap(
+m = anymap.Map(
     center=[-74.0060, 40.7128],
     zoom=12,
     request_headers={"Authorization": "Bearer YOUR_TOKEN_HERE"},
@@ -2664,7 +2664,7 @@ m</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">m2</span> <span class="o">=</span> <span class="n">anymap</span><span class="o">.</span><span class="n">MapLibreMap</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">122.4194</span><span class="p">,</span> <span class="mf">37.7749</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">m2</span> <span class="o">=</span> <span class="n">anymap</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">122.4194</span><span class="p">,</span> <span class="mf">37.7749</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
 
 <span class="c1"># Set headers after creation</span>
 <span class="n">m2</span><span class="o">.</span><span class="n">request_headers</span> <span class="o">=</span> <span class="p">{</span>
@@ -2674,7 +2674,7 @@ m</div>
 
 <span class="n">m2</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-2">m2 = anymap.MapLibreMap(center=[-122.4194, 37.7749], zoom=12)
+<div class="clipboard-copy-txt" id="cell-2">m2 = anymap.Map(center=[-122.4194, 37.7749], zoom=12)
 
 # Set headers after creation
 m2.request_headers = {
@@ -2718,7 +2718,7 @@ m2</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">m3</span> <span class="o">=</span> <span class="n">anymap</span><span class="o">.</span><span class="n">MapLibreMap</span><span class="p">(</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">m3</span> <span class="o">=</span> <span class="n">anymap</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span>
     <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">0.1278</span><span class="p">,</span> <span class="mf">51.5074</span><span class="p">],</span>
     <span class="n">zoom</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
     <span class="n">request_headers</span><span class="o">=</span><span class="p">{</span><span class="s2">"Authorization"</span><span class="p">:</span> <span class="s2">"Bearer YOUR_TOKEN_HERE"</span><span class="p">},</span>
@@ -2740,7 +2740,7 @@ m2</div>
 
 <span class="n">m3</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-3">m3 = anymap.MapLibreMap(
+<div class="clipboard-copy-txt" id="cell-3">m3 = anymap.Map(
     center=[-0.1278, 51.5074],
     zoom=12,
     request_headers={"Authorization": "Bearer YOUR_TOKEN_HERE"},
@@ -2796,7 +2796,7 @@ m3</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">m4</span> <span class="o">=</span> <span class="n">anymap</span><span class="o">.</span><span class="n">MapLibreMap</span><span class="p">(</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">m4</span> <span class="o">=</span> <span class="n">anymap</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span>
     <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mf">2.3522</span><span class="p">,</span> <span class="mf">48.8566</span><span class="p">],</span>
     <span class="n">zoom</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
     <span class="n">request_headers</span><span class="o">=</span><span class="p">{</span>
@@ -2828,7 +2828,7 @@ m3</div>
 
 <span class="n">m4</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-4">m4 = anymap.MapLibreMap(
+<div class="clipboard-copy-txt" id="cell-4">m4 = anymap.Map(
     center=[2.3522, 48.8566],
     zoom=12,
     request_headers={
@@ -2894,7 +2894,7 @@ m4</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">m5</span> <span class="o">=</span> <span class="n">anymap</span><span class="o">.</span><span class="n">MapLibreMap</span><span class="p">(</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">m5</span> <span class="o">=</span> <span class="n">anymap</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span>
     <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mf">13.4050</span><span class="p">,</span> <span class="mf">52.5200</span><span class="p">],</span>
     <span class="n">zoom</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
     <span class="n">request_headers</span><span class="o">=</span><span class="p">{</span>
@@ -2907,7 +2907,7 @@ m4</div>
 
 <span class="n">m5</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-5">m5 = anymap.MapLibreMap(
+<div class="clipboard-copy-txt" id="cell-5">m5 = anymap.Map(
     center=[13.4050, 52.5200],
     zoom=12,
     request_headers={
@@ -2954,7 +2954,7 @@ m5</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">m6</span> <span class="o">=</span> <span class="n">anymap</span><span class="o">.</span><span class="n">MapLibreMap</span><span class="p">(</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">m6</span> <span class="o">=</span> <span class="n">anymap</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span>
     <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mf">139.6917</span><span class="p">,</span> <span class="mf">35.6895</span><span class="p">],</span>
     <span class="n">zoom</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
     <span class="n">request_headers</span><span class="o">=</span><span class="p">{</span><span class="s2">"Authorization"</span><span class="p">:</span> <span class="s2">"Bearer INITIAL_TOKEN"</span><span class="p">},</span>
@@ -2963,7 +2963,7 @@ m5</div>
 <span class="c1"># Display the map</span>
 <span class="n">m6</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-6">m6 = anymap.MapLibreMap(
+<div class="clipboard-copy-txt" id="cell-6">m6 = anymap.Map(
     center=[139.6917, 35.6895],
     zoom=12,
     request_headers={"Authorization": "Bearer INITIAL_TOKEN"},
@@ -3065,7 +3065,7 @@ m6.request_headers = {"Authorization": "Bearer REFRESHED_TOKEN"}
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 23, 2025 01:20:26 UTC"><span class="timeago" datetime="2025-11-23T01:20:26+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 23, 2025 01:20:26 UTC">2025-11-23</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 23, 2025 01:27:36 UTC"><span class="timeago" datetime="2025-11-23T01:27:36+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 23, 2025 01:27:36 UTC">2025-11-23</span>
   </span>
 
     
