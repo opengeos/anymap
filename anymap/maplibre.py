@@ -1780,7 +1780,7 @@ class MapLibreMap(MapWidget):
             scale: Scale factor for marker size (default: 1.0, range: 0.1 to 3.0).
                 For example, 0.5 makes the marker half size, 2.0 makes it double size.
         """
-        marker_options = options or {}
+        marker_options = dict(options) if options else {}
         if "scale" not in marker_options:
             marker_options["scale"] = scale
 
