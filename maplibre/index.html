@@ -2200,6 +2200,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.add_marker_group" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        add_marker_group()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.add_measures_control" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3734,6 +3745,17 @@
     <span class="md-ellipsis">
       
         add_marker()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.add_marker_group" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        add_marker_group()
       
     </span>
   </a>
@@ -6313,6 +6335,15 @@ data sources, custom styling, and interactive features.</p>
 <span class="sd">            layer_id: Unique identifier of the layer.</span>
 <span class="sd">            visible: Whether the layer should be visible.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check if this is a marker group</span>
+        <span class="k">if</span> <span class="n">layer_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_dict</span><span class="p">:</span>
+            <span class="n">layer_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_dict</span><span class="p">[</span><span class="n">layer_id</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">layer_type</span> <span class="o">==</span> <span class="s2">&quot;marker-group&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">layer_dict</span><span class="p">[</span><span class="n">layer_id</span><span class="p">][</span><span class="s2">&quot;visible&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">visible</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;setMarkerGroupVisibility&quot;</span><span class="p">,</span> <span class="n">layer_id</span><span class="p">,</span> <span class="n">visible</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_update_layer_controls</span><span class="p">()</span>
+                <span class="k">return</span>
+
         <span class="k">if</span> <span class="n">visible</span><span class="p">:</span>
             <span class="n">visibility</span> <span class="o">=</span> <span class="s2">&quot;visible&quot;</span>
         <span class="k">else</span><span class="p">:</span>
@@ -6334,6 +6365,15 @@ data sources, custom styling, and interactive features.</p>
 <span class="sd">            layer_id: Unique identifier of the layer.</span>
 <span class="sd">            opacity: Opacity value between 0.0 (transparent) and 1.0 (opaque).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check if this is a marker group</span>
+        <span class="k">if</span> <span class="n">layer_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_dict</span><span class="p">:</span>
+            <span class="n">layer_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_dict</span><span class="p">[</span><span class="n">layer_id</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">layer_type</span> <span class="o">==</span> <span class="s2">&quot;marker-group&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">layer_dict</span><span class="p">[</span><span class="n">layer_id</span><span class="p">][</span><span class="s2">&quot;opacity&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">opacity</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;setMarkerGroupOpacity&quot;</span><span class="p">,</span> <span class="n">layer_id</span><span class="p">,</span> <span class="n">opacity</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_update_layer_controls</span><span class="p">()</span>
+                <span class="k">return</span>
+
         <span class="n">layer_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_layer_type</span><span class="p">(</span><span class="n">layer_id</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">layer_id</span> <span class="o">==</span> <span class="s2">&quot;Background&quot;</span><span class="p">:</span>
@@ -6587,6 +6627,73 @@ data sources, custom styling, and interactive features.</p>
             <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="n">marker_options</span><span class="p">,</span>
         <span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addMarker&quot;</span><span class="p">,</span> <span class="n">marker_data</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_marker_group</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">layer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">markers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">visible</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">opacity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a group of markers as a controllable layer.</span>
+
+<span class="sd">        This method adds multiple markers as a single layer that can be controlled</span>
+<span class="sd">        through the layer control panel. All markers in the group share the same</span>
+<span class="sd">        visibility and opacity settings.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            layer_id: Unique identifier for the marker group layer.</span>
+<span class="sd">            markers: List of marker definitions. Each marker should be a dictionary with:</span>
+<span class="sd">                - lng (float): Longitude coordinate</span>
+<span class="sd">                - lat (float): Latitude coordinate</span>
+<span class="sd">                - popup (str, optional): Popup HTML content</span>
+<span class="sd">                - tooltip (str, optional): Tooltip HTML content</span>
+<span class="sd">                - options (dict, optional): Marker options (color, draggable, etc.)</span>
+<span class="sd">                - scale (float, optional): Marker scale factor (default: 1.0)</span>
+<span class="sd">            name: Display name for the layer in the layer control.</span>
+<span class="sd">                If None, uses layer_id.</span>
+<span class="sd">            visible: Whether the marker group should be visible initially.</span>
+<span class="sd">            opacity: Initial opacity for all markers in the group (0.0 to 1.0).</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; m = MapLibreMap()</span>
+<span class="sd">            &gt;&gt;&gt; markers = [</span>
+<span class="sd">            ...     {&quot;lng&quot;: -122.4, &quot;lat&quot;: 37.8, &quot;popup&quot;: &quot;San Francisco&quot;},</span>
+<span class="sd">            ...     {&quot;lng&quot;: -118.2, &quot;lat&quot;: 34.0, &quot;popup&quot;: &quot;Los Angeles&quot;},</span>
+<span class="sd">            ...     {&quot;lng&quot;: -122.3, &quot;lat&quot;: 47.6, &quot;popup&quot;: &quot;Seattle&quot;}</span>
+<span class="sd">            ... ]</span>
+<span class="sd">            &gt;&gt;&gt; m.add_marker_group(&quot;cities&quot;, markers, name=&quot;West Coast Cities&quot;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">display_name</span> <span class="o">=</span> <span class="n">name</span> <span class="k">if</span> <span class="n">name</span> <span class="k">else</span> <span class="n">layer_id</span>
+
+        <span class="c1"># Validate markers</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">marker</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">markers</span><span class="p">):</span>
+            <span class="k">if</span> <span class="s2">&quot;lng&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">marker</span> <span class="ow">or</span> <span class="s2">&quot;lat&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">marker</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Marker at index </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> missing required &#39;lng&#39; or &#39;lat&#39; coordinate&quot;</span>
+                <span class="p">)</span>
+
+        <span class="c1"># Store in layer_dict for layer control integration</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer_dict</span><span class="p">[</span><span class="n">layer_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;layer&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">layer_id</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;marker-group&quot;</span><span class="p">},</span>
+            <span class="s2">&quot;visible&quot;</span><span class="p">:</span> <span class="n">visible</span><span class="p">,</span>
+            <span class="s2">&quot;opacity&quot;</span><span class="p">:</span> <span class="n">opacity</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">display_name</span><span class="p">,</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;marker-group&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="c1"># Update layer controls</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_layer_controls</span><span class="p">()</span>
+
+        <span class="c1"># Send to JavaScript</span>
+        <span class="n">marker_group_data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;layerId&quot;</span><span class="p">:</span> <span class="n">layer_id</span><span class="p">,</span>
+            <span class="s2">&quot;markers&quot;</span><span class="p">:</span> <span class="n">markers</span><span class="p">,</span>
+            <span class="s2">&quot;visible&quot;</span><span class="p">:</span> <span class="n">visible</span><span class="p">,</span>
+            <span class="s2">&quot;opacity&quot;</span><span class="p">:</span> <span class="n">opacity</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addMarkerGroup&quot;</span><span class="p">,</span> <span class="n">marker_group_data</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">fit_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bounds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span> <span class="n">padding</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fit the map to given bounds.</span>
@@ -8310,6 +8417,15 @@ data sources, custom styling, and interactive features.</p>
 <span class="sd">        Args:</span>
 <span class="sd">            layer_id: Unique identifier for the layer to remove.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check if this is a marker group</span>
+        <span class="k">if</span> <span class="n">layer_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_dict</span><span class="p">:</span>
+            <span class="n">layer_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_dict</span><span class="p">[</span><span class="n">layer_id</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">layer_type</span> <span class="o">==</span> <span class="s2">&quot;marker-group&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;removeMarkerGroup&quot;</span><span class="p">,</span> <span class="n">layer_id</span><span class="p">)</span>
+                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_dict</span><span class="p">[</span><span class="n">layer_id</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_update_layer_controls</span><span class="p">()</span>
+                <span class="k">return</span>
+
         <span class="c1"># Remove from JavaScript map</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;removeLayer&quot;</span><span class="p">,</span> <span class="n">layer_id</span><span class="p">)</span>
 
@@ -14650,6 +14766,159 @@ For example, 0.5 makes the marker half size, 2.0 makes it double size.</p></td>
 
 
 
+<h3 id="anymap.maplibre.MapLibreMap.add_marker_group" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">add_marker_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer_id</span><span class="p">,</span> <span class="n">markers</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span></code>
+
+
+<a href="#anymap.maplibre.MapLibreMap.add_marker_group" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Add a group of markers as a controllable layer.</p>
+<p>This method adds multiple markers as a single layer that can be controlled
+through the layer control panel. All markers in the group share the same
+visibility and opacity settings.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>layer_id</code></td>
+        <td><code>str</code></td>
+        <td><p>Unique identifier for the marker group layer.</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>markers</code></td>
+        <td><code>List[Dict[str, Any]]</code></td>
+        <td><p>List of marker definitions. Each marker should be a dictionary with:
+- lng (float): Longitude coordinate
+- lat (float): Latitude coordinate
+- popup (str, optional): Popup HTML content
+- tooltip (str, optional): Tooltip HTML content
+- options (dict, optional): Marker options (color, draggable, etc.)
+- scale (float, optional): Marker scale factor (default: 1.0)</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>name</code></td>
+        <td><code>Optional[str]</code></td>
+        <td><p>Display name for the layer in the layer control.
+If None, uses layer_id.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>visible</code></td>
+        <td><code>bool</code></td>
+        <td><p>Whether the marker group should be visible initially.</p></td>
+        <td><code>True</code></td>
+      </tr>
+      <tr>
+        <td><code>opacity</code></td>
+        <td><code>float</code></td>
+        <td><p>Initial opacity for all markers in the group (0.0 to 1.0).</p></td>
+        <td><code>1.0</code></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">m</span> <span class="o">=</span> <span class="n">MapLibreMap</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">markers</span> <span class="o">=</span> <span class="p">[</span>
+<span class="o">...</span>     <span class="p">{</span><span class="s2">&quot;lng&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">122.4</span><span class="p">,</span> <span class="s2">&quot;lat&quot;</span><span class="p">:</span> <span class="mf">37.8</span><span class="p">,</span> <span class="s2">&quot;popup&quot;</span><span class="p">:</span> <span class="s2">&quot;San Francisco&quot;</span><span class="p">},</span>
+<span class="o">...</span>     <span class="p">{</span><span class="s2">&quot;lng&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">118.2</span><span class="p">,</span> <span class="s2">&quot;lat&quot;</span><span class="p">:</span> <span class="mf">34.0</span><span class="p">,</span> <span class="s2">&quot;popup&quot;</span><span class="p">:</span> <span class="s2">&quot;Los Angeles&quot;</span><span class="p">},</span>
+<span class="o">...</span>     <span class="p">{</span><span class="s2">&quot;lng&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">122.3</span><span class="p">,</span> <span class="s2">&quot;lat&quot;</span><span class="p">:</span> <span class="mf">47.6</span><span class="p">,</span> <span class="s2">&quot;popup&quot;</span><span class="p">:</span> <span class="s2">&quot;Seattle&quot;</span><span class="p">}</span>
+<span class="o">...</span> <span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">m</span><span class="o">.</span><span class="n">add_marker_group</span><span class="p">(</span><span class="s2">&quot;cities&quot;</span><span class="p">,</span> <span class="n">markers</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;West Coast Cities&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+        <details class="quote">
+          <summary>Source code in <code>anymap/maplibre.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_marker_group</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">layer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">markers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
+    <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">visible</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">opacity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a group of markers as a controllable layer.</span>
+
+<span class="sd">    This method adds multiple markers as a single layer that can be controlled</span>
+<span class="sd">    through the layer control panel. All markers in the group share the same</span>
+<span class="sd">    visibility and opacity settings.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        layer_id: Unique identifier for the marker group layer.</span>
+<span class="sd">        markers: List of marker definitions. Each marker should be a dictionary with:</span>
+<span class="sd">            - lng (float): Longitude coordinate</span>
+<span class="sd">            - lat (float): Latitude coordinate</span>
+<span class="sd">            - popup (str, optional): Popup HTML content</span>
+<span class="sd">            - tooltip (str, optional): Tooltip HTML content</span>
+<span class="sd">            - options (dict, optional): Marker options (color, draggable, etc.)</span>
+<span class="sd">            - scale (float, optional): Marker scale factor (default: 1.0)</span>
+<span class="sd">        name: Display name for the layer in the layer control.</span>
+<span class="sd">            If None, uses layer_id.</span>
+<span class="sd">        visible: Whether the marker group should be visible initially.</span>
+<span class="sd">        opacity: Initial opacity for all markers in the group (0.0 to 1.0).</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; m = MapLibreMap()</span>
+<span class="sd">        &gt;&gt;&gt; markers = [</span>
+<span class="sd">        ...     {&quot;lng&quot;: -122.4, &quot;lat&quot;: 37.8, &quot;popup&quot;: &quot;San Francisco&quot;},</span>
+<span class="sd">        ...     {&quot;lng&quot;: -118.2, &quot;lat&quot;: 34.0, &quot;popup&quot;: &quot;Los Angeles&quot;},</span>
+<span class="sd">        ...     {&quot;lng&quot;: -122.3, &quot;lat&quot;: 47.6, &quot;popup&quot;: &quot;Seattle&quot;}</span>
+<span class="sd">        ... ]</span>
+<span class="sd">        &gt;&gt;&gt; m.add_marker_group(&quot;cities&quot;, markers, name=&quot;West Coast Cities&quot;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">display_name</span> <span class="o">=</span> <span class="n">name</span> <span class="k">if</span> <span class="n">name</span> <span class="k">else</span> <span class="n">layer_id</span>
+
+    <span class="c1"># Validate markers</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">marker</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">markers</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s2">&quot;lng&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">marker</span> <span class="ow">or</span> <span class="s2">&quot;lat&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">marker</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Marker at index </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> missing required &#39;lng&#39; or &#39;lat&#39; coordinate&quot;</span>
+            <span class="p">)</span>
+
+    <span class="c1"># Store in layer_dict for layer control integration</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">layer_dict</span><span class="p">[</span><span class="n">layer_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;layer&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">layer_id</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;marker-group&quot;</span><span class="p">},</span>
+        <span class="s2">&quot;visible&quot;</span><span class="p">:</span> <span class="n">visible</span><span class="p">,</span>
+        <span class="s2">&quot;opacity&quot;</span><span class="p">:</span> <span class="n">opacity</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">display_name</span><span class="p">,</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;marker-group&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Update layer controls</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_update_layer_controls</span><span class="p">()</span>
+
+    <span class="c1"># Send to JavaScript</span>
+    <span class="n">marker_group_data</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;layerId&quot;</span><span class="p">:</span> <span class="n">layer_id</span><span class="p">,</span>
+        <span class="s2">&quot;markers&quot;</span><span class="p">:</span> <span class="n">markers</span><span class="p">,</span>
+        <span class="s2">&quot;visible&quot;</span><span class="p">:</span> <span class="n">visible</span><span class="p">,</span>
+        <span class="s2">&quot;opacity&quot;</span><span class="p">:</span> <span class="n">opacity</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addMarkerGroup&quot;</span><span class="p">,</span> <span class="n">marker_group_data</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
 <h3 id="anymap.maplibre.MapLibreMap.add_measures_control" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">add_measures_control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s1">&#39;top-left&#39;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;metric&#39;</span><span class="p">,</span> <span class="n">area_button_title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">length_button_title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">clear_button_title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
@@ -20010,6 +20279,15 @@ work, please save or export it before calling this method.</p>
 <span class="sd">    Args:</span>
 <span class="sd">        layer_id: Unique identifier for the layer to remove.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Check if this is a marker group</span>
+    <span class="k">if</span> <span class="n">layer_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_dict</span><span class="p">:</span>
+        <span class="n">layer_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_dict</span><span class="p">[</span><span class="n">layer_id</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">layer_type</span> <span class="o">==</span> <span class="s2">&quot;marker-group&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;removeMarkerGroup&quot;</span><span class="p">,</span> <span class="n">layer_id</span><span class="p">)</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_dict</span><span class="p">[</span><span class="n">layer_id</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_layer_controls</span><span class="p">()</span>
+            <span class="k">return</span>
+
     <span class="c1"># Remove from JavaScript map</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;removeLayer&quot;</span><span class="p">,</span> <span class="n">layer_id</span><span class="p">)</span>
 
@@ -20776,6 +21054,15 @@ Use GeoJSON or GPKG formats for mixed geometry types.</p>
 <span class="sd">        layer_id: Unique identifier of the layer.</span>
 <span class="sd">        opacity: Opacity value between 0.0 (transparent) and 1.0 (opaque).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Check if this is a marker group</span>
+    <span class="k">if</span> <span class="n">layer_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_dict</span><span class="p">:</span>
+        <span class="n">layer_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_dict</span><span class="p">[</span><span class="n">layer_id</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">layer_type</span> <span class="o">==</span> <span class="s2">&quot;marker-group&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">layer_dict</span><span class="p">[</span><span class="n">layer_id</span><span class="p">][</span><span class="s2">&quot;opacity&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">opacity</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;setMarkerGroupOpacity&quot;</span><span class="p">,</span> <span class="n">layer_id</span><span class="p">,</span> <span class="n">opacity</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_layer_controls</span><span class="p">()</span>
+            <span class="k">return</span>
+
     <span class="n">layer_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_layer_type</span><span class="p">(</span><span class="n">layer_id</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">layer_id</span> <span class="o">==</span> <span class="s2">&quot;Background&quot;</span><span class="p">:</span>
@@ -21328,6 +21615,15 @@ Use GeoJSON or GPKG formats for mixed geometry types.</p>
 <span class="sd">        layer_id: Unique identifier of the layer.</span>
 <span class="sd">        visible: Whether the layer should be visible.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Check if this is a marker group</span>
+    <span class="k">if</span> <span class="n">layer_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_dict</span><span class="p">:</span>
+        <span class="n">layer_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_dict</span><span class="p">[</span><span class="n">layer_id</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">layer_type</span> <span class="o">==</span> <span class="s2">&quot;marker-group&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">layer_dict</span><span class="p">[</span><span class="n">layer_id</span><span class="p">][</span><span class="s2">&quot;visible&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">visible</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;setMarkerGroupVisibility&quot;</span><span class="p">,</span> <span class="n">layer_id</span><span class="p">,</span> <span class="n">visible</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_layer_controls</span><span class="p">()</span>
+            <span class="k">return</span>
+
     <span class="k">if</span> <span class="n">visible</span><span class="p">:</span>
         <span class="n">visibility</span> <span class="o">=</span> <span class="s2">&quot;visible&quot;</span>
     <span class="k">else</span><span class="p">:</span>
