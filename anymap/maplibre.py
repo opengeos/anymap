@@ -1326,6 +1326,10 @@ class MapLibreMap(MapWidget):
         panel_width: int = 320,
         panel_min_width: int = 220,
         panel_max_width: int = 420,
+        panel_max_height: Optional[Union[int, str]] = None,
+        auto_panel_width: bool = False,
+        header_bg: Optional[str] = None,
+        header_text_color: Optional[str] = None,
         control_id: Optional[str] = None,
         description: Optional[str] = None,
     ) -> str:
@@ -1346,10 +1350,14 @@ class MapLibreMap(MapWidget):
             panel_width: Default panel width in pixels.
             panel_min_width: Minimum panel width in pixels when resized on the front-end.
             panel_max_width: Maximum panel width in pixels when resized on the front-end.
+            panel_max_height: Maximum panel height. Can be an int (pixels) or a CSS string (e.g., '70vh', '500px').
+                Defaults to None, which uses the JavaScript default of '70vh'.
+            auto_panel_width: Whether the panel width should be automatically adjusted to the content width. Defaults to False.
+            header_bg: The background color of the header, like "linear-gradient(135deg,#444,#888)". Defaults to None.
+            header_text_color: The text color of the header, like "#fff". Defaults to None.
             control_id: Optional identifier used for duplicate detection and later removal.
                 If omitted, a unique identifier is generated from the label.
             description: Optional tooltip description for the toggle button.
-
         Returns:
             str: The unique identifier assigned to the widget control.
 
@@ -1386,9 +1394,19 @@ class MapLibreMap(MapWidget):
             "panelWidth": panel_width,
             "panelMinWidth": panel_min_width,
             "panelMaxWidth": panel_max_width,
+            "autoWidth": auto_panel_width,
+            "headerBg": header_bg,
+            "headerTextColor": header_text_color,
             "control_id": control_id,
             "widget_model_id": widget_id,
         }
+
+        if panel_max_height is not None:
+            control_options["maxHeight"] = (
+                panel_max_height
+                if isinstance(panel_max_height, str)
+                else f"{panel_max_height}px"
+            )
 
         if description:
             control_options["description"] = description
@@ -5405,6 +5423,10 @@ class MapLibreMap(MapWidget):
         collapsed: bool = True,
         builtin_legend: Optional[str] = None,
         shape_type: str = "rectangle",
+        header_color: Optional[str] = None,
+        header_text_color: Optional[str] = None,
+        responsive: Optional[bool] = True,
+        max_height: int = 380,
         **kwargs: Union[str, int, float],
     ) -> None:
         """
@@ -5429,6 +5451,10 @@ class MapLibreMap(MapWidget):
             collapsed (bool, optional): Whether the legend is collapsed by default. Defaults to True.
             builtin_legend (Optional[str], optional): The name of a built-in legend to use. Available options: "NLCD", "NWI". Defaults to None.
             shape_type (str, optional): The shape type of the legend items. Can be one of "rectangle", "circle", or "line". Defaults to "rectangle".
+            header_color (str, optional): The background color of the legend header, like "linear-gradient(135deg,#444,#888)". Defaults to None.
+            header_text_color (str, optional): The text color of the legend header, like "#fff". Defaults to None.
+            responsive (bool, optional): Whether the legend is responsive. Defaults to True.
+            max_height (int, optional): Maximum height of the legend content area in pixels. Defaults to 380.
             **kwargs: Any
         """
         if shape_type is not None and shape_type not in ["rectangle", "circle", "line"]:
@@ -5529,12 +5555,14 @@ class MapLibreMap(MapWidget):
             legend_items.append(item_html)
 
         # Create a VBox container for legend items
+        # Subtract space for panel header (~60px) from panel_max_height
+        # This ensures the legend content scrolls properly within the panel
+        legend_content_height = max(100, max_height - 60)
         legend_vbox = widgets.VBox(
             legend_items,
             layout=widgets.Layout(
                 width="fit-content",
-                max_width="300px",
-                max_height="400px",
+                max_height=f"{legend_content_height}px",
                 overflow_y="auto",
                 overflow_x="hidden",
                 padding="8px",
@@ -5544,12 +5572,71 @@ class MapLibreMap(MapWidget):
             ),
         )
 
+        # Determine responsiveness: default to responsive unless user supplied panel_width
+        if responsive is None:
+            auto_flag = "panel_width" not in kwargs and "auto_panel_width" not in kwargs
+        else:
+            auto_flag = bool(responsive)
+
+        # Build options
+        control_kwargs: Dict[str, Union[str, int, float, bool]] = dict(kwargs)
+        control_kwargs.update(
+            {
+                "position": position,
+                "label": title,
+                "icon": icon,
+                "collapsed": collapsed,
+                "header_bg": header_color,
+                "header_text_color": header_text_color,
+                "panel_max_height": max_height,
+            }
+        )
+
+        # Configure width behavior based on responsive setting
+        if auto_flag:
+            # Responsive mode: use auto width with min/max constraints
+            control_kwargs.setdefault(
+                "panel_min_width", 100
+            )  # Minimum width for legend items (reduced for short text)
+            control_kwargs.setdefault(
+                "panel_max_width", 500
+            )  # Reasonable maximum width
+            control_kwargs["auto_panel_width"] = True
+        else:
+            # Fixed width mode: ensure auto_panel_width is False
+            control_kwargs["auto_panel_width"] = False
+            # Use default panel_width if not specified
+            control_kwargs.setdefault("panel_width", 320)
+
+        # Extract parameters for add_widget_control
+        widget_control_params = {
+            "label": control_kwargs.pop("label"),
+            "icon": control_kwargs.pop("icon"),
+            "position": control_kwargs.pop("position"),
+            "collapsed": control_kwargs.pop("collapsed"),
+            "auto_panel_width": control_kwargs.pop("auto_panel_width"),
+            "header_bg": control_kwargs.pop("header_bg", None),
+            "header_text_color": control_kwargs.pop("header_text_color", None),
+        }
+
+        # Add panel width parameters if specified
+        if "panel_width" in control_kwargs:
+            widget_control_params["panel_width"] = control_kwargs.pop("panel_width")
+        if "panel_min_width" in control_kwargs:
+            widget_control_params["panel_min_width"] = control_kwargs.pop(
+                "panel_min_width"
+            )
+        if "panel_max_width" in control_kwargs:
+            widget_control_params["panel_max_width"] = control_kwargs.pop(
+                "panel_max_width"
+            )
+        if "panel_max_height" in control_kwargs:
+            widget_control_params["panel_max_height"] = control_kwargs.pop(
+                "panel_max_height"
+            )
+
         # Add legend as a widget control at the specified position
         self.add_widget_control(
             legend_vbox,
-            position=position,
-            label=title,
-            icon=icon,
-            collapsed=collapsed,
-            **kwargs,
+            **widget_control_params,
         )
