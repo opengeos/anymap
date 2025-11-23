@@ -752,6 +752,7 @@
                 gear.appendChild(menu);
                 gear.addEventListener('click', (ev) => {{
                     ev.stopPropagation();
+                    document.querySelectorAll('.layer-control-menu.open').forEach(m => m.classList.remove('open'));
                     menu.classList.toggle('open');
                 }});
                 document.addEventListener('click', () => {{
