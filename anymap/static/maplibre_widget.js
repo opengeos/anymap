@@ -5721,6 +5721,7 @@ const pointInPolygon = (pt, poly) => {
                                   }
                                 }
                               } catch (_e) {
+                                console.warn('Info button workaround failed:', _e);
                                 this._activatingWorkaround = false;
                               }
                             }, 50);
