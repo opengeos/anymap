@@ -4349,16 +4349,21 @@ class MapLibreMap(MapWidget):
         with open(template_path, "r", encoding="utf-8") as f:
             template_content = f.read()
 
+        # Normalize double braces used to escape Python str.format in template assets.
+        # We now do manual placeholder substitution, so convert '{{' -> '{' and '}}' -> '}'.
+        # This fixes invalid CSS/JS like 'body {{ ... }}' and '${{x}}' in the exported HTML.
+        template_content = template_content.replace("{{", "{").replace("}}", "}")
+
         # Serialize map state for JavaScript
         map_state_json = json.dumps(map_state, indent=2)
 
-        # Replace placeholders with actual values
-        html_template = template_content.format(
-            title=title,
-            width=map_state["width"],
-            height=map_state["height"],
-            map_state_json=map_state_json,
-        )
+        # Replace placeholders with actual values using safe string replacement
+        # to avoid conflicts with single-brace usage throughout the template.
+        html_template = template_content
+        html_template = html_template.replace("{title}", str(title))
+        html_template = html_template.replace("{width}", str(map_state["width"]))
+        html_template = html_template.replace("{height}", str(map_state["height"]))
+        html_template = html_template.replace("{map_state_json}", map_state_json)
 
         return html_template
 
@@ -5337,6 +5342,8 @@ class MapLibreMap(MapWidget):
             "_controls": dict(self._controls),
             "_terrain": dict(self._terrain),
             "_deckgl_layers": dict(self._deckgl_layers),  # Include DeckGL layers
+            # Include recorded JS calls so we can faithfully reconstruct dynamic elements
+            "_js_calls": list(self._js_calls),
         }
 
         # Add class-specific attributes
@@ -5352,6 +5359,28 @@ class MapLibreMap(MapWidget):
             map_state["_draw_data"] = dict(self._draw_data)
         if hasattr(self, "_terra_draw_data"):
             map_state["_terra_draw_data"] = dict(self._terra_draw_data)
+        # Persist Geoman data if available
+        if hasattr(self, "geoman_data"):
+            try:
+                map_state["geoman_data"] = dict(self.geoman_data)
+            except Exception:
+                # Best-effort; skip if not serializable
+                pass
+        # Extract last requested fitBounds to guarantee initial viewport in export
+        try:
+            last_fit = None
+            for call in self._js_calls:  # type: ignore[attr-defined]
+                if isinstance(call, dict) and call.get("method") == "fitBounds":
+                    last_fit = call
+            if last_fit:
+                args = last_fit.get("args") or []
+                if isinstance(args, (list, tuple)) and len(args) >= 1:
+                    map_state["_initial_fit_bounds"] = args[0]
+                    if len(args) >= 2 and isinstance(args[1], dict):
+                        map_state["_initial_fit_bounds_options"] = args[1]
+        except Exception:
+            # Non-fatal if inspection fails
+            pass
 
         # Generate HTML content
         html_content = self._generate_html_template(map_state, title, **kwargs)
@@ -5360,8 +5389,8 @@ class MapLibreMap(MapWidget):
         if filename:
             with open(filename, "w", encoding="utf-8") as f:
                 f.write(html_content)
-
-        return html_content
+        else:
+            return html_content
 
     def add_legend(
         self,

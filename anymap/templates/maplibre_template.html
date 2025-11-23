@@ -140,6 +140,69 @@
                 border-bottom: none;
             }}
 
+            .layer-control-gear {{
+                width: 16px;
+                height: 16px;
+                margin-left: 6px;
+                opacity: 0.8;
+                background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23333"><path d="M19.14,12.94a7.43,7.43,0,0,0,.05-.94,7.43,7.43,0,0,0-.05-.94l2.11-1.65a.5.5,0,0,0,.12-.64l-2-3.46a.5.5,0,0,0-.6-.22l-2.49,1a7.37,7.37,0,0,0-1.63-.94L14.5,2.5a.5.5,0,0,0-.5-.5H10a.5.5,0,0,0-.5.5l-.28,2.59a7.37,7.37,0,0,0-1.63.94l-2.49-1a.5.5,0,0,0-.6.22l-2,3.46a.5.5,0,0,0,.12.64L2.73,11.06a7.43,7.43,0,0,0-.05.94,7.43,7.43,0,0,0,.05.94L.62,14.59a.5.5,0,0,0-.12.64l2,3.46a.5.5,0,0,0,.6.22l2.49-1a7.37,7.37,0,0,0,1.63.94L9.5,21.5a.5.5,0,0,0,.5.5h4a.5.5,0,0,0,.5-.5l.28-2.59a7.37,7.37,0,0,0,1.63-.94l2.49,1a.5.5,0,0,0,.6-.22l2-3.46a.5.5,0,0,0-.12-.64ZM12,15.5A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z"/></svg>');
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: 16px 16px;
+            }}
+
+            .layer-control-width {{
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 6px 0 4px 0;
+                font-size: 12px;
+                color: #333;
+            }}
+
+            .layer-control-width .width-slider {{
+                flex: 1;
+                height: 16px;
+                margin: 0;
+            }}
+
+            .layer-control-width .width-value {{
+                width: 42px;
+                text-align: right;
+                color: #666;
+            }}
+
+            .layer-control-menu {{
+                position: absolute;
+                right: 0;
+                top: 100%;
+                margin-top: 4px;
+                background: #fff;
+                border-radius: 4px;
+                box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+                z-index: 1000;
+                display: none;
+                min-width: 140px;
+                font-size: 12px;
+                color: #333;
+                overflow: hidden;
+            }}
+            .layer-control-menu.open {{
+                display: block;
+            }}
+            .layer-control-menu button {{
+                display: block;
+                width: 100%;
+                text-align: left;
+                background: none;
+                border: none;
+                padding: 8px 10px;
+                cursor: default !important;
+            }}
+            .layer-control-menu button:hover {{
+                background: rgba(0, 0, 0, 0.05);
+            }}
+
             .layer-control-checkbox {{
                 margin-right: 8px;
                 cursor: default !important;
@@ -222,6 +285,12 @@
         <link
             rel="stylesheet"
             href="https://www.unpkg.com/@mapbox/mapbox-gl-draw@1.5.0/dist/mapbox-gl-draw.css"
+        />
+        <!-- MapLibre Geoman (drawing/editing) -->
+        <script src="https://cdn.jsdelivr.net/npm/@geoman-io/maplibre-geoman-free@latest/dist/maplibre-geoman.umd.js"></script>
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/@geoman-io/maplibre-geoman-free@latest/dist/maplibre-geoman.css"
         />
         <!-- Terra Draw libraries -->
         <script src="https://cdn.jsdelivr.net/npm/@watergis/maplibre-gl-terradraw@1.0.1/dist/maplibre-gl-terradraw.umd.js"></script>
@@ -485,6 +554,34 @@
                     header.textContent = 'Layers';
                     this.panel.appendChild(header);
 
+                    // Width slider row
+                    const widthRow = document.createElement('div');
+                    widthRow.className = 'layer-control-width';
+                    const widthLabel = document.createElement('span');
+                    widthLabel.textContent = 'Width';
+                    const widthSlider = document.createElement('input');
+                    widthSlider.type = 'range';
+                    widthSlider.min = '220';
+                    widthSlider.max = '420';
+                    widthSlider.step = '10';
+                    // Initialize from current computed width or fallback
+                    const initialWidth = Math.max(220, Math.min(420, Math.round(this.panel.getBoundingClientRect().width || 320)));
+                    widthSlider.value = String(initialWidth);
+                    const widthValue = document.createElement('span');
+                    widthValue.className = 'width-value';
+                    widthValue.textContent = `${{initialWidth}}px`;
+                    widthSlider.className = 'width-slider';
+                    widthSlider.addEventListener('input', () => {{
+                        const w = parseInt(widthSlider.value, 10);
+                        this.panel.style.minWidth = `${{w}}px`;
+                        this.panel.style.maxWidth = `${{w}}px`;
+                        widthValue.textContent = `${{w}}px`;
+                    }});
+                    widthRow.appendChild(widthLabel);
+                    widthRow.appendChild(widthSlider);
+                    widthRow.appendChild(widthValue);
+                    this.panel.appendChild(widthRow);
+
                     // Build layer items
                     this.buildLayerItems();
 
@@ -578,9 +675,93 @@
                         opacity.title = `Opacity: ${{Math.round(opacity.value * 100)}}%`;
                     }});
 
+                    // Gear icon (decorative / placeholder)
+                    const gear = document.createElement('span');
+                    gear.className = 'layer-control-gear';
+                    gear.title = 'Layer options';
+                gear.style.position = 'relative';
+
+                // Simple popup menu
+                const menu = document.createElement('div');
+                menu.className = 'layer-control-menu';
+                const zoomBtn = document.createElement('button');
+                zoomBtn.type = 'button';
+                zoomBtn.textContent = 'Zoom to layer';
+                zoomBtn.addEventListener('click', () => {{
+                    try {{
+                        // Find the source for the layer
+                        const layer = this.map.getStyle().layers.find(l => l.id === layerId);
+                        const sourceId = layer && layer.source;
+                        if (!sourceId) {{
+                            console.warn('No source for layer', layerId);
+                            return;
+                        }}
+                        const srcCfg = (mapState._sources || {{}})[sourceId];
+                        if (!srcCfg) {{
+                            console.warn('No source config found for', sourceId);
+                            return;
+                        }}
+                        if (srcCfg.type === 'geojson' && srcCfg.data) {{
+                            const bbox = (function computeBbox(geojson) {{
+                                let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+                                function processCoords(coords) {{
+                                    for (let i = 0; i < coords.length; i++) {{
+                                        const c = coords[i];
+                                        if (Array.isArray(c) && typeof c[0] === 'number' && typeof c[1] === 'number') {{
+                                            const x = c[0], y = c[1];
+                                            if (x < minX) minX = x;
+                                            if (y < minY) minY = y;
+                                            if (x > maxX) maxX = x;
+                                            if (y > maxY) maxY = y;
+                                        }} else if (Array.isArray(c)) {{
+                                            processCoords(c);
+                                        }}
+                                    }}
+                                }}
+                                function walk(g) {{
+                                    if (!g) return;
+                                    const type = g.type;
+                                    if (type === 'FeatureCollection') {{
+                                        (g.features || []).forEach(f => walk(f));
+                                    }} else if (type === 'Feature') {{
+                                        walk(g.geometry);
+                                    }} else {{
+                                        processCoords(g.coordinates || []);
+                                    }}
+                                }}
+                                walk(geojson);
+                                if (minX === Infinity) return null;
+                                return [[minX, minY], [maxX, maxY]];
+                            }})(srcCfg.data);
+                            if (bbox) {{
+                                this.map.fitBounds(bbox, {{ padding: 50 }});
+                            }} else {{
+                                console.warn('Could not compute bbox for layer', layerId);
+                            }}
+                        }} else {{
+                            // Fallback: try the map API in case source is not GeoJSON
+                            console.warn('Zoom to layer currently supports GeoJSON sources only.');
+                        }}
+                    }} catch (e) {{
+                        console.warn('Failed to zoom to layer:', e);
+                    }} finally {{
+                        menu.classList.remove('open');
+                    }}
+                }});
+                menu.appendChild(zoomBtn);
+                gear.appendChild(menu);
+                gear.addEventListener('click', (ev) => {{
+                    ev.stopPropagation();
+                    menu.classList.toggle('open');
+                }});
+                document.addEventListener('click', () => {{
+                    menu.classList.remove('open');
+                }});
+
                     item.appendChild(checkbox);
                     item.appendChild(name);
                     item.appendChild(opacity);
+                    item.appendChild(gear);
 
                     this.panel.appendChild(item);
                 }}
@@ -864,6 +1045,56 @@
                             // Handle layer control restoration
                             control = new LayerControl(controlOptions || {{}}, map);
                             break;
+                        case 'html':
+                            (function() {{
+                                const opts = controlOptions || {{}};
+                                const container = document.createElement('div');
+                                container.className = 'maplibregl-ctrl';
+                                container.style.background = (opts.bgColor || 'white');
+                                container.style.padding = '6px';
+                                container.style.borderRadius = '4px';
+                                if (opts.html) {{
+                                    container.innerHTML = opts.html;
+                                }} else {{
+                                    container.textContent = opts.text || '';
+                                }}
+                                control = {{
+                                    onAdd: function() {{ return container; }},
+                                    onRemove: function() {{ if (container.parentNode) {{ container.parentNode.removeChild(container); }} }}
+                                }};
+                            }})();
+                            break;
+                        case 'geoman':
+                            (function() {{
+                                try {{
+                                    const GeomanConstructor = (window.Geoman && (window.Geoman.Geoman || window.Geoman)) || null;
+                                    if (!GeomanConstructor) {{
+                                        console.warn('Geoman constructor unavailable; skipping geoman control restore');
+                                        return;
+                                    }}
+                                    const gmOptions = (controlOptions && controlOptions.geoman_options) || {{}};
+                                    const settings = gmOptions.settings || {{}};
+                                    if (!settings.position && controlOptions && controlOptions.position) {{
+                                        gmOptions.settings = {{ ...settings, position: controlOptions.position }};
+                                    }}
+                                    new GeomanConstructor(map, gmOptions);
+                                    if (mapState.geoman_data && map && map.gm && map.gm.features && typeof map.gm.features.importGeoJson === 'function') {{
+                                        try {{
+                                            map.gm.features.importGeoJson(mapState.geoman_data);
+                                        }} catch (e) {{
+                                            console.warn('Failed to import saved geoman_data:', e);
+                                        }}
+                                    }}
+                                    control = {{
+                                        onAdd: function() {{ return document.createElement('div'); }},
+                                        onRemove: function() {{}}
+                                    }};
+                                }} catch (e) {{
+                                    console.warn('Failed to initialize Geoman control in export:', e);
+                                    return;
+                                }}
+                            }})();
+                            break;
                         case 'geocoder':
                             // Handle geocoder control restoration
                             if (typeof MaplibreGeocoder !== 'undefined') {{
@@ -950,6 +1181,17 @@
                     console.warn(`Failed to add control ${{controlKey}}:`, error);
                 }}
             }});
+
+            // Apply initial fit bounds if present (ensures viewport even if replay fails)
+            const initialBounds = mapState._initial_fit_bounds;
+            if (initialBounds && Array.isArray(initialBounds) && initialBounds.length === 2) {{
+                try {{
+                    const initialOptions = mapState._initial_fit_bounds_options || {{}};
+                    map.fitBounds(initialBounds, initialOptions);
+                }} catch (e) {{
+                    console.warn('Failed to apply initial fit bounds:', e);
+                }}
+            }}
 
             // Initialize DeckGL layers if present
             const deckglLayers = mapState._deckgl_layers || {{}};
@@ -1083,6 +1325,162 @@
             map.on('error', function(e) {{
                 console.error('Map error:', e);
             }});
+
+            // Replay essential JavaScript calls recorded from the Python session
+            (function replayJsCalls() {{
+                const jsCalls = mapState._js_calls || [];
+                if (!Array.isArray(jsCalls) || jsCalls.length === 0) {{
+                    return;
+                }}
+
+                // Simple marker and marker-group support for export
+                const markerGroups = {{}};
+                window.__anymap_marker_groups__ = markerGroups;
+
+                function createMarker(opts) {{
+                    const m = new maplibregl.Marker((opts && opts.options) || {{}})
+                        .setLngLat(opts.coordinates);
+                    if (opts.tooltip) {{
+                        // Tooltips are not native in MapLibre; use title attribute
+                        const el = m.getElement();
+                        el.title = opts.tooltip;
+                    }}
+                    if (opts.popup) {{
+                        try {{
+                            m.setPopup(new maplibregl.Popup().setHTML(String(opts.popup)));
+                        }} catch (e) {{
+                            console.warn('Failed to attach popup to marker:', e);
+                        }}
+                    }}
+                    m.addTo(map);
+                    if (opts.options && typeof opts.options.opacity === 'number') {{
+                        try {{
+                            m.getElement().style.opacity = String(opts.options.opacity);
+                        }} catch (e) {{}}
+                    }}
+                    return m;
+                }}
+
+                function handleAddMarker(args) {{
+                    const data = (args && args[0]) || null;
+                    if (!data || !Array.isArray(data.coordinates)) return;
+                    createMarker(data);
+                }}
+
+                function handleAddMarkerGroup(args) {{
+                    const cfg = (args && args[0]) || null;
+                    if (!cfg || !cfg.layerId) return;
+                    const items = [];
+                    (cfg.markers || []).forEach((mk) => {{
+                        try {{
+                            items.push(createMarker(mk));
+                        }} catch (e) {{
+                            console.warn('Failed to create marker in group:', e);
+                        }}
+                    }});
+                    markerGroups[cfg.layerId] = {{
+                        items,
+                        visible: cfg.visible !== false,
+                        opacity: (typeof cfg.opacity === 'number' ? cfg.opacity : 1.0),
+                    }};
+                    // Apply initial visibility/opacity
+                    items.forEach((m) => {{
+                        const el = m.getElement();
+                        if (el) {{
+                            el.style.display = (cfg.visible === false) ? 'none' : '';
+                            el.style.opacity = String(markerGroups[cfg.layerId].opacity);
+                        }}
+                    }});
+                }}
+
+                function handleSetMarkerGroupVisibility(args) {{
+                    const id = args && args[0];
+                    const visible = args && args[1];
+                    const group = markerGroups[id];
+                    if (!group) return;
+                    group.visible = !!visible;
+                    group.items.forEach((m) => {{
+                        const el = m.getElement();
+                        if (el) el.style.display = visible ? '' : 'none';
+                    }});
+                }}
+
+                function handleSetMarkerGroupOpacity(args) {{
+                    const id = args && args[0];
+                    const opacity = args && args[1];
+                    const group = markerGroups[id];
+                    if (!group || typeof opacity !== 'number') return;
+                    group.opacity = opacity;
+                    group.items.forEach((m) => {{
+                        const el = m.getElement();
+                        if (el) el.style.opacity = String(opacity);
+                    }});
+                }}
+
+                function handleUpdateHTML(args) {{
+                    // args: [control_key, html, bg_color]
+                    try {{
+                        const html = args && args[1];
+                        if (!html) return;
+                        // Try to find our control container by content match heuristic
+                        const ctrls = document.querySelectorAll('.maplibregl-ctrl');
+                        for (const c of ctrls) {{
+                            // Update only simple HTML controls we created
+                            if (!c.querySelector('.maplibregl-ctrl-group') && c.innerHTML) {{
+                                c.innerHTML = html;
+                            }}
+                        }}
+                    }} catch (e) {{
+                        console.warn('Failed to update HTML control during replay:', e);
+                    }}
+                }}
+
+                function handleFitBounds(args) {{
+                    try {{
+                        const bounds = args && args[0];
+                        const options = args && args[1];
+                        if (Array.isArray(bounds) && bounds.length === 2) {{
+                            map.fitBounds(bounds, options || {{}});
+                        }}
+                    }} catch (e) {{
+                        console.warn('Failed to apply fitBounds during replay:', e);
+                    }}
+                }}
+
+                map.on('load', function() {{
+                    jsCalls.forEach((call) => {{
+                        try {{
+                            const name = call && call.method;
+                            const args = (call && Array.isArray(call.args)) ? call.args : [];
+                            switch (name) {{
+                                case 'addMarker':
+                                    handleAddMarker(args);
+                                    break;
+                                case 'addMarkerGroup':
+                                    handleAddMarkerGroup(args);
+                                    break;
+                                case 'setMarkerGroupVisibility':
+                                    handleSetMarkerGroupVisibility(args);
+                                    break;
+                                case 'setMarkerGroupOpacity':
+                                    handleSetMarkerGroupOpacity(args);
+                                    break;
+                                case 'updateHTML':
+                                    handleUpdateHTML(args);
+                                    break;
+                                case 'fitBounds':
+                                    handleFitBounds(args);
+                                    break;
+                                default:
+                                    // No-op for calls already covered by serialized state (addSource/addLayer/addControl/etc.)
+                                    break;
+                            }}
+                        }} catch (e) {{
+                            console.warn('Failed to replay JS call:', call, e);
+                        }}
+                    }});
+                }});
+            }})();
         </script>
     </body>
 </html>
