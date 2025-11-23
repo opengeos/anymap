@@ -7641,9 +7641,25 @@ const pointInPolygon = (pt, poly) => {
           case 'addMarker':
             const markerData = args[0];
             const markerOptions = markerData.options || {};
+
+            // Extract scale option (not a native MapLibre option)
+            const markerScale = markerOptions.scale || 1.0;
+            delete markerOptions.scale; // Remove before passing to MapLibre
+
             const marker = new maplibregl.Marker(markerOptions)
               .setLngLat(markerData.coordinates)
               .addTo(map);
+
+            // Apply scale to the marker's inner element so MapLibre updates to the outer
+            // transform (positioning) do not overwrite the sizing.
+            if (markerScale !== 1.0) {
+              const markerElement = marker.getElement();
+              const markerInner = markerElement.querySelector('svg') || markerElement.firstElementChild;
+              if (markerInner) {
+                markerInner.style.transform = `scale(${markerScale})`;
+                markerInner.style.transformOrigin = 'center center';
+              }
+            }
 
             if (markerData.popup) {
               const popup = new maplibregl.Popup()
