@@ -5719,6 +5719,8 @@ const pointInPolygon = (pt, poly) => {
                                   } else {
                                     this._activatingWorkaround = false;
                                   }
+                                } else {
+                                  this._activatingWorkaround = false;
                                 }
                               } catch (_e) {
                                 console.warn('Info button workaround failed:', _e);
