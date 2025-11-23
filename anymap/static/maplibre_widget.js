@@ -7277,6 +7277,43 @@ const pointInPolygon = (pt, poly) => {
                 scheduleLegendInitialization(controlKey, { position, options: other }, map, el);
                 return;
               }
+              case 'html': {
+                // Restore HTML control
+                const htmlContent = controlOptions.html || '';
+                const bgColor = controlOptions.bgColor || 'white';
+
+                control = {
+                  onAdd(map) {
+                    const container = document.createElement('div');
+                    container.className = 'maplibregl-ctrl maplibregl-ctrl-group';
+                    container.style.background = bgColor;
+                    container.style.padding = '10px';
+                    container.style.borderRadius = '4px';
+                    container.style.boxShadow = '0 0 0 2px rgba(0,0,0,0.1)';
+                    container.innerHTML = htmlContent;
+                    this._container = container;
+                    return container;
+                  },
+                  onRemove() {
+                    if (this._container && this._container.parentNode) {
+                      this._container.parentNode.removeChild(this._container);
+                    }
+                    this._container = null;
+                  },
+                  updateHTML(newHTML) {
+                    if (this._container) {
+                      this._container.innerHTML = newHTML;
+                    }
+                  },
+                  updateBgColor(newColor) {
+                    if (this._container) {
+                      this._container.style.background = newColor;
+                    }
+                  }
+                };
+                console.log('HTML control restored successfully');
+                break;
+              }
               default:
                 console.warn(`Unknown control type during restore: ${controlType}`);
                 return;
@@ -7873,6 +7910,8 @@ const pointInPolygon = (pt, poly) => {
             }
             const controlKey = controlType === 'widget_panel'
               ? `widget_panel_${controlIdForKey}`
+              : controlType === 'html'
+              ? `html_${controlOptions?.control_id || `${position}_${Date.now()}`}`
               : `${controlType}_${position}`;
 
             // Normalize gradient options for multiple plugin builds
@@ -7901,7 +7940,12 @@ const pointInPolygon = (pt, poly) => {
             // Check if this control is already added
             if (el._controls.has(controlKey)) {
               const existingControl = el._controls.get(controlKey);
-              if (
+
+              // For HTML controls, remove and recreate instead of updating
+              if (controlType === 'html') {
+                map.removeControl(existingControl);
+                el._controls.delete(controlKey);
+              } else if (
                 existingControl &&
                 typeof existingControl.updateOptions === 'function' &&
                 controlOptions &&
@@ -7916,8 +7960,10 @@ const pointInPolygon = (pt, poly) => {
                     updateError,
                   );
                 }
+                return;
+              } else {
+                return;
               }
-              return;
             }
 
             let control;
@@ -8620,6 +8666,45 @@ const pointInPolygon = (pt, poly) => {
                   return;
                 }
                 break;
+
+              case 'html': {
+                // Create a custom HTML control
+                const htmlContent = controlOptions.html || '';
+                const bgColor = controlOptions.bgColor || 'white';
+
+                control = {
+                  onAdd(map) {
+                    const container = document.createElement('div');
+                    container.className = 'maplibregl-ctrl maplibregl-ctrl-group';
+                    container.style.background = bgColor;
+                    container.style.padding = '10px';
+                    container.style.borderRadius = '4px';
+                    container.style.boxShadow = '0 0 0 2px rgba(0,0,0,0.1)';
+                    container.innerHTML = htmlContent;
+                    this._container = container;
+                    return container;
+                  },
+                  onRemove() {
+                    if (this._container && this._container.parentNode) {
+                      this._container.parentNode.removeChild(this._container);
+                    }
+                    this._container = null;
+                  },
+                  updateHTML(newHTML) {
+                    if (this._container) {
+                      this._container.innerHTML = newHTML;
+                    }
+                  },
+                  updateBgColor(newColor) {
+                    if (this._container) {
+                      this._container.style.background = newColor;
+                    }
+                  }
+                };
+                console.log('HTML control added successfully');
+                break;
+              }
+
               default:
                 console.warn(`Unknown control type: ${controlType}`);
                 return;
@@ -8711,6 +8796,36 @@ const pointInPolygon = (pt, poly) => {
               } else {
                 console.warn(`Widget control ${widgetControlId} not found`);
               }
+            }
+            break;
+
+          case 'updateHTML':
+            const [updateControlKey, newHTML, newBgColor] = args;
+            if (el._controls.has(updateControlKey)) {
+              const htmlControl = el._controls.get(updateControlKey);
+              if (htmlControl && typeof htmlControl.updateHTML === 'function') {
+                htmlControl.updateHTML(newHTML);
+                if (newBgColor && typeof htmlControl.updateBgColor === 'function') {
+                  htmlControl.updateBgColor(newBgColor);
+                }
+                console.log(`HTML control ${updateControlKey} updated successfully`);
+              } else {
+                console.warn(`HTML control ${updateControlKey} does not support updates`);
+              }
+            } else {
+              console.warn(`HTML control ${updateControlKey} not found`);
+            }
+            break;
+
+          case 'removeHTML':
+            const [removeHtmlControlKey] = args;
+            if (el._controls.has(removeHtmlControlKey)) {
+              const htmlControl = el._controls.get(removeHtmlControlKey);
+              map.removeControl(htmlControl);
+              el._controls.delete(removeHtmlControlKey);
+              console.log(`HTML control ${removeHtmlControlKey} removed successfully`);
+            } else {
+              console.warn(`HTML control ${removeHtmlControlKey} not found`);
             }
             break;
 
