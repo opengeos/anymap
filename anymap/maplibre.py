@@ -1766,6 +1766,7 @@ class MapLibreMap(MapWidget):
         lng: float,
         lat: float,
         popup: Optional[str] = None,
+        tooltip: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         scale: float = 1.0,
     ) -> None:
@@ -1774,7 +1775,10 @@ class MapLibreMap(MapWidget):
         Args:
             lng: Longitude coordinate for the marker.
             lat: Latitude coordinate for the marker.
-            popup: Optional popup text to display when marker is clicked.
+            popup: Optional popup HTML to display when marker is clicked.
+                Supports HTML content including images.
+            tooltip: Optional tooltip HTML to display when hovering over marker.
+                Supports HTML content including images.
             options: Optional marker options forwarded to MapLibre GL JS.
                 This supports properties like color, draggable, and opacity.
             scale: Scale factor for marker size (default: 1.0, range: 0.1 to 3.0).
@@ -1787,6 +1791,7 @@ class MapLibreMap(MapWidget):
         marker_data = {
             "coordinates": [lng, lat],
             "popup": popup,
+            "tooltip": tooltip,
             "options": marker_options,
         }
         self.call_js_method("addMarker", marker_data)
