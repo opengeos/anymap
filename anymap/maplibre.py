@@ -1767,6 +1767,7 @@ class MapLibreMap(MapWidget):
         lat: float,
         popup: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
+        scale: float = 1.0,
     ) -> None:
         """Add a marker to the map.
 
@@ -1776,11 +1777,17 @@ class MapLibreMap(MapWidget):
             popup: Optional popup text to display when marker is clicked.
             options: Optional marker options forwarded to MapLibre GL JS.
                 This supports properties like color, draggable, and opacity.
+            scale: Scale factor for marker size (default: 1.0, range: 0.1 to 3.0).
+                For example, 0.5 makes the marker half size, 2.0 makes it double size.
         """
+        marker_options = dict(options) if options else {}
+        if "scale" not in marker_options:
+            marker_options["scale"] = scale
+
         marker_data = {
             "coordinates": [lng, lat],
             "popup": popup,
-            "options": options or {},
+            "options": marker_options,
         }
         self.call_js_method("addMarker", marker_data)
 

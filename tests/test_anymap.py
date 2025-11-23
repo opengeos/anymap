@@ -180,7 +180,7 @@ class TestMapLibreMap(unittest.TestCase):
 
     def test_add_marker(self):
         """Test adding a marker."""
-        marker_options = {"color": "#ff0000", "opacity": 0.8}
+        marker_options = {"color": "#ff0000", "opacity": 0.8, "scale": 1.0}
         self.map.add_marker(
             -74.0060,
             40.7128,
