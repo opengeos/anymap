@@ -7667,6 +7667,23 @@ const pointInPolygon = (pt, poly) => {
               marker.setPopup(popup);
             }
 
+            // Add tooltip support (shows on hover)
+            if (markerData.tooltip) {
+              const tooltip = new maplibregl.Popup({
+                closeButton: false,
+                closeOnClick: false,
+                className: 'marker-tooltip'
+              }).setHTML(markerData.tooltip);
+
+              const markerElement = marker.getElement();
+              markerElement.addEventListener('mouseenter', () => {
+                tooltip.setLngLat(markerData.coordinates).addTo(map);
+              });
+              markerElement.addEventListener('mouseleave', () => {
+                tooltip.remove();
+              });
+            }
+
             el._markers.push(marker);
             break;
 
