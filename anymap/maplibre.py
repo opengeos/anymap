@@ -2886,7 +2886,7 @@ class MapLibreMap(MapWidget):
         settings: Optional[Dict[str, Any]] = None,
         controls: Optional[Dict[str, Any]] = None,
         collapsed: Optional[bool] = False,
-        show_info_box: Optional[bool] = False,
+        show_info_box: Optional[bool] = None,
         info_box_mode: str = "click",
         info_box_tolerance: Optional[int] = None,
         paint: Optional[Dict[str, Any]] = None,
