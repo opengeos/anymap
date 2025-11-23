@@ -2931,9 +2931,15 @@ function render({ model, el }) {
   el.innerHTML = "";
   el.appendChild(container);
 
-  // Load and register protocols dynamically
-  const loadProtocols = async () => {
-    try {
+  let mapLibreReadyPromise = null;
+
+  // Ensure MapLibre core assets are available (JS + CSS) without blocking on optional plugins
+  const ensureMapLibreReady = async () => {
+    if (mapLibreReadyPromise) {
+      return mapLibreReadyPromise;
+    }
+
+    mapLibreReadyPromise = (async () => {
       // Load MapLibre GL JS first
       if (!window.maplibregl) {
         const maplibreScript = document.createElement('script');
@@ -3012,10 +3018,6 @@ function render({ model, el }) {
           throw new Error('MapLibre GL JS failed to load');
         }
 
-        if (!window.mapboxgl) {
-          window.mapboxgl = window.maplibregl;
-        }
-
         console.log("MapLibre GL JS loaded successfully");
       }
 
@@ -3030,6 +3032,16 @@ function render({ model, el }) {
         maplibreCSS.href = 'https://unpkg.com/maplibre-gl@5.10.0/dist/maplibre-gl.css';
         document.head.appendChild(maplibreCSS);
       }
+    })();
+
+    return mapLibreReadyPromise;
+  };
+
+  // Load and register protocols dynamically
+  const loadProtocols = async (coreReadyPromise) => {
+    // Wait for core assets but do not block map render on optional plugins
+    await (coreReadyPromise || ensureMapLibreReady());
+    try {
 
       // Load COG protocol
       if (!window.MaplibreCOGProtocol) {
@@ -3920,60 +3932,66 @@ function render({ model, el }) {
     }
   };
 
-  // Load protocols before initializing map
-  Promise.resolve()
-    .then(() => loadProtocols())
+  // Begin loading optional plugins but render the map as soon as the core library is ready
+  const coreReady = ensureMapLibreReady();
+  const protocolsReady = loadProtocols(coreReady);
+
+  coreReady
     .then(() => {
-      // Initialize MapLibre map after protocols are loaded
       const map = new maplibregl.Map({
         container: container,
         style: model.get("style"),
-      center: model.get("center"), // [lng, lat] format
-      zoom: model.get("zoom"),
-      bearing: model.get("bearing"),
-      pitch: model.get("pitch"),
-      antialias: model.get("antialias"),
-      doubleClickZoom: model.get("double_click_zoom"),
-      transformRequest: (url, resourceType) => {
-        // Add custom headers if specified
-        const customHeaders = model.get("request_headers");
-        if (customHeaders && Object.keys(customHeaders).length > 0) {
-          return {
-            url: url,
-            headers: customHeaders
-          };
+        center: model.get("center"), // [lng, lat] format
+        zoom: model.get("zoom"),
+        bearing: model.get("bearing"),
+        pitch: model.get("pitch"),
+        antialias: model.get("antialias"),
+        doubleClickZoom: model.get("double_click_zoom"),
+        transformRequest: (url, resourceType) => {
+          // Add custom headers if specified
+          const customHeaders = model.get("request_headers");
+          if (customHeaders && Object.keys(customHeaders).length > 0) {
+            return {
+              url: url,
+              headers: customHeaders
+            };
+          }
+          // Return undefined to use default behavior
+          return undefined;
         }
-        // Return undefined to use default behavior
-        return undefined;
-      }
-    });
+      });
 
-    // Force default cursor for all map interactions
-    map.on('load', () => {
-      const canvas = map.getCanvas();
-      canvas.style.cursor = 'default';
-    });
+      // Force default cursor for all map interactions
+      map.on('load', () => {
+        const canvas = map.getCanvas();
+        canvas.style.cursor = 'default';
+      });
 
-    // Store map instance for cleanup
-    el._map = map;
-    el._markers = [];
-    el._markerGroups = new Map(); // Track marker groups by layer ID
-    el._controls = new Map(); // Track added controls by type and position
-    el._drawControl = null; // Track draw control instance
-    el._terraDrawControl = null; // Track Terra Draw control instance
-    el._streetViewPlugins = new Map(); // Track Street View plugin instances
-    el._streetViewObservers = new Map(); // Track Street View mutation observers
-    el._streetViewHandlers = new Map(); // Track Street View event handlers
-    el._widgetId = widgetId;
-    el._mapReady = false; // Track if map is fully loaded
-    el._pendingCalls = []; // Queue for calls before map is ready
-    el._flatgeobufLayers = new Map();
-    el._flatgeobufLayerPromises = new Map();
-    el._pendingFlatGeobufSync = false;
-    el._featurePopupHandlers = new Map();
-    el._featurePopupConfigs = new Map();
-    el._featurePopupRetryTimer = null;
-    el._pendingGeomanData = normalizeGeomanGeoJson(model.get("geoman_data"));
+      // Store map instance for cleanup
+      el._map = map;
+      el._markers = [];
+      el._markerGroups = new Map(); // Track marker groups by layer ID
+      el._controls = new Map(); // Track added controls by type and position
+      el._drawControl = null; // Track draw control instance
+      el._terraDrawControl = null; // Track Terra Draw control instance
+      el._streetViewPlugins = new Map(); // Track Street View plugin instances
+      el._streetViewObservers = new Map(); // Track Street View mutation observers
+      el._streetViewHandlers = new Map(); // Track Street View event handlers
+      el._widgetId = widgetId;
+      el._mapReady = false; // Track if map is fully loaded
+      el._pendingCalls = []; // Queue for calls before map is ready
+      el._flatgeobufLayers = new Map();
+      el._flatgeobufLayerPromises = new Map();
+      el._pendingFlatGeobufSync = false;
+      el._featurePopupHandlers = new Map();
+      el._featurePopupConfigs = new Map();
+      el._featurePopupRetryTimer = null;
+      el._pendingGeomanData = normalizeGeomanGeoJson(model.get("geoman_data"));
+      el._protocolsPromise = protocolsReady;
+
+      protocolsReady.catch((error) => {
+        console.warn("Optional MapLibre plugins failed to load:", error);
+      });
 
     const exportGeomanData = () => {
       // Try map.gm first (v0.5.0+ API), then fallback to el._geomanInstance
