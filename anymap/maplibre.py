@@ -1349,10 +1349,12 @@ class MapLibreMap(MapWidget):
             panel_width: Default panel width in pixels.
             panel_min_width: Minimum panel width in pixels when resized on the front-end.
             panel_max_width: Maximum panel width in pixels when resized on the front-end.
+            auto_panel_width: Whether the panel width should be automatically adjusted to the content width. Defaults to False.
+            header_bg: The background color of the header, like "linear-gradient(135deg,#444,#888)". Defaults to None.
+            header_text_color: The text color of the header, like "#fff". Defaults to None.
             control_id: Optional identifier used for duplicate detection and later removal.
                 If omitted, a unique identifier is generated from the label.
             description: Optional tooltip description for the toggle button.
-
         Returns:
             str: The unique identifier assigned to the widget control.
 
@@ -5438,6 +5440,9 @@ class MapLibreMap(MapWidget):
             collapsed (bool, optional): Whether the legend is collapsed by default. Defaults to True.
             builtin_legend (Optional[str], optional): The name of a built-in legend to use. Available options: "NLCD", "NWI". Defaults to None.
             shape_type (str, optional): The shape type of the legend items. Can be one of "rectangle", "circle", or "line". Defaults to "rectangle".
+            header_color (str, optional): The background color of the legend header, like "linear-gradient(135deg,#444,#888)". Defaults to None.
+            header_text_color (str, optional): The text color of the legend header, like "#fff". Defaults to None.
+            responsive (bool, optional): Whether the legend is responsive. Defaults to True.
             **kwargs: Any
         """
         if shape_type is not None and shape_type not in ["rectangle", "circle", "line"]:
