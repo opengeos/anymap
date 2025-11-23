@@ -2356,6 +2356,96 @@ class MapLibreMap(MapWidget):
 
         self.call_js_method("addControl", control_type, control_options)
 
+    def add_html(
+        self,
+        html: str,
+        bg_color: str = "white",
+        position: str = "bottom-right",
+        control_id: Optional[str] = None,
+        **kwargs: Any,
+    ) -> None:
+        """Add an HTML element to the map.
+
+        Args:
+            html: HTML string to display
+            bg_color: Background color for the HTML container (default: 'white')
+            position: Position on map ('top-left', 'top-right', 'bottom-left', 'bottom-right')
+            control_id: Optional unique identifier for the control. If not provided, one will be generated.
+            **kwargs: Additional options passed to the control
+        """
+        # Generate control_id if not provided
+        if control_id is None:
+            control_id = f"html_{position}_{uuid.uuid4().hex[:6]}"
+
+        # Check if control already exists and remove it first
+        current_controls = dict(self._controls)
+        control_key = f"html_{control_id}"
+        if control_key in current_controls:
+            self.remove_html(control_id)
+            current_controls = dict(self._controls)
+
+        control_options = dict(kwargs)
+        control_options.update(
+            {
+                "html": html,
+                "bgColor": bg_color,
+                "position": position,
+                "control_id": control_id,
+            }
+        )
+
+        # Store control in persistent state
+        current_controls[control_key] = {
+            "type": "html",
+            "position": position,
+            "options": control_options,
+        }
+        self._controls = current_controls
+
+        self.call_js_method("addControl", "html", control_options)
+
+    def update_html(
+        self,
+        control_id: str,
+        html: str,
+        bg_color: Optional[str] = None,
+    ) -> None:
+        """Update an existing HTML control.
+
+        Args:
+            control_id: The control ID used when adding the HTML control
+            html: New HTML string to display
+            bg_color: Optional new background color for the HTML container
+        """
+        # Update persistent state
+        control_key = f"html_{control_id}"
+        current_controls = dict(self._controls)
+        if control_key in current_controls:
+            current_controls[control_key]["options"]["html"] = html
+            if bg_color is not None:
+                current_controls[control_key]["options"]["bgColor"] = bg_color
+            self._controls = current_controls
+
+        self.call_js_method("updateHTML", control_key, html, bg_color)
+
+    def remove_html(
+        self,
+        control_id: str,
+    ) -> None:
+        """Remove an HTML control from the map.
+
+        Args:
+            control_id: The control ID used when adding the HTML control
+        """
+        # Remove from persistent state
+        control_key = f"html_{control_id}"
+        current_controls = dict(self._controls)
+        if control_key in current_controls:
+            del current_controls[control_key]
+            self._controls = current_controls
+
+        self.call_js_method("removeHTML", control_key)
+
     def remove_control(
         self,
         control_type: str,
