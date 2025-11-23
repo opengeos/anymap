@@ -2112,6 +2112,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.add_html" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        add_html()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.add_image_layer" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2838,6 +2849,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.remove_html" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        remove_html()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.remove_layer" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3150,6 +3172,17 @@
     <span class="md-ellipsis">
       
         update_deckgl_layer()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.update_html" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        update_html()
       
     </span>
   </a>
@@ -3664,6 +3697,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.add_html" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        add_html()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.add_image_layer" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4390,6 +4434,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.remove_html" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        remove_html()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#anymap.maplibre.MapLibreMap.remove_layer" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4702,6 +4757,17 @@
     <span class="md-ellipsis">
       
         update_deckgl_layer()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anymap.maplibre.MapLibreMap.update_html" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        update_html()
       
     </span>
   </a>
@@ -7169,6 +7235,96 @@ data sources, custom styling, and interactive features.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">_controls</span> <span class="o">=</span> <span class="n">current_controls</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addControl&quot;</span><span class="p">,</span> <span class="n">control_type</span><span class="p">,</span> <span class="n">control_options</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_html</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">html</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">bg_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;white&quot;</span><span class="p">,</span>
+        <span class="n">position</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;bottom-right&quot;</span><span class="p">,</span>
+        <span class="n">control_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add an HTML element to the map.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            html: HTML string to display</span>
+<span class="sd">            bg_color: Background color for the HTML container (default: &#39;white&#39;)</span>
+<span class="sd">            position: Position on map (&#39;top-left&#39;, &#39;top-right&#39;, &#39;bottom-left&#39;, &#39;bottom-right&#39;)</span>
+<span class="sd">            control_id: Optional unique identifier for the control. If not provided, one will be generated.</span>
+<span class="sd">            **kwargs: Additional options passed to the control</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Generate control_id if not provided</span>
+        <span class="k">if</span> <span class="n">control_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">control_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;html_</span><span class="si">{</span><span class="n">position</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="p">[:</span><span class="mi">6</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="c1"># Check if control already exists and remove it first</span>
+        <span class="n">current_controls</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_controls</span><span class="p">)</span>
+        <span class="n">control_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;html_</span><span class="si">{</span><span class="n">control_id</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="n">control_key</span> <span class="ow">in</span> <span class="n">current_controls</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">remove_html</span><span class="p">(</span><span class="n">control_id</span><span class="p">)</span>
+            <span class="n">current_controls</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_controls</span><span class="p">)</span>
+
+        <span class="n">control_options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">control_options</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;html&quot;</span><span class="p">:</span> <span class="n">html</span><span class="p">,</span>
+                <span class="s2">&quot;bgColor&quot;</span><span class="p">:</span> <span class="n">bg_color</span><span class="p">,</span>
+                <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
+                <span class="s2">&quot;control_id&quot;</span><span class="p">:</span> <span class="n">control_id</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Store control in persistent state</span>
+        <span class="n">current_controls</span><span class="p">[</span><span class="n">control_key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;html&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
+            <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="n">control_options</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_controls</span> <span class="o">=</span> <span class="n">current_controls</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addControl&quot;</span><span class="p">,</span> <span class="s2">&quot;html&quot;</span><span class="p">,</span> <span class="n">control_options</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_html</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">control_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">html</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">bg_color</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update an existing HTML control.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            control_id: The control ID used when adding the HTML control</span>
+<span class="sd">            html: New HTML string to display</span>
+<span class="sd">            bg_color: Optional new background color for the HTML container</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Update persistent state</span>
+        <span class="n">control_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;html_</span><span class="si">{</span><span class="n">control_id</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">current_controls</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_controls</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">control_key</span> <span class="ow">in</span> <span class="n">current_controls</span><span class="p">:</span>
+            <span class="n">current_controls</span><span class="p">[</span><span class="n">control_key</span><span class="p">][</span><span class="s2">&quot;options&quot;</span><span class="p">][</span><span class="s2">&quot;html&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">html</span>
+            <span class="k">if</span> <span class="n">bg_color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">current_controls</span><span class="p">[</span><span class="n">control_key</span><span class="p">][</span><span class="s2">&quot;options&quot;</span><span class="p">][</span><span class="s2">&quot;bgColor&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bg_color</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_controls</span> <span class="o">=</span> <span class="n">current_controls</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;updateHTML&quot;</span><span class="p">,</span> <span class="n">control_key</span><span class="p">,</span> <span class="n">html</span><span class="p">,</span> <span class="n">bg_color</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_html</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">control_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove an HTML control from the map.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            control_id: The control ID used when adding the HTML control</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Remove from persistent state</span>
+        <span class="n">control_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;html_</span><span class="si">{</span><span class="n">control_id</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">current_controls</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_controls</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">control_key</span> <span class="ow">in</span> <span class="n">current_controls</span><span class="p">:</span>
+            <span class="k">del</span> <span class="n">current_controls</span><span class="p">[</span><span class="n">control_key</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_controls</span> <span class="o">=</span> <span class="n">current_controls</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;removeHTML&quot;</span><span class="p">,</span> <span class="n">control_key</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">remove_control</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -13390,6 +13546,120 @@ street-level imagery at clicked locations on the map.</p>
     <span class="bp">self</span><span class="o">.</span><span class="n">_controls</span> <span class="o">=</span> <span class="n">current_controls</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addControl&quot;</span><span class="p">,</span> <span class="s2">&quot;gradientbox&quot;</span><span class="p">,</span> <span class="n">control_options</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="anymap.maplibre.MapLibreMap.add_html" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">add_html</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">html</span><span class="p">,</span> <span class="n">bg_color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s1">&#39;bottom-right&#39;</span><span class="p">,</span> <span class="n">control_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+
+<a href="#anymap.maplibre.MapLibreMap.add_html" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Add an HTML element to the map.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>html</code></td>
+        <td><code>str</code></td>
+        <td><p>HTML string to display</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>bg_color</code></td>
+        <td><code>str</code></td>
+        <td><p>Background color for the HTML container (default: 'white')</p></td>
+        <td><code>&#39;white&#39;</code></td>
+      </tr>
+      <tr>
+        <td><code>position</code></td>
+        <td><code>str</code></td>
+        <td><p>Position on map ('top-left', 'top-right', 'bottom-left', 'bottom-right')</p></td>
+        <td><code>&#39;bottom-right&#39;</code></td>
+      </tr>
+      <tr>
+        <td><code>control_id</code></td>
+        <td><code>Optional[str]</code></td>
+        <td><p>Optional unique identifier for the control. If not provided, one will be generated.</p></td>
+        <td><code>None</code></td>
+      </tr>
+      <tr>
+        <td><code>**kwargs</code></td>
+        <td><code>Any</code></td>
+        <td><p>Additional options passed to the control</p></td>
+        <td><code>{}</code></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>anymap/maplibre.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_html</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">html</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">bg_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;white&quot;</span><span class="p">,</span>
+    <span class="n">position</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;bottom-right&quot;</span><span class="p">,</span>
+    <span class="n">control_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add an HTML element to the map.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        html: HTML string to display</span>
+<span class="sd">        bg_color: Background color for the HTML container (default: &#39;white&#39;)</span>
+<span class="sd">        position: Position on map (&#39;top-left&#39;, &#39;top-right&#39;, &#39;bottom-left&#39;, &#39;bottom-right&#39;)</span>
+<span class="sd">        control_id: Optional unique identifier for the control. If not provided, one will be generated.</span>
+<span class="sd">        **kwargs: Additional options passed to the control</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Generate control_id if not provided</span>
+    <span class="k">if</span> <span class="n">control_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">control_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;html_</span><span class="si">{</span><span class="n">position</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="p">[:</span><span class="mi">6</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="c1"># Check if control already exists and remove it first</span>
+    <span class="n">current_controls</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_controls</span><span class="p">)</span>
+    <span class="n">control_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;html_</span><span class="si">{</span><span class="n">control_id</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">if</span> <span class="n">control_key</span> <span class="ow">in</span> <span class="n">current_controls</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">remove_html</span><span class="p">(</span><span class="n">control_id</span><span class="p">)</span>
+        <span class="n">current_controls</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_controls</span><span class="p">)</span>
+
+    <span class="n">control_options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">control_options</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;html&quot;</span><span class="p">:</span> <span class="n">html</span><span class="p">,</span>
+            <span class="s2">&quot;bgColor&quot;</span><span class="p">:</span> <span class="n">bg_color</span><span class="p">,</span>
+            <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
+            <span class="s2">&quot;control_id&quot;</span><span class="p">:</span> <span class="n">control_id</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Store control in persistent state</span>
+    <span class="n">current_controls</span><span class="p">[</span><span class="n">control_key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;html&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
+        <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="n">control_options</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_controls</span> <span class="o">=</span> <span class="n">current_controls</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addControl&quot;</span><span class="p">,</span> <span class="s2">&quot;html&quot;</span><span class="p">,</span> <span class="n">control_options</span><span class="p">)</span>
 </code></pre></div>
         </details>
     </div>
@@ -20242,6 +20512,66 @@ work, please save or export it before calling this method.</p>
 
 
 
+<h3 id="anymap.maplibre.MapLibreMap.remove_html" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">remove_html</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">control_id</span><span class="p">)</span></code>
+
+
+<a href="#anymap.maplibre.MapLibreMap.remove_html" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Remove an HTML control from the map.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>control_id</code></td>
+        <td><code>str</code></td>
+        <td><p>The control ID used when adding the HTML control</p></td>
+        <td><em>required</em></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>anymap/maplibre.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">remove_html</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">control_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove an HTML control from the map.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        control_id: The control ID used when adding the HTML control</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Remove from persistent state</span>
+    <span class="n">control_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;html_</span><span class="si">{</span><span class="n">control_id</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">current_controls</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_controls</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">control_key</span> <span class="ow">in</span> <span class="n">current_controls</span><span class="p">:</span>
+        <span class="k">del</span> <span class="n">current_controls</span><span class="p">[</span><span class="n">control_key</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_controls</span> <span class="o">=</span> <span class="n">current_controls</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;removeHTML&quot;</span><span class="p">,</span> <span class="n">control_key</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
 <h3 id="anymap.maplibre.MapLibreMap.remove_layer" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">remove_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer_id</span><span class="p">)</span></code>
 
@@ -22072,6 +22402,84 @@ Use GeoJSON or GPKG formats for mixed geometry types.</p>
 
     <span class="c1"># Send to JavaScript</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;updateDeckGLLayer&quot;</span><span class="p">,</span> <span class="n">layer_config</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="anymap.maplibre.MapLibreMap.update_html" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">update_html</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">control_id</span><span class="p">,</span> <span class="n">html</span><span class="p">,</span> <span class="n">bg_color</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+
+<a href="#anymap.maplibre.MapLibreMap.update_html" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Update an existing HTML control.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>control_id</code></td>
+        <td><code>str</code></td>
+        <td><p>The control ID used when adding the HTML control</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>html</code></td>
+        <td><code>str</code></td>
+        <td><p>New HTML string to display</p></td>
+        <td><em>required</em></td>
+      </tr>
+      <tr>
+        <td><code>bg_color</code></td>
+        <td><code>Optional[str]</code></td>
+        <td><p>Optional new background color for the HTML container</p></td>
+        <td><code>None</code></td>
+      </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>anymap/maplibre.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">update_html</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">control_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">html</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">bg_color</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Update an existing HTML control.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        control_id: The control ID used when adding the HTML control</span>
+<span class="sd">        html: New HTML string to display</span>
+<span class="sd">        bg_color: Optional new background color for the HTML container</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Update persistent state</span>
+    <span class="n">control_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;html_</span><span class="si">{</span><span class="n">control_id</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">current_controls</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_controls</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">control_key</span> <span class="ow">in</span> <span class="n">current_controls</span><span class="p">:</span>
+        <span class="n">current_controls</span><span class="p">[</span><span class="n">control_key</span><span class="p">][</span><span class="s2">&quot;options&quot;</span><span class="p">][</span><span class="s2">&quot;html&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">html</span>
+        <span class="k">if</span> <span class="n">bg_color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">current_controls</span><span class="p">[</span><span class="n">control_key</span><span class="p">][</span><span class="s2">&quot;options&quot;</span><span class="p">][</span><span class="s2">&quot;bgColor&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bg_color</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_controls</span> <span class="o">=</span> <span class="n">current_controls</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;updateHTML&quot;</span><span class="p">,</span> <span class="n">control_key</span><span class="p">,</span> <span class="n">html</span><span class="p">,</span> <span class="n">bg_color</span><span class="p">)</span>
 </code></pre></div>
         </details>
     </div>
