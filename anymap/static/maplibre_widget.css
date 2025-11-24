@@ -90,9 +90,18 @@
   display: block;
 }
 
-.maplibregl-popup-content * {
+/* Constrain only specific elements inside popup content */
+.maplibregl-popup-content img,
+.maplibregl-popup-content table,
+.maplibregl-popup-content pre,
+.maplibregl-popup-content code {
   max-width: 100%;
   box-sizing: border-box;
+}
+/* If needed, ensure buttons and SVGs are not constrained */
+.maplibregl-popup-content button,
+.maplibregl-popup-content svg {
+  max-width: none;
 }
 
 .anymap-popup {
