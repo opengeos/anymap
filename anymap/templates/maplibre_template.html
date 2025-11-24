@@ -1477,7 +1477,16 @@
                     const items = [];
                     (cfg.markers || []).forEach((mk) => {{
                         try {{
-                            items.push(createMarker(mk));
+                            // Transform marker data from {lng, lat} to {coordinates: [lng, lat]}
+                            const markerData = {{
+                                coordinates: [mk.lng, mk.lat],
+                                popup: mk.popup,
+                                tooltip: mk.tooltip,
+                                options: mk.options,
+                                popup_max_width: mk.popup_max_width,
+                                tooltip_max_width: mk.tooltip_max_width
+                            }};
+                            items.push(createMarker(markerData));
                         }} catch (e) {{
                             console.warn('Failed to create marker in group:', e);
                         }}
