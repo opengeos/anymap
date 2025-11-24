@@ -6685,6 +6685,8 @@ data sources, custom styling, and interactive features.</p>
         <span class="n">tooltip</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">popup_max_width</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;240px&quot;</span><span class="p">,</span>
+        <span class="n">tooltip_max_width</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;240px&quot;</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a marker to the map.</span>
 
@@ -6699,6 +6701,10 @@ data sources, custom styling, and interactive features.</p>
 <span class="sd">                This supports properties like color, draggable, and opacity.</span>
 <span class="sd">            scale: Scale factor for marker size (default: 1.0, range: 0.1 to 3.0).</span>
 <span class="sd">                For example, 0.5 makes the marker half size, 2.0 makes it double size.</span>
+<span class="sd">            popup_max_width: Maximum width for popup (default: &quot;240px&quot;).</span>
+<span class="sd">                Accepts CSS values like &quot;300px&quot;, &quot;20rem&quot;, or &quot;none&quot; for no limit.</span>
+<span class="sd">            tooltip_max_width: Maximum width for tooltip (default: &quot;240px&quot;).</span>
+<span class="sd">                Accepts CSS values like &quot;300px&quot;, &quot;20rem&quot;, or &quot;none&quot; for no limit.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">marker_options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">options</span><span class="p">)</span> <span class="k">if</span> <span class="n">options</span> <span class="k">else</span> <span class="p">{}</span>
         <span class="k">if</span> <span class="s2">&quot;scale&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">marker_options</span><span class="p">:</span>
@@ -6709,6 +6715,8 @@ data sources, custom styling, and interactive features.</p>
             <span class="s2">&quot;popup&quot;</span><span class="p">:</span> <span class="n">popup</span><span class="p">,</span>
             <span class="s2">&quot;tooltip&quot;</span><span class="p">:</span> <span class="n">tooltip</span><span class="p">,</span>
             <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="n">marker_options</span><span class="p">,</span>
+            <span class="s2">&quot;popup_max_width&quot;</span><span class="p">:</span> <span class="n">popup_max_width</span><span class="p">,</span>
+            <span class="s2">&quot;tooltip_max_width&quot;</span><span class="p">:</span> <span class="n">tooltip_max_width</span><span class="p">,</span>
         <span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addMarker&quot;</span><span class="p">,</span> <span class="n">marker_data</span><span class="p">)</span>
 
@@ -6735,6 +6743,8 @@ data sources, custom styling, and interactive features.</p>
 <span class="sd">                - tooltip (str, optional): Tooltip HTML content</span>
 <span class="sd">                - options (dict, optional): Marker options (color, draggable, etc.)</span>
 <span class="sd">                - scale (float, optional): Marker scale factor (default: 1.0)</span>
+<span class="sd">                - popup_max_width (str, optional): Maximum width for popup (default: &quot;240px&quot;)</span>
+<span class="sd">                - tooltip_max_width (str, optional): Maximum width for tooltip (default: &quot;240px&quot;)</span>
 <span class="sd">            name: Display name for the layer in the layer control.</span>
 <span class="sd">                If None, uses layer_id.</span>
 <span class="sd">            visible: Whether the marker group should be visible initially.</span>
@@ -15135,7 +15145,7 @@ search interface for finding locations and can display markers for search result
 
 
 <h3 id="anymap.maplibre.MapLibreMap.add_marker" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">add_marker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lng</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">popup</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tooltip</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">add_marker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lng</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">popup</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tooltip</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">popup_max_width</span><span class="o">=</span><span class="s1">&#39;240px&#39;</span><span class="p">,</span> <span class="n">tooltip_max_width</span><span class="o">=</span><span class="s1">&#39;240px&#39;</span><span class="p">)</span></code>
 
 
 <a href="#anymap.maplibre.MapLibreMap.add_marker" class="headerlink" title="Permanent link">&para;</a></h3>
@@ -15195,6 +15205,20 @@ This supports properties like color, draggable, and opacity.</p></td>
 For example, 0.5 makes the marker half size, 2.0 makes it double size.</p></td>
         <td><code>1.0</code></td>
       </tr>
+      <tr>
+        <td><code>popup_max_width</code></td>
+        <td><code>str</code></td>
+        <td><p>Maximum width for popup (default: "240px").
+Accepts CSS values like "300px", "20rem", or "none" for no limit.</p></td>
+        <td><code>&#39;240px&#39;</code></td>
+      </tr>
+      <tr>
+        <td><code>tooltip_max_width</code></td>
+        <td><code>str</code></td>
+        <td><p>Maximum width for tooltip (default: "240px").
+Accepts CSS values like "300px", "20rem", or "none" for no limit.</p></td>
+        <td><code>&#39;240px&#39;</code></td>
+      </tr>
   </tbody>
 </table>
         <details class="quote">
@@ -15207,6 +15231,8 @@ For example, 0.5 makes the marker half size, 2.0 makes it double size.</p></td>
     <span class="n">tooltip</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">popup_max_width</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;240px&quot;</span><span class="p">,</span>
+    <span class="n">tooltip_max_width</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;240px&quot;</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a marker to the map.</span>
 
@@ -15221,6 +15247,10 @@ For example, 0.5 makes the marker half size, 2.0 makes it double size.</p></td>
 <span class="sd">            This supports properties like color, draggable, and opacity.</span>
 <span class="sd">        scale: Scale factor for marker size (default: 1.0, range: 0.1 to 3.0).</span>
 <span class="sd">            For example, 0.5 makes the marker half size, 2.0 makes it double size.</span>
+<span class="sd">        popup_max_width: Maximum width for popup (default: &quot;240px&quot;).</span>
+<span class="sd">            Accepts CSS values like &quot;300px&quot;, &quot;20rem&quot;, or &quot;none&quot; for no limit.</span>
+<span class="sd">        tooltip_max_width: Maximum width for tooltip (default: &quot;240px&quot;).</span>
+<span class="sd">            Accepts CSS values like &quot;300px&quot;, &quot;20rem&quot;, or &quot;none&quot; for no limit.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">marker_options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">options</span><span class="p">)</span> <span class="k">if</span> <span class="n">options</span> <span class="k">else</span> <span class="p">{}</span>
     <span class="k">if</span> <span class="s2">&quot;scale&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">marker_options</span><span class="p">:</span>
@@ -15231,6 +15261,8 @@ For example, 0.5 makes the marker half size, 2.0 makes it double size.</p></td>
         <span class="s2">&quot;popup&quot;</span><span class="p">:</span> <span class="n">popup</span><span class="p">,</span>
         <span class="s2">&quot;tooltip&quot;</span><span class="p">:</span> <span class="n">tooltip</span><span class="p">,</span>
         <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="n">marker_options</span><span class="p">,</span>
+        <span class="s2">&quot;popup_max_width&quot;</span><span class="p">:</span> <span class="n">popup_max_width</span><span class="p">,</span>
+        <span class="s2">&quot;tooltip_max_width&quot;</span><span class="p">:</span> <span class="n">tooltip_max_width</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">call_js_method</span><span class="p">(</span><span class="s2">&quot;addMarker&quot;</span><span class="p">,</span> <span class="n">marker_data</span><span class="p">)</span>
 </code></pre></div>
@@ -15284,7 +15316,9 @@ visibility and opacity settings.</p>
 - popup (str, optional): Popup HTML content
 - tooltip (str, optional): Tooltip HTML content
 - options (dict, optional): Marker options (color, draggable, etc.)
-- scale (float, optional): Marker scale factor (default: 1.0)</p></td>
+- scale (float, optional): Marker scale factor (default: 1.0)
+- popup_max_width (str, optional): Maximum width for popup (default: "240px")
+- tooltip_max_width (str, optional): Maximum width for tooltip (default: "240px")</p></td>
         <td><em>required</em></td>
       </tr>
       <tr>
@@ -15343,6 +15377,8 @@ If None, uses layer_id.</p></td>
 <span class="sd">            - tooltip (str, optional): Tooltip HTML content</span>
 <span class="sd">            - options (dict, optional): Marker options (color, draggable, etc.)</span>
 <span class="sd">            - scale (float, optional): Marker scale factor (default: 1.0)</span>
+<span class="sd">            - popup_max_width (str, optional): Maximum width for popup (default: &quot;240px&quot;)</span>
+<span class="sd">            - tooltip_max_width (str, optional): Maximum width for tooltip (default: &quot;240px&quot;)</span>
 <span class="sd">        name: Display name for the layer in the layer control.</span>
 <span class="sd">            If None, uses layer_id.</span>
 <span class="sd">        visible: Whether the marker group should be visible initially.</span>

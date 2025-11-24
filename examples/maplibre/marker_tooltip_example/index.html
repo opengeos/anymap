@@ -2958,13 +2958,13 @@ m</div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">m</span> <span class="o">=</span> <span class="n">anymap</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">122.4194</span><span class="p">,</span> <span class="mf">37.7749</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
 
 <span class="c1"># Compact tooltip with small thumbnail</span>
-<span class="n">tooltip_html</span> <span class="o">=</span> <span class="s1">'&lt;div style="text-align: center;"&gt;&lt;img src="https://picsum.photos/100/60?random=3" width="100"&gt;&lt;br&gt;&lt;b&gt;San Francisco&lt;/b&gt;&lt;/div&gt;'</span>
+<span class="n">tooltip_html</span> <span class="o">=</span> <span class="s1">'&lt;div style="text-align: center;"&gt;&lt;img src="https://picsum.photos/300/180?random=3" width="300"&gt;&lt;br&gt;&lt;b&gt;San Francisco&lt;/b&gt;&lt;/div&gt;'</span>
 
 <span class="c1"># Detailed popup with larger image and more info</span>
 <span class="n">popup_html</span> <span class="o">=</span> <span class="s2">"""</span>
-<span class="s2">&lt;div style="text-align: center; max-width: 280px;"&gt;</span>
+<span class="s2">&lt;div style="text-align: center; max-width: 400px;"&gt;</span>
 <span class="s2">    &lt;h2 style="margin: 0 0 10px 0; color: #2c3e50;"&gt;San Francisco&lt;/h2&gt;</span>
-<span class="s2">    &lt;img src="https://picsum.photos/280/180?random=4" width="280" style="border-radius: 8px; margin-bottom: 10px;"&gt;</span>
+<span class="s2">    &lt;img src="https://picsum.photos/400/240?random=4" width="400" style="border-radius: 8px; margin-bottom: 10px;"&gt;</span>
 <span class="s2">    &lt;div style="text-align: left; padding: 0 10px;"&gt;</span>
 <span class="s2">        &lt;p&gt;&lt;strong&gt;Population:&lt;/strong&gt; ~883,305&lt;/p&gt;</span>
 <span class="s2">        &lt;p&gt;&lt;strong&gt;Founded:&lt;/strong&gt; June 29, 1776&lt;/p&gt;</span>
@@ -2974,20 +2974,27 @@ m</div>
 <span class="s2">&lt;/div&gt;</span>
 <span class="s2">"""</span>
 
-<span class="n">m</span><span class="o">.</span><span class="n">add_marker</span><span class="p">(</span><span class="n">lng</span><span class="o">=-</span><span class="mf">122.4194</span><span class="p">,</span> <span class="n">lat</span><span class="o">=</span><span class="mf">37.7749</span><span class="p">,</span> <span class="n">tooltip</span><span class="o">=</span><span class="n">tooltip_html</span><span class="p">,</span> <span class="n">popup</span><span class="o">=</span><span class="n">popup_html</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">add_marker</span><span class="p">(</span>
+    <span class="n">lng</span><span class="o">=-</span><span class="mf">122.4194</span><span class="p">,</span>
+    <span class="n">lat</span><span class="o">=</span><span class="mf">37.7749</span><span class="p">,</span>
+    <span class="n">tooltip</span><span class="o">=</span><span class="n">tooltip_html</span><span class="p">,</span>
+    <span class="n">popup</span><span class="o">=</span><span class="n">popup_html</span><span class="p">,</span>
+    <span class="n">popup_max_width</span><span class="o">=</span><span class="s2">"400px"</span><span class="p">,</span>
+    <span class="n">tooltip_max_width</span><span class="o">=</span><span class="s2">"300px"</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="n">m</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-7">m = anymap.Map(center=[-122.4194, 37.7749], zoom=12)
 
 # Compact tooltip with small thumbnail
-tooltip_html = '<div style="text-align: center;"><img alt="No description has been provided for this image" src="https://picsum.photos/100/60?random=3" width="100"/><br/><b>San Francisco</b></div>'
+tooltip_html = '<div style="text-align: center;"><img alt="No description has been provided for this image" src="https://picsum.photos/300/180?random=3" width="300"/><br/><b>San Francisco</b></div>'
 
 # Detailed popup with larger image and more info
 popup_html = """
-<div style="text-align: center; max-width: 280px;">
+<div style="text-align: center; max-width: 400px;">
 <h2 style="margin: 0 0 10px 0; color: #2c3e50;">San Francisco</h2>
-<img alt="No description has been provided for this image" src="https://picsum.photos/280/180?random=4" style="border-radius: 8px; margin-bottom: 10px;" width="280"/>
+<img alt="No description has been provided for this image" src="https://picsum.photos/400/240?random=4" style="border-radius: 8px; margin-bottom: 10px;" width="400"/>
 <div style="text-align: left; padding: 0 10px;">
 <p><strong>Population:</strong> ~883,305</p>
 <p><strong>Founded:</strong> June 29, 1776</p>
@@ -2997,7 +3004,14 @@ popup_html = """
 </div>
 """
 
-m.add_marker(lng=-122.4194, lat=37.7749, tooltip=tooltip_html, popup=popup_html)
+m.add_marker(
+    lng=-122.4194,
+    lat=37.7749,
+    tooltip=tooltip_html,
+    popup=popup_html,
+    popup_max_width="400px",
+    tooltip_max_width="300px",
+)
 
 m</div>
 </div>
@@ -3365,7 +3379,7 @@ m</div>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 23, 2025 02:48:14 UTC"><span class="timeago" datetime="2025-11-23T02:48:14+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 23, 2025 02:48:14 UTC">2025-11-23</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 24, 2025 01:42:19 UTC"><span class="timeago" datetime="2025-11-24T01:42:19+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 24, 2025 01:42:19 UTC">2025-11-24</span>
   </span>
 
     
