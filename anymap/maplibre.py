@@ -1067,8 +1067,8 @@ class MapLibreMap(MapWidget):
 
         Args:
             widget (Optional[Union[widgets.Widget, List[widgets.Widget]]]): Initial widget(s) to display in the content box.
-            widget_icon (str): Icon for the header. See https://pictogrammers.github.io/@mdi/font/2.0.46/ for available icons.
-            close_icon (str): Icon for the close button. See https://pictogrammers.github.io/@mdi/font/2.0.46/ for available icons.
+            widget_icon (str): Icon for the header. See https://pictogrammers.github.io/@mdi/font/7.4.47/ for available icons.
+            close_icon (str): Icon for the close button. See https://pictogrammers.github.io/@mdi/font/7.4.47/ for available icons.
             background_color (str): Background color of the header. Defaults to "#f5f5f5".
             label (str): Text label for the header. Defaults to "My Tools".
             height (str): Height of the header. Defaults to "40px".
