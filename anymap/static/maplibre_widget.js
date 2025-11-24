@@ -2702,10 +2702,20 @@ class WidgetPanelControl {
     this.button.setAttribute('aria-label', buttonLabel);
     this.button.setAttribute('aria-expanded', (!this.collapsed).toString());
 
-    const iconSpan = document.createElement('span');
-    iconSpan.className = 'widget-panel-toggle-icon';
-    iconSpan.textContent = options.icon || '⋮';
-    this.button.appendChild(iconSpan);
+    // Support both text icons and Material Design Icons (MDI)
+    const iconValue = options.icon || '⋮';
+    if (iconValue.startsWith('mdi-')) {
+      // Render MDI icon using <i> element
+      const iconElement = document.createElement('i');
+      iconElement.className = `mdi ${iconValue}`;
+      this.button.appendChild(iconElement);
+    } else {
+      // Render text icon using <span> element
+      const iconSpan = document.createElement('span');
+      iconSpan.className = 'widget-panel-toggle-icon';
+      iconSpan.textContent = iconValue;
+      this.button.appendChild(iconSpan);
+    }
 
     this.button.addEventListener('click', () => this.toggle());
     this.container.appendChild(this.button);

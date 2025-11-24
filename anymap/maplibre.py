@@ -1067,8 +1067,8 @@ class MapLibreMap(MapWidget):
 
         Args:
             widget (Optional[Union[widgets.Widget, List[widgets.Widget]]]): Initial widget(s) to display in the content box.
-            widget_icon (str): Icon for the header. See https://pictogrammers.github.io/@mdi/font/2.0.46/ for available icons.
-            close_icon (str): Icon for the close button. See https://pictogrammers.github.io/@mdi/font/2.0.46/ for available icons.
+            widget_icon (str): Icon for the header. See https://pictogrammers.github.io/@mdi/font/7.4.47/ for available icons.
+            close_icon (str): Icon for the close button. See https://pictogrammers.github.io/@mdi/font/7.4.47/ for available icons.
             background_color (str): Background color of the header. Defaults to "#f5f5f5".
             label (str): Text label for the header. Defaults to "My Tools".
             height (str): Height of the header. Defaults to "40px".
@@ -1343,7 +1343,10 @@ class MapLibreMap(MapWidget):
         Args:
             widget: The ipywidget instance to embed inside the collapsible panel.
             label: Title shown at the top of the expanded panel.
-            icon: Text or icon hint shown on the toggle button. Defaults to a vertical ellipsis.
+            icon: Text or icon hint shown on the toggle button. Supports unicode characters
+                (e.g., "⋮", "☰", "⚙") and Material Design Icons (e.g., "mdi-map-marker",
+                "mdi-layers", "mdi-cog"). Browse icons at https://pictogrammers.com/library/mdi/.
+                Defaults to a vertical ellipsis.
             position: Map control corner (``'top-left'``, ``'top-right'``,
                 ``'bottom-left'``, or ``'bottom-right'``).
             collapsed: Whether the panel starts collapsed.

@@ -1,3 +1,6 @@
+/* Import Material Design Icons */
+@import url('https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css');
+
 /* Widget container styles */
 .anymap-container {
   position: relative;
@@ -316,6 +319,12 @@
 
 .maplibregl-ctrl-widget-panel .widget-panel-toggle-icon {
   font-size: 16px;
+  line-height: 1;
+}
+
+/* MDI icon sizing for widget panel buttons */
+.maplibregl-ctrl-widget-panel .widget-panel-toggle .mdi {
+  font-size: 18px;
   line-height: 1;
 }
 
