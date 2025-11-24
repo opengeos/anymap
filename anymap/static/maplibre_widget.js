@@ -7864,18 +7864,26 @@ const pointInPolygon = (pt, poly) => {
             }
 
             if (markerData.popup) {
-              const popup = new maplibregl.Popup()
+              const popupOptions = {};
+              if (markerData.popup_max_width) {
+                popupOptions.maxWidth = markerData.popup_max_width;
+              }
+              const popup = new maplibregl.Popup(popupOptions)
                 .setHTML(markerData.popup);
               marker.setPopup(popup);
             }
 
             // Add tooltip support (shows on hover)
             if (markerData.tooltip) {
-              const tooltip = new maplibregl.Popup({
+              const tooltipOptions = {
                 closeButton: false,
                 closeOnClick: false,
                 className: 'marker-tooltip'
-              }).setHTML(markerData.tooltip);
+              };
+              if (markerData.tooltip_max_width) {
+                tooltipOptions.maxWidth = markerData.tooltip_max_width;
+              }
+              const tooltip = new maplibregl.Popup(tooltipOptions).setHTML(markerData.tooltip);
 
               const markerElement = marker.getElement();
               markerElement.addEventListener('mouseenter', () => {
@@ -7932,17 +7940,25 @@ const pointInPolygon = (pt, poly) => {
 
               // Add popup if provided
               if (markerDef.popup) {
-                const popup = new maplibregl.Popup().setHTML(markerDef.popup);
+                const popupOptions = {};
+                if (markerDef.popup_max_width) {
+                  popupOptions.maxWidth = markerDef.popup_max_width;
+                }
+                const popup = new maplibregl.Popup(popupOptions).setHTML(markerDef.popup);
                 groupMarker.setPopup(popup);
               }
 
               // Add tooltip if provided
               if (markerDef.tooltip) {
-                const tooltip = new maplibregl.Popup({
+                const tooltipOptions = {
                   closeButton: false,
                   closeOnClick: false,
                   className: 'marker-tooltip'
-                }).setHTML(markerDef.tooltip);
+                };
+                if (markerDef.tooltip_max_width) {
+                  tooltipOptions.maxWidth = markerDef.tooltip_max_width;
+                }
+                const tooltip = new maplibregl.Popup(tooltipOptions).setHTML(markerDef.tooltip);
 
                 const markerEl = groupMarker.getElement();
                 markerEl.addEventListener('mouseenter', () => {

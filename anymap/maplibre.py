@@ -1805,6 +1805,8 @@ class MapLibreMap(MapWidget):
         tooltip: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         scale: float = 1.0,
+        popup_max_width: str = "240px",
+        tooltip_max_width: str = "240px",
     ) -> None:
         """Add a marker to the map.
 
@@ -1819,6 +1821,10 @@ class MapLibreMap(MapWidget):
                 This supports properties like color, draggable, and opacity.
             scale: Scale factor for marker size (default: 1.0, range: 0.1 to 3.0).
                 For example, 0.5 makes the marker half size, 2.0 makes it double size.
+            popup_max_width: Maximum width for popup (default: "240px").
+                Accepts CSS values like "300px", "20rem", or "none" for no limit.
+            tooltip_max_width: Maximum width for tooltip (default: "240px").
+                Accepts CSS values like "300px", "20rem", or "none" for no limit.
         """
         marker_options = dict(options) if options else {}
         if "scale" not in marker_options:
@@ -1829,6 +1835,8 @@ class MapLibreMap(MapWidget):
             "popup": popup,
             "tooltip": tooltip,
             "options": marker_options,
+            "popup_max_width": popup_max_width,
+            "tooltip_max_width": tooltip_max_width,
         }
         self.call_js_method("addMarker", marker_data)
 
@@ -1855,6 +1863,8 @@ class MapLibreMap(MapWidget):
                 - tooltip (str, optional): Tooltip HTML content
                 - options (dict, optional): Marker options (color, draggable, etc.)
                 - scale (float, optional): Marker scale factor (default: 1.0)
+                - popup_max_width (str, optional): Maximum width for popup (default: "240px")
+                - tooltip_max_width (str, optional): Maximum width for tooltip (default: "240px")
             name: Display name for the layer in the layer control.
                 If None, uses layer_id.
             visible: Whether the marker group should be visible initially.
