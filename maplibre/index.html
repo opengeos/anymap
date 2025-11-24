@@ -5947,8 +5947,8 @@ data sources, custom styling, and interactive features.</p>
 
 <span class="sd">        Args:</span>
 <span class="sd">            widget (Optional[Union[widgets.Widget, List[widgets.Widget]]]): Initial widget(s) to display in the content box.</span>
-<span class="sd">            widget_icon (str): Icon for the header. See https://pictogrammers.github.io/@mdi/font/2.0.46/ for available icons.</span>
-<span class="sd">            close_icon (str): Icon for the close button. See https://pictogrammers.github.io/@mdi/font/2.0.46/ for available icons.</span>
+<span class="sd">            widget_icon (str): Icon for the header. See https://pictogrammers.github.io/@mdi/font/7.4.47/ for available icons.</span>
+<span class="sd">            close_icon (str): Icon for the close button. See https://pictogrammers.github.io/@mdi/font/7.4.47/ for available icons.</span>
 <span class="sd">            background_color (str): Background color of the header. Defaults to &quot;#f5f5f5&quot;.</span>
 <span class="sd">            label (str): Text label for the header. Defaults to &quot;My Tools&quot;.</span>
 <span class="sd">            height (str): Height of the header. Defaults to &quot;40px&quot;.</span>
@@ -6223,7 +6223,10 @@ data sources, custom styling, and interactive features.</p>
 <span class="sd">        Args:</span>
 <span class="sd">            widget: The ipywidget instance to embed inside the collapsible panel.</span>
 <span class="sd">            label: Title shown at the top of the expanded panel.</span>
-<span class="sd">            icon: Text or icon hint shown on the toggle button. Defaults to a vertical ellipsis.</span>
+<span class="sd">            icon: Text or icon hint shown on the toggle button. Supports unicode characters</span>
+<span class="sd">                (e.g., &quot;⋮&quot;, &quot;☰&quot;, &quot;⚙&quot;) and Material Design Icons (e.g., &quot;mdi-map-marker&quot;,</span>
+<span class="sd">                &quot;mdi-layers&quot;, &quot;mdi-cog&quot;). Browse icons at https://pictogrammers.com/library/mdi/.</span>
+<span class="sd">                Defaults to a vertical ellipsis.</span>
 <span class="sd">            position: Map control corner (``&#39;top-left&#39;``, ``&#39;top-right&#39;``,</span>
 <span class="sd">                ``&#39;bottom-left&#39;``, or ``&#39;bottom-right&#39;``).</span>
 <span class="sd">            collapsed: Whether the panel starts collapsed.</span>
@@ -16998,13 +17001,13 @@ maplibre-gl-temporal-control plugin.</p>
       <tr>
         <td><code>widget_icon</code></td>
         <td><code>str</code></td>
-        <td><p>Icon for the header. See https://pictogrammers.github.io/@mdi/font/2.0.46/ for available icons.</p></td>
+        <td><p>Icon for the header. See https://pictogrammers.github.io/@mdi/font/7.4.47/ for available icons.</p></td>
         <td><code>&#39;mdi-tools&#39;</code></td>
       </tr>
       <tr>
         <td><code>close_icon</code></td>
         <td><code>str</code></td>
-        <td><p>Icon for the close button. See https://pictogrammers.github.io/@mdi/font/2.0.46/ for available icons.</p></td>
+        <td><p>Icon for the close button. See https://pictogrammers.github.io/@mdi/font/7.4.47/ for available icons.</p></td>
         <td><code>&#39;mdi-close&#39;</code></td>
       </tr>
       <tr>
@@ -17058,8 +17061,8 @@ maplibre-gl-temporal-control plugin.</p>
 
 <span class="sd">    Args:</span>
 <span class="sd">        widget (Optional[Union[widgets.Widget, List[widgets.Widget]]]): Initial widget(s) to display in the content box.</span>
-<span class="sd">        widget_icon (str): Icon for the header. See https://pictogrammers.github.io/@mdi/font/2.0.46/ for available icons.</span>
-<span class="sd">        close_icon (str): Icon for the close button. See https://pictogrammers.github.io/@mdi/font/2.0.46/ for available icons.</span>
+<span class="sd">        widget_icon (str): Icon for the header. See https://pictogrammers.github.io/@mdi/font/7.4.47/ for available icons.</span>
+<span class="sd">        close_icon (str): Icon for the close button. See https://pictogrammers.github.io/@mdi/font/7.4.47/ for available icons.</span>
 <span class="sd">        background_color (str): Background color of the header. Defaults to &quot;#f5f5f5&quot;.</span>
 <span class="sd">        label (str): Text label for the header. Defaults to &quot;My Tools&quot;.</span>
 <span class="sd">        height (str): Height of the header. Defaults to &quot;40px&quot;.</span>
@@ -18072,7 +18075,10 @@ ipywidget content.</p>
       <tr>
         <td><code>icon</code></td>
         <td><code>str</code></td>
-        <td><p>Text or icon hint shown on the toggle button. Defaults to a vertical ellipsis.</p></td>
+        <td><p>Text or icon hint shown on the toggle button. Supports unicode characters
+(e.g., "⋮", "☰", "⚙") and Material Design Icons (e.g., "mdi-map-marker",
+"mdi-layers", "mdi-cog"). Browse icons at https://pictogrammers.com/library/mdi/.
+Defaults to a vertical ellipsis.</p></td>
         <td><code>&#39;⋮&#39;</code></td>
       </tr>
       <tr>
@@ -18206,7 +18212,10 @@ If omitted, a unique identifier is generated from the label.</p></td>
 <span class="sd">    Args:</span>
 <span class="sd">        widget: The ipywidget instance to embed inside the collapsible panel.</span>
 <span class="sd">        label: Title shown at the top of the expanded panel.</span>
-<span class="sd">        icon: Text or icon hint shown on the toggle button. Defaults to a vertical ellipsis.</span>
+<span class="sd">        icon: Text or icon hint shown on the toggle button. Supports unicode characters</span>
+<span class="sd">            (e.g., &quot;⋮&quot;, &quot;☰&quot;, &quot;⚙&quot;) and Material Design Icons (e.g., &quot;mdi-map-marker&quot;,</span>
+<span class="sd">            &quot;mdi-layers&quot;, &quot;mdi-cog&quot;). Browse icons at https://pictogrammers.com/library/mdi/.</span>
+<span class="sd">            Defaults to a vertical ellipsis.</span>
 <span class="sd">        position: Map control corner (``&#39;top-left&#39;``, ``&#39;top-right&#39;``,</span>
 <span class="sd">            ``&#39;bottom-left&#39;``, or ``&#39;bottom-right&#39;``).</span>
 <span class="sd">        collapsed: Whether the panel starts collapsed.</span>
