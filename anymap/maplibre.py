@@ -1343,7 +1343,10 @@ class MapLibreMap(MapWidget):
         Args:
             widget: The ipywidget instance to embed inside the collapsible panel.
             label: Title shown at the top of the expanded panel.
-            icon: Text or icon hint shown on the toggle button. Defaults to a vertical ellipsis.
+            icon: Text or icon hint shown on the toggle button. Supports unicode characters
+                (e.g., "⋮", "☰", "⚙") and Material Design Icons (e.g., "mdi-map-marker",
+                "mdi-layers", "mdi-cog"). Browse icons at https://pictogrammers.com/library/mdi/.
+                Defaults to a vertical ellipsis.
             position: Map control corner (``'top-left'``, ``'top-right'``,
                 ``'bottom-left'``, or ``'bottom-right'``).
             collapsed: Whether the panel starts collapsed.
