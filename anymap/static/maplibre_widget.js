@@ -5696,6 +5696,7 @@ const pointInPolygon = (pt, poly) => {
                     this._button = null;
                     this._map = null;
                     this._activatingWorkaround = false;
+                    this._workaroundCompleted = false; // Track if workaround has been run once per session
                   }
                   setPressed(pressed) {
                     if (!this._button) return;
@@ -5756,7 +5757,8 @@ const pointInPolygon = (pt, poly) => {
                           }
                           // Workaround: Briefly activate then deactivate remove button
                           // This initializes handlers so info button works on first click
-                          if (!this._activatingWorkaround) {
+                          // Only run once per session to avoid accidentally deleting selected features
+                          if (!this._activatingWorkaround && !this._workaroundCompleted) {
                             this._activatingWorkaround = true;
                             setTimeout(() => {
                               try {
@@ -5776,16 +5778,20 @@ const pointInPolygon = (pt, poly) => {
                                     setTimeout(() => {
                                       removeBtn.click();
                                       this._activatingWorkaround = false;
+                                      this._workaroundCompleted = true; // Mark workaround as completed for this session
                                     }, 50);
                                   } else {
                                     this._activatingWorkaround = false;
+                                    this._workaroundCompleted = true;
                                   }
                                 } else {
                                   this._activatingWorkaround = false;
+                                  this._workaroundCompleted = true;
                                 }
                               } catch (_e) {
                                 console.warn('Info button workaround failed:', _e);
                                 this._activatingWorkaround = false;
+                                this._workaroundCompleted = true;
                               }
                             }, 50);
                           }
