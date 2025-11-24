@@ -77,6 +77,22 @@
   font-size: 13px;
   line-height: 1.4;
   color: #0f172a;
+  box-sizing: border-box;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+/* Constrain images and other content within popups */
+.maplibregl-popup-content img {
+  max-width: 100% !important;
+  height: auto !important;
+  display: block;
+}
+
+.maplibregl-popup-content * {
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .anymap-popup {
