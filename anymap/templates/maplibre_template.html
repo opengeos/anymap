@@ -1434,12 +1434,21 @@
                             const tooltip = new maplibregl.Popup(tooltipOptions).setHTML(String(opts.tooltip));
 
                             const markerElement = m.getElement();
-                            markerElement.addEventListener('mouseenter', () => {{
+                            // Define named event listener functions
+                            function onMouseEnter() {{
                                 tooltip.setLngLat(opts.coordinates).addTo(map);
-                            }});
-                            markerElement.addEventListener('mouseleave', () => {{
+                            }}
+                            function onMouseLeave() {{
                                 tooltip.remove();
-                            }});
+                            }}
+                            markerElement.addEventListener('mouseenter', onMouseEnter);
+                            markerElement.addEventListener('mouseleave', onMouseLeave);
+                            // Store cleanup function on marker object
+                            m._cleanupTooltip = function() {{
+                                markerElement.removeEventListener('mouseenter', onMouseEnter);
+                                markerElement.removeEventListener('mouseleave', onMouseLeave);
+                                tooltip.remove();
+                            }};
                         }} catch (e) {{
                             console.warn('Failed to attach tooltip to marker:', e);
                         }}
