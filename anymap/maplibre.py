@@ -4354,14 +4354,14 @@ class MapLibreMap(MapWidget):
         self.call_js_method("loadTerraDrawData", geojson_data)
 
     def _generate_html_template(
-        self, map_state: Dict[str, Any], title: str, **kwargs: Any
+        self, map_state: Dict[str, Any], title: Optional[str], **kwargs: Any
     ) -> str:
         """Generate HTML template for MapLibre GL JS.
 
         Args:
             map_state: Dictionary containing the current map state including
                       center, zoom, style, layers, and sources.
-            title: Title for the HTML page.
+            title: Title for the HTML page. If None, no title is displayed.
             **kwargs: Additional arguments for template customization.
 
         Returns:
@@ -4388,7 +4388,8 @@ class MapLibreMap(MapWidget):
         # Replace placeholders with actual values using safe string replacement
         # to avoid conflicts with single-brace usage throughout the template.
         html_template = template_content
-        html_template = html_template.replace("{title}", str(title))
+        # Handle title - if None, use empty string which will hide the h1 element
+        html_template = html_template.replace("{title}", str(title) if title else "")
         html_template = html_template.replace("{width}", str(map_state["width"]))
         html_template = html_template.replace("{height}", str(map_state["height"]))
         html_template = html_template.replace("{map_state_json}", map_state_json)
@@ -5339,9 +5340,9 @@ class MapLibreMap(MapWidget):
     def to_html(
         self,
         filename: Optional[str] = None,
-        title: str = "Anymap Export",
+        title: Optional[str] = None,
         width: str = "100%",
-        height: str = "600px",
+        height: str = "100vh",
         **kwargs: Any,
     ) -> str:
         """Export the map to a standalone HTML file with DeckGL layers.
@@ -5350,9 +5351,9 @@ class MapLibreMap(MapWidget):
 
         Args:
             filename: Optional filename to save the HTML. If None, returns HTML string.
-            title: Title for the HTML page.
-            width: Width of the map container as CSS string.
-            height: Height of the map container as CSS string.
+            title: Title for the HTML page. If None, no title is displayed.
+            width: Width of the map container as CSS string (default: "100%").
+            height: Height of the map container as CSS string (default: "100vh").
             **kwargs: Additional arguments passed to the HTML template.
 
         Returns:

@@ -16,12 +16,22 @@
         <style>
             body {{
                 margin: 0;
-                padding: 20px;
+                padding: 0;
                 font-family: Arial, sans-serif;
             }}
+
+            /* Only add padding when title is present */
+            body:has(h1:not(:empty)) {{
+                padding: 20px;
+            }}
+
             #map {{
                 width: {width};
                 height: {height};
+            }}
+
+            /* Add border when title is present */
+            body:has(h1:not(:empty)) #map {{
                 border: 1px solid #ccc;
             }}
 
@@ -57,9 +67,48 @@
             .maplibregl-marker {{
                 cursor: default !important;
             }}
+
+            /* Marker tooltip styles */
+            .marker-tooltip .maplibregl-popup-content {{
+                padding: 8px 10px;
+                font-size: 12px;
+                line-height: 1.3;
+            }}
+
+            .marker-tooltip .maplibregl-popup-tip {{
+                display: block;
+            }}
+
+            /* Constrain images and other content within popups */
+            .maplibregl-popup-content img {{
+                max-width: 100% !important;
+                height: auto !important;
+                display: block;
+            }}
+
+            .maplibregl-popup-content {{
+                box-sizing: border-box;
+                max-width: 100%;
+                overflow-wrap: break-word;
+                word-wrap: break-word;
+            }}
+
+            .maplibregl-popup-content img,
+            .maplibregl-popup-content video,
+            .maplibregl-popup-content table,
+            .maplibregl-popup-content svg {{
+                max-width: 100%;
+                box-sizing: border-box;
+            }}
+
             h1 {{
                 margin-top: 0;
                 color: #333;
+            }}
+
+            /* Hide title when empty */
+            h1:empty {{
+                display: none;
             }}
 
             /* Layer control styles to match notebook appearance */
@@ -1339,26 +1388,80 @@
                 window.__anymap_marker_groups__ = markerGroups;
 
                 function createMarker(opts) {{
-                    const m = new maplibregl.Marker((opts && opts.options) || {{}})
+                    const markerOpts = (opts && opts.options) || {{}};
+                    // Extract scale if present (not a native MapLibre option)
+                    const markerScale = markerOpts.scale || 1.0;
+                    const markerOptsClean = {{ ...markerOpts }};
+                    delete markerOptsClean.scale;
+
+                    const m = new maplibregl.Marker(markerOptsClean)
                         .setLngLat(opts.coordinates);
-                    if (opts.tooltip) {{
-                        // Tooltips are not native in MapLibre; use title attribute
-                        const el = m.getElement();
-                        el.title = opts.tooltip;
+
+                    // Apply scale to the marker's inner element
+                    if (markerScale !== 1.0) {{
+                        const markerElement = m.getElement();
+                        const markerInner = markerElement.querySelector('svg') || markerElement.firstElementChild;
+                        if (markerInner) {{
+                            markerInner.style.transform = `scale(${{markerScale}})`;
+                            markerInner.style.transformOrigin = 'center center';
+                        }}
                     }}
+
+                    // Add popup if provided
                     if (opts.popup) {{
                         try {{
-                            m.setPopup(new maplibregl.Popup().setHTML(String(opts.popup)));
+                            const popupOptions = {{}};
+                            if (opts.popup_max_width) {{
+                                popupOptions.maxWidth = opts.popup_max_width;
+                            }}
+                            m.setPopup(new maplibregl.Popup(popupOptions).setHTML(String(opts.popup)));
                         }} catch (e) {{
                             console.warn('Failed to attach popup to marker:', e);
                         }}
                     }}
+
+                    // Add tooltip support (shows on hover)
+                    if (opts.tooltip) {{
+                        try {{
+                            const tooltipOptions = {{
+                                closeButton: false,
+                                closeOnClick: false,
+                                className: 'marker-tooltip'
+                            }};
+                            if (opts.tooltip_max_width) {{
+                                tooltipOptions.maxWidth = opts.tooltip_max_width;
+                            }}
+                            const tooltip = new maplibregl.Popup(tooltipOptions).setHTML(String(opts.tooltip));
+
+                            const markerElement = m.getElement();
+                            // Define named event listener functions
+                            function onMouseEnter() {{
+                                tooltip.setLngLat(opts.coordinates).addTo(map);
+                            }}
+                            function onMouseLeave() {{
+                                tooltip.remove();
+                            }}
+                            markerElement.addEventListener('mouseenter', onMouseEnter);
+                            markerElement.addEventListener('mouseleave', onMouseLeave);
+                            // Store cleanup function on marker object
+                            m._cleanupTooltip = function() {{
+                                markerElement.removeEventListener('mouseenter', onMouseEnter);
+                                markerElement.removeEventListener('mouseleave', onMouseLeave);
+                                tooltip.remove();
+                            }};
+                        }} catch (e) {{
+                            console.warn('Failed to attach tooltip to marker:', e);
+                        }}
+                    }}
+
                     m.addTo(map);
+
                     if (opts.options && typeof opts.options.opacity === 'number') {{
                         try {{
                             m.getElement().style.opacity = String(opts.options.opacity);
                         }} catch (e) {{}}
                     }}
+
                     return m;
                 }}
 
