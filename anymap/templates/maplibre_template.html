@@ -738,7 +738,31 @@
                 zoomBtn.textContent = 'Zoom to layer';
                 zoomBtn.addEventListener('click', () => {{
                     try {{
-                        // Find the source for the layer
+                        // Check if this is a marker-group type
+                        if (this.layerStates[layerId] && this.layerStates[layerId].type === 'marker-group') {{
+                            // Handle marker group zoom
+                            const markerGroups = window.__anymap_marker_groups__ || {{}};
+                            const group = markerGroups[layerId];
+                            if (group && group.items.length > 0) {{
+                                // Compute bounding box for all markers
+                                let minLng = Infinity, minLat = Infinity, maxLng = -Infinity, maxLat = -Infinity;
+                                group.items.forEach((marker) => {{
+                                    const lngLat = marker.getLngLat();
+                                    if (lngLat.lng < minLng) minLng = lngLat.lng;
+                                    if (lngLat.lat < minLat) minLat = lngLat.lat;
+                                    if (lngLat.lng > maxLng) maxLng = lngLat.lng;
+                                    if (lngLat.lat > maxLat) maxLat = lngLat.lat;
+                                }});
+                                if (minLng !== Infinity) {{
+                                    const bbox = [[minLng, minLat], [maxLng, maxLat]];
+                                    this.map.fitBounds(bbox, {{ padding: 50 }});
+                                }}
+                            }}
+                            menu.classList.remove('open');
+                            return;
+                        }}
+
+                        // Find the source for regular layers
                         const layer = this.map.getStyle().layers.find(l => l.id === layerId);
                         const sourceId = layer && layer.source;
                         if (!sourceId) {{
@@ -822,8 +846,24 @@
                         this.layerStates[layerId].visible = visible;
                     }}
 
-                    // Call map's visibility method
-                    this.map.setLayoutProperty(layerId, 'visibility', visible ? 'visible' : 'none');
+                    // Check if this is a marker-group type
+                    if (this.layerStates[layerId] && this.layerStates[layerId].type === 'marker-group') {{
+                        // Handle marker group visibility
+                        const markerGroups = window.__anymap_marker_groups__ || {{}};
+                        const group = markerGroups[layerId];
+                        if (group) {{
+                            group.visible = visible;
+                            group.items.forEach((marker) => {{
+                                const el = marker.getElement();
+                                if (el) {{
+                                    el.style.display = visible ? '' : 'none';
+                                }}
+                            }});
+                        }}
+                    }} else {{
+                        // Call map's visibility method for regular layers
+                        this.map.setLayoutProperty(layerId, 'visibility', visible ? 'visible' : 'none');
+                    }}
                 }}
 
                 changeLayerOpacity(layerId, opacity) {{
@@ -832,37 +872,53 @@
                         this.layerStates[layerId].opacity = opacity;
                     }}
 
-                    // Apply opacity to map layer
-                    const layer = this.map.getLayer(layerId);
-                    if (layer) {{
-                        const layerType = layer.type;
-                        let opacityProperty;
-
-                        switch (layerType) {{
-                            case 'fill':
-                                opacityProperty = 'fill-opacity';
-                                break;
-                            case 'line':
-                                opacityProperty = 'line-opacity';
-                                break;
-                            case 'circle':
-                                opacityProperty = 'circle-opacity';
-                                break;
-                            case 'symbol':
-                                this.map.setPaintProperty(layerId, 'icon-opacity', opacity);
-                                this.map.setPaintProperty(layerId, 'text-opacity', opacity);
-                                return;
-                            case 'raster':
-                                opacityProperty = 'raster-opacity';
-                                break;
-                            case 'background':
-                                opacityProperty = 'background-opacity';
-                                break;
-                            default:
-                                opacityProperty = `${{layerType}}-opacity`;
+                    // Check if this is a marker-group type
+                    if (this.layerStates[layerId] && this.layerStates[layerId].type === 'marker-group') {{
+                        // Handle marker group opacity
+                        const markerGroups = window.__anymap_marker_groups__ || {{}};
+                        const group = markerGroups[layerId];
+                        if (group) {{
+                            group.opacity = opacity;
+                            group.items.forEach((marker) => {{
+                                const el = marker.getElement();
+                                if (el) {{
+                                    el.style.opacity = String(opacity);
+                                }}
+                            }});
                         }}
+                    }} else {{
+                        // Apply opacity to map layer
+                        const layer = this.map.getLayer(layerId);
+                        if (layer) {{
+                            const layerType = layer.type;
+                            let opacityProperty;
 
-                        this.map.setPaintProperty(layerId, opacityProperty, opacity);
+                            switch (layerType) {{
+                                case 'fill':
+                                    opacityProperty = 'fill-opacity';
+                                    break;
+                                case 'line':
+                                    opacityProperty = 'line-opacity';
+                                    break;
+                                case 'circle':
+                                    opacityProperty = 'circle-opacity';
+                                    break;
+                                case 'symbol':
+                                    this.map.setPaintProperty(layerId, 'icon-opacity', opacity);
+                                    this.map.setPaintProperty(layerId, 'text-opacity', opacity);
+                                    return;
+                                case 'raster':
+                                    opacityProperty = 'raster-opacity';
+                                    break;
+                                case 'background':
+                                    opacityProperty = 'background-opacity';
+                                    break;
+                                default:
+                                    opacityProperty = `${{layerType}}-opacity`;
+                            }}
+
+                            this.map.setPaintProperty(layerId, opacityProperty, opacity);
+                        }}
                     }}
                 }}
 
