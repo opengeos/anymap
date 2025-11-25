@@ -2543,7 +2543,8 @@ class MapLibreMap(MapWidget):
                 layer_states[layer_id] = {
                     "visible": layer_info.get("visible", True),
                     "opacity": layer_info.get("opacity", 1.0),
-                    "name": layer_id,  # Use layer_id as display name by default
+                    "name": layer_info.get("name", layer_id),
+                    "type": layer_info.get("type"),
                 }
 
         control_options["layerStates"] = layer_states
@@ -3705,7 +3706,8 @@ class MapLibreMap(MapWidget):
                         layer_states[layer_id] = {
                             "visible": layer_info.get("visible", True),
                             "opacity": layer_info.get("opacity", 1.0),
-                            "name": layer_id,
+                            "name": layer_info.get("name", layer_id),
+                            "type": layer_info.get("type"),
                         }
 
                 # Update the control options with new layer states
