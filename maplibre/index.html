@@ -7423,7 +7423,8 @@ data sources, custom styling, and interactive features.</p>
                 <span class="n">layer_states</span><span class="p">[</span><span class="n">layer_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
                     <span class="s2">&quot;visible&quot;</span><span class="p">:</span> <span class="n">layer_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;visible&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
                     <span class="s2">&quot;opacity&quot;</span><span class="p">:</span> <span class="n">layer_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;opacity&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
-                    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">layer_id</span><span class="p">,</span>  <span class="c1"># Use layer_id as display name by default</span>
+                    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">layer_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">layer_id</span><span class="p">),</span>
+                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">layer_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">),</span>
                 <span class="p">}</span>
 
         <span class="n">control_options</span><span class="p">[</span><span class="s2">&quot;layerStates&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">layer_states</span>
@@ -8585,7 +8586,8 @@ data sources, custom styling, and interactive features.</p>
                         <span class="n">layer_states</span><span class="p">[</span><span class="n">layer_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
                             <span class="s2">&quot;visible&quot;</span><span class="p">:</span> <span class="n">layer_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;visible&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
                             <span class="s2">&quot;opacity&quot;</span><span class="p">:</span> <span class="n">layer_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;opacity&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
-                            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">layer_id</span><span class="p">,</span>
+                            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">layer_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">layer_id</span><span class="p">),</span>
+                            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">layer_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">),</span>
                         <span class="p">}</span>
 
                 <span class="c1"># Update the control options with new layer states</span>
@@ -14241,7 +14243,8 @@ similar to other controls, and expands when clicked.</p>
             <span class="n">layer_states</span><span class="p">[</span><span class="n">layer_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="s2">&quot;visible&quot;</span><span class="p">:</span> <span class="n">layer_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;visible&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
                 <span class="s2">&quot;opacity&quot;</span><span class="p">:</span> <span class="n">layer_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;opacity&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
-                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">layer_id</span><span class="p">,</span>  <span class="c1"># Use layer_id as display name by default</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">layer_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">layer_id</span><span class="p">),</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">layer_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">),</span>
             <span class="p">}</span>
 
     <span class="n">control_options</span><span class="p">[</span><span class="s2">&quot;layerStates&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">layer_states</span>
