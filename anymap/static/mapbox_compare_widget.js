@@ -116,6 +116,10 @@ async function render({ model, el }) {
             new Promise(resolve => beforeMap.on('load', resolve)),
             new Promise(resolve => afterMap.on('load', resolve))
         ]).then(() => {
+            // Add sources and layers from config (for maps passed as MapWidget instances)
+            addSourcesAndLayersFromConfig(beforeMap, leftMapConfig);
+            addSourcesAndLayersFromConfig(afterMap, rightMapConfig);
+
             // Initialize comparison using the maplibre-gl-compare plugin (works with Mapbox too)
             compare = new maplibregl.Compare(beforeMap, afterMap, '#' + container.id, {
                 orientation: model.get('orientation') || 'vertical',
@@ -172,6 +176,44 @@ async function render({ model, el }) {
             // Note: MapLibre Compare plugin handles synchronization internally
             // Custom synchronization disabled to prevent conflicts and improve performance
         });
+    }
+
+    // Helper function to add sources and layers from config
+    function addSourcesAndLayersFromConfig(map, config) {
+        if (!config) return;
+
+        // Add sources first
+        const sources = config.sources || {};
+        for (const [sourceId, sourceConfig] of Object.entries(sources)) {
+            try {
+                if (!map.getSource(sourceId)) {
+                    map.addSource(sourceId, sourceConfig);
+                }
+            } catch (error) {
+                console.warn(`Failed to add source ${sourceId}:`, error);
+            }
+        }
+
+        // Add layers
+        const layers = config.layers || [];
+        for (const layerConfig of layers) {
+            try {
+                if (layerConfig && layerConfig.id && !map.getLayer(layerConfig.id)) {
+                    map.addLayer(layerConfig);
+                }
+            } catch (error) {
+                console.warn(`Failed to add layer ${layerConfig?.id}:`, error);
+            }
+        }
+
+        // Add terrain if configured
+        if (config.terrain) {
+            try {
+                map.setTerrain(config.terrain);
+            } catch (error) {
+                console.warn('Failed to set terrain:', error);
+            }
+        }
     }
 
     function setupSynchronization() {
@@ -333,6 +375,115 @@ async function render({ model, el }) {
                         };
                         beforeMap.flyTo(flyToOptions);
                         afterMap.flyTo(flyToOptions);
+                    }
+                    break;
+
+                // Left map source/layer methods
+                case 'addLeftSource':
+                    if (beforeMap) {
+                        const sourceId = args[0];
+                        const sourceConfig = args[1];
+                        try {
+                            if (!beforeMap.getSource(sourceId)) {
+                                beforeMap.addSource(sourceId, sourceConfig);
+                            }
+                        } catch (error) {
+                            console.error(`Error adding left source ${sourceId}:`, error);
+                        }
+                    }
+                    break;
+
+                case 'addRightSource':
+                    if (afterMap) {
+                        const sourceId = args[0];
+                        const sourceConfig = args[1];
+                        try {
+                            if (!afterMap.getSource(sourceId)) {
+                                afterMap.addSource(sourceId, sourceConfig);
+                            }
+                        } catch (error) {
+                            console.error(`Error adding right source ${sourceId}:`, error);
+                        }
+                    }
+                    break;
+
+                case 'addLeftLayer':
+                    if (beforeMap) {
+                        const layerConfig = args[0];
+                        const beforeId = args[1];
+                        try {
+                            if (layerConfig && layerConfig.id && !beforeMap.getLayer(layerConfig.id)) {
+                                beforeMap.addLayer(layerConfig, beforeId || undefined);
+                            }
+                        } catch (error) {
+                            console.error(`Error adding left layer ${layerConfig?.id}:`, error);
+                        }
+                    }
+                    break;
+
+                case 'addRightLayer':
+                    if (afterMap) {
+                        const layerConfig = args[0];
+                        const beforeId = args[1];
+                        try {
+                            if (layerConfig && layerConfig.id && !afterMap.getLayer(layerConfig.id)) {
+                                afterMap.addLayer(layerConfig, beforeId || undefined);
+                            }
+                        } catch (error) {
+                            console.error(`Error adding right layer ${layerConfig?.id}:`, error);
+                        }
+                    }
+                    break;
+
+                case 'removeLeftLayer':
+                    if (beforeMap) {
+                        const layerId = args[0];
+                        try {
+                            if (beforeMap.getLayer(layerId)) {
+                                beforeMap.removeLayer(layerId);
+                            }
+                        } catch (error) {
+                            console.error(`Error removing left layer ${layerId}:`, error);
+                        }
+                    }
+                    break;
+
+                case 'removeRightLayer':
+                    if (afterMap) {
+                        const layerId = args[0];
+                        try {
+                            if (afterMap.getLayer(layerId)) {
+                                afterMap.removeLayer(layerId);
+                            }
+                        } catch (error) {
+                            console.error(`Error removing right layer ${layerId}:`, error);
+                        }
+                    }
+                    break;
+
+                case 'removeLeftSource':
+                    if (beforeMap) {
+                        const sourceId = args[0];
+                        try {
+                            if (beforeMap.getSource(sourceId)) {
+                                beforeMap.removeSource(sourceId);
+                            }
+                        } catch (error) {
+                            console.error(`Error removing left source ${sourceId}:`, error);
+                        }
+                    }
+                    break;
+
+                case 'removeRightSource':
+                    if (afterMap) {
+                        const sourceId = args[0];
+                        try {
+                            if (afterMap.getSource(sourceId)) {
+                                afterMap.removeSource(sourceId);
+                            }
+                        } catch (error) {
+                            console.error(`Error removing right source ${sourceId}:`, error);
+                        }
                     }
                     break;
 
