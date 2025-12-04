@@ -2622,6 +2622,104 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </clipboard-copy>
 </div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">anymap</span><span class="w"> </span><span class="kn">import</span> <span class="n">MapLibreMap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">anymap.compare</span><span class="w"> </span><span class="kn">import</span> <span class="n">MapCompare</span>
+
+<span class="c1"># Option 1: Pass existing map objects</span>
+<span class="n">left</span> <span class="o">=</span> <span class="n">MapLibreMap</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">74.0</span><span class="p">,</span> <span class="mf">40.7</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">left</span><span class="o">.</span><span class="n">add_basemap</span><span class="p">(</span><span class="s2">"CartoDB.DarkMatter"</span><span class="p">)</span>
+
+<span class="n">right</span> <span class="o">=</span> <span class="n">MapLibreMap</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">74.0</span><span class="p">,</span> <span class="mf">40.7</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">right</span><span class="o">.</span><span class="n">add_basemap</span><span class="p">(</span><span class="s2">"OpenTopoMap"</span><span class="p">)</span>
+
+<span class="n">compare</span> <span class="o">=</span> <span class="n">MapCompare</span><span class="p">(</span><span class="n">left_map</span><span class="o">=</span><span class="n">left</span><span class="p">,</span> <span class="n">right_map</span><span class="o">=</span><span class="n">right</span><span class="p">)</span>
+<span class="n">compare</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-2">from anymap import MapLibreMap
+from anymap.compare import MapCompare
+
+# Option 1: Pass existing map objects
+left = MapLibreMap(center=[-74.0, 40.7], zoom=10)
+left.add_basemap("CartoDB.DarkMatter")
+
+right = MapLibreMap(center=[-74.0, 40.7], zoom=10)
+right.add_basemap("OpenTopoMap")
+
+compare = MapCompare(left_map=left, right_map=right)
+compare</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-3">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">anymap</span><span class="w"> </span><span class="kn">import</span> <span class="n">MapLibreMap</span><span class="p">,</span> <span class="n">MapCompare</span>
+
+<span class="n">left</span> <span class="o">=</span> <span class="n">MapLibreMap</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">117.5921</span><span class="p">,</span> <span class="mf">47.6530</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mf">15.5</span><span class="p">)</span>
+<span class="n">left</span><span class="o">.</span><span class="n">add_basemap</span><span class="p">(</span><span class="s2">"Esri.WorldImagery"</span><span class="p">)</span>
+
+<span class="n">right</span> <span class="o">=</span> <span class="n">MapLibreMap</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">117.5921</span><span class="p">,</span> <span class="mf">47.6530</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mf">15.5</span><span class="p">)</span>
+<span class="n">right</span><span class="o">.</span><span class="n">add_basemap</span><span class="p">(</span><span class="s2">"Esri.WorldImagery"</span><span class="p">)</span>
+<span class="n">filepath</span> <span class="o">=</span> <span class="s2">"https://huggingface.co/datasets/giswqs/geospatial/resolve/main/naip_train_buildings.geojson"</span>
+<span class="n">right</span><span class="o">.</span><span class="n">add_vector</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"buildings"</span><span class="p">)</span>
+
+<span class="n">compare</span> <span class="o">=</span> <span class="n">MapCompare</span><span class="p">(</span><span class="n">left_map</span><span class="o">=</span><span class="n">left</span><span class="p">,</span> <span class="n">right_map</span><span class="o">=</span><span class="n">right</span><span class="p">)</span>
+<span class="n">compare</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-3">from anymap import MapLibreMap, MapCompare
+
+left = MapLibreMap(center=[-117.5921, 47.6530], zoom=15.5)
+left.add_basemap("Esri.WorldImagery")
+
+right = MapLibreMap(center=[-117.5921, 47.6530], zoom=15.5)
+right.add_basemap("Esri.WorldImagery")
+filepath = "https://huggingface.co/datasets/giswqs/geospatial/resolve/main/naip_train_buildings.geojson"
+right.add_vector(filepath, opacity=0.5, name="buildings")
+
+compare = MapCompare(left_map=left, right_map=right)
+compare</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-4">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Basic MapLibre comparison with different styles</span>
 <span class="n">compare</span> <span class="o">=</span> <span class="n">anymap</span><span class="o">.</span><span class="n">MapCompare</span><span class="p">(</span>
     <span class="n">left_map</span><span class="o">=</span><span class="p">{</span>
@@ -2642,7 +2740,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 
 <span class="n">compare</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-2"># Basic MapLibre comparison with different styles
+<div class="clipboard-copy-txt" id="cell-4"># Basic MapLibre comparison with different styles
 compare = anymap.MapCompare(
     left_map={
         "center": [37.7749, -122.4194],  # San Francisco
@@ -2686,7 +2784,7 @@ compare</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-3">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-5">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2699,7 +2797,7 @@ compare</div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Move slider to 25% position (more of the left map visible)</span>
 <span class="n">compare</span><span class="o">.</span><span class="n">set_slider_position</span><span class="p">(</span><span class="mf">0.25</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-3"># Move slider to 25% position (more of the left map visible)
+<div class="clipboard-copy-txt" id="cell-5"># Move slider to 25% position (more of the left map visible)
 compare.set_slider_position(0.25)</div>
 </div>
 </div>
@@ -2715,7 +2813,7 @@ compare.set_slider_position(0.25)</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-4">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-6">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2728,7 +2826,7 @@ compare.set_slider_position(0.25)</div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Move slider to 75% position (more of the right map visible)</span>
 <span class="n">compare</span><span class="o">.</span><span class="n">set_slider_position</span><span class="p">(</span><span class="mf">0.75</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-4"># Move slider to 75% position (more of the right map visible)
+<div class="clipboard-copy-txt" id="cell-6"># Move slider to 75% position (more of the right map visible)
 compare.set_slider_position(0.75)</div>
 </div>
 </div>
@@ -2744,7 +2842,7 @@ compare.set_slider_position(0.75)</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-5">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-7">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2757,7 +2855,7 @@ compare.set_slider_position(0.75)</div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Center the slider"</span>
 <span class="n">compare</span><span class="o">.</span><span class="n">set_slider_position</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-5"># Center the slider"
+<div class="clipboard-copy-txt" id="cell-7"># Center the slider"
 compare.set_slider_position(0.5)</div>
 </div>
 </div>
@@ -2784,7 +2882,7 @@ compare.set_slider_position(0.5)</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-6">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-8">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2797,7 +2895,7 @@ compare.set_slider_position(0.5)</div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Switch to horizontal orientation (top/bottom comparison)</span>
 <span class="n">compare</span><span class="o">.</span><span class="n">set_orientation</span><span class="p">(</span><span class="s2">"horizontal"</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-6"># Switch to horizontal orientation (top/bottom comparison)
+<div class="clipboard-copy-txt" id="cell-8"># Switch to horizontal orientation (top/bottom comparison)
 compare.set_orientation("horizontal")</div>
 </div>
 </div>
@@ -2813,7 +2911,7 @@ compare.set_orientation("horizontal")</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-7">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-9">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2826,7 +2924,7 @@ compare.set_orientation("horizontal")</div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Switch back to vertical orientation (left/right comparison)</span>
 <span class="n">compare</span><span class="o">.</span><span class="n">set_orientation</span><span class="p">(</span><span class="s2">"vertical"</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-7"># Switch back to vertical orientation (left/right comparison)
+<div class="clipboard-copy-txt" id="cell-9"># Switch back to vertical orientation (left/right comparison)
 compare.set_orientation("vertical")</div>
 </div>
 </div>
@@ -2853,7 +2951,7 @@ compare.set_orientation("vertical")</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-8">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-10">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2866,7 +2964,7 @@ compare.set_orientation("vertical")</div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Disable mouse move (slider must be dragged)</span>
 <span class="n">compare</span><span class="o">.</span><span class="n">enable_mousemove</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-8"># Disable mouse move (slider must be dragged)
+<div class="clipboard-copy-txt" id="cell-10"># Disable mouse move (slider must be dragged)
 compare.enable_mousemove(False)</div>
 </div>
 </div>
@@ -2882,7 +2980,7 @@ compare.enable_mousemove(False)</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-9">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-11">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2895,7 +2993,7 @@ compare.enable_mousemove(False)</div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Re-enable mouse move</span>
 <span class="n">compare</span><span class="o">.</span><span class="n">enable_mousemove</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-9"># Re-enable mouse move
+<div class="clipboard-copy-txt" id="cell-11"># Re-enable mouse move
 compare.enable_mousemove(True)</div>
 </div>
 </div>
@@ -2922,7 +3020,7 @@ compare.enable_mousemove(True)</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-10">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-12">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2935,7 +3033,7 @@ compare.enable_mousemove(True)</div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Update the left map to a different style</span>
 <span class="n">compare</span><span class="o">.</span><span class="n">update_left_map</span><span class="p">({</span><span class="s2">"style"</span><span class="p">:</span> <span class="s2">"https://tiles.stadiamaps.com/styles/outdoors.json"</span><span class="p">})</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-10"># Update the left map to a different style
+<div class="clipboard-copy-txt" id="cell-12"># Update the left map to a different style
 compare.update_left_map({"style": "https://tiles.stadiamaps.com/styles/outdoors.json"})</div>
 </div>
 </div>
@@ -2951,7 +3049,7 @@ compare.update_left_map({"style": "https://tiles.stadiamaps.com/styles/outdoors.
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-11">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-13">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2966,7 +3064,7 @@ compare.update_left_map({"style": "https://tiles.stadiamaps.com/styles/outdoors.
     <span class="p">{</span><span class="s2">"style"</span><span class="p">:</span> <span class="s2">"https://tiles.stadiamaps.com/styles/alidade_satellite.json"</span><span class="p">}</span>
 <span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-11"># Update the right map to a satellite style
+<div class="clipboard-copy-txt" id="cell-13"># Update the right map to a satellite style
 compare.update_right_map(
     {"style": "https://tiles.stadiamaps.com/styles/alidade_satellite.json"}
 )</div>
@@ -2995,7 +3093,7 @@ compare.update_right_map(
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-12">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-14">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -3008,7 +3106,7 @@ compare.update_right_map(
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Fly to New York City</span>
 <span class="n">compare</span><span class="o">.</span><span class="n">fly_to</span><span class="p">(</span><span class="mf">40.7128</span><span class="p">,</span> <span class="o">-</span><span class="mf">74.0060</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-12"># Fly to New York City
+<div class="clipboard-copy-txt" id="cell-14"># Fly to New York City
 compare.fly_to(40.7128, -74.0060, zoom=13)</div>
 </div>
 </div>
@@ -3024,7 +3122,7 @@ compare.fly_to(40.7128, -74.0060, zoom=13)</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-13">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-15">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -3037,7 +3135,7 @@ compare.fly_to(40.7128, -74.0060, zoom=13)</div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Fly to London</span>
 <span class="n">compare</span><span class="o">.</span><span class="n">fly_to</span><span class="p">(</span><span class="mf">51.5074</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1278</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-13"># Fly to London
+<div class="clipboard-copy-txt" id="cell-15"># Fly to London
 compare.fly_to(51.5074, -0.1278, zoom=12)</div>
 </div>
 </div>
@@ -3064,7 +3162,7 @@ compare.fly_to(51.5074, -0.1278, zoom=12)</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-14">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-16">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -3077,7 +3175,7 @@ compare.fly_to(51.5074, -0.1278, zoom=12)</div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Disable center synchronization but keep zoom sync</span>
 <span class="n">compare</span><span class="o">.</span><span class="n">set_sync_options</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bearing</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pitch</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-14"># Disable center synchronization but keep zoom sync
+<div class="clipboard-copy-txt" id="cell-16"># Disable center synchronization but keep zoom sync
 compare.set_sync_options(center=False, zoom=True, bearing=True, pitch=True)</div>
 </div>
 </div>
@@ -3093,7 +3191,7 @@ compare.set_sync_options(center=False, zoom=True, bearing=True, pitch=True)</div
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-15">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-17">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -3106,7 +3204,7 @@ compare.set_sync_options(center=False, zoom=True, bearing=True, pitch=True)</div
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Re-enable all synchronization</span>
 <span class="n">compare</span><span class="o">.</span><span class="n">set_sync_options</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bearing</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pitch</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-15"># Re-enable all synchronization
+<div class="clipboard-copy-txt" id="cell-17"># Re-enable all synchronization
 compare.set_sync_options(center=True, zoom=True, bearing=True, pitch=True)</div>
 </div>
 </div>
@@ -3133,7 +3231,7 @@ compare.set_sync_options(center=True, zoom=True, bearing=True, pitch=True)</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-16">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-18">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -3166,7 +3264,7 @@ compare.set_sync_options(center=True, zoom=True, bearing=True, pitch=True)</div>
 
 <span class="c1"># mapbox_compare</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-16"># Uncomment and set your Mapbox access token
+<div class="clipboard-copy-txt" id="cell-18"># Uncomment and set your Mapbox access token
 # import os
 # os.environ['MAPBOX_ACCESS_TOKEN'] = 'your_mapbox_token_here'
 
@@ -3213,7 +3311,7 @@ compare.set_sync_options(center=True, zoom=True, bearing=True, pitch=True)</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-17">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-19">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -3231,7 +3329,7 @@ compare.set_sync_options(center=True, zoom=True, bearing=True, pitch=True)</div>
 <span class="c1"># Register the event handler</span>
 <span class="n">compare</span><span class="o">.</span><span class="n">on_event</span><span class="p">(</span><span class="s2">"slideend"</span><span class="p">,</span> <span class="n">on_slide_end</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-17"># Define an event handler
+<div class="clipboard-copy-txt" id="cell-19"># Define an event handler
 def on_slide_end(event):
     print(f"Slider moved to position: {event.get('position', 'unknown')}")
 
@@ -3281,7 +3379,7 @@ compare.on_event("slideend", on_slide_end)</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-18">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-20">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -3311,7 +3409,7 @@ compare.on_event("slideend", on_slide_end)</div>
 
 <span class="n">compare2</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-18"># Second comparison with different settings
+<div class="clipboard-copy-txt" id="cell-20"># Second comparison with different settings
 compare2 = anymap.MapCompare(
     left_map={
         "center": [51.5074, -0.1278],  # London
@@ -3355,7 +3453,7 @@ compare2</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-19">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-21">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -3370,7 +3468,7 @@ compare2</div>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"HTML content generated (first 500 characters):"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">html_content</span><span class="p">[:</span><span class="mi">500</span><span class="p">]</span> <span class="o">+</span> <span class="s2">"..."</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-19"># You can also get the HTML content without saving to file
+<div class="clipboard-copy-txt" id="cell-21"># You can also get the HTML content without saving to file
 html_content = compare.to_html(title="My Map Comparison")
 print("HTML content generated (first 500 characters):")
 print(html_content[:500] + "...")</div>
@@ -3388,7 +3486,7 @@ print(html_content[:500] + "...")</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-20">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-22">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -3406,7 +3504,7 @@ print(html_content[:500] + "...")</div>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"Map comparison exported to map_comparison.html"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"HTML file size: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">html_content</span><span class="p">)</span><span class="si">}</span><span class="s2"> characters"</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-20"># Export to HTML file
+<div class="clipboard-copy-txt" id="cell-22"># Export to HTML file
 html_content = compare.to_html(
     filename="map_comparison.html", title="San Francisco Map Style Comparison"
 )
@@ -3475,7 +3573,7 @@ print(f"HTML file size: {len(html_content)} characters")</div>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 4, 2025 03:56:49 UTC"><span class="timeago" datetime="2025-07-04T03:56:49+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 4, 2025 03:56:49 UTC">2025-07-04</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="December 4, 2025 05:04:42 UTC"><span class="timeago" datetime="2025-12-04T05:04:42+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="December 4, 2025 05:04:42 UTC">2025-12-04</span>
   </span>
 
     
