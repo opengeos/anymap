@@ -23,7 +23,6 @@ from .potree import PotreeMap
 from .deckgl import DeckGLMap
 from .compare import MapCompare
 
-
 # Make all classes available when importing from this module
 __all__ = [
     "Map",
