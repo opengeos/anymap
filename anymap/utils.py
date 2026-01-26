@@ -1672,12 +1672,10 @@ def get_crs(filepath: str) -> str:
     con = duckdb.connect()
     duckdb_install_extensions(con)
 
-    result = con.sql(
-        f"""
+    result = con.sql(f"""
 SELECT CONCAT(layers[1].geometry_fields[1].crs.auth_name, ':', layers[1].geometry_fields[1].crs.auth_code) AS crs_string
 FROM ST_Read_Meta('{filepath}')
-"""
-    ).fetchone()
+""").fetchone()
 
     if result is None:
         return None

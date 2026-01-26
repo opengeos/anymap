@@ -30,7 +30,6 @@ from IPython.display import display
 
 from .base import MapWidget
 
-
 try:
     import geopandas as gpd
 
