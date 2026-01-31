@@ -10536,6 +10536,38 @@ data sources, custom styling, and interactive features.</p>
             <span class="n">legend_vbox</span><span class="p">,</span>
             <span class="o">**</span><span class="n">widget_control_params</span><span class="p">,</span>
         <span class="p">)</span>
+
+        <span class="c1"># Store legend configuration for HTML export.</span>
+        <span class="c1"># ipywidgets (used above) don&#39;t persist in static HTML, so we save the</span>
+        <span class="c1"># raw legend data as a dedicated control entry that the HTML template</span>
+        <span class="c1"># can render as pure HTML/CSS.</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">safe_fs</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">fontsize</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">safe_fs</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="p">):</span>
+                <span class="n">safe_fs</span> <span class="o">=</span> <span class="mi">14</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
+            <span class="n">safe_fs</span> <span class="o">=</span> <span class="mi">14</span>
+
+        <span class="n">legend_export_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;legend_</span><span class="si">{</span><span class="n">position</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="p">[:</span><span class="mi">6</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">current_controls</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_controls</span><span class="p">)</span>
+        <span class="n">current_controls</span><span class="p">[</span><span class="n">legend_export_key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;legend&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
+            <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="n">title</span><span class="p">,</span>
+                <span class="s2">&quot;labels&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">labels</span><span class="p">),</span>
+                <span class="s2">&quot;colors&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">colors</span><span class="p">),</span>
+                <span class="s2">&quot;shape_type&quot;</span><span class="p">:</span> <span class="n">shape_type</span><span class="p">,</span>
+                <span class="s2">&quot;bg_color&quot;</span><span class="p">:</span> <span class="n">bg_color</span><span class="p">,</span>
+                <span class="s2">&quot;icon&quot;</span><span class="p">:</span> <span class="n">icon</span><span class="p">,</span>
+                <span class="s2">&quot;collapsed&quot;</span><span class="p">:</span> <span class="n">collapsed</span><span class="p">,</span>
+                <span class="s2">&quot;fontsize&quot;</span><span class="p">:</span> <span class="n">safe_fs</span><span class="p">,</span>
+                <span class="s2">&quot;max_height&quot;</span><span class="p">:</span> <span class="n">max_height</span><span class="p">,</span>
+                <span class="s2">&quot;header_color&quot;</span><span class="p">:</span> <span class="n">header_color</span><span class="p">,</span>
+                <span class="s2">&quot;header_text_color&quot;</span><span class="p">:</span> <span class="n">header_text_color</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_controls</span> <span class="o">=</span> <span class="n">current_controls</span>
 </code></pre></div>
         </details>
 
@@ -14630,6 +14662,38 @@ To make the background half transparent, set this to "rgba(255, 255, 255, 0.5)".
         <span class="n">legend_vbox</span><span class="p">,</span>
         <span class="o">**</span><span class="n">widget_control_params</span><span class="p">,</span>
     <span class="p">)</span>
+
+    <span class="c1"># Store legend configuration for HTML export.</span>
+    <span class="c1"># ipywidgets (used above) don&#39;t persist in static HTML, so we save the</span>
+    <span class="c1"># raw legend data as a dedicated control entry that the HTML template</span>
+    <span class="c1"># can render as pure HTML/CSS.</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">safe_fs</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">fontsize</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">safe_fs</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="p">):</span>
+            <span class="n">safe_fs</span> <span class="o">=</span> <span class="mi">14</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
+        <span class="n">safe_fs</span> <span class="o">=</span> <span class="mi">14</span>
+
+    <span class="n">legend_export_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;legend_</span><span class="si">{</span><span class="n">position</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="p">[:</span><span class="mi">6</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">current_controls</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_controls</span><span class="p">)</span>
+    <span class="n">current_controls</span><span class="p">[</span><span class="n">legend_export_key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;legend&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
+        <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="n">title</span><span class="p">,</span>
+            <span class="s2">&quot;labels&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">labels</span><span class="p">),</span>
+            <span class="s2">&quot;colors&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">colors</span><span class="p">),</span>
+            <span class="s2">&quot;shape_type&quot;</span><span class="p">:</span> <span class="n">shape_type</span><span class="p">,</span>
+            <span class="s2">&quot;bg_color&quot;</span><span class="p">:</span> <span class="n">bg_color</span><span class="p">,</span>
+            <span class="s2">&quot;icon&quot;</span><span class="p">:</span> <span class="n">icon</span><span class="p">,</span>
+            <span class="s2">&quot;collapsed&quot;</span><span class="p">:</span> <span class="n">collapsed</span><span class="p">,</span>
+            <span class="s2">&quot;fontsize&quot;</span><span class="p">:</span> <span class="n">safe_fs</span><span class="p">,</span>
+            <span class="s2">&quot;max_height&quot;</span><span class="p">:</span> <span class="n">max_height</span><span class="p">,</span>
+            <span class="s2">&quot;header_color&quot;</span><span class="p">:</span> <span class="n">header_color</span><span class="p">,</span>
+            <span class="s2">&quot;header_text_color&quot;</span><span class="p">:</span> <span class="n">header_text_color</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_controls</span> <span class="o">=</span> <span class="n">current_controls</span>
 </code></pre></div>
         </details>
     </div>
