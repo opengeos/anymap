@@ -5655,3 +5655,35 @@ class MapLibreMap(MapWidget):
             legend_vbox,
             **widget_control_params,
         )
+
+        # Store legend configuration for HTML export.
+        # ipywidgets (used above) don't persist in static HTML, so we save the
+        # raw legend data as a dedicated control entry that the HTML template
+        # can render as pure HTML/CSS.
+        try:
+            safe_fs = int(fontsize)
+            if not (1 <= safe_fs <= 100):
+                safe_fs = 14
+        except (ValueError, TypeError):
+            safe_fs = 14
+
+        legend_export_key = f"legend_{position}_{uuid.uuid4().hex[:6]}"
+        current_controls = dict(self._controls)
+        current_controls[legend_export_key] = {
+            "type": "legend",
+            "position": position,
+            "options": {
+                "title": title,
+                "labels": list(labels),
+                "colors": list(colors),
+                "shape_type": shape_type,
+                "bg_color": bg_color,
+                "icon": icon,
+                "collapsed": collapsed,
+                "fontsize": safe_fs,
+                "max_height": max_height,
+                "header_color": header_color,
+                "header_text_color": header_text_color,
+            },
+        }
+        self._controls = current_controls
