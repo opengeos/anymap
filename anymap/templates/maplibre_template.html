@@ -1277,6 +1277,116 @@
                                 return;
                             }}
                             break;
+                        case 'legend':
+                            (function() {{
+                                const opts = controlOptions || {{}};
+                                const legendTitle = opts.title || 'Legend';
+                                const legendLabels = opts.labels || [];
+                                const legendColors = opts.colors || [];
+                                const shapeType = opts.shape_type || 'rectangle';
+                                const bgColor = opts.bg_color || 'white';
+                                const legendIcon = opts.icon || '\u2261';
+                                const collapsed = opts.collapsed !== false;
+                                const fontSize = opts.fontsize || 14;
+                                const maxHeight = opts.max_height || 380;
+                                const headerColor = opts.header_color || null;
+                                const headerTextColor = opts.header_text_color || '#333';
+
+                                // Build the panel container
+                                const wrapper = document.createElement('div');
+                                wrapper.className = 'maplibregl-ctrl anymap-legend-ctrl';
+                                wrapper.style.cssText = 'font-family: Arial, sans-serif; pointer-events: auto;';
+
+                                // Toggle button (shown when collapsed)
+                                const toggleBtn = document.createElement('button');
+                                toggleBtn.className = 'anymap-legend-toggle';
+                                toggleBtn.textContent = legendIcon;
+                                toggleBtn.title = legendTitle;
+                                toggleBtn.style.cssText = 'display: block; width: 30px; height: 30px; padding: 0; border: none; background: white; cursor: pointer; font-size: 18px; line-height: 30px; text-align: center; border-radius: 4px; box-shadow: 0 0 0 2px rgba(0,0,0,.1);';
+                                wrapper.appendChild(toggleBtn);
+
+                                // Panel (shown when expanded)
+                                const panel = document.createElement('div');
+                                panel.className = 'anymap-legend-panel';
+                                panel.style.cssText = 'display: none; background: ' + bgColor + '; border-radius: 4px; box-shadow: 0 0 0 2px rgba(0,0,0,.1); min-width: 120px; max-width: 360px;';
+
+                                // Header
+                                const header = document.createElement('div');
+                                header.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; border-bottom: 1px solid #ddd; cursor: pointer; border-radius: 4px 4px 0 0;' +
+                                    (headerColor ? ' background: ' + headerColor + ';' : ' background: #f0f0f0;');
+                                const headerLabel = document.createElement('span');
+                                headerLabel.textContent = legendTitle;
+                                headerLabel.style.cssText = 'font-weight: bold; font-size: 13px; color: ' + (headerTextColor || '#333') + ';';
+                                const closeBtn = document.createElement('span');
+                                closeBtn.innerHTML = '&times;';
+                                closeBtn.style.cssText = 'cursor: pointer; font-size: 16px; color: ' + (headerTextColor || '#666') + '; margin-left: 12px;';
+                                header.appendChild(headerLabel);
+                                header.appendChild(closeBtn);
+                                panel.appendChild(header);
+
+                                // Content area with items
+                                const contentHeight = Math.max(100, maxHeight - 60);
+                                const content = document.createElement('div');
+                                content.style.cssText = 'padding: 8px; max-height: ' + contentHeight + 'px; overflow-y: auto; overflow-x: hidden;';
+
+                                for (let i = 0; i < legendLabels.length; i++) {{
+                                    const label = legendLabels[i];
+                                    const color = legendColors[i] || '#ccc';
+                                    const row = document.createElement('div');
+                                    row.style.cssText = 'margin: 0 0 4px 0; line-height: 1.4; white-space: nowrap; font-size: ' + fontSize + 'px;';
+
+                                    const shape = document.createElement('span');
+                                    if (shapeType === 'circle') {{
+                                        shape.style.cssText = 'display: inline-block; width: 20px; height: 20px; background-color: ' + color + '; border-radius: 50%; margin-right: 8px; vertical-align: middle;';
+                                    }} else if (shapeType === 'line') {{
+                                        shape.style.cssText = 'display: inline-block; width: 20px; height: 3px; background-color: ' + color + '; margin-right: 8px; vertical-align: middle;';
+                                    }} else {{
+                                        shape.style.cssText = 'display: inline-block; width: 20px; height: 20px; background-color: ' + color + '; margin-right: 8px; vertical-align: middle;';
+                                    }}
+
+                                    const text = document.createElement('span');
+                                    text.textContent = label;
+                                    text.style.verticalAlign = 'middle';
+
+                                    row.appendChild(shape);
+                                    row.appendChild(text);
+                                    content.appendChild(row);
+                                }}
+
+                                panel.appendChild(content);
+                                wrapper.appendChild(panel);
+
+                                // Toggle behaviour
+                                function expand() {{
+                                    toggleBtn.style.display = 'none';
+                                    panel.style.display = 'block';
+                                }}
+                                function collapse() {{
+                                    panel.style.display = 'none';
+                                    toggleBtn.style.display = 'block';
+                                }}
+                                toggleBtn.addEventListener('click', expand);
+                                closeBtn.addEventListener('click', collapse);
+                                header.addEventListener('click', function(e) {{
+                                    if (e.target === closeBtn) return;
+                                    collapse();
+                                }});
+
+                                if (!collapsed) {{
+                                    expand();
+                                }}
+
+                                control = {{
+                                    onAdd: function() {{ return wrapper; }},
+                                    onRemove: function() {{ if (wrapper.parentNode) {{ wrapper.parentNode.removeChild(wrapper); }} }}
+                                }};
+                            }})();
+                            break;
+                        case 'widget_panel':
+                            // widget_panel controls use ipywidgets which are only
+                            // available inside Jupyter.  Skip silently during HTML
+                            // export — the legend case above handles legend data.
+                            return;
                         default:
                             console.warn(`Unknown control type during restore: ${{controlType}}`);
                             return;
