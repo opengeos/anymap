@@ -125,6 +125,22 @@ class CesiumMap(MapWidget):
             **kwargs,
         )
 
+        # Initialize entity counter for unique ID generation
+        self._entity_counter = 0
+
+    def _generate_entity_id(self, prefix: str) -> str:
+        """Generate a unique entity ID with the given prefix.
+
+        Args:
+            prefix: The prefix for the entity ID (e.g., 'point', 'billboard')
+
+        Returns:
+            A unique entity ID string
+        """
+        entity_id = f"{prefix}_{self._entity_counter}"
+        self._entity_counter += 1
+        return entity_id
+
     @staticmethod
     def _get_default_access_token() -> str:
         """Get default Cesium access token from environment."""
@@ -210,7 +226,7 @@ class CesiumMap(MapWidget):
     ) -> str:
         """Add a point to the globe."""
         if entity_id is None:
-            entity_id = f"point_{len(self._layers)}"
+            entity_id = self._generate_entity_id("point")
 
         entity_config = {
             "id": entity_id,
@@ -249,7 +265,7 @@ class CesiumMap(MapWidget):
     ) -> str:
         """Add a billboard (image marker) to the globe."""
         if entity_id is None:
-            entity_id = f"billboard_{len(self._layers)}"
+            entity_id = self._generate_entity_id("billboard")
 
         entity_config = {
             "id": entity_id,
@@ -285,7 +301,7 @@ class CesiumMap(MapWidget):
     ) -> str:
         """Add a polyline to the globe."""
         if entity_id is None:
-            entity_id = f"polyline_{len(self._layers)}"
+            entity_id = self._generate_entity_id("polyline")
 
         # Convert coordinates to Cesium format
         positions = []
@@ -326,7 +342,7 @@ class CesiumMap(MapWidget):
     ) -> str:
         """Add a polygon to the globe."""
         if entity_id is None:
-            entity_id = f"polygon_{len(self._layers)}"
+            entity_id = self._generate_entity_id("polygon")
 
         # Convert coordinates to Cesium format
         positions = []
