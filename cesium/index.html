@@ -2842,6 +2842,22 @@ MapWidget            (AnyWidget)
             <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
         <span class="p">)</span>
 
+        <span class="c1"># Initialize entity counter for unique ID generation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_entity_counter</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_entity_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate a unique entity ID with the given prefix.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            prefix: The prefix for the entity ID (e.g., &#39;point&#39;, &#39;billboard&#39;)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A unique entity ID string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">entity_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_entity_counter</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_entity_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">entity_id</span>
+
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_default_access_token</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get default Cesium access token from environment.&quot;&quot;&quot;</span>
@@ -2927,7 +2943,7 @@ MapWidget            (AnyWidget)
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a point to the globe.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">entity_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">entity_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;point_</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_layers</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">entity_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_entity_id</span><span class="p">(</span><span class="s2">&quot;point&quot;</span><span class="p">)</span>
 
         <span class="n">entity_config</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">entity_id</span><span class="p">,</span>
@@ -2966,7 +2982,7 @@ MapWidget            (AnyWidget)
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a billboard (image marker) to the globe.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">entity_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">entity_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;billboard_</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_layers</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">entity_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_entity_id</span><span class="p">(</span><span class="s2">&quot;billboard&quot;</span><span class="p">)</span>
 
         <span class="n">entity_config</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">entity_id</span><span class="p">,</span>
@@ -3002,7 +3018,7 @@ MapWidget            (AnyWidget)
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a polyline to the globe.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">entity_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">entity_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;polyline_</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_layers</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">entity_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_entity_id</span><span class="p">(</span><span class="s2">&quot;polyline&quot;</span><span class="p">)</span>
 
         <span class="c1"># Convert coordinates to Cesium format</span>
         <span class="n">positions</span> <span class="o">=</span> <span class="p">[]</span>
@@ -3043,7 +3059,7 @@ MapWidget            (AnyWidget)
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a polygon to the globe.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">entity_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">entity_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;polygon_</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_layers</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">entity_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_entity_id</span><span class="p">(</span><span class="s2">&quot;polygon&quot;</span><span class="p">)</span>
 
         <span class="c1"># Convert coordinates to Cesium format</span>
         <span class="n">positions</span> <span class="o">=</span> <span class="p">[]</span>
@@ -3437,6 +3453,9 @@ MapWidget            (AnyWidget)
         <span class="n">should_animate</span><span class="o">=</span><span class="n">should_animate</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">)</span>
+
+    <span class="c1"># Initialize entity counter for unique ID generation</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_entity_counter</span> <span class="o">=</span> <span class="mi">0</span>
 </code></pre></div>
         </details>
     </div>
@@ -3474,7 +3493,7 @@ MapWidget            (AnyWidget)
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a billboard (image marker) to the globe.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">entity_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">entity_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;billboard_</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_layers</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">entity_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_entity_id</span><span class="p">(</span><span class="s2">&quot;billboard&quot;</span><span class="p">)</span>
 
     <span class="n">entity_config</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">entity_id</span><span class="p">,</span>
@@ -3679,7 +3698,7 @@ MapWidget            (AnyWidget)
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a point to the globe.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">entity_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">entity_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;point_</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_layers</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">entity_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_entity_id</span><span class="p">(</span><span class="s2">&quot;point&quot;</span><span class="p">)</span>
 
     <span class="n">entity_config</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">entity_id</span><span class="p">,</span>
@@ -3741,7 +3760,7 @@ MapWidget            (AnyWidget)
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a polygon to the globe.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">entity_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">entity_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;polygon_</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_layers</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">entity_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_entity_id</span><span class="p">(</span><span class="s2">&quot;polygon&quot;</span><span class="p">)</span>
 
     <span class="c1"># Convert coordinates to Cesium format</span>
     <span class="n">positions</span> <span class="o">=</span> <span class="p">[]</span>
@@ -3806,7 +3825,7 @@ MapWidget            (AnyWidget)
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a polyline to the globe.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">entity_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">entity_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;polyline_</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_layers</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">entity_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_entity_id</span><span class="p">(</span><span class="s2">&quot;polyline&quot;</span><span class="p">)</span>
 
     <span class="c1"># Convert coordinates to Cesium format</span>
     <span class="n">positions</span> <span class="o">=</span> <span class="p">[]</span>
