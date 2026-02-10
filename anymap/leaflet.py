@@ -9,13 +9,21 @@ from .base import MapWidget
 
 # Load Leaflet-specific js and css
 try:
-    with open(pathlib.Path(__file__).parent / "static" / "leaflet_widget.js", "r", encoding="utf-8") as f:
+    with open(
+        pathlib.Path(__file__).parent / "static" / "leaflet_widget.js",
+        "r",
+        encoding="utf-8",
+    ) as f:
         _esm_leaflet = f.read()
 except FileNotFoundError:
     _esm_leaflet = "console.error('Leaflet widget JS not found');"
 
 try:
-    with open(pathlib.Path(__file__).parent / "static" / "leaflet_widget.css", "r", encoding="utf-8") as f:
+    with open(
+        pathlib.Path(__file__).parent / "static" / "leaflet_widget.css",
+        "r",
+        encoding="utf-8",
+    ) as f:
         _css_leaflet = f.read()
 except FileNotFoundError:
     _css_leaflet = "/* Leaflet widget CSS not found */"
