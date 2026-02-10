@@ -7,10 +7,16 @@ from typing import Dict, List, Any, Optional, Union
 from .base import MapWidget
 
 # Load Cesium-specific js and css
-with open(pathlib.Path(__file__).parent / "static" / "cesium_widget.js", "r") as f:
+with open(
+    pathlib.Path(__file__).parent / "static" / "cesium_widget.js", "r", encoding="utf-8"
+) as f:
     _esm_cesium = f.read()
 
-with open(pathlib.Path(__file__).parent / "static" / "cesium_widget.css", "r") as f:
+with open(
+    pathlib.Path(__file__).parent / "static" / "cesium_widget.css",
+    "r",
+    encoding="utf-8",
+) as f:
     _css_cesium = f.read()
 
 

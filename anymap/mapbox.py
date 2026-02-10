@@ -33,10 +33,16 @@ from .base import MapWidget
 from .basemaps import available_basemaps
 
 # Load Mapbox-specific js and css
-with open(pathlib.Path(__file__).parent / "static" / "mapbox_widget.js", "r") as f:
+with open(
+    pathlib.Path(__file__).parent / "static" / "mapbox_widget.js", "r", encoding="utf-8"
+) as f:
     _esm_mapbox = f.read()
 
-with open(pathlib.Path(__file__).parent / "static" / "mapbox_widget.css", "r") as f:
+with open(
+    pathlib.Path(__file__).parent / "static" / "mapbox_widget.css",
+    "r",
+    encoding="utf-8",
+) as f:
     _css_mapbox = f.read()
 
 
