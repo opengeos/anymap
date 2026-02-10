@@ -11,10 +11,10 @@ from pathlib import Path
 from .base import MapWidget
 
 # Load Potree-specific js and css
-with open(pathlib.Path(__file__).parent / "static" / "potree_widget.js", "r") as f:
+with open(pathlib.Path(__file__).parent / "static" / "potree_widget.js", "r", encoding="utf-8") as f:
     _esm_potree = f.read()
 
-with open(pathlib.Path(__file__).parent / "static" / "potree_widget.css", "r") as f:
+with open(pathlib.Path(__file__).parent / "static" / "potree_widget.css", "r", encoding="utf-8") as f:
     _css_potree = f.read()
 
 

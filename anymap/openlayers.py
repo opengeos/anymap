@@ -10,7 +10,7 @@ from .base import MapWidget
 # Load OpenLayers-specific js and css
 try:
     with open(
-        pathlib.Path(__file__).parent / "static" / "openlayers_widget.js", "r"
+        pathlib.Path(__file__).parent / "static" / "openlayers_widget.js", "r", encoding="utf-8"
     ) as f:
         _esm_openlayers = f.read()
 except FileNotFoundError:
@@ -18,7 +18,7 @@ except FileNotFoundError:
 
 try:
     with open(
-        pathlib.Path(__file__).parent / "static" / "openlayers_widget.css", "r"
+        pathlib.Path(__file__).parent / "static" / "openlayers_widget.css", "r", encoding="utf-8"
     ) as f:
         _css_openlayers = f.read()
 except FileNotFoundError:
