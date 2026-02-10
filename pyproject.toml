@@ -1,6 +1,6 @@
 [project]
 name = "anymap"
-version = "0.11.3"
+version = "0.12.0"
 dynamic = [
     "dependencies",
 ]
@@ -54,7 +54,7 @@ universal = true
 
 
 [tool.bumpversion]
-current_version = "0.11.3"
+current_version = "0.12.0"
 commit = true
 tag = true
 
