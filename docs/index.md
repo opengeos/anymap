@@ -186,7 +186,7 @@ m.call_js_method('easeTo', {
 
 ## Examples
 
-Check out the example notebooks in the `examples/` directory:
+Check out the example notebooks in the `docs/examples` directory:
 
 -   `basic_usage.ipynb` - Basic map creation and interaction
 -   `advanced_features.ipynb` - Advanced layer management and styling
