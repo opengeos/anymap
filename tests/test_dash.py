@@ -15,6 +15,7 @@ class TestDashMap(unittest.TestCase):
         """Test importing DashMap from anymap and anymap.dash."""
         self.assertTrue(hasattr(anymap, "DashMap"))
         from anymap.dash import DashMap as DirectDashMap
+
         self.assertIs(DashMap, DirectDashMap)
 
     def test_issue_example(self):
@@ -151,7 +152,9 @@ class TestDashMap(unittest.TestCase):
 
     def test_to_plotly_with_plotly(self):
         """Test to_plotly conversion."""
-        m = DashMap(center=[-74.0060, 40.7128], zoom=13, height="500px", bearing=45, pitch=60)
+        m = DashMap(
+            center=[-74.0060, 40.7128], zoom=13, height="500px", bearing=45, pitch=60
+        )
 
         mock_plotly = MagicMock()
         mock_go = MagicMock()
@@ -159,7 +162,9 @@ class TestDashMap(unittest.TestCase):
         mock_fig = MagicMock()
         mock_go.Figure.return_value = mock_fig
 
-        with patch.dict(sys.modules, {"plotly": mock_plotly, "plotly.graph_objects": mock_go}):
+        with patch.dict(
+            sys.modules, {"plotly": mock_plotly, "plotly.graph_objects": mock_go}
+        ):
             fig = m.to_plotly()
             mock_go.Figure.assert_called_once()
             mock_fig.update_layout.assert_called_once()
@@ -175,7 +180,9 @@ class TestDashMap(unittest.TestCase):
         mock_app = MagicMock()
         with patch.object(m, "to_dash", return_value=mock_app):
             m.run_dash(port=8050, host="127.0.0.1", debug=False)
-            mock_app.run.assert_called_once_with(port=8050, host="127.0.0.1", debug=False)
+            mock_app.run.assert_called_once_with(
+                port=8050, host="127.0.0.1", debug=False
+            )
 
 
 if __name__ == "__main__":
