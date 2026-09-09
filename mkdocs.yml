@@ -112,6 +112,7 @@ nav:
           - base module: base.md
           - cesium module: cesium.md
           - compare module: compare.md
+          - dash module: dash.md
           - deckgl module: deckgl.md
           - draw_styles module: draw_styles.md
           - keplergl module: keplergl.md

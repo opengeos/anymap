@@ -216,6 +216,7 @@ python -m unittest tests.test_anymap -v
 -   ✅ OpenLayers backend
 -   ✅ DeckGL backend
 -   ✅ KeplerGL backend
+-   ✅ Plotly Dash backend
 -   🔲 Cesium backend
 -   🔲 Potree backend
 

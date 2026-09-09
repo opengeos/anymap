@@ -28,11 +28,16 @@ classifiers = [
 
 [project.optional-dependencies]
 all = [
-    "anymap[extra, raster]",
+    "anymap[extra, raster, dash]",
 ]
 
 extra = [
     "pandas",
+]
+
+dash = [
+    "dash",
+    "plotly",
 ]
 
 raster = ["localtileserver>=0.10.6", "jupyter-server-proxy", "rio-cogeo", "rioxarray",  "flask", "flask-cors"]

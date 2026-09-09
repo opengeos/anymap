@@ -21,6 +21,7 @@ from .mapbox import MapboxMap
 from .cesium import CesiumMap
 from .potree import PotreeMap
 from .deckgl import DeckGLMap
+from .dash import DashMap
 from .compare import MapCompare
 
 # Make all classes available when importing from this module
@@ -31,5 +32,6 @@ __all__ = [
     "CesiumMap",
     "PotreeMap",
     "DeckGLMap",
+    "DashMap",
     "MapCompare",
 ]

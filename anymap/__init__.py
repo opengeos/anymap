@@ -13,6 +13,7 @@ from .deckgl import DeckGLMap
 from .leaflet import LeafletMap
 from .openlayers import OpenLayersMap
 from .keplergl import KeplerGLMap
+from .dash import DashMap
 from .compare import MapCompare
 
 from .utils import download_file
@@ -30,5 +31,6 @@ __all__ = [
     "LeafletMap",
     "OpenLayersMap",
     "KeplerGLMap",
+    "DashMap",
     "MapCompare",
 ]
